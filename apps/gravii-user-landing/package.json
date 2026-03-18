@@ -74,6 +74,7 @@
     "postcss-functions": "^4.0.2",
     "postcss-preset-env": "^10.6.1",
     "sanity": "^5.2.0",
+    "stats-gl": "^4.1.0",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3"
   },

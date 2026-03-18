@@ -28,10 +28,6 @@ const ORBIT_CURSORS = [
   }),
 ] as const
 
-const partnerLpUrl =
-  process.env.NEXT_PUBLIC_PARTNER_LP_URL?.trim() ||
-  (process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : '#')
-
 function MousePointerIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" className={s.cursorGlyph}>
@@ -162,10 +158,9 @@ export function StickyHeader() {
             className={`${s.pillLink} ${s.navLink}`}
           />
           <HeaderPill
-            href={partnerLpUrl}
+            href="/partners"
             label="PARTNER"
             className={`${s.pillLink} ${s.navLink}`}
-            target="_self"
           />
         </nav>
       </div>
