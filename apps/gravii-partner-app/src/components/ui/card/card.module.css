@@ -1,0 +1,73 @@
+.card {
+  position: relative;
+  overflow: hidden;
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.card:hover {
+  border-color: var(--border-hover);
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 42%);
+  opacity: 0.55;
+}
+
+.header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--text-primary);
+}
+
+.action {
+  position: relative;
+  z-index: 1;
+}
+
+.accentBlue {
+  border-top-color: rgba(88, 166, 255, 0.44);
+}
+
+.accentTeal {
+  border-top-color: rgba(86, 212, 192, 0.44);
+}
+
+.accentAmber {
+  border-top-color: rgba(227, 179, 65, 0.44);
+}
+
+.accentRose {
+  border-top-color: rgba(247, 120, 186, 0.44);
+}

@@ -1,0 +1,148 @@
+.page {
+  display: grid;
+  gap: 1rem;
+}
+
+.tabs,
+.pills,
+.inlineControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.tab,
+.pill,
+.infoButton,
+.labelCard {
+  border: 1px solid var(--border-strong);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+}
+
+.tab,
+.pill,
+.infoButton {
+  border-radius: 999px;
+  padding: 0.62rem 0.9rem;
+}
+
+.tabActive,
+.pillActive {
+  background: rgba(79, 214, 190, 0.12);
+  border-color: rgba(79, 214, 190, 0.28);
+  color: var(--text-primary);
+}
+
+.filterGrid,
+.valueFilterStack {
+  display: grid;
+  gap: 1rem;
+}
+
+.filterSummary,
+.labelPct,
+.threshold {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.filterLabel,
+.controlLabel {
+  margin: 0 0 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.inlineControls {
+  align-items: center;
+}
+
+.labelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-weight: 600;
+}
+
+.labelGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.labelCard {
+  border-radius: 1.2rem;
+  padding: 1rem;
+  text-align: left;
+}
+
+.labelCardActive {
+  border-color: rgba(110, 174, 255, 0.3);
+  background: rgba(110, 174, 255, 0.08);
+}
+
+.labelCardHeader {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.45rem;
+}
+
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+  font-size: 0.8rem;
+}
+
+.labelName {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.chainBar {
+  display: flex;
+  overflow: hidden;
+  min-height: 0.55rem;
+  margin: 0.7rem 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.chainBar span {
+  height: 0.55rem;
+}
+
+.metric {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+@media (max-width: 1100px) {
+  .labelGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .labelGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .labelHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

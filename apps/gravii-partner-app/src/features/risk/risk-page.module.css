@@ -1,0 +1,133 @@
+.page {
+  display: grid;
+  gap: 1rem;
+}
+
+.distribution,
+.clusterList {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.barHeader,
+.clusterHeader,
+.tableHead,
+.tableRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.barTrack {
+  overflow: hidden;
+  min-height: 0.8rem;
+  margin-top: 0.3rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.barFill {
+  display: block;
+  min-height: 0.8rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ec718d, #ff8f57);
+}
+
+.clusterCard {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 1rem;
+}
+
+.clusterHeader h3,
+.clusterHeader p {
+  margin: 0;
+}
+
+.clusterHeader p,
+.clusterCard span {
+  color: var(--text-secondary);
+}
+
+.filters {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.filters select {
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.5rem 0.8rem;
+  color: var(--text-primary);
+}
+
+.table {
+  display: grid;
+}
+
+.tableHead,
+.tableRow {
+  grid-template-columns: minmax(0, 1.2fr) 0.7fr 0.8fr 0.7fr auto;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0.85rem 0;
+}
+
+.tableHead {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.badge {
+  width: fit-content;
+  border-radius: 999px;
+  padding: 0.25rem 0.65rem;
+  text-transform: capitalize;
+}
+
+.badgecritical {
+  background: rgba(236, 113, 141, 0.16);
+  color: #ffa1b4;
+}
+
+.badgehigh {
+  background: rgba(255, 143, 87, 0.16);
+  color: #ffb58f;
+}
+
+.badgemedium {
+  background: rgba(246, 193, 93, 0.16);
+  color: #ffd68d;
+}
+
+.blockButton {
+  border: 0;
+  border-radius: 999px;
+  background: #ec718d;
+  padding: 0.55rem 0.8rem;
+  color: white;
+}
+
+.blockButtonBlocked {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+@media (max-width: 900px) {
+  .tableHead {
+    display: none;
+  }
+
+  .tableRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem;
+  }
+}

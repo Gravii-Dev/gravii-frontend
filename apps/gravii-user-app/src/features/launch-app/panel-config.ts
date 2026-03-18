@@ -1,0 +1,46 @@
+import type { PanelConfig } from "@/features/launch-app/types";
+
+export const PANELS: PanelConfig[] = [
+  {
+    id: "profile",
+    num: "01",
+    tab: "GRAVII ID",
+    sub: "GRAVII ID",
+    editorCopy: "Your identity, distilled.",
+    dark: false,
+    bg: "#F5F2EB",
+    bgHover: "#EDEAE3",
+  },
+  {
+    id: "discovery",
+    num: "02",
+    tab: "DISCOVERY",
+    sub: "CAMPAIGNS",
+    editorCopy: "Browse what's running.",
+    dark: true,
+    bg: "#1A1A1A",
+    bgHover: "#1F1F1F",
+  },
+  {
+    id: "leaderboard",
+    num: "03",
+    tab: "STANDING",
+    sub: "RANKING",
+    editorCopy: "See where you stand.",
+    dark: false,
+    bg: "#EDEAE3",
+    bgHover: "#1A1A1A",
+    hoverDark: true,
+  },
+  {
+    id: "lookup",
+    num: "04",
+    tab: "X-RAY",
+    sub: "VERIFY",
+    editorCopy: "Peel back any account.",
+    dark: false,
+    bg: "#F0EDE6",
+    bgHover: "#F0EDE6",
+    xray: true,
+  },
+];

@@ -1,0 +1,94 @@
+.sectionTitle {
+  font-family: var(--font-ui);
+  display: block;
+  margin-bottom: 16px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.card {
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.miniBarTrack {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(20, minmax(0, 1fr));
+  gap: 2px;
+  height: 6px;
+}
+
+.miniBarSegment {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  transition: background 0.4s ease;
+}
+
+.miniBarSegmentActive {}
+
+.miniBarSegmentPurple {}
+
+.miniBarSegmentGreen {}
+
+.miniBarSegmentAmber {}
+
+.miniBarSegmentActive.miniBarSegmentPurple {
+  background: rgba(200, 180, 240, 0.8);
+}
+
+.miniBarSegmentActive.miniBarSegmentGreen {
+  background: rgba(100, 200, 130, 0.85);
+}
+
+.miniBarSegmentActive.miniBarSegmentAmber {
+  background: rgba(255, 200, 80, 0.85);
+}
+
+.tagChip {
+  font-family: var(--font-ui);
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  padding: 4px 10px;
+  border: 1px solid transparent;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.tagChipPill {
+  border-radius: 12px;
+}
+
+.tagChipSoft {
+  border-radius: 6px;
+}
+
+.tagChipTier {
+  color: rgba(200, 180, 240, 0.8);
+  border-color: rgba(200, 180, 240, 0.25);
+  background: rgba(200, 180, 240, 0.06);
+}
+
+.tagChipVerified {
+  color: rgba(100, 200, 130, 0.85);
+  border-color: rgba(100, 200, 130, 0.25);
+  background: rgba(100, 200, 130, 0.06);
+}
+
+.tagChipRequires {
+  color: rgba(255, 200, 80, 0.85);
+  border-color: rgba(255, 200, 80, 0.25);
+  background: rgba(255, 200, 80, 0.06);
+}
+
+.tagChipMuted {
+  color: rgba(255, 255, 255, 0.4);
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+}

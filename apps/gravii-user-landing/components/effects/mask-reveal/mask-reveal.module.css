@@ -1,0 +1,25 @@
+.root {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+}
+
+.inner {
+  display: block;
+  width: 100%;
+  opacity: 0;
+  transform: translate3d(0, 16%, 0);
+  transition:
+    transform var(--mask-reveal-duration, 1.08s) cubic-bezier(0.22, 1, 0.36, 1) var(--mask-reveal-delay, 0s),
+    opacity 220ms ease var(--mask-reveal-delay, 0s);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inner {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    will-change: auto;
+  }
+}

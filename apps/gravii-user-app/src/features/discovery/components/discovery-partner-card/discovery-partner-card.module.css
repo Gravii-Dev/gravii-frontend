@@ -1,0 +1,111 @@
+.card {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 22px;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(230, 220, 250, 0.18);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.name {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--font-ui);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.subline {
+  color: rgba(255, 255, 255, 0.4);
+  font-family: var(--font-ui);
+  font-size: 13px;
+}
+
+.status {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-align: right;
+}
+
+.statusEligible {
+  color: rgba(100, 200, 130, 0.85);
+}
+
+.statusAlmostThere {
+  color: rgba(255, 200, 80, 0.85);
+}
+
+.statusUpcoming {
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.statusInviteOnly {
+  color: rgba(200, 180, 240, 0.82);
+}
+
+.statusIneligible {
+  color: rgba(255, 90, 90, 0.8);
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.metaChip {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tagRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.count {
+  color: rgba(255, 255, 255, 0.3);
+  font-family: var(--font-ui);
+  font-size: 11px;
+}
+
+.cta {
+  color: rgba(230, 220, 250, 0.7);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}

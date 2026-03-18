@@ -1,0 +1,19 @@
+{
+  "name": "@gravii/domain-types",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./analytics": "./src/analytics.ts",
+    "./campaign": "./src/campaign.ts",
+    "./labels": "./src/labels.ts",
+    "./partner": "./src/partner.ts",
+    "./population": "./src/population.ts",
+    "./risk": "./src/risk.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  }
+}

@@ -1,0 +1,253 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.rootDark {
+  --myspace-text: #f5f2eb;
+  --myspace-sub: rgba(255, 255, 255, 0.5);
+  --myspace-card-border: rgba(255, 255, 255, 0.1);
+  --myspace-card-background: rgba(255, 255, 255, 0.04);
+  --myspace-locked-background: rgba(26, 26, 26, 0.92);
+  --myspace-locked-border: rgba(255, 255, 255, 0.15);
+  --myspace-locked-hint: rgba(255, 255, 255, 0.3);
+}
+
+.rootLight {
+  --myspace-text: #1a1a1a;
+  --myspace-sub: rgba(0, 0, 0, 0.5);
+  --myspace-card-border: rgba(0, 0, 0, 0.1);
+  --myspace-card-background: rgba(0, 0, 0, 0.02);
+  --myspace-locked-background: rgba(245, 242, 235, 0.92);
+  --myspace-locked-border: rgba(0, 0, 0, 0.12);
+  --myspace-locked-hint: rgba(0, 0, 0, 0.25);
+}
+
+.lead {
+  margin: 0 0 18px;
+  font-family: var(--font-serif);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--myspace-text);
+}
+
+.copy {
+  margin: 0 0 12px;
+  font-family: var(--font-ui);
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--myspace-sub);
+}
+
+.summary {
+  margin: 0 0 20px;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.summaryEligible {
+  color: rgba(100, 200, 130, 0.8);
+  font-weight: 700;
+}
+
+.summaryAlmost {
+  color: rgba(255, 200, 80, 0.8);
+  font-weight: 700;
+}
+
+.summaryInviteOnly {
+  color: rgba(200, 180, 240, 0.7);
+  font-weight: 700;
+}
+
+.categoryRow {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.categoryChip {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.5);
+  border-radius: 999px;
+  padding: 7px 16px;
+  font-family: var(--font-ui);
+  letter-spacing: 1px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.categoryChipActive {
+  background: rgba(230, 220, 250, 0.8);
+  border-color: rgba(230, 220, 250, 0.6);
+  color: #1a1a1a;
+}
+
+.contentWindow {
+  position: relative;
+}
+
+.contentState {
+  transition: filter 0.5s ease, opacity 0.5s ease;
+}
+
+.contentStateLocked {
+  filter: blur(5px);
+  opacity: 0.6;
+}
+
+.sectionGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.section {
+  margin-bottom: 28px;
+}
+
+.sectionHeader {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.sectionTitle {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.sectionToneBenefits {
+  color: rgba(100, 200, 130, 0.8);
+}
+
+.sectionToneAlmostThere {
+  color: rgba(255, 200, 80, 0.8);
+}
+
+.sectionToneInviteOnly {
+  color: rgba(200, 180, 240, 0.7);
+}
+
+.sectionChevron {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--myspace-sub);
+}
+
+.emptyState {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-style: italic;
+  color: var(--myspace-sub);
+}
+
+.sectionDivider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  margin-top: 28px;
+}
+
+.exploreButton {
+  width: 100%;
+  margin-top: 8px;
+  border: 1px solid var(--myspace-card-border);
+  border-radius: 999px;
+  background: transparent;
+  padding: 14px 16px;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--myspace-sub);
+  cursor: pointer;
+}
+
+.lockedOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 40px;
+}
+
+.lockedCard {
+  text-align: center;
+  min-width: 340px;
+  border: 1px solid var(--myspace-locked-border);
+  border-radius: 16px;
+  padding: 40px 60px;
+  background: var(--myspace-locked-background);
+}
+
+.lockedTitle {
+  margin: 0 0 14px;
+  font-family: var(--font-ui);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--myspace-text);
+}
+
+.lockedCopy {
+  margin: 0 0 10px;
+  font-family: var(--font-ui);
+  font-size: 15px;
+  color: var(--myspace-sub);
+}
+
+.lockedHint {
+  margin: 0 0 24px;
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-style: italic;
+  color: var(--myspace-locked-hint);
+}
+
+.lockedActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lockedPrimary,
+.lockedSecondary {
+  border-radius: 999px;
+  padding: 12px 16px;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+}
+
+.lockedPrimary {
+  border: 1px solid rgba(230, 220, 250, 0.2);
+  background: rgba(230, 220, 250, 0.12);
+  color: #f5f2eb;
+}
+
+.lockedSecondary {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: transparent;
+  color: inherit;
+}

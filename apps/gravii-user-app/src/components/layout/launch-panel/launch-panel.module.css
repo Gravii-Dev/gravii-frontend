@@ -1,0 +1,327 @@
+.panel {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  cursor: pointer;
+  transition: flex 0.6s cubic-bezier(0.4, 0, 0.2, 1), background 0.4s ease, box-shadow 0.4s ease;
+}
+
+.panel:focus-visible {
+  outline: 2px solid rgba(80, 200, 190, 0.65);
+  outline-offset: -2px;
+}
+
+.panelIdle {
+  flex: 2.5;
+  background: var(--panel-bg);
+  box-shadow: var(--panel-shadow);
+}
+
+.panelCollapsed {
+  flex: 0.8;
+  background: var(--panel-bg);
+  box-shadow: var(--panel-shadow);
+}
+
+.panelActive {
+  flex: 8;
+  background: var(--panel-bg-active);
+  box-shadow: none;
+}
+
+.panelHovered.panelIdle,
+.panelHovered.panelCollapsed {
+  background: var(--panel-bg-hover);
+}
+
+.panelIdle:not(.lastPanel),
+.panelCollapsed:not(.lastPanel) {
+  border-right: 1px solid var(--panel-border-color);
+}
+
+.panelProfile {
+  --panel-bg: #f5f2eb;
+  --panel-bg-hover: #edeae3;
+  --panel-bg-active: #f5f2eb;
+}
+
+.panelDiscovery {
+  --panel-bg: #1a1a1a;
+  --panel-bg-hover: #1f1f1f;
+  --panel-bg-active: #1a1a1a;
+}
+
+.panelStanding {
+  --panel-bg: #edeae3;
+  --panel-bg-hover: #1a1a1a;
+  --panel-bg-active: #1a1a1a;
+}
+
+.panelXray {
+  --panel-bg: #f0ede6;
+  --panel-bg-hover: #f0ede6;
+  --panel-bg-active: #f0ede6;
+}
+
+.tokensLight {
+  --panel-border-color: rgba(0, 0, 0, 0.18);
+  --panel-shadow: inset 12px 0 20px -8px rgba(0, 0, 0, 0.12), inset -12px 0 20px -8px rgba(0, 0, 0, 0.12), inset 0 12px 20px -8px rgba(0, 0, 0, 0.08), inset 0 -12px 20px -8px rgba(0, 0, 0, 0.08);
+}
+
+.tokensDark {
+  --panel-border-color: rgba(255, 255, 255, 0.1);
+  --panel-shadow: inset 12px 0 20px -8px rgba(0, 0, 0, 0.5), inset -12px 0 20px -8px rgba(0, 0, 0, 0.5), inset 0 12px 20px -8px rgba(0, 0, 0, 0.4), inset 0 -12px 20px -8px rgba(0, 0, 0, 0.4);
+}
+
+.previewLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.08);
+  transition: opacity 0.4s ease;
+}
+
+.previewHidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.previewTop {
+  position: relative;
+  z-index: 3;
+  padding: 20px 20px 0;
+}
+
+.previewNumber {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 2px;
+  transition: color 0.35s ease;
+}
+
+.tokensLight .previewNumber {
+  color: rgba(0, 0, 0, 0.35);
+}
+
+.tokensDark .previewNumber {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.panelHovered.tokensLight .previewNumber {
+  color: rgba(0, 0, 0, 0.55);
+}
+
+.panelHovered.tokensDark .previewNumber {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.panelXray.panelHovered .previewNumber {
+  color: rgba(100, 210, 200, 0.3);
+}
+
+.editorCopy {
+  position: absolute;
+  bottom: max(48px, 12%);
+  left: 50%;
+  z-index: 3;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.editorText {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(14px, 1.5vw, 24px);
+  transition: color 0.35s ease;
+}
+
+.tokensLight .editorText {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.tokensDark .editorText {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.panelHovered.tokensLight:not(.panelCollapsed) .editorText {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.panelHovered.tokensDark:not(.panelCollapsed) .editorText {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.panelXray .editorText {
+  color: rgba(50, 110, 220, 0.55);
+}
+
+.panelXray.panelHovered .editorText {
+  color: rgba(100, 210, 210, 0.45);
+}
+
+.rotatedTitle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(90deg);
+  white-space: nowrap;
+}
+
+.titleText {
+  font-family: var(--font-display);
+  transition: color 0.35s ease;
+}
+
+.titleProfile {
+  font-size: clamp(38px, 5.2vw, 58px);
+  letter-spacing: 4px;
+}
+
+.panelCollapsed .titleProfile {
+  font-size: 14px;
+}
+
+.titleDiscovery {
+  font-size: clamp(48px, 6.6vw, 72px);
+  letter-spacing: 4px;
+}
+
+.panelCollapsed .titleDiscovery {
+  font-size: 18px;
+  letter-spacing: 6px;
+}
+
+.titleDefault {
+  font-size: clamp(32px, 4.5vw, 50px);
+  letter-spacing: 4px;
+}
+
+.panelCollapsed .titleDefault {
+  font-size: 18px;
+  letter-spacing: 6px;
+}
+
+.tokensLight .titleText {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.tokensDark .titleText {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.panelHovered.tokensLight:not(.panelCollapsed) .titleText {
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.panelHovered.tokensDark:not(.panelCollapsed) .titleText {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.lookupCompactTitle {
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: rgba(50, 110, 220, 0.7);
+  letter-spacing: 6px;
+}
+
+.lookupCenteredTitle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 3;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+}
+
+.lookupTitle {
+  font-family: var(--font-display);
+  font-size: clamp(45px, 4.5vw, 60px);
+  color: rgba(50, 110, 220, 0.7);
+  letter-spacing: 4px;
+  transition: color 0.35s ease, text-shadow 0.35s ease;
+}
+
+.panelXray.panelHovered .lookupTitle {
+  color: rgba(100, 210, 200, 0.9);
+  text-shadow: 0 0 40px rgba(80, 200, 190, 0.3), 0 0 80px rgba(60, 180, 170, 0.1);
+}
+
+.lookupThermalOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: #000;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.lookupThermalCore {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  width: 60%;
+  height: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse, rgba(80, 200, 190, 0.07) 0%, transparent 70%);
+  animation: thermalPulse 4s ease-in-out infinite;
+}
+
+.lookupThermalLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(80, 200, 190, 0.03);
+}
+
+.lookupThermalLine20 { top: 20%; }
+.lookupThermalLine40 { top: 40%; }
+.lookupThermalLine60 { top: 60%; }
+.lookupThermalLine80 { top: 80%; }
+
+.panelBrand {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+}
+
+.brandMark {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 3px;
+  transition: color 0.35s ease;
+}
+
+.tokensLight .brandMark {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.tokensDark .brandMark {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.panelHovered.tokensLight .brandMark {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.panelHovered.tokensDark .brandMark {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.panelXray.panelHovered .brandMark {
+  color: rgba(100, 210, 200, 0.3);
+}
+
+.scanLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.04);
+  animation: scanLine 8s linear infinite;
+}

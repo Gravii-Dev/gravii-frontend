@@ -1,0 +1,115 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rootDark {
+  --history-row-border: rgba(255, 255, 255, 0.08);
+  --history-row-background: rgba(255, 255, 255, 0.04);
+  --history-text: #f5f2eb;
+  --history-sub: rgba(255, 255, 255, 0.5);
+}
+
+.rootLight {
+  --history-row-border: rgba(0, 0, 0, 0.1);
+  --history-row-background: rgba(0, 0, 0, 0.03);
+  --history-text: #1a1a1a;
+  --history-sub: rgba(0, 0, 0, 0.5);
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.title {
+  color: rgba(255, 255, 255, 0.6);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+}
+
+.count {
+  color: var(--history-sub);
+  font-family: var(--font-ui);
+  font-size: 12px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 110px 1fr 140px 24px;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--history-row-border);
+  background: var(--history-row-background);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+  font-family: var(--font-ui);
+}
+
+.row:hover {
+  border-color: rgba(200, 180, 240, 0.3);
+}
+
+.rowMeta {
+  color: var(--history-sub);
+}
+
+.wallet {
+  font-weight: 600;
+  color: var(--history-text);
+}
+
+.persona {
+  color: rgba(200, 180, 240, 0.75);
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.pageButton {
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  padding: 6px 12px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.pageNavButton {
+  color: var(--history-text);
+}
+
+.pageIndexButton {
+  color: var(--history-sub);
+}
+
+.pageButton:disabled {
+  opacity: 0.2;
+  cursor: default;
+}
+
+.pageActive {
+  background: rgba(200, 180, 240, 0.8);
+  color: #1a1a1a;
+}

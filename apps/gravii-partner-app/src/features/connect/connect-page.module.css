@@ -1,0 +1,173 @@
+.page {
+  display: grid;
+  gap: 1rem;
+}
+
+.highlightValue {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.highlightHelper,
+.moduleDescription,
+.reasonGrid p {
+  margin: 0;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+.moduleCard {
+  min-height: 100%;
+}
+
+.moduleCardActive {
+  border-color: rgba(79, 214, 190, 0.28);
+  box-shadow: 0 0 0 1px rgba(79, 214, 190, 0.14);
+}
+
+.moduleBody {
+  display: grid;
+  gap: 1rem;
+}
+
+.activeBadge {
+  display: inline-flex;
+  width: fit-content;
+  border-radius: 999px;
+  background: rgba(79, 214, 190, 0.12);
+  padding: 0.35rem 0.7rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #91eddc;
+}
+
+.detailBlock {
+  display: flex;
+  gap: 0.7rem;
+  border-radius: var(--radius-md);
+  padding: 0.9rem 1rem;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.toneBlue {
+  background: rgba(110, 174, 255, 0.12);
+  color: #aed1ff;
+}
+
+.toneTeal {
+  background: rgba(79, 214, 190, 0.12);
+  color: #8ef1df;
+}
+
+.toneAmber {
+  background: rgba(246, 193, 93, 0.14);
+  color: #ffd68d;
+}
+
+.moduleActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.feedbackBlock {
+  display: grid;
+  gap: 0.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.02);
+  padding: 0.85rem 0.95rem;
+}
+
+.inlineLabelRow,
+.statusRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.feedbackLabel {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.inlineLink {
+  font-size: 0.82rem;
+  color: var(--brand-blue);
+  text-decoration: none;
+}
+
+.codeInline,
+.codeBlock {
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.24);
+  padding: 0.7rem 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: #d7e7ff;
+  word-break: break-all;
+}
+
+.codeBlock {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.previewPanel {
+  border-radius: 12px;
+  background: rgba(79, 214, 190, 0.08);
+  padding: 0.8rem 0.9rem;
+}
+
+.previewPanel strong,
+.previewPanel p {
+  margin: 0;
+}
+
+.previewPanel p {
+  margin-top: 0.3rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.statusPositive {
+  color: #91eddc;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.statusMuted {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.reasonGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.reasonGrid article {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.02);
+  padding: 1rem;
+}
+
+.reasonGrid h3 {
+  margin: 0 0 0.45rem;
+  font-size: 1rem;
+}
+
+@media (max-width: 900px) {
+  .reasonGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

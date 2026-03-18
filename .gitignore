@@ -1,0 +1,25 @@
+.DS_Store
+.turbo
+node_modules
+
+# Build and framework outputs
+.next
+dist
+coverage
+test-results
+
+# Environment and local state
+.env
+.env.*
+!.env.example
+
+# Tooling and editor state
+.idea
+.vscode
+.cursor
+*.tsbuildinfo
+**/.playwright-cli
+**/output/playwright
+
+# Transition backups
+tooling/backups

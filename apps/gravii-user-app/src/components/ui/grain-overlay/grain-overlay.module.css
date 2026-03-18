@@ -1,0 +1,29 @@
+.overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: soft-light;
+  transition: opacity 0.5s ease;
+  overflow: hidden;
+}
+
+.surface {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.panel {
+}
+
+.dock {
+}
+
+.active {
+  opacity: 0.09;
+}
+
+.inactive {
+  opacity: 0.16;
+}

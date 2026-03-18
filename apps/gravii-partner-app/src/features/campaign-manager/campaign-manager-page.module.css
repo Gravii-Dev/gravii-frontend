@@ -1,0 +1,157 @@
+.page {
+  display: grid;
+  gap: 1rem;
+}
+
+.notice {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(110, 174, 255, 0.22);
+  border-radius: 1rem;
+  background: rgba(12, 18, 40, 0.72);
+  color: rgba(236, 241, 255, 0.92);
+}
+
+.notice strong {
+  font-size: 0.96rem;
+}
+
+.notice span {
+  font-size: 0.86rem;
+  color: rgba(208, 216, 255, 0.78);
+}
+
+.filters,
+.actions,
+.criteria,
+.regionRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.filterButton {
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.62rem 0.9rem;
+  color: var(--text-secondary);
+}
+
+.filterButtonActive {
+  border-color: rgba(79, 214, 190, 0.28);
+  background: rgba(79, 214, 190, 0.1);
+  color: var(--text-primary);
+}
+
+.list,
+.campaignCard,
+.stack,
+.report {
+  display: grid;
+  gap: 1rem;
+}
+
+.progressTrack,
+.barTrack {
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.progressTrack {
+  min-height: 0.45rem;
+}
+
+.progressFill,
+.barFill {
+  display: block;
+  border-radius: 999px;
+}
+
+.progressFill {
+  min-height: 0.45rem;
+  background: linear-gradient(135deg, #4fd6be, #6eaeff);
+}
+
+.barFill {
+  min-height: 0.8rem;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--text-secondary);
+}
+
+.modeTag,
+.criterion {
+  border-radius: 999px;
+  padding: 0.38rem 0.7rem;
+  font-size: 0.8rem;
+}
+
+.modeTag {
+  background: rgba(124, 131, 255, 0.12);
+  color: #b8bcff;
+}
+
+.criterion {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-secondary);
+}
+
+.reportBlock {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 1rem;
+}
+
+.reportLabel {
+  margin: 0 0 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.barHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-bottom: 0.3rem;
+  color: var(--text-secondary);
+}
+
+.regionCard {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 4rem;
+}
+
+.regionCard strong,
+.sybilValue {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.regionCard span {
+  color: var(--text-secondary);
+}
+
+.sybilValue {
+  margin: 0;
+  color: #ec718d;
+}
+
+@media (max-width: 700px) {
+  .meta {
+    flex-direction: column;
+  }
+}

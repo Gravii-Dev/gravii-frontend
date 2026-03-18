@@ -1,0 +1,115 @@
+.root {
+  position: relative;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  padding: 0 24px;
+  background: #1a1a1a;
+  cursor: pointer;
+  transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease;
+}
+
+.rootActive {
+  height: calc(100vh - 48px);
+  box-shadow: none;
+}
+
+.rootCompact {
+  height: 60px;
+  box-shadow: inset 0 12px 20px -8px rgba(0, 0, 0, 0.6), inset 12px 0 20px -8px rgba(0, 0, 0, 0.4), inset -12px 0 20px -8px rgba(0, 0, 0, 0.4), inset 0 -12px 20px -8px rgba(0, 0, 0, 0.4);
+}
+
+.rootIdle {
+  height: 234px;
+  box-shadow: inset 0 12px 20px -8px rgba(0, 0, 0, 0.6), inset 12px 0 20px -8px rgba(0, 0, 0, 0.4), inset -12px 0 20px -8px rgba(0, 0, 0, 0.4), inset 0 -12px 20px -8px rgba(0, 0, 0, 0.4);
+}
+
+.root:focus-visible {
+  outline: 2px solid rgba(80, 200, 190, 0.65);
+  outline-offset: -2px;
+}
+
+.hoverLine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  height: 1px;
+  opacity: 0;
+  background: linear-gradient(90deg, transparent 10%, rgba(220, 210, 245, 0.35) 50%, transparent 90%);
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+.rootHovered .hoverLine {
+  opacity: 1;
+}
+
+.preview {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+}
+
+.previewCompact {
+  flex-direction: row;
+  gap: 12px;
+}
+
+.previewHidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.previewNumber {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.25);
+  letter-spacing: 2px;
+  transition: color 0.35s ease;
+}
+
+.rootHovered .previewNumber {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.previewTitle {
+  font-family: var(--font-display);
+  font-size: 80px;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 8px;
+  transition: font-size 0.4s ease, letter-spacing 0.4s ease, color 0.35s ease;
+}
+
+.rootCompact .previewTitle {
+  font-size: 18px;
+  letter-spacing: 6px;
+}
+
+.rootHovered .previewTitle {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.previewTagline {
+  margin-top: 8px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(14px, 1.5vw, 24px);
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.expanded {
+  animation: fadeInUp 0.4s ease 0.3s both;
+}

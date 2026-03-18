@@ -1,0 +1,2401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gravii HQ — Internal Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Sora:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Inter:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#000;--bgCard:#0a0e14;--bgSidebar:#060a10;--bgPanel:rgba(255,255,255,0.02);
+  --border:rgba(255,255,255,0.06);--borderH:rgba(255,255,255,0.12);--borderA:rgba(255,255,255,0.2);
+  --text:#f0f4f8;--textS:#b4bcc8;--textM:#6b7280;--textD:#3d4550;
+  --cream:#F5E6D3;--lav:#C8B6FF;
+  --blue:#58a6ff;--purple:#bc8cff;--teal:#56d4c0;--amber:#e3b341;--orange:#f0883e;--red:#f85149;--green:#3fb950;
+  --hq:#E8A87C;/* HQ accent — warm amber/copper to distinguish from partner dashboard */
+  --sidebar-w:260px;
+}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow:hidden;height:100vh}
+a{color:inherit;text-decoration:none}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.14)}
+
+/* Grain */
+.grain{position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:0.02;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* Layout */
+.app{display:flex;height:100vh;width:100vw}
+
+/* Sidebar */
+.sidebar{
+  width:var(--sidebar-w);min-width:var(--sidebar-w);height:100vh;
+  background:var(--bgSidebar);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden;
+  position:relative;z-index:100;
+}
+.sidebar::after{
+  content:'';position:absolute;top:0;right:0;bottom:0;width:1px;
+  background:linear-gradient(180deg,rgba(232,168,124,0.15) 0%,transparent 40%,transparent 60%,rgba(232,168,124,0.08) 100%);
+}
+.sb-header{
+  padding:24px 20px 20px;border-bottom:1px solid var(--border);flex-shrink:0;
+}
+.sb-logo{
+  font-family:'Archivo Black',sans-serif;font-size:20px;letter-spacing:-0.5px;color:var(--cream);
+  display:flex;align-items:center;gap:10px;
+}
+.sb-badge{
+  font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1.5px;
+  color:var(--hq);background:rgba(232,168,124,0.1);border:1px solid rgba(232,168,124,0.2);
+  padding:3px 8px;border-radius:6px;
+}
+.sb-nav{flex:1;overflow-y:auto;padding:16px 0}
+.sb-section{padding:0 12px;margin-bottom:8px}
+.sb-section-label{
+  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--textD);padding:8px 12px 6px;
+}
+.sb-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;border-radius:8px;cursor:pointer;
+  font-size:14px;font-weight:500;color:var(--textM);
+  transition:all 0.15s ease;position:relative;
+}
+.sb-item:hover{background:rgba(255,255,255,0.03);color:var(--textS)}
+.sb-item.active{background:rgba(232,168,124,0.08);color:var(--hq)}
+.sb-item.active::before{
+  content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);
+  width:3px;height:20px;background:var(--hq);border-radius:0 2px 2px 0;
+}
+.sb-item-icon{width:18px;height:18px;opacity:0.5;flex-shrink:0}
+.sb-item.active .sb-item-icon{opacity:1}
+.sb-sub{padding-left:20px}
+.sb-sub .sb-item{font-size:13px;padding:7px 12px}
+.sb-group{margin-bottom:4px}
+.sb-group-toggle{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:9px 12px;border-radius:8px;cursor:pointer;
+  font-size:14px;font-weight:500;color:var(--textM);
+  transition:all 0.15s ease;
+}
+.sb-group-toggle:hover{background:rgba(255,255,255,0.03);color:var(--textS)}
+.sb-group-toggle.open{color:var(--textS)}
+.sb-group-toggle .chevron{
+  font-size:10px;transition:transform 0.2s;opacity:0.4;
+}
+.sb-group-toggle.open .chevron{transform:rotate(90deg)}
+.sb-group-sub{display:none;padding-left:8px}
+.sb-group.open .sb-group-sub{display:block}
+
+/* Chat trigger */
+.sb-chat-trigger{
+  padding:12px 16px;margin:0 0px;flex-shrink:0;
+  background:rgba(232,168,124,0.04);border:1px solid rgba(232,168,124,0.12);
+  border-radius:10px;cursor:pointer;transition:all 0.2s;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.sb-chat-trigger:hover{background:rgba(232,168,124,0.08);border-color:rgba(232,168,124,0.25)}
+.sb-chat-icon{
+  width:28px;height:28px;border-radius:8px;
+  background:linear-gradient(135deg,var(--hq),var(--lav));
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;color:#000;font-weight:700;flex-shrink:0;
+}
+.sb-chat-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--hq);
+  animation:pulse 2s ease-in-out infinite;flex-shrink:0;
+}
+@keyframes pulse{0%,100%{opacity:0.4;transform:scale(1)}50%{opacity:1;transform:scale(1.2)}}
+
+/* Chat panel */
+.chat-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;
+  opacity:0;pointer-events:none;transition:opacity 0.3s;
+}
+.chat-overlay.open{opacity:1;pointer-events:auto}
+.chat-panel{
+  position:fixed;top:0;right:0;bottom:0;width:400px;
+  background:var(--bgSidebar);border-left:1px solid var(--border);
+  z-index:201;transform:translateX(100%);transition:transform 0.3s ease;
+  display:flex;flex-direction:column;
+}
+.chat-panel.open{transform:translateX(0)}
+.chat-header{
+  padding:20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+.chat-close{
+  background:none;border:none;color:var(--textM);font-size:18px;cursor:pointer;
+  padding:4px 8px;border-radius:6px;transition:all 0.15s;
+}
+.chat-close:hover{color:var(--text);background:rgba(255,255,255,0.06)}
+.chat-messages{
+  flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px;
+}
+.chat-msg{max-width:90%;padding:12px 16px;border-radius:12px;font-size:14px;line-height:1.6}
+.chat-msg-ai{
+  background:rgba(232,168,124,0.06);border:1px solid rgba(232,168,124,0.12);
+  color:var(--textS);align-self:flex-start;border-top-left-radius:4px;
+}
+.chat-msg-user{
+  background:rgba(255,255,255,0.06);border:1px solid var(--border);
+  color:var(--text);align-self:flex-end;border-top-right-radius:4px;
+}
+.chat-msg-ai .chat-msg-label{
+  font-size:10px;font-weight:700;color:var(--hq);letter-spacing:0.5px;margin-bottom:6px;
+}
+.chat-input-wrap{
+  padding:16px 20px;border-top:1px solid var(--border);
+  display:flex;gap:8px;flex-shrink:0;
+}
+.chat-input{
+  flex:1;padding:10px 14px;background:rgba(255,255,255,0.03);
+  border:1px solid var(--border);border-radius:8px;color:var(--text);
+  font-size:13px;font-family:'Outfit',sans-serif;outline:none;transition:border-color 0.2s;
+}
+.chat-input:focus{border-color:var(--hq)}
+.chat-send{
+  padding:10px 16px;background:var(--hq);color:#000;border:none;border-radius:8px;
+  font-size:14px;font-weight:700;cursor:pointer;font-family:'Space Mono',monospace;
+  transition:all 0.15s;
+}
+.chat-send:hover{transform:scale(1.05)}
+.chat-suggestions{
+  padding:8px 20px 16px;display:flex;flex-wrap:wrap;gap:6px;flex-shrink:0;
+}
+.chat-sug{
+  font-size:12px;padding:6px 12px;border-radius:16px;cursor:pointer;
+  background:rgba(255,255,255,0.03);border:1px solid var(--border);
+  color:var(--textM);transition:all 0.15s;
+}
+.chat-sug:hover{border-color:var(--hq);color:var(--hq)}
+
+.sb-footer{
+  padding:16px 20px;border-top:1px solid var(--border);flex-shrink:0;
+  display:flex;align-items:center;gap:10px;
+}
+.sb-avatar{
+  width:32px;height:32px;border-radius:8px;
+  background:linear-gradient(135deg,var(--hq),var(--lav));
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;color:#000;flex-shrink:0;
+}
+.sb-user-info{overflow:hidden}
+.sb-user-name{font-size:13px;font-weight:600;color:var(--textS)}
+.sb-user-role{font-size:11px;color:var(--textM)}
+
+/* Main */
+.main{flex:1;overflow-y:auto;overflow-x:hidden}
+.main-header{
+  position:sticky;top:0;z-index:50;
+  padding:20px 32px;
+  background:rgba(0,0,0,0.85);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.main-title{font-family:'Sora',sans-serif;font-size:22px;font-weight:700;letter-spacing:-0.5px}
+.main-meta{display:flex;align-items:center;gap:16px}
+.main-time{font-family:'Space Mono',monospace;font-size:12px;color:var(--textM)}
+.main-status{
+  font-size:11px;font-weight:600;color:var(--green);
+  display:flex;align-items:center;gap:6px;
+}
+.main-status::before{
+  content:'';width:6px;height:6px;border-radius:50%;background:var(--green);
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
+/* Content area */
+.content{padding:28px 32px 60px}
+
+/* Page containers */
+.page{display:none}
+.page.active{display:block}
+
+/* Cards */
+.card{
+  background:rgba(255,255,255,0.02);border:1px solid var(--border);
+  border-radius:16px;padding:24px;
+  transition:all 0.3s ease;position:relative;overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;inset:0;border-radius:16px;opacity:0;
+  background:radial-gradient(ellipse at top left,rgba(232,168,124,0.06) 0%,transparent 60%);
+  transition:opacity 0.3s;pointer-events:none;
+}
+.card:hover::before{opacity:1}
+
+/* Stat cards */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:28px}
+.stat-card{
+  background:rgba(255,255,255,0.02);border:1px solid var(--border);
+  border-radius:14px;padding:20px;position:relative;overflow:hidden;
+  transition:all 0.3s;
+}
+.stat-card:hover{border-color:var(--borderH);transform:translateY(-1px)}
+.stat-card::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  border-radius:14px 14px 0 0;opacity:0.6;
+}
+.stat-card[data-accent="hq"]::after{background:var(--hq)}
+.stat-card[data-accent="teal"]::after{background:var(--teal)}
+.stat-card[data-accent="blue"]::after{background:var(--blue)}
+.stat-card[data-accent="purple"]::after{background:var(--purple)}
+.stat-card[data-accent="green"]::after{background:var(--green)}
+.stat-card[data-accent="amber"]::after{background:var(--amber)}
+.stat-card[data-accent="red"]::after{background:var(--red)}
+.stat-label{font-size:14px;color:var(--textM);margin-bottom:8px;font-weight:500}
+.stat-value{font-family:'Space Mono',monospace;font-size:28px;font-weight:700;color:var(--text);line-height:1;margin-bottom:6px}
+.stat-sub{font-size:13px;color:var(--textM);display:flex;align-items:center;gap:6px}
+.stat-delta{font-weight:600;display:inline-flex;align-items:center;gap:3px}
+.stat-delta.up{color:var(--green)}
+.stat-delta.down{color:var(--red)}
+.stat-delta.neutral{color:var(--textM)}
+
+/* Section title */
+.sec-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:16px;
+}
+.sec-title{font-family:'Sora',sans-serif;font-size:17px;font-weight:700;letter-spacing:-0.3px}
+.sec-action{font-size:14px;font-weight:600;color:var(--hq);cursor:pointer;opacity:0.8;transition:opacity 0.2s}
+.sec-action:hover{opacity:1}
+
+/* Mini chart placeholder */
+.mini-chart{
+  height:120px;background:rgba(255,255,255,0.01);border:1px solid var(--border);
+  border-radius:12px;display:flex;align-items:flex-end;padding:16px;gap:4px;
+  overflow:hidden;
+}
+.mini-bar{
+  flex:1;border-radius:3px 3px 0 0;min-width:8px;
+  transition:height 0.6s cubic-bezier(0.34,1.56,0.64,1);
+  position:relative;
+}
+.mini-bar:hover{opacity:0.8}
+
+/* Table */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{
+  font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--textD);text-align:left;padding:10px 14px;
+  border-bottom:1px solid var(--border);
+}
+.tbl td{
+  font-size:14px;color:var(--textS);padding:12px 14px;
+  border-bottom:1px solid rgba(255,255,255,0.03);
+  transition:background 0.15s;
+}
+.tbl tr:hover td{background:rgba(255,255,255,0.02)}
+.tbl-mono{font-family:'Space Mono',monospace;font-size:13px}
+
+/* Tags */
+.tag{
+  font-size:12px;font-weight:600;padding:3px 10px;border-radius:10px;
+  display:inline-block;white-space:nowrap;
+}
+.tag-teal{background:rgba(86,212,192,0.1);color:var(--teal)}
+.tag-blue{background:rgba(88,166,255,0.1);color:var(--blue)}
+.tag-purple{background:rgba(188,140,255,0.1);color:var(--purple)}
+.tag-amber{background:rgba(227,179,65,0.1);color:var(--amber)}
+.tag-green{background:rgba(63,185,80,0.1);color:var(--green)}
+.tag-red{background:rgba(248,81,73,0.1);color:var(--red)}
+.tag-hq{background:rgba(232,168,124,0.1);color:var(--hq)}
+
+/* Filter bar */
+.filter-bar{
+  display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+  padding:14px 18px;margin-bottom:20px;
+  background:rgba(255,255,255,0.02);border:1px solid var(--border);
+  border-radius:12px;
+}
+.filter-bar-label{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--textD);margin-right:4px;flex-shrink:0}
+.filter-group{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.filter-sep{width:1px;height:20px;background:var(--border);margin:0 6px;flex-shrink:0}
+.fbtn{
+  font-size:13px;font-weight:600;padding:6px 14px;border-radius:8px;
+  cursor:pointer;transition:all 0.15s;border:1px solid var(--border);
+  color:var(--textM);background:transparent;font-family:'Outfit',sans-serif;
+  white-space:nowrap;
+}
+.fbtn:hover{border-color:var(--borderH);color:var(--textS)}
+.fbtn.f-active{background:rgba(232,168,124,0.1);border-color:rgba(232,168,124,0.3);color:var(--hq)}
+.fbtn-reset{
+  font-size:12px;font-weight:600;padding:5px 10px;border-radius:6px;
+  cursor:pointer;border:none;background:rgba(255,255,255,0.04);
+  color:var(--textD);font-family:'Outfit',sans-serif;margin-left:auto;
+  transition:all 0.15s;
+}
+.fbtn-reset:hover{background:rgba(255,255,255,0.08);color:var(--textM)}
+/* Toggle switch */
+.toggle-wrap{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--textM)}
+
+/* CPA tooltip */
+.roi-tip{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:15px;height:15px;border-radius:50%;background:rgba(255,255,255,0.06);
+  font-size:10px;font-weight:700;color:var(--textM);cursor:help;
+  vertical-align:middle;margin-left:3px;position:relative;
+  font-style:normal;
+}
+.roi-tip:hover::after{
+  content:attr(title);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
+  background:#1a1f28;border:1px solid var(--borderH);border-radius:8px;padding:8px 12px;
+  font-size:11px;font-weight:500;color:var(--textS);white-space:nowrap;z-index:100;
+  pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,0.4);
+}
+.toggle{
+  width:34px;height:18px;border-radius:9px;background:rgba(255,255,255,0.1);
+  position:relative;cursor:pointer;transition:background 0.2s;border:1px solid var(--border);
+}
+.toggle.t-on{background:rgba(232,168,124,0.25);border-color:rgba(232,168,124,0.4)}
+.toggle::after{
+  content:'';position:absolute;top:2px;left:2px;width:12px;height:12px;
+  border-radius:50%;background:var(--textM);transition:all 0.2s;
+}
+.toggle.t-on::after{left:18px;background:var(--hq)}
+
+/* Donut chart */
+.donut-wrap{display:flex;align-items:center;gap:24px}
+.donut{position:relative;width:140px;height:140px;flex-shrink:0}
+.donut svg{transform:rotate(-90deg)}
+.donut-center{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+}
+.donut-center-val{font-family:'Space Mono',monospace;font-size:22px;font-weight:700}
+.donut-center-label{font-size:11px;color:var(--textM)}
+.donut-legend{display:flex;flex-direction:column;gap:8px}
+.donut-legend-item{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--textS)}
+.donut-legend-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+
+/* Sparkline area */
+.spark-row{display:flex;align-items:center;gap:16px;padding:8px 0}
+.spark-label{font-size:13px;color:var(--textM);width:100px;flex-shrink:0}
+.spark-line{flex:1;height:32px;position:relative}
+.spark-val{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;width:80px;text-align:right;flex-shrink:0}
+
+/* Horizontal bar */
+.hbar-wrap{margin-bottom:12px}
+.hbar-header{display:flex;justify-content:space-between;margin-bottom:4px}
+.hbar-label{font-size:13px;color:var(--textS)}
+.hbar-val{font-family:'Space Mono',monospace;font-size:13px;font-weight:700}
+.hbar-track{height:6px;background:rgba(255,255,255,0.04);border-radius:3px;overflow:hidden}
+.hbar-fill{height:100%;border-radius:3px;transition:width 1s cubic-bezier(0.34,1.56,0.64,1)}
+
+/* Grid layouts */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+.g23{display:grid;grid-template-columns:2fr 1fr;gap:20px}
+.g32{display:grid;grid-template-columns:1fr 2fr;gap:20px}
+
+/* Period selector */
+.period-sel{display:flex;gap:4px;background:rgba(255,255,255,0.03);border-radius:8px;padding:3px;border:1px solid var(--border)}
+.period-btn{
+  font-size:12px;font-weight:600;padding:6px 14px;border-radius:6px;
+  cursor:pointer;color:var(--textM);transition:all 0.2s;border:none;
+  background:transparent;font-family:'Outfit',sans-serif;
+}
+.period-btn.active{background:rgba(232,168,124,0.12);color:var(--hq)}
+.period-btn:hover:not(.active){color:var(--textS)}
+
+/* Animations */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn 0.4s ease forwards}
+.fade-d1{animation-delay:0.05s;opacity:0}
+.fade-d2{animation-delay:0.1s;opacity:0}
+.fade-d3{animation-delay:0.15s;opacity:0}
+.fade-d4{animation-delay:0.2s;opacity:0}
+.fade-d5{animation-delay:0.25s;opacity:0}
+.fade-d6{animation-delay:0.3s;opacity:0}
+
+/* Responsive */
+@media(max-width:1100px){.g2,.g3,.g23,.g32{grid-template-columns:1fr}}
+@media(max-width:768px){
+  .sidebar{position:fixed;left:-260px;transition:left 0.3s}
+  .sidebar.open{left:0}
+  .stat-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<div class="app">
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-header">
+    <div class="sb-logo">
+      Gravii <span class="sb-badge">HQ</span>
+    </div>
+  </div>
+
+  <nav class="sb-nav">
+    <!-- Overview -->
+    <div class="sb-section">
+      <div class="sb-item active" data-page="overview" onclick="navTo(this)">
+        <svg class="sb-item-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="7" height="7" rx="2"/><rect x="10" y="1" width="7" height="7" rx="2"/><rect x="1" y="10" width="7" height="7" rx="2"/><rect x="10" y="10" width="7" height="7" rx="2"/></svg>
+        Overview
+      </div>
+    </div>
+
+    <!-- User Pool -->
+    <div class="sb-section">
+      <div class="sb-section-label">User Pool</div>
+      <div class="sb-group open">
+        <div class="sb-item" data-page="pool-composition" onclick="navTo(this)">
+          <svg class="sb-item-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/><path d="M9 2v14M2 9h14"/></svg>
+          Composition
+        </div>
+        <div class="sb-item" data-page="pool-cohort" onclick="navTo(this)">
+          <svg class="sb-item-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 14l4-5 3 3 7-9"/></svg>
+          Cohort Analysis
+        </div>
+        <div class="sb-item" data-page="pool-explorer" onclick="navTo(this)">
+          <svg class="sb-item-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5"/><path d="M12 12l4 4"/></svg>
+          User Explorer
+        </div>
+      </div>
+    </div>
+
+    <!-- Acquisition -->
+    <div class="sb-section">
+      <div class="sb-section-label">Acquisition</div>
+      <div class="sb-group open">
+        <div class="sb-item" data-page="acq-source" onclick="navTo(this)">
+          <svg class="sb-item-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 2v6m0 0l4-3m-4 3L5 5"/><rect x="2" y="10" width="14" height="6" rx="2"/></svg>
+          Source Breakdown
+        </div>
+        <div class="sb-item" data-page="acq-attribution" onclick="navTo(this)">
+          <svg class="sb-item-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 9h3l2-4 3 8 2-4h4"/></svg>
+          Attribution
+        </div>
+        <div class="sb-item" data-page="acq-funnel" onclick="navTo(this)">
+          <svg class="sb-item-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h14l-5 6v5l-4 2v-7z"/></svg>
+          Funnel
+        </div>
+      </div>
+    </div>
+
+    <!-- Partners -->
+    <div class="sb-section">
+      <div class="sb-section-label">Partners</div>
+      <div class="sb-group open">
+        <div class="sb-item" data-page="partner-list" onclick="navTo(this)">
+          <svg class="sb-item-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="14" height="12" rx="2"/><path d="M2 7h14"/></svg>
+          Partner List
+        </div>
+        <div class="sb-item" data-page="partner-perf" onclick="navTo(this)">
+          <svg class="sb-item-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 14l4-4 3 2 7-8"/><circle cx="16" cy="4" r="1.5"/></svg>
+          Performance
+        </div>
+        <div class="sb-item" data-page="campaigns" onclick="navTo(this)">
+          <svg class="sb-item-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="14" height="14" rx="2"/><path d="M6 7h6m-6 4h4"/></svg>
+          Campaigns
+        </div>
+      </div>
+    </div>
+
+    <!-- Risk & Health -->
+    <div class="sb-section">
+      <div class="sb-section-label">Risk & Health</div>
+      <div class="sb-group open">
+        <div class="sb-item" data-page="risk-sybil" onclick="navTo(this)">
+          <svg class="sb-item-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 2l7 12H2z"/><path d="M9 7v3m0 2v1"/></svg>
+          Sybil Monitor
+        </div>
+        <div class="sb-item" data-page="risk-health" onclick="navTo(this)">
+          <svg class="sb-item-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 9h3l2-4 2 8 2-6 2 4h3"/></svg>
+          Growth Health
+        </div>
+      </div>
+    </div>
+
+    <!-- Gravii Insight Chat -->
+    <div class="sb-section" style="margin-top:12px">
+      <div class="sb-chat-trigger" onclick="toggleChat()">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="sb-chat-icon">✦</div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--hq)">Gravii Insight</div>
+            <div style="font-size:10px;color:var(--textD)">Ask anything about your data</div>
+          </div>
+        </div>
+        <div class="sb-chat-dot" id="chatDot"></div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="sb-footer">
+    <div class="sb-avatar">G</div>
+    <div class="sb-user-info">
+      <div class="sb-user-name">Gravii Team</div>
+      <div class="sb-user-role">Internal · Full Access</div>
+    </div>
+  </div>
+</aside>
+
+<!-- CHAT PANEL -->
+<div class="chat-overlay" id="chatOverlay" onclick="toggleChat()"></div>
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-header">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:18px;color:var(--hq)">✦</span>
+      <div>
+        <div style="font-size:14px;font-weight:700;color:var(--text)">Gravii Insight</div>
+        <div style="font-size:12px;color:var(--textM)">AI-powered analysis assistant</div>
+      </div>
+    </div>
+    <button class="chat-close" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-messages" id="chatMessages"></div>
+  <div class="chat-input-wrap">
+    <input type="text" class="chat-input" id="chatInput" placeholder="Ask about your data..." onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="chat-send" onclick="sendChat()">→</button>
+  </div>
+  <div class="chat-suggestions" id="chatSuggestions"></div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+  <div class="main-header">
+    <div class="main-title" id="pageTitle">Overview</div>
+    <div class="main-meta">
+      <div class="period-sel">
+        <button class="period-btn" data-period="24h">24h</button>
+        <button class="period-btn active" data-period="7d">7d</button>
+        <button class="period-btn" data-period="30d">30d</button>
+        <button class="period-btn" data-period="90d">90d</button>
+        <button class="period-btn" data-period="all">All</button>
+      </div>
+      <div class="main-status">Live</div>
+      <div class="main-time" id="liveTime"></div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ========== OVERVIEW ========== -->
+    <div class="page active" id="page-overview">
+      <!-- Top stats -->
+      <div class="stat-grid fade-in fade-d1">
+        <div class="stat-card" data-accent="hq">
+          <div class="stat-label">Total Gravii IDs</div>
+          <div class="stat-value">487,231</div>
+          <div class="stat-sub"><span class="stat-delta up">▲ 3.2%</span> vs prev period</div>
+        </div>
+        <div class="stat-card" data-accent="green">
+          <div class="stat-label">New IDs (7d)</div>
+          <div class="stat-value">12,408</div>
+          <div class="stat-sub"><span class="stat-delta up">▲ 8.1%</span> vs prev 7d</div>
+        </div>
+        <div class="stat-card" data-accent="teal">
+          <div class="stat-label">Active Partners</div>
+          <div class="stat-value">34</div>
+          <div class="stat-sub"><span class="stat-delta up">▲ 2</span> new this month</div>
+        </div>
+        <div class="stat-card" data-accent="blue">
+          <div class="stat-label">Total Pool Value</div>
+          <div class="stat-value">$2.14B</div>
+          <div class="stat-sub"><span class="stat-delta up">▲ 5.6%</span> deployed + idle</div>
+        </div>
+        <div class="stat-card" data-accent="amber">
+          <div class="stat-label">Active Campaigns</div>
+          <div class="stat-value">18</div>
+          <div class="stat-sub"><span class="stat-delta neutral">—</span> across 12 partners</div>
+        </div>
+        <div class="stat-card" data-accent="red">
+          <div class="stat-label">Sybil Rate</div>
+          <div class="stat-value">14.2%</div>
+          <div class="stat-sub"><span class="stat-delta down">▼ 1.1%</span> improving</div>
+        </div>
+      </div>
+
+      <!-- Growth + Tier Distribution -->
+      <div class="g23 fade-in fade-d2">
+        <div class="card">
+          <div class="sec-head">
+            <div class="sec-title">User Growth</div>
+            <span class="sec-action">View Cohort →</span>
+          </div>
+          <div class="mini-chart" id="growthChart"></div>
+          <div style="display:flex;justify-content:space-between;margin-top:12px;font-size:12px;color:var(--textD)">
+            <span>30d ago</span><span>Today</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="sec-head">
+            <div class="sec-title">Tier Distribution</div>
+          </div>
+          <div class="donut-wrap">
+            <div class="donut">
+              <svg width="140" height="140" viewBox="0 0 140 140">
+                <circle cx="70" cy="70" r="56" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="16"/>
+                <circle cx="70" cy="70" r="56" fill="none" stroke="var(--cream)" stroke-width="16" stroke-dasharray="88 264" stroke-dashoffset="0" stroke-linecap="round"/>
+                <circle cx="70" cy="70" r="56" fill="none" stroke="var(--amber)" stroke-width="16" stroke-dasharray="74 278" stroke-dashoffset="-88" stroke-linecap="round"/>
+                <circle cx="70" cy="70" r="56" fill="none" stroke="var(--lav)" stroke-width="16" stroke-dasharray="53 299" stroke-dashoffset="-162" stroke-linecap="round"/>
+                <circle cx="70" cy="70" r="56" fill="none" stroke="var(--textD)" stroke-width="16" stroke-dasharray="137 215" stroke-dashoffset="-215" stroke-linecap="round"/>
+              </svg>
+              <div class="donut-center">
+                <div class="donut-center-val">487K</div>
+                <div class="donut-center-label">Total IDs</div>
+              </div>
+            </div>
+            <div class="donut-legend">
+              <div class="donut-legend-item"><div class="donut-legend-dot" style="background:var(--textD)"></div>Classic — 39% (189.9K)</div>
+              <div class="donut-legend-item"><div class="donut-legend-dot" style="background:var(--cream)"></div>Gold — 25% (121.8K)</div>
+              <div class="donut-legend-item"><div class="donut-legend-dot" style="background:var(--amber)"></div>Platinum — 21% (102.3K)</div>
+              <div class="donut-legend-item"><div class="donut-legend-dot" style="background:var(--lav)"></div>Black — 15% (73.1K)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Source Mix + Top Partners -->
+      <div class="g2 fade-in fade-d3" style="margin-top:20px">
+        <div class="card">
+          <div class="sec-head">
+            <div class="sec-title">Acquisition Source Mix (7d)</div>
+            <span class="sec-action">Details →</span>
+          </div>
+          <div id="sourceBars">
+            <div class="hbar-wrap">
+              <div class="hbar-header"><span class="hbar-label">Partner Drive</span><span class="hbar-val" style="color:var(--teal)">42%</span></div>
+              <div class="hbar-track"><div class="hbar-fill" style="width:42%;background:var(--teal)"></div></div>
+            </div>
+            <div class="hbar-wrap">
+              <div class="hbar-header"><span class="hbar-label">Campaign (Reach)</span><span class="hbar-val" style="color:var(--blue)">24%</span></div>
+              <div class="hbar-track"><div class="hbar-fill" style="width:24%;background:var(--blue)"></div></div>
+            </div>
+            <div class="hbar-wrap">
+              <div class="hbar-header"><span class="hbar-label">Organic</span><span class="hbar-val" style="color:var(--purple)">18%</span></div>
+              <div class="hbar-track"><div class="hbar-fill" style="width:18%;background:var(--purple)"></div></div>
+            </div>
+            <div class="hbar-wrap">
+              <div class="hbar-header"><span class="hbar-label">Community Bot</span><span class="hbar-val" style="color:var(--amber)">10%</span></div>
+              <div class="hbar-track"><div class="hbar-fill" style="width:10%;background:var(--amber)"></div></div>
+            </div>
+            <div class="hbar-wrap">
+              <div class="hbar-header"><span class="hbar-label">Referral</span><span class="hbar-val" style="color:var(--hq)">4%</span></div>
+              <div class="hbar-track"><div class="hbar-fill" style="width:4%;background:var(--hq)"></div></div>
+            </div>
+            <div class="hbar-wrap">
+              <div class="hbar-header"><span class="hbar-label">Other / Unknown</span><span class="hbar-val" style="color:var(--textD)">2%</span></div>
+              <div class="hbar-track"><div class="hbar-fill" style="width:2%;background:var(--textD)"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="sec-head">
+            <div class="sec-title">Top Partners by Drive (7d)</div>
+            <span class="sec-action">All Partners →</span>
+          </div>
+          <table class="tbl">
+            <thead><tr><th>Partner</th><th>Users</th><th>Gold+</th><th>Sybil</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:600;color:var(--text)">Nexus Finance</td><td class="tbl-mono">2,840</td><td><span class="tag tag-green">68%</span></td><td><span class="tag tag-green">4%</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">ChainVault</td><td class="tbl-mono">2,210</td><td><span class="tag tag-green">52%</span></td><td><span class="tag tag-amber">11%</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">DeFi Pulse</td><td class="tbl-mono">1,680</td><td><span class="tag tag-teal">45%</span></td><td><span class="tag tag-green">7%</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">MetaBridge</td><td class="tbl-mono">1,340</td><td><span class="tag tag-teal">41%</span></td><td><span class="tag tag-amber">15%</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">Orbital Labs</td><td class="tbl-mono">980</td><td><span class="tag tag-amber">33%</span></td><td><span class="tag tag-red">22%</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Active Campaigns -->
+      <div class="fade-in fade-d4" style="margin-top:20px">
+        <div class="card">
+          <div class="sec-head">
+            <div class="sec-title">Active Campaigns</div>
+            <span class="sec-action">All Campaigns →</span>
+          </div>
+          <table class="tbl">
+            <thead><tr><th>Campaign</th><th>Partner</th><th>Type</th><th>Engaged</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:600;color:var(--text)">ETH Stakers Welcome</td><td>Nexus Finance</td><td><span class="tag tag-teal">Reach</span></td><td class="tbl-mono">4,280</td><td><span class="tag tag-green">Live</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">Diamond Hands Bonus</td><td>ChainVault</td><td><span class="tag tag-teal">Reach</span></td><td class="tbl-mono">2,190</td><td><span class="tag tag-green">Live</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">New User Onboarding</td><td>MetaBridge</td><td><span class="tag tag-teal">Reach</span></td><td class="tbl-mono">1,820</td><td><span class="tag tag-green">Live</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">Yield Explorer Week</td><td>DeFi Pulse</td><td><span class="tag tag-teal">Reach</span></td><td class="tbl-mono">960</td><td><span class="tag tag-amber">Ending</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Revenue Summary -->
+      <div class="g2 fade-in fade-d5" style="margin-top:20px">
+        <div class="card">
+          <div class="sec-head">
+            <div class="sec-title">Revenue (30d)</div>
+            <span class="sec-action" onclick="navToPage('partner-perf')">View Performance →</span>
+          </div>
+          <div style="display:flex;gap:20px;align-items:flex-end;margin-bottom:16px">
+            <div>
+              <div style="font-size:12px;color:var(--textM);margin-bottom:4px">Total MRR</div>
+              <div style="font-family:'Space Mono',monospace;font-size:32px;font-weight:700;color:var(--green)">$33,800</div>
+            </div>
+            <div style="margin-bottom:4px"><span class="stat-delta up" style="font-size:14px">▲ 18.2%</span><span style="font-size:12px;color:var(--textM);margin-left:6px">MoM</span></div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+            <div style="padding:12px;background:rgba(88,166,255,0.04);border:1px solid rgba(88,166,255,0.1);border-radius:10px">
+              <div style="font-size:12px;color:var(--textM);margin-bottom:4px">Gate (API)</div>
+              <div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--blue)">$22,400</div>
+              <div style="font-size:12px;color:var(--textM);margin-top:2px">66% of MRR</div>
+            </div>
+            <div style="padding:12px;background:rgba(86,212,192,0.04);border:1px solid rgba(86,212,192,0.1);border-radius:10px">
+              <div style="font-size:12px;color:var(--textM);margin-bottom:4px">Reach (Campaign)</div>
+              <div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--teal)">$8,200</div>
+              <div style="font-size:12px;color:var(--textM);margin-top:2px">24% of MRR</div>
+            </div>
+            <div style="padding:12px;background:rgba(188,140,255,0.04);border:1px solid rgba(188,140,255,0.1);border-radius:10px">
+              <div style="font-size:12px;color:var(--textM);margin-bottom:4px">Lens (Report)</div>
+              <div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--purple)">$3,200</div>
+              <div style="font-size:12px;color:var(--textM);margin-top:2px">10% of MRR</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="sec-head">
+            <div class="sec-title">Revenue by Top Partners</div>
+          </div>
+          <div>
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">ZenProtocol</span><span class="hbar-val" style="color:var(--green)">$8,200</span></div><div class="hbar-track"><div class="hbar-fill" style="width:100%;background:var(--green)"></div></div></div>
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Nexus Finance</span><span class="hbar-val" style="color:var(--green)">$6,800</span></div><div class="hbar-track"><div class="hbar-fill" style="width:83%;background:var(--green)"></div></div></div>
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">ChainVault</span><span class="hbar-val" style="color:var(--teal)">$3,400</span></div><div class="hbar-track"><div class="hbar-fill" style="width:41%;background:var(--teal)"></div></div></div>
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">DeFi Pulse</span><span class="hbar-val" style="color:var(--teal)">$2,800</span></div><div class="hbar-track"><div class="hbar-fill" style="width:34%;background:var(--teal)"></div></div></div>
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Others (30)</span><span class="hbar-val" style="color:var(--textM)">$12,600</span></div><div class="hbar-track"><div class="hbar-fill" style="width:60%;background:var(--textD)"></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== PLACEHOLDER PAGES ========== -->
+    <div class="page" id="page-pool-composition">
+      <!-- Filters -->
+      <div class="filter-bar fade-in">
+        <div class="filter-bar-label">Filter</div>
+        <div class="filter-group">
+          <span class="fbtn f-active" onclick="togF(this)">All Chains</span>
+          <span class="fbtn" onclick="togF(this)">Ethereum</span>
+          <span class="fbtn" onclick="togF(this)">Arbitrum</span>
+          <span class="fbtn" onclick="togF(this)">Base</span>
+          <span class="fbtn" onclick="togF(this)">Polygon</span>
+          <span class="fbtn" onclick="togF(this)">Optimism</span>
+        </div>
+        <div class="filter-sep"></div>
+        <div class="filter-group">
+          <span class="fbtn f-active" onclick="togF(this)">All Sources</span>
+          <span class="fbtn" onclick="togF(this)">Partner Drive</span>
+          <span class="fbtn" onclick="togF(this)">Campaign</span>
+          <span class="fbtn" onclick="togF(this)">Organic</span>
+          <span class="fbtn" onclick="togF(this)">Bot</span>
+          <span class="fbtn" onclick="togF(this)">Referral</span>
+        </div>
+        <div class="filter-sep"></div>
+        <div class="toggle-wrap">
+          <div class="toggle t-on" onclick="this.classList.toggle('t-on')"></div>
+          <span>Include Sybil</span>
+        </div>
+        <button class="fbtn-reset" onclick="resetF(this)">Reset</button>
+      </div>
+
+      <!-- Tier Distribution -->
+      <div class="stat-grid fade-in fade-d1">
+        <div class="stat-card" data-accent="hq"><div class="stat-label">Classic</div><div class="stat-value">189,921</div><div class="stat-sub">39.0% of pool</div></div>
+        <div class="stat-card" data-accent="amber"><div class="stat-label">Gold</div><div class="stat-value">121,808</div><div class="stat-sub">25.0% of pool</div></div>
+        <div class="stat-card" data-accent="purple"><div class="stat-label">Platinum</div><div class="stat-value">102,319</div><div class="stat-sub">21.0% of pool</div></div>
+        <div class="stat-card" data-accent="blue"><div class="stat-label">Black</div><div class="stat-value">73,183</div><div class="stat-sub">15.0% of pool</div></div>
+      </div>
+
+      <div class="g2 fade-in fade-d2">
+        <!-- Persona Breakdown -->
+        <div class="card">
+          <div class="sec-head"><div class="sec-title">Top Personas (All Tiers)</div></div>
+          <div id="personaBars">
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Diamond Hands</span><span class="hbar-val" style="color:var(--lav)">14.2%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:71%;background:var(--lav)"></div></div></div>
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Steady Earner</span><span class="hbar-val" style="color:var(--teal)">12.8%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:64%;background:var(--teal)"></div></div></div>
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Chain Believer</span><span class="hbar-val" style="color:var(--blue)">10.1%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:50.5%;background:var(--blue)"></div></div></div>
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Fast Mover</span><span class="hbar-val" style="color:var(--amber)">8.6%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:43%;background:var(--amber)"></div></div></div>
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Yield Explorer</span><span class="hbar-val" style="color:var(--purple)">7.9%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:39.5%;background:var(--purple)"></div></div></div>
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Pool Builder</span><span class="hbar-val" style="color:var(--hq)">6.4%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:32%;background:var(--hq)"></div></div></div>
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Rising Star</span><span class="hbar-val" style="color:var(--green)">5.8%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:29%;background:var(--green)"></div></div></div>
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Fresh Start</span><span class="hbar-val" style="color:var(--textM)">5.2%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:26%;background:var(--textD)"></div></div></div>
+          </div>
+          <div style="margin-top:12px;font-size:12px;color:var(--textD);font-style:italic">Showing top 8 of 20 personas · Remaining 12 personas account for 29.0%</div>
+        </div>
+
+        <!-- Chain Distribution -->
+        <div class="card">
+          <div class="sec-head"><div class="sec-title">Primary Chain Distribution</div></div>
+          <div>
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Ethereum</span><span class="hbar-val" style="color:var(--blue)">38.4%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:76.8%;background:var(--blue)"></div></div></div>
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Arbitrum</span><span class="hbar-val" style="color:var(--teal)">18.2%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:36.4%;background:var(--teal)"></div></div></div>
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Base</span><span class="hbar-val" style="color:var(--purple)">14.7%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:29.4%;background:var(--purple)"></div></div></div>
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Polygon</span><span class="hbar-val" style="color:var(--lav)">11.3%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:22.6%;background:var(--lav)"></div></div></div>
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Optimism</span><span class="hbar-val" style="color:var(--red)">8.1%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:16.2%;background:var(--red)"></div></div></div>
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Others (12 chains)</span><span class="hbar-val" style="color:var(--textD)">9.3%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:18.6%;background:var(--textD)"></div></div></div>
+          </div>
+          <div style="margin-top:20px;padding:14px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px">
+            <div style="font-size:12px;color:var(--textM);margin-bottom:8px;font-weight:600">Multi-Chain Users</div>
+            <div style="display:flex;gap:16px">
+              <div><span style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--text)">62%</span><div style="font-size:12px;color:var(--textM)">2+ chains</div></div>
+              <div><span style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--text)">28%</span><div style="font-size:12px;color:var(--textM)">4+ chains</div></div>
+              <div><span style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--text)">3.4</span><div style="font-size:12px;color:var(--textM)">Avg chains/user</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Value Distribution -->
+      <div class="card fade-in fade-d3" style="margin-top:20px">
+        <div class="sec-head"><div class="sec-title">Value Distribution</div></div>
+        <div class="stat-grid" style="margin-bottom:0">
+          <div style="padding:16px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid var(--border)">
+            <div style="font-size:12px;color:var(--textM);margin-bottom:4px">Total Deployed Value</div>
+            <div style="font-family:'Space Mono',monospace;font-size:24px;font-weight:700;color:var(--teal)">$1.42B</div>
+            <div style="font-size:12px;color:var(--textM);margin-top:2px">Stables + Tokens in active use</div>
+          </div>
+          <div style="padding:16px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid var(--border)">
+            <div style="font-size:12px;color:var(--textM);margin-bottom:4px">Total Available (Idle)</div>
+            <div style="font-family:'Space Mono',monospace;font-size:24px;font-weight:700;color:var(--amber)">$720M</div>
+            <div style="font-size:12px;color:var(--textM);margin-top:2px">Partner opportunity pool</div>
+          </div>
+          <div style="padding:16px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid var(--border)">
+            <div style="font-size:12px;color:var(--textM);margin-bottom:4px">Avg Value / User</div>
+            <div style="font-family:'Space Mono',monospace;font-size:24px;font-weight:700;color:var(--hq)">$4,392</div>
+            <div style="font-size:12px;color:var(--textM);margin-top:2px">Deployed + Idle combined</div>
+          </div>
+          <div style="padding:16px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid var(--border)">
+            <div style="font-size:12px;color:var(--textM);margin-bottom:4px">Avg Value / Gold+ User</div>
+            <div style="font-family:'Space Mono',monospace;font-size:24px;font-weight:700;color:var(--lav)">$11,240</div>
+            <div style="font-size:12px;color:var(--textM);margin-top:2px">2.56× pool average</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sybil breakdown in composition context -->
+      <div class="card fade-in fade-d4" style="margin-top:20px">
+        <div class="sec-head"><div class="sec-title">Sybil Status in Pool</div></div>
+        <div style="display:flex;gap:20px;align-items:center">
+          <div style="flex:1">
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Clean</span><span class="hbar-val" style="color:var(--green)">74.8% (364,449)</span></div><div class="hbar-track"><div class="hbar-fill" style="width:74.8%;background:var(--green)"></div></div></div>
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Suspect</span><span class="hbar-val" style="color:var(--amber)">11.0% (53,595)</span></div><div class="hbar-track"><div class="hbar-fill" style="width:11%;background:var(--amber)"></div></div></div>
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Flagged (Sybil)</span><span class="hbar-val" style="color:var(--red)">14.2% (69,187)</span></div><div class="hbar-track"><div class="hbar-fill" style="width:14.2%;background:var(--red)"></div></div></div>
+          </div>
+          <div style="padding:16px 24px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;text-align:center;flex-shrink:0">
+            <div style="font-size:12px;color:var(--textM);margin-bottom:4px">Total Including Sybil</div>
+            <div style="font-family:'Space Mono',monospace;font-size:28px;font-weight:700;color:var(--text)">487,231</div>
+            <div style="font-size:12px;color:var(--red);margin-top:4px">69,187 flagged (separately noted)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page" id="page-pool-cohort">
+      <!-- Filters -->
+      <div class="filter-bar fade-in">
+        <div class="filter-bar-label">Filter</div>
+        <div class="filter-group">
+          <span class="fbtn f-active" onclick="togF(this)">All Sources</span>
+          <span class="fbtn" onclick="togF(this)">Partner Drive</span>
+          <span class="fbtn" onclick="togF(this)">Campaign</span>
+          <span class="fbtn" onclick="togF(this)">Organic</span>
+          <span class="fbtn" onclick="togF(this)">Bot</span>
+        </div>
+        <div class="filter-sep"></div>
+        <div class="filter-group">
+          <span class="fbtn f-active" onclick="togF(this)">All Tiers</span>
+          <span class="fbtn" onclick="togF(this)">Gold+</span>
+          <span class="fbtn" onclick="togF(this)">Platinum+</span>
+          <span class="fbtn" onclick="togF(this)">Black</span>
+        </div>
+        <button class="fbtn-reset" onclick="resetF(this)">Reset</button>
+      </div>
+
+      <!-- Cohort summary stats -->
+      <div class="stat-grid fade-in fade-d1">
+        <div class="stat-card" data-accent="green"><div class="stat-label">30d Retention (All)</div><div class="stat-value">64.2%</div><div class="stat-sub"><span class="stat-delta up">▲ 2.1%</span> vs prev cohort</div></div>
+        <div class="stat-card" data-accent="teal"><div class="stat-label">30d Retention (Gold+)</div><div class="stat-value">82.7%</div><div class="stat-sub"><span class="stat-delta up">▲ 1.4%</span> vs prev cohort</div></div>
+        <div class="stat-card" data-accent="amber"><div class="stat-label">Avg Days Active (30d)</div><div class="stat-value">12.4</div><div class="stat-sub"><span class="stat-delta neutral">—</span> stable</div></div>
+      </div>
+
+      <!-- Cohort retention table -->
+      <div class="card fade-in fade-d2">
+        <div class="sec-head"><div class="sec-title">Monthly Cohort Retention</div></div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr><th>Cohort</th><th>Size</th><th>Week 1</th><th>Week 2</th><th>Week 3</th><th>Week 4</th><th>Month 2</th><th>Month 3</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:600;color:var(--text)">Mar 2026</td><td class="tbl-mono">48,200</td>
+                <td><span class="tag tag-green">89%</span></td><td><span class="tag tag-green">76%</span></td><td><span class="tag tag-green">68%</span></td><td><span class="tag tag-green">64%</span></td><td style="color:var(--textD)">—</td><td style="color:var(--textD)">—</td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">Feb 2026</td><td class="tbl-mono">44,800</td>
+                <td><span class="tag tag-green">87%</span></td><td><span class="tag tag-green">73%</span></td><td><span class="tag tag-green">65%</span></td><td><span class="tag tag-green">61%</span></td><td><span class="tag tag-teal">52%</span></td><td style="color:var(--textD)">—</td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">Jan 2026</td><td class="tbl-mono">41,300</td>
+                <td><span class="tag tag-green">85%</span></td><td><span class="tag tag-green">71%</span></td><td><span class="tag tag-teal">62%</span></td><td><span class="tag tag-teal">58%</span></td><td><span class="tag tag-teal">48%</span></td><td><span class="tag tag-amber">41%</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">Dec 2025</td><td class="tbl-mono">38,600</td>
+                <td><span class="tag tag-green">83%</span></td><td><span class="tag tag-green">68%</span></td><td><span class="tag tag-teal">59%</span></td><td><span class="tag tag-teal">54%</span></td><td><span class="tag tag-amber">44%</span></td><td><span class="tag tag-amber">37%</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">Nov 2025</td><td class="tbl-mono">35,100</td>
+                <td><span class="tag tag-green">81%</span></td><td><span class="tag tag-teal">66%</span></td><td><span class="tag tag-teal">56%</span></td><td><span class="tag tag-teal">51%</span></td><td><span class="tag tag-amber">42%</span></td><td><span class="tag tag-amber">35%</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">Oct 2025</td><td class="tbl-mono">32,400</td>
+                <td><span class="tag tag-green">80%</span></td><td><span class="tag tag-teal">64%</span></td><td><span class="tag tag-teal">54%</span></td><td><span class="tag tag-amber">49%</span></td><td><span class="tag tag-amber">39%</span></td><td><span class="tag tag-red">32%</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top:12px;font-size:12px;color:var(--textD);font-style:italic">Trend: Retention improving month-over-month — newest cohorts show strongest stickiness</div>
+      </div>
+
+      <!-- Activity by Tier -->
+      <div class="fade-in fade-d3" style="margin-top:20px">
+        <div class="card">
+          <div class="sec-head"><div class="sec-title">Activity by Tier (30d)</div></div>
+          <table class="tbl">
+            <thead><tr><th>Tier</th><th>Active Rate</th><th>Avg Tx/User</th><th>Avg Sessions</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:600;color:var(--lav)">Black</td><td class="tbl-mono">91.2%</td><td class="tbl-mono">48.3</td><td class="tbl-mono">22.1</td></tr>
+              <tr><td style="font-weight:600;color:var(--amber)">Platinum</td><td class="tbl-mono">84.6%</td><td class="tbl-mono">32.7</td><td class="tbl-mono">16.8</td></tr>
+              <tr><td style="font-weight:600;color:var(--cream)">Gold</td><td class="tbl-mono">72.1%</td><td class="tbl-mono">18.4</td><td class="tbl-mono">10.2</td></tr>
+              <tr><td style="font-weight:600;color:var(--textM)">Classic</td><td class="tbl-mono">41.3%</td><td class="tbl-mono">6.2</td><td class="tbl-mono">3.8</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="page" id="page-pool-explorer">
+      <!-- Filters -->
+      <div class="filter-bar fade-in">
+        <div class="filter-bar-label">Filter</div>
+        <div class="filter-group">
+          <span class="fbtn f-active" onclick="togF(this)">All Tiers</span>
+          <span class="fbtn" onclick="togF(this)">Classic</span>
+          <span class="fbtn" onclick="togF(this)">Gold</span>
+          <span class="fbtn" onclick="togF(this)">Platinum</span>
+          <span class="fbtn" onclick="togF(this)">Black</span>
+        </div>
+        <div class="filter-sep"></div>
+        <div class="filter-group">
+          <span class="fbtn f-active" onclick="togF(this)">All Personas</span>
+          <span class="fbtn" onclick="togF(this)">Diamond Hands</span>
+          <span class="fbtn" onclick="togF(this)">Yield Explorer</span>
+          <span class="fbtn" onclick="togF(this)">Fast Mover</span>
+        </div>
+        <div class="filter-sep"></div>
+        <div class="filter-group">
+          <span class="fbtn f-active" onclick="togF(this)">All Status</span>
+          <span class="fbtn" onclick="togF(this)">Clean</span>
+          <span class="fbtn" onclick="togF(this)">Suspect</span>
+          <span class="fbtn" onclick="togF(this)">Sybil</span>
+        </div>
+        <div class="filter-sep"></div>
+        <div class="filter-group">
+          <span class="fbtn f-active" onclick="togF(this)">All Chains</span>
+          <span class="fbtn" onclick="togF(this)">ETH</span>
+          <span class="fbtn" onclick="togF(this)">ARB</span>
+          <span class="fbtn" onclick="togF(this)">BASE</span>
+        </div>
+        <div class="filter-sep"></div>
+        <div class="filter-group">
+          <span class="fbtn f-active" onclick="togF(this)">All Sources</span>
+          <span class="fbtn" onclick="togF(this)">Partner</span>
+          <span class="fbtn" onclick="togF(this)">Campaign</span>
+          <span class="fbtn" onclick="togF(this)">Organic</span>
+        </div>
+        <button class="fbtn-reset" onclick="resetF(this)">Reset</button>
+      </div>
+
+      <!-- Search bar -->
+      <div class="card fade-in fade-d1" style="padding:16px 20px;margin-bottom:20px">
+        <div style="display:flex;gap:12px;align-items:center">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--textM)" stroke-width="1.5"><circle cx="8" cy="8" r="5"/><path d="M12 12l4 4"/></svg>
+          <input type="text" placeholder="Search by wallet address, Gravii ID, or persona..." style="flex:1;background:transparent;border:none;outline:none;font-size:14px;color:var(--text);font-family:'Outfit',sans-serif" id="userSearchInput">
+          <button onclick="searchUser()" style="padding:8px 20px;background:rgba(232,168,124,0.12);border:1px solid rgba(232,168,124,0.25);border-radius:8px;color:var(--hq);font-size:13px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif">Search</button>
+        </div>
+      </div>
+
+      <!-- Sample user result -->
+      <div class="card fade-in fade-d2" id="userResult">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+          <div>
+            <div style="font-family:'Space Mono',monospace;font-size:14px;color:var(--textM);margin-bottom:6px">0x742d35Cc6634C0532925a3b844Bc9e7595f3f8a</div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span style="font-family:'Sora',sans-serif;font-size:20px;font-weight:700;color:var(--text)">Gravii ID #28,401</span>
+              <span class="tag tag-purple">Platinum</span>
+              <span class="tag tag-green">Clean</span>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <span class="tag tag-hq">Diamond Hands</span>
+            <span class="tag tag-blue">Chain Believer</span>
+          </div>
+        </div>
+
+        <!-- Raw Data Grid -->
+        <div class="stat-grid" style="margin-bottom:20px">
+          <div style="padding:14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid var(--border)">
+            <div style="font-size:12px;color:var(--textM);margin-bottom:4px">Total Value</div>
+            <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--text)">$84,230</div>
+          </div>
+          <div style="padding:14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid var(--border)">
+            <div style="font-size:12px;color:var(--textM);margin-bottom:4px">Deployed</div>
+            <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--teal)">$61,400</div>
+          </div>
+          <div style="padding:14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid var(--border)">
+            <div style="font-size:12px;color:var(--textM);margin-bottom:4px">Available (Idle)</div>
+            <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--amber)">$22,830</div>
+          </div>
+          <div style="padding:14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid var(--border)">
+            <div style="font-size:12px;color:var(--textM);margin-bottom:4px">Active Chains</div>
+            <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--blue)">5</div>
+          </div>
+          <div style="padding:14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid var(--border)">
+            <div style="font-size:12px;color:var(--textM);margin-bottom:4px">Activity Grade</div>
+            <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--green)">A</div>
+          </div>
+          <div style="padding:14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid var(--border)">
+            <div style="font-size:12px;color:var(--textM);margin-bottom:4px">Wallet Age</div>
+            <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--textS)">847d</div>
+          </div>
+        </div>
+
+        <!-- Touch History (Multi-Touch Attribution) -->
+        <div style="margin-top:4px">
+          <div style="font-size:14px;font-weight:700;color:var(--textS);margin-bottom:12px">Touch History (Multi-Touch)</div>
+          <div style="position:relative;padding-left:24px;border-left:2px solid var(--border)">
+            <div style="margin-bottom:16px;position:relative">
+              <div style="position:absolute;left:-29px;top:2px;width:12px;height:12px;border-radius:50%;background:var(--hq);border:2px solid var(--bg)"></div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div><span style="font-size:13px;font-weight:600;color:var(--text)">Organic — Direct Visit</span> <span class="tag tag-hq" style="font-size:10px">1st Touch · Primary</span></div>
+                <span style="font-size:12px;color:var(--textD);font-family:'Space Mono',monospace">2025-11-14</span>
+              </div>
+              <div style="font-size:12px;color:var(--textM);margin-top:2px">Created Gravii ID via direct site visit</div>
+            </div>
+            <div style="margin-bottom:16px;position:relative">
+              <div style="position:absolute;left:-29px;top:2px;width:12px;height:12px;border-radius:50%;background:var(--teal);border:2px solid var(--bg)"></div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div><span style="font-size:13px;font-weight:600;color:var(--text)">Nexus Finance — Campaign</span> <span class="tag tag-teal" style="font-size:10px">2nd Touch</span></div>
+                <span style="font-size:12px;color:var(--textD);font-family:'Space Mono',monospace">2025-12-03</span>
+              </div>
+              <div style="font-size:12px;color:var(--textM);margin-top:2px">Opted into "ETH Stakers Welcome" campaign</div>
+            </div>
+            <div style="margin-bottom:16px;position:relative">
+              <div style="position:absolute;left:-29px;top:2px;width:12px;height:12px;border-radius:50%;background:var(--blue);border:2px solid var(--bg)"></div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div><span style="font-size:13px;font-weight:600;color:var(--text)">ChainVault — Partner Drive</span> <span class="tag tag-blue" style="font-size:10px">3rd Touch</span></div>
+                <span style="font-size:12px;color:var(--textD);font-family:'Space Mono',monospace">2026-01-18</span>
+              </div>
+              <div style="font-size:12px;color:var(--textM);margin-top:2px">Driven via X-RAY Users link, auto-tagged to ChainVault pool</div>
+            </div>
+            <div style="position:relative">
+              <div style="position:absolute;left:-29px;top:2px;width:12px;height:12px;border-radius:50%;background:var(--purple);border:2px solid var(--bg)"></div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div><span style="font-size:13px;font-weight:600;color:var(--text)">DeFi Pulse — Community Bot</span> <span class="tag tag-purple" style="font-size:10px">4th Touch</span></div>
+                <span style="font-size:12px;color:var(--textD);font-family:'Space Mono',monospace">2026-02-25</span>
+              </div>
+              <div style="font-size:12px;color:var(--textM);margin-top:2px">Connected wallet via Discord bot, auto-role assigned: Platinum</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page" id="page-acq-source">
+      <!-- Filters -->
+      <div class="filter-bar fade-in">
+        <div class="filter-bar-label">Filter</div>
+        <div class="filter-group">
+          <span class="fbtn f-active" onclick="togF(this)">All Tiers</span>
+          <span class="fbtn" onclick="togF(this)">Gold+ Only</span>
+          <span class="fbtn" onclick="togF(this)">Platinum+</span>
+          <span class="fbtn" onclick="togF(this)">Black</span>
+        </div>
+        <div class="filter-sep"></div>
+        <div class="filter-group">
+          <span class="fbtn f-active" onclick="togF(this)">All Chains</span>
+          <span class="fbtn" onclick="togF(this)">ETH</span>
+          <span class="fbtn" onclick="togF(this)">ARB</span>
+          <span class="fbtn" onclick="togF(this)">BASE</span>
+          <span class="fbtn" onclick="togF(this)">POLY</span>
+        </div>
+        <button class="fbtn-reset" onclick="resetF(this)">Reset</button>
+      </div>
+
+      <div class="stat-grid fade-in fade-d1">
+        <div class="stat-card" data-accent="teal"><div class="stat-label">Partner Drive</div><div class="stat-value">5,211</div><div class="stat-sub">42% of new IDs (7d) · <span class="stat-delta up">▲ 6%</span></div></div>
+        <div class="stat-card" data-accent="blue"><div class="stat-label">Campaign (Reach)</div><div class="stat-value">2,978</div><div class="stat-sub">24% · <span class="stat-delta up">▲ 12%</span></div></div>
+        <div class="stat-card" data-accent="purple"><div class="stat-label">Organic</div><div class="stat-value">2,233</div><div class="stat-sub">18% · <span class="stat-delta down">▼ 3%</span></div></div>
+        <div class="stat-card" data-accent="amber"><div class="stat-label">Community Bot</div><div class="stat-value">1,241</div><div class="stat-sub">10% · <span class="stat-delta up">▲ 22%</span></div></div>
+      </div>
+
+      <!-- Source quality comparison -->
+      <div class="card fade-in fade-d2">
+        <div class="sec-head"><div class="sec-title">Source Quality Comparison (7d New Users)</div></div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr><th>Source</th><th>New IDs</th><th>Gold+ %</th><th>Sybil %</th><th>30d Retention</th><th>Avg Value</th><th>Trend</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:600;color:var(--teal)">Partner Drive</td><td class="tbl-mono">5,211</td><td><span class="tag tag-green">58%</span></td><td><span class="tag tag-green">6%</span></td><td class="tbl-mono">71%</td><td class="tbl-mono">$6,840</td><td><span class="stat-delta up">▲</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--blue)">Campaign (Reach)</td><td class="tbl-mono">2,978</td><td><span class="tag tag-green">52%</span></td><td><span class="tag tag-green">8%</span></td><td class="tbl-mono">66%</td><td class="tbl-mono">$5,210</td><td><span class="stat-delta up">▲</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--purple)">Organic</td><td class="tbl-mono">2,233</td><td><span class="tag tag-teal">44%</span></td><td><span class="tag tag-green">5%</span></td><td class="tbl-mono">68%</td><td class="tbl-mono">$4,920</td><td><span class="stat-delta down">▼</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--amber)">Community Bot</td><td class="tbl-mono">1,241</td><td><span class="tag tag-amber">36%</span></td><td><span class="tag tag-amber">14%</span></td><td class="tbl-mono">54%</td><td class="tbl-mono">$3,180</td><td><span class="stat-delta up">▲</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--hq)">Referral</td><td class="tbl-mono">497</td><td><span class="tag tag-green">62%</span></td><td><span class="tag tag-green">3%</span></td><td class="tbl-mono">78%</td><td class="tbl-mono">$8,120</td><td><span class="stat-delta neutral">—</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--textM)">Other / Unknown</td><td class="tbl-mono">248</td><td><span class="tag tag-red">22%</span></td><td><span class="tag tag-red">28%</span></td><td class="tbl-mono">32%</td><td class="tbl-mono">$1,040</td><td><span class="stat-delta down">▼</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top:14px;padding:10px 14px;background:rgba(232,168,124,0.04);border:1px solid rgba(232,168,124,0.1);border-radius:10px;font-size:13px;color:var(--textS)">
+          Highest quality source: <span style="font-weight:700;color:var(--hq)">Referral</span> (62% Gold+, 3% sybil, 78% retention) — lowest volume but best per-user metrics
+        </div>
+      </div>
+
+      <!-- Source trend chart -->
+      <div class="card fade-in fade-d3" style="margin-top:20px">
+        <div class="sec-head"><div class="sec-title">Source Mix Trend (12 Weeks)</div></div>
+        <div style="display:flex;align-items:flex-end;gap:3px;height:160px;padding:16px 0" id="sourceTrendChart"></div>
+        <div style="display:flex;gap:16px;margin-top:12px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--textM)"><div style="width:10px;height:10px;border-radius:2px;background:var(--teal)"></div>Partner Drive</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--textM)"><div style="width:10px;height:10px;border-radius:2px;background:var(--blue)"></div>Campaign</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--textM)"><div style="width:10px;height:10px;border-radius:2px;background:var(--purple)"></div>Organic</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--textM)"><div style="width:10px;height:10px;border-radius:2px;background:var(--amber)"></div>Bot</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--textM)"><div style="width:10px;height:10px;border-radius:2px;background:var(--hq)"></div>Referral</div>
+        </div>
+      </div>
+    </div>
+    <div class="page" id="page-acq-attribution">
+      <div class="card fade-in fade-d1" style="margin-bottom:20px">
+        <div style="font-size:14px;font-weight:700;color:var(--hq);margin-bottom:12px">Attribution Model</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+          <div style="padding:16px;background:rgba(232,168,124,0.04);border:1px solid rgba(232,168,124,0.15);border-radius:12px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+              <span class="tag tag-hq">Primary</span>
+              <span style="font-size:15px;font-weight:700;color:var(--text)">First-Touch</span>
+            </div>
+            <div style="font-size:13px;color:var(--textS);line-height:1.7;margin-bottom:10px">Attributes each user to the <strong style="color:var(--text)">first channel that brought them into Gravii</strong>. Answers the question: "Who originally brought this user into the ecosystem?"</div>
+            <div style="font-size:12px;color:var(--textM);padding:10px;background:rgba(255,255,255,0.02);border-radius:8px;line-height:1.6">
+              <strong style="color:var(--textS)">Example:</strong> User A signs up organically → later joins Partner X campaign → then gets driven by Partner Y<br>→ <span style="color:var(--hq);font-weight:600">First-Touch = Organic</span> (earliest touchpoint)
+            </div>
+          </div>
+          <div style="padding:16px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+              <span class="tag" style="background:rgba(255,255,255,0.04);color:var(--textM)">Recorded</span>
+              <span style="font-size:15px;font-weight:700;color:var(--text)">Any-Touch (Multi-Touch)</span>
+            </div>
+            <div style="font-size:13px;color:var(--textS);line-height:1.7;margin-bottom:10px">Records <strong style="color:var(--text)">every touchpoint a user passes through</strong>. Tracks the full journey across multiple partners and channels. Per-user touch history is available in User Explorer.</div>
+            <div style="font-size:12px;color:var(--textM);padding:10px;background:rgba(255,255,255,0.02);border-radius:8px;line-height:1.6">
+              <strong style="color:var(--textS)">Example:</strong> Same User A's full history<br>→ Organic (1st) → Partner X Campaign (2nd) → Partner Y Drive (3rd)<br>→ <span style="color:var(--textS);font-weight:600">Any-Touch = all 3 recorded</span>
+            </div>
+          </div>
+        </div>
+        <div style="padding:12px 16px;background:rgba(232,168,124,0.04);border:1px solid rgba(232,168,124,0.1);border-radius:10px;display:flex;gap:12px;align-items:flex-start">
+          <span style="color:var(--hq);font-size:14px;flex-shrink:0;margin-top:1px">ⓘ</span>
+          <div style="font-size:13px;color:var(--textS);line-height:1.7">
+            <strong style="color:var(--text)">Why hybrid?</strong> — First-Touch is essential for measuring pool growth contribution (who brought users in). Any-Touch is needed to show partners that their campaigns also re-engage existing users. The tables below show First-Touch aggregation alongside Any-Touch comparison.
+          </div>
+        </div>
+      </div>
+
+      <!-- First-touch attribution -->
+      <div class="card fade-in fade-d2">
+        <div class="sec-head"><div class="sec-title">First-Touch Attribution — Who Brought Users In</div></div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr><th>Source (1st Touch)</th><th>Total Users</th><th>Gold+ Rate</th><th>Avg Value</th><th>Trend (30d)</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:600;color:var(--teal)">Partner Drive</td><td class="tbl-mono">198,420</td><td><span class="tag tag-green">54%</span></td><td class="tbl-mono">$5,840</td><td><span class="stat-delta up">▲ 3.2%</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--purple)">Organic</td><td class="tbl-mono">121,320</td><td><span class="tag tag-teal">46%</span></td><td class="tbl-mono">$4,620</td><td><span class="stat-delta down">▼ 1.1%</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--blue)">Campaign (Reach)</td><td class="tbl-mono">97,200</td><td><span class="tag tag-green">50%</span></td><td class="tbl-mono">$4,980</td><td><span class="stat-delta up">▲ 5.8%</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--amber)">Community Bot</td><td class="tbl-mono">43,800</td><td><span class="tag tag-amber">34%</span></td><td class="tbl-mono">$2,940</td><td><span class="stat-delta up">▲ 8.1%</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--hq)">Referral</td><td class="tbl-mono">18,240</td><td><span class="tag tag-green">64%</span></td><td class="tbl-mono">$8,420</td><td><span class="stat-delta up">▲ 1.2%</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--textM)">Unknown / Other</td><td class="tbl-mono">8,251</td><td><span class="tag tag-red">21%</span></td><td class="tbl-mono">$1,180</td><td><span class="stat-delta down">▼ 4.2%</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Any-touch vs first-touch comparison -->
+      <div class="card fade-in fade-d3" style="margin-top:20px">
+        <div class="sec-head"><div class="sec-title">First-Touch vs Any-Touch — Partner Attribution</div></div>
+        <div style="font-size:13px;color:var(--textM);margin-bottom:16px">Compare how many users a partner "brought in" (1st touch) vs "touched" (any touch).</div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr><th>Partner</th><th>As 1st Touch</th><th>As Any Touch</th><th>Ratio</th><th>Insight</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:600;color:var(--text)">Nexus Finance</td><td class="tbl-mono">42,100</td><td class="tbl-mono">68,400</td><td class="tbl-mono">1.62×</td><td style="font-size:12px;color:var(--textM)">Strong at both acquiring and engaging existing</td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">ChainVault</td><td class="tbl-mono">31,800</td><td class="tbl-mono">54,200</td><td class="tbl-mono">1.70×</td><td style="font-size:12px;color:var(--textM)">High re-engagement through campaigns</td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">DeFi Pulse</td><td class="tbl-mono">28,400</td><td class="tbl-mono">39,100</td><td class="tbl-mono">1.38×</td><td style="font-size:12px;color:var(--textM)">Mostly new user acquisition focused</td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">MetaBridge</td><td class="tbl-mono">22,600</td><td class="tbl-mono">48,800</td><td class="tbl-mono">2.16×</td><td style="font-size:12px;color:var(--amber)">Heavy re-claimer — touches existing users more</td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">Orbital Labs</td><td class="tbl-mono">15,200</td><td class="tbl-mono">21,300</td><td class="tbl-mono">1.40×</td><td style="font-size:12px;color:var(--textM)">Balanced acquisition/engagement</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top:14px;padding:10px 14px;background:rgba(227,179,65,0.04);border:1px solid rgba(227,179,65,0.1);border-radius:10px;font-size:12px;color:var(--textS)">
+          Ratio &gt; 2.0× may indicate partner is "claiming" existing users rather than bringing new ones. Worth monitoring for attribution fairness.
+        </div>
+      </div>
+    </div>
+    <div class="page" id="page-acq-funnel">
+      <div class="card fade-in fade-d1">
+        <div class="sec-head"><div class="sec-title">Acquisition Funnel (Last 30d)</div></div>
+        <div style="display:flex;flex-direction:column;gap:0">
+          <div style="padding:20px;background:rgba(232,168,124,0.06);border:1px solid rgba(232,168,124,0.15);border-radius:12px 12px 0 0;display:flex;justify-content:space-between;align-items:center">
+            <div><div style="font-size:16px;font-weight:700;color:var(--text)">Site Visits / Wallet Connections</div><div style="font-size:12px;color:var(--textM);margin-top:2px">Unique wallets that touched Gravii</div></div>
+            <div style="text-align:right"><div style="font-family:'Space Mono',monospace;font-size:28px;font-weight:700;color:var(--hq)">186,400</div><div style="font-size:12px;color:var(--textM)">100%</div></div>
+          </div>
+          <div style="display:flex;justify-content:center;padding:4px 0"><div style="width:2px;height:16px;background:var(--border)"></div></div>
+          <div style="padding:20px;background:rgba(86,212,192,0.04);border:1px solid rgba(86,212,192,0.1);border-radius:0;display:flex;justify-content:space-between;align-items:center">
+            <div><div style="font-size:16px;font-weight:700;color:var(--text)">Gravii ID Created</div><div style="font-size:12px;color:var(--textM);margin-top:2px">Completed onboarding & ID generation</div></div>
+            <div style="text-align:right"><div style="font-family:'Space Mono',monospace;font-size:28px;font-weight:700;color:var(--teal)">48,200</div><div style="font-size:12px;color:var(--teal)">25.9% conversion</div></div>
+          </div>
+          <div style="display:flex;justify-content:center;padding:4px 0"><div style="width:2px;height:16px;background:var(--border)"></div></div>
+          <div style="padding:20px;background:rgba(88,166,255,0.04);border:1px solid rgba(88,166,255,0.1);border-radius:0;display:flex;justify-content:space-between;align-items:center">
+            <div><div style="font-size:16px;font-weight:700;color:var(--text)">Campaign Participation</div><div style="font-size:12px;color:var(--textM);margin-top:2px">Opted into at least one campaign</div></div>
+            <div style="text-align:right"><div style="font-family:'Space Mono',monospace;font-size:28px;font-weight:700;color:var(--blue)">18,640</div><div style="font-size:12px;color:var(--blue)">38.7% of IDs</div></div>
+          </div>
+          <div style="display:flex;justify-content:center;padding:4px 0"><div style="width:2px;height:16px;background:var(--border)"></div></div>
+          <div style="padding:20px;background:rgba(188,140,255,0.04);border:1px solid rgba(188,140,255,0.1);border-radius:0 0 12px 12px;display:flex;justify-content:space-between;align-items:center">
+            <div><div style="font-size:16px;font-weight:700;color:var(--text)">30d Retained</div><div style="font-size:12px;color:var(--textM);margin-top:2px">Active again within 30 days of ID creation</div></div>
+            <div style="text-align:right"><div style="font-family:'Space Mono',monospace;font-size:28px;font-weight:700;color:var(--purple)">30,940</div><div style="font-size:12px;color:var(--purple)">64.2% retention</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Funnel by source -->
+      <div class="card fade-in fade-d2" style="margin-top:20px">
+        <div class="sec-head"><div class="sec-title">Funnel Conversion by Source</div></div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr><th>Source</th><th>Visits→ID</th><th>ID→Campaign</th><th>ID→Retained</th><th>Best Stage</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:600;color:var(--teal)">Partner Drive</td><td class="tbl-mono">32.4%</td><td class="tbl-mono">44.1%</td><td class="tbl-mono">71.0%</td><td><span class="tag tag-green">Retention</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--blue)">Campaign</td><td class="tbl-mono">28.8%</td><td class="tbl-mono">62.3%</td><td class="tbl-mono">66.0%</td><td><span class="tag tag-green">Engagement</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--purple)">Organic</td><td class="tbl-mono">21.6%</td><td class="tbl-mono">28.4%</td><td class="tbl-mono">68.0%</td><td><span class="tag tag-teal">Retention</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--amber)">Community Bot</td><td class="tbl-mono">38.2%</td><td class="tbl-mono">22.1%</td><td class="tbl-mono">54.0%</td><td><span class="tag tag-teal">Top-Funnel</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--hq)">Referral</td><td class="tbl-mono">41.6%</td><td class="tbl-mono">38.8%</td><td class="tbl-mono">78.0%</td><td><span class="tag tag-green">All Stages</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="page" id="page-partner-list">
+      <!-- Search -->
+      <div class="fade-in" style="margin-bottom:12px">
+        <input type="text" id="pl-search" oninput="filterPartnerList()" placeholder="Search partners..." style="width:100%;padding:12px 16px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;font-family:'Outfit',sans-serif;outline:none;transition:border-color 0.2s" onfocus="this.style.borderColor='var(--hq)'" onblur="this.style.borderColor='var(--border)'">
+      </div>
+      <!-- Filters -->
+      <div class="filter-bar fade-in">
+        <div class="filter-bar-label">Filter</div>
+        <div class="filter-group">
+          <span class="fbtn f-active" onclick="togF(this)">All Status</span>
+          <span class="fbtn" onclick="togF(this)">Active</span>
+          <span class="fbtn" onclick="togF(this)">Review</span>
+          <span class="fbtn" onclick="togF(this)">Flagged</span>
+        </div>
+        <div class="filter-sep"></div>
+        <div class="filter-group">
+          <span class="fbtn f-active" onclick="togF(this)">All Plans</span>
+          <span class="fbtn" onclick="togF(this)">Free</span>
+          <span class="fbtn" onclick="togF(this)">Starter</span>
+          <span class="fbtn" onclick="togF(this)">Growth</span>
+          <span class="fbtn" onclick="togF(this)">Enterprise</span>
+        </div>
+        <div class="filter-sep"></div>
+        <div class="filter-group">
+          <span class="fbtn f-active" onclick="togF(this)">All Products</span>
+          <span class="fbtn" onclick="togF(this)">Reach</span>
+          <span class="fbtn" onclick="togF(this)">Gate</span>
+          <span class="fbtn" onclick="togF(this)">Lens</span>
+        </div>
+        <button class="fbtn-reset" onclick="resetF(this)">Reset</button>
+      </div>
+
+      <div id="pl-stats" class="stat-grid fade-in fade-d1"></div>
+      <div class="card fade-in fade-d2">
+        <div class="sec-head"><div class="sec-title">All Partners</div></div>
+        <div style="overflow-x:auto" id="pl-table"></div>
+        <div style="margin-top:12px;font-size:12px;color:var(--textD);font-style:italic" id="pl-footer"></div>
+      </div>
+    </div>
+    <div class="page" id="page-partner-perf">
+      <div class="card fade-in fade-d1">
+        <div class="sec-head"><div class="sec-title">Partner Performance Scorecard</div></div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr><th>Partner</th><th>Drive (1st Touch)</th><th>Drive (Any Touch)</th><th>Gold+ Rate</th><th>Sybil Rate</th><th>Campaigns</th><th>Avg CPA <span class="roi-tip" title="CPA = Cost ÷ Engaged (cost per user acquired)">i</span></th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:600;color:var(--text)">Nexus Finance</td><td class="tbl-mono">42,100</td><td class="tbl-mono">68,400</td><td><span class="tag tag-green">68%</span></td><td><span class="tag tag-green">4%</span></td><td class="tbl-mono">6</td><td class="tbl-mono">$0.31</td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">ZenProtocol</td><td class="tbl-mono">38,900</td><td class="tbl-mono">52,100</td><td><span class="tag tag-green">61%</span></td><td><span class="tag tag-green">5%</span></td><td class="tbl-mono">4</td><td class="tbl-mono">$0.36</td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">ChainVault</td><td class="tbl-mono">31,800</td><td class="tbl-mono">54,200</td><td><span class="tag tag-green">52%</span></td><td><span class="tag tag-amber">11%</span></td><td class="tbl-mono">3</td><td class="tbl-mono">$0.48</td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">DeFi Pulse</td><td class="tbl-mono">28,400</td><td class="tbl-mono">39,100</td><td><span class="tag tag-teal">45%</span></td><td><span class="tag tag-green">7%</span></td><td class="tbl-mono">2</td><td class="tbl-mono">$0.53</td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">MetaBridge</td><td class="tbl-mono">22,600</td><td class="tbl-mono">48,800</td><td><span class="tag tag-teal">41%</span></td><td><span class="tag tag-amber">15%</span></td><td class="tbl-mono">2</td><td class="tbl-mono">$0.71</td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">Orbital Labs</td><td class="tbl-mono">15,200</td><td class="tbl-mono">21,300</td><td><span class="tag tag-amber">33%</span></td><td><span class="tag tag-red">22%</span></td><td class="tbl-mono">0</td><td class="tbl-mono">—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="g2 fade-in fade-d2" style="margin-top:20px">
+        <div class="card">
+          <div class="sec-head"><div class="sec-title">Revenue by Partner (30d)</div></div>
+          <div>
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">ZenProtocol</span><span class="hbar-val" style="color:var(--green)">$8,200</span></div><div class="hbar-track"><div class="hbar-fill" style="width:100%;background:var(--green)"></div></div></div>
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Nexus Finance</span><span class="hbar-val" style="color:var(--green)">$6,800</span></div><div class="hbar-track"><div class="hbar-fill" style="width:83%;background:var(--green)"></div></div></div>
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">ChainVault</span><span class="hbar-val" style="color:var(--teal)">$3,400</span></div><div class="hbar-track"><div class="hbar-fill" style="width:41%;background:var(--teal)"></div></div></div>
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">DeFi Pulse</span><span class="hbar-val" style="color:var(--teal)">$2,800</span></div><div class="hbar-track"><div class="hbar-fill" style="width:34%;background:var(--teal)"></div></div></div>
+            <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Others (30)</span><span class="hbar-val" style="color:var(--textM)">$12,600</span></div><div class="hbar-track"><div class="hbar-fill" style="width:60%;background:var(--textD)"></div></div></div>
+          </div>
+          <div style="margin-top:14px;padding:10px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--textS)">
+            Total MRR: <span style="font-family:'Space Mono',monospace;font-weight:700;color:var(--green)">$33,800</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="sec-head"><div class="sec-title">Product Adoption</div></div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="padding:14px;background:rgba(86,212,192,0.04);border:1px solid rgba(86,212,192,0.1);border-radius:10px;display:flex;justify-content:space-between;align-items:center">
+              <div><div style="font-size:13px;font-weight:600;color:var(--teal)">Reach Only</div><div style="font-size:12px;color:var(--textM)">Using campaigns only</div></div>
+              <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--text)">4</div>
+            </div>
+            <div style="padding:14px;background:rgba(88,166,255,0.04);border:1px solid rgba(88,166,255,0.1);border-radius:10px;display:flex;justify-content:space-between;align-items:center">
+              <div><div style="font-size:13px;font-weight:600;color:var(--blue)">Gate Only</div><div style="font-size:12px;color:var(--textM)">API verification only</div></div>
+              <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--text)">10</div>
+            </div>
+            <div style="padding:14px;background:rgba(188,140,255,0.04);border:1px solid rgba(188,140,255,0.1);border-radius:10px;display:flex;justify-content:space-between;align-items:center">
+              <div><div style="font-size:13px;font-weight:600;color:var(--purple)">Lens Only</div><div style="font-size:12px;color:var(--textM)">Report analysis only</div></div>
+              <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--text)">6</div>
+            </div>
+            <div style="padding:14px;background:rgba(232,168,124,0.04);border:1px solid rgba(232,168,124,0.1);border-radius:10px;display:flex;justify-content:space-between;align-items:center">
+              <div><div style="font-size:13px;font-weight:600;color:var(--hq)">Multi-Product</div><div style="font-size:12px;color:var(--textM)">2+ products active</div></div>
+              <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--hq)">14</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ========== PARTNER DETAIL ========== -->
+    <div class="page" id="page-partner-detail">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px" class="fade-in">
+        <button onclick="navToPage('partner-list')" style="padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--textM);font-size:13px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.15s">← Back to List</button>
+      </div>
+      <div class="card fade-in fade-d1" style="margin-bottom:20px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px">
+          <div>
+            <div style="font-family:'Sora',sans-serif;font-size:24px;font-weight:800;color:var(--text);margin-bottom:8px" id="pd-name">—</div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <span class="tag tag-green" id="pd-status">—</span>
+              <span class="tag tag-hq" id="pd-plan">—</span>
+              <span id="pd-products"></span>
+            </div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:12px;color:var(--textM)">Joined</div>
+            <div style="font-family:'Space Mono',monospace;font-size:14px;color:var(--textS)" id="pd-joined">—</div>
+            <div style="font-size:12px;color:var(--textM);margin-top:4px">Last Active</div>
+            <div style="font-family:'Space Mono',monospace;font-size:14px;color:var(--green)" id="pd-lastactive">—</div>
+          </div>
+        </div>
+      </div>
+      <div class="stat-grid fade-in fade-d2" id="pd-stats"></div>
+      <div class="g2 fade-in fade-d3" style="margin-top:20px">
+        <div class="card"><div class="sec-head"><div class="sec-title">User Pool — Tier Distribution</div></div><div id="pd-tiers"></div></div>
+        <div class="card"><div class="sec-head"><div class="sec-title">Drive Source Breakdown</div></div><div id="pd-drives"></div></div>
+      </div>
+      <div class="g2 fade-in fade-d4" style="margin-top:20px">
+        <div class="card"><div class="sec-head"><div class="sec-title">Campaigns</div></div><div id="pd-campaigns"></div></div>
+        <div class="card"><div class="sec-head"><div class="sec-title">Gate API Usage (30d)</div></div><div id="pd-api"></div></div>
+      </div>
+      <div class="card fade-in fade-d5" style="margin-top:20px"><div class="sec-head"><div class="sec-title">Revenue History</div></div><div id="pd-revenue"></div></div>
+    </div>
+
+    <div class="page" id="page-risk-sybil">
+      <!-- Filters -->
+      <div class="filter-bar fade-in">
+        <div class="filter-bar-label">Filter</div>
+        <div class="filter-group">
+          <span class="fbtn f-active" onclick="togF(this)">All Severity</span>
+          <span class="fbtn" onclick="togF(this)">Critical</span>
+          <span class="fbtn" onclick="togF(this)">Suspect</span>
+          <span class="fbtn" onclick="togF(this)">Clean</span>
+        </div>
+        <div class="filter-sep"></div>
+        <div class="filter-group">
+          <span class="fbtn f-active" onclick="togF(this)">All Partners</span>
+          <span class="fbtn" onclick="togF(this)">Orbital Labs</span>
+          <span class="fbtn" onclick="togF(this)">MetaBridge</span>
+          <span class="fbtn" onclick="togF(this)">ChainVault</span>
+          <span class="fbtn" onclick="togF(this)">Nexus</span>
+        </div>
+        <button class="fbtn-reset" onclick="resetF(this)">Reset</button>
+      </div>
+
+      <div class="stat-grid fade-in fade-d1">
+        <div class="stat-card" data-accent="red"><div class="stat-label">Total Flagged</div><div class="stat-value">69,187</div><div class="stat-sub">14.2% of pool · <span class="stat-delta down">▼ 1.1%</span> improving</div></div>
+        <div class="stat-card" data-accent="amber"><div class="stat-label">Suspect (Watchlist)</div><div class="stat-value">53,595</div><div class="stat-sub">11.0% of pool</div></div>
+        <div class="stat-card" data-accent="red"><div class="stat-label">Critical Clusters</div><div class="stat-value">8</div><div class="stat-sub">Shared funding source detected</div></div>
+        <div class="stat-card" data-accent="green"><div class="stat-label">Auto-Filtered (30d)</div><div class="stat-value">3,420</div><div class="stat-sub">Blocked from campaigns</div></div>
+      </div>
+
+      <div class="fade-in fade-d2">
+        <div class="card">
+          <div class="sec-head"><div class="sec-title">Sybil by Partner</div></div>
+          <table class="tbl">
+            <thead><tr><th>Partner</th><th>Flagged</th><th>Rate</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:600;color:var(--text)">Orbital Labs</td><td class="tbl-mono">3,344</td><td><span class="tag tag-red">22%</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">MetaBridge</td><td class="tbl-mono">3,390</td><td><span class="tag tag-amber">15%</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">ChainVault</td><td class="tbl-mono">3,498</td><td><span class="tag tag-amber">11%</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">SwapHub</td><td class="tbl-mono">756</td><td><span class="tag tag-green">9%</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">DeFi Pulse</td><td class="tbl-mono">1,988</td><td><span class="tag tag-green">7%</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--text)">Nexus Finance</td><td class="tbl-mono">1,684</td><td><span class="tag tag-green">4%</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Sybil by chain -->
+      <div class="card fade-in fade-d3" style="margin-top:20px">
+        <div class="sec-head"><div class="sec-title">Sybil Distribution by Chain</div></div>
+        <div>
+          <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Ethereum</span><span class="hbar-val" style="color:var(--red)">42% of flagged</span></div><div class="hbar-track"><div class="hbar-fill" style="width:42%;background:var(--red)"></div></div></div>
+          <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Arbitrum</span><span class="hbar-val" style="color:var(--orange)">22%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:22%;background:var(--orange)"></div></div></div>
+          <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Base</span><span class="hbar-val" style="color:var(--amber)">18%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:18%;background:var(--amber)"></div></div></div>
+          <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Polygon</span><span class="hbar-val" style="color:var(--textM)">12%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:12%;background:var(--textD)"></div></div></div>
+          <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Others</span><span class="hbar-val" style="color:var(--textD)">6%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:6%;background:rgba(255,255,255,0.06)"></div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="page" id="page-risk-health">
+      <!-- Growth Health Grade -->
+      <div class="card fade-in fade-d1" style="text-align:center;padding:32px;margin-bottom:20px">
+        <div style="font-size:14px;font-weight:700;color:var(--hq);letter-spacing:1px;margin-bottom:12px">GROWTH HEALTH</div>
+        <div style="font-family:'Space Mono',monospace;font-size:64px;font-weight:700;color:var(--green);line-height:1">A</div>
+        <div style="font-size:14px;color:var(--textM);margin-top:8px">Net Growth MoM ≥10%, Churn &lt;1%, Sources diversified</div>
+        <div style="margin-top:16px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap">
+          <div style="padding:8px 16px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:8px;font-size:12px">
+            <span style="color:var(--textM)">Grade basis:</span> <span style="color:var(--textS);font-weight:600">Net Growth Rate (MoM)</span>
+          </div>
+          <div style="padding:8px 16px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:8px;font-size:12px">
+            <span style="color:var(--textM)">Adjusters:</span> <span style="color:var(--textS);font-weight:600">Churn, Source Concentration</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grading criteria -->
+      <div class="card fade-in fade-d1" style="margin-bottom:20px;padding:16px 20px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+          <span style="color:var(--hq);font-size:14px">ⓘ</span>
+          <span style="font-size:14px;font-weight:700;color:var(--text)">Grading Criteria</span>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr><th>Grade</th><th>Net Growth MoM</th><th>Conditions</th></tr></thead>
+            <tbody>
+              <tr><td style="font-family:'Space Mono',monospace;font-weight:700;color:var(--green)">A</td><td class="tbl-mono">≥10%</td><td style="font-size:12px;color:var(--textM)">Churn &lt;1% and no single source &gt;60%</td></tr>
+              <tr><td style="font-family:'Space Mono',monospace;font-weight:700;color:var(--green)">A-</td><td class="tbl-mono">≥10%</td><td style="font-size:12px;color:var(--textM)">One or more conditions unmet</td></tr>
+              <tr><td style="font-family:'Space Mono',monospace;font-weight:700;color:var(--teal)">B+</td><td class="tbl-mono">7~10%</td><td style="font-size:12px;color:var(--textM)">—</td></tr>
+              <tr><td style="font-family:'Space Mono',monospace;font-weight:700;color:var(--textS)">B</td><td class="tbl-mono">5~7%</td><td style="font-size:12px;color:var(--textM)">—</td></tr>
+              <tr><td style="font-family:'Space Mono',monospace;font-weight:700;color:var(--amber)">C</td><td class="tbl-mono">1~5%</td><td style="font-size:12px;color:var(--textM)">—</td></tr>
+              <tr><td style="font-family:'Space Mono',monospace;font-weight:700;color:var(--red)">D</td><td class="tbl-mono">&lt;1% or negative</td><td style="font-size:12px;color:var(--textM)">Pool is stagnant or shrinking</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 6 Growth Health indicators -->
+      <div class="stat-grid fade-in fade-d2">
+        <div class="stat-card" data-accent="green">
+          <div class="stat-label">Net ID Growth (30d)</div>
+          <div class="stat-value">+46,360</div>
+          <div class="stat-sub">48,200 new — 1,840 deleted</div>
+        </div>
+        <div class="stat-card" data-accent="green">
+          <div class="stat-label">Growth Rate (MoM)</div>
+          <div class="stat-value">11.2%</div>
+          <div class="stat-sub"><span class="stat-delta up">▲ 3.0%</span> vs prev month (8.2%)</div>
+        </div>
+        <div class="stat-card" data-accent="teal">
+          <div class="stat-label">Source Diversification</div>
+          <div class="stat-value">0.74</div>
+          <div class="stat-sub">Healthy (max source: 42%) · 1.0 = perfect</div>
+        </div>
+        <div class="stat-card" data-accent="blue">
+          <div class="stat-label">Gold+ Acquisition Rate</div>
+          <div class="stat-value">52%</div>
+          <div class="stat-sub">Of new IDs in last 30d are Gold+</div>
+        </div>
+        <div class="stat-card" data-accent="hq">
+          <div class="stat-label">Partner Contribution</div>
+          <div class="stat-value">66%</div>
+          <div class="stat-sub">Of new IDs driven by partners (Drive + Campaign)</div>
+        </div>
+        <div class="stat-card" data-accent="green">
+          <div class="stat-label">Churn Rate (30d) <span class="roi-tip" title="Churn = Deleted IDs ÷ Total Pool. Measures how many users leave the ecosystem relative to total pool size.">i</span></div>
+          <div class="stat-value">0.38%</div>
+          <div class="stat-sub"><span class="stat-delta down">▼ 0.04%</span> improving · 1,840 deleted of 487K</div>
+        </div>
+      </div>
+
+      <!-- Growth Health Trend -->
+      <div class="card fade-in fade-d3" style="margin-top:20px">
+        <div class="sec-head"><div class="sec-title">Growth Health Trend (12 Weeks)</div></div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr><th>Week</th><th>Net Growth</th><th>MoM Rate</th><th>Churn</th><th>Source Div.</th><th>Gold+ Acq.</th><th>Grade</th></tr></thead>
+            <tbody>
+              <tr><td class="tbl-mono">Mar 10</td><td class="tbl-mono">+12,408</td><td class="tbl-mono">11.2%</td><td class="tbl-mono">0.38%</td><td class="tbl-mono">0.74</td><td class="tbl-mono">52%</td><td style="font-family:'Space Mono',monospace;font-weight:700;color:var(--green)">A</td></tr>
+              <tr><td class="tbl-mono">Mar 03</td><td class="tbl-mono">+11,840</td><td class="tbl-mono">10.8%</td><td class="tbl-mono">0.40%</td><td class="tbl-mono">0.72</td><td class="tbl-mono">50%</td><td style="font-family:'Space Mono',monospace;font-weight:700;color:var(--green)">A</td></tr>
+              <tr><td class="tbl-mono">Feb 24</td><td class="tbl-mono">+10,200</td><td class="tbl-mono">9.4%</td><td class="tbl-mono">0.41%</td><td class="tbl-mono">0.70</td><td class="tbl-mono">48%</td><td style="font-family:'Space Mono',monospace;font-weight:700;color:var(--teal)">B+</td></tr>
+              <tr><td class="tbl-mono">Feb 17</td><td class="tbl-mono">+9,600</td><td class="tbl-mono">8.6%</td><td class="tbl-mono">0.42%</td><td class="tbl-mono">0.68</td><td class="tbl-mono">46%</td><td style="font-family:'Space Mono',monospace;font-weight:700;color:var(--teal)">B+</td></tr>
+              <tr><td class="tbl-mono">Feb 10</td><td class="tbl-mono">+8,400</td><td class="tbl-mono">7.8%</td><td class="tbl-mono">0.44%</td><td class="tbl-mono">0.66</td><td class="tbl-mono">44%</td><td style="font-family:'Space Mono',monospace;font-weight:700;color:var(--teal)">B+</td></tr>
+              <tr><td class="tbl-mono">Feb 03</td><td class="tbl-mono">+7,200</td><td class="tbl-mono">6.2%</td><td class="tbl-mono">0.46%</td><td class="tbl-mono">0.64</td><td class="tbl-mono">42%</td><td style="font-family:'Space Mono',monospace;font-weight:700;color:var(--textS)">B</td></tr>
+              <tr><td class="tbl-mono">Jan 27</td><td class="tbl-mono">+6,800</td><td class="tbl-mono">5.8%</td><td class="tbl-mono">0.48%</td><td class="tbl-mono">0.62</td><td class="tbl-mono">40%</td><td style="font-family:'Space Mono',monospace;font-weight:700;color:var(--textS)">B</td></tr>
+              <tr><td class="tbl-mono">Jan 20</td><td class="tbl-mono">+6,100</td><td class="tbl-mono">5.4%</td><td class="tbl-mono">0.50%</td><td class="tbl-mono">0.60</td><td class="tbl-mono">38%</td><td style="font-family:'Space Mono',monospace;font-weight:700;color:var(--textS)">B</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Product Contribution (from Flywheel) -->
+      <div class="g3 fade-in fade-d4" style="margin-top:20px">
+        <div class="card" style="border-color:rgba(86,212,192,0.2)">
+          <div style="text-align:center;margin-bottom:16px">
+            <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--teal);letter-spacing:1.5px;margin-bottom:8px">REACH</div>
+            <div style="font-family:'Space Mono',monospace;font-size:32px;font-weight:700;color:var(--text)">8,420</div>
+            <div style="font-size:12px;color:var(--textM)">New IDs via campaigns (30d)</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid var(--border)"><span style="color:var(--textM)">Active campaigns</span><span style="color:var(--textS);font-family:'Space Mono',monospace">18</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid var(--border)"><span style="color:var(--textM)">Total engaged</span><span style="color:var(--textS);font-family:'Space Mono',monospace">84,200</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid var(--border)"><span style="color:var(--textM)">Avg CPA</span><span style="color:var(--green);font-family:'Space Mono',monospace">$0.42</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:6px 0"><span style="color:var(--textM)">Pool contribution</span><span style="color:var(--teal);font-family:'Space Mono',monospace;font-weight:700">17.5%</span></div>
+          </div>
+        </div>
+        <div class="card" style="border-color:rgba(88,166,255,0.2)">
+          <div style="text-align:center;margin-bottom:16px">
+            <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--blue);letter-spacing:1.5px;margin-bottom:8px">GATE</div>
+            <div style="font-family:'Space Mono',monospace;font-size:32px;font-weight:700;color:var(--text)">142K</div>
+            <div style="font-size:12px;color:var(--textM)">API queries (30d)</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid var(--border)"><span style="color:var(--textM)">Partners using Gate</span><span style="color:var(--textS);font-family:'Space Mono',monospace">28</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid var(--border)"><span style="color:var(--textM)">IDs via Drive link</span><span style="color:var(--textS);font-family:'Space Mono',monospace">24,800</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid var(--border)"><span style="color:var(--textM)">Avg latency</span><span style="color:var(--green);font-family:'Space Mono',monospace">127ms</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:6px 0"><span style="color:var(--textM)">Pool contribution</span><span style="color:var(--blue);font-family:'Space Mono',monospace;font-weight:700">51.5%</span></div>
+          </div>
+        </div>
+        <div class="card" style="border-color:rgba(188,140,255,0.2)">
+          <div style="text-align:center;margin-bottom:16px">
+            <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--purple);letter-spacing:1.5px;margin-bottom:8px">LENS</div>
+            <div style="font-family:'Space Mono',monospace;font-size:32px;font-weight:700;color:var(--text)">12</div>
+            <div style="font-size:12px;color:var(--textM)">Reports delivered (30d)</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid var(--border)"><span style="color:var(--textM)">Partners using Lens</span><span style="color:var(--textS);font-family:'Space Mono',monospace">22</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid var(--border)"><span style="color:var(--textM)">Converted to Gate/Reach</span><span style="color:var(--textS);font-family:'Space Mono',monospace">6</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid var(--border)"><span style="color:var(--textM)">Wallets analyzed</span><span style="color:var(--textS);font-family:'Space Mono',monospace">420K</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:6px 0"><span style="color:var(--textM)">Entry point role</span><span style="color:var(--purple);font-family:'Space Mono',monospace;font-weight:700">Pipeline</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Net Pool Effect -->
+      <div class="card fade-in fade-d5" style="margin-top:20px">
+        <div class="sec-head"><div class="sec-title">Net Pool Effect (30d)</div></div>
+        <div class="stat-grid" style="margin-bottom:0">
+          <div style="padding:16px;background:rgba(63,185,80,0.04);border:1px solid rgba(63,185,80,0.1);border-radius:10px;text-align:center">
+            <div style="font-size:12px;color:var(--textM);margin-bottom:4px">New IDs (All Sources)</div>
+            <div style="font-family:'Space Mono',monospace;font-size:24px;font-weight:700;color:var(--green)">+48,200</div>
+          </div>
+          <div style="padding:16px;background:rgba(248,81,73,0.04);border:1px solid rgba(248,81,73,0.1);border-radius:10px;text-align:center">
+            <div style="font-size:12px;color:var(--textM);margin-bottom:4px">Deleted IDs</div>
+            <div style="font-family:'Space Mono',monospace;font-size:24px;font-weight:700;color:var(--red)">-1,840</div>
+          </div>
+          <div style="padding:16px;background:rgba(232,168,124,0.04);border:1px solid rgba(232,168,124,0.1);border-radius:10px;text-align:center">
+            <div style="font-size:12px;color:var(--textM);margin-bottom:4px">Net Growth</div>
+            <div style="font-family:'Space Mono',monospace;font-size:24px;font-weight:700;color:var(--hq)">+46,360</div>
+          </div>
+          <div style="padding:16px;background:rgba(200,182,255,0.04);border:1px solid rgba(200,182,255,0.1);border-radius:10px;text-align:center">
+            <div style="font-size:12px;color:var(--textM);margin-bottom:4px">Pool Value Change</div>
+            <div style="font-family:'Space Mono',monospace;font-size:24px;font-weight:700;color:var(--lav)">+$184M</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="page" id="page-campaigns">
+      <!-- Filters -->
+      <div class="filter-bar fade-in">
+        <div class="filter-bar-label">Filter</div>
+        <div class="filter-group">
+          <span class="fbtn f-active" onclick="togF(this)">All Status</span>
+          <span class="fbtn" onclick="togF(this)">Live</span>
+          <span class="fbtn" onclick="togF(this)">Ending</span>
+          <span class="fbtn" onclick="togF(this)">Pending</span>
+          <span class="fbtn" onclick="togF(this)">Completed</span>
+        </div>
+        <div class="filter-sep"></div>
+        <div class="filter-group">
+          <span class="fbtn f-active" onclick="togF(this)">All Scopes</span>
+          <span class="fbtn" onclick="togF(this)">Users</span>
+          <span class="fbtn" onclick="togF(this)">Gravii Pool</span>
+          <span class="fbtn" onclick="togF(this)">Both</span>
+        </div>
+        <div class="filter-sep"></div>
+        <div class="filter-group">
+          <span class="fbtn f-active" onclick="togF(this)">All Partners</span>
+          <span class="fbtn" onclick="togF(this)">Nexus</span>
+          <span class="fbtn" onclick="togF(this)">ChainVault</span>
+          <span class="fbtn" onclick="togF(this)">ZenProtocol</span>
+          <span class="fbtn" onclick="togF(this)">DeFi Pulse</span>
+          <span class="fbtn" onclick="togF(this)">MetaBridge</span>
+        </div>
+        <button class="fbtn-reset" onclick="resetF(this)">Reset</button>
+      </div>
+
+      <!-- Stats (dynamic) -->
+      <div id="camp-stats" class="stat-grid fade-in fade-d1"></div>
+
+      <!-- Campaign List (dynamic) -->
+      <div class="card fade-in fade-d2">
+        <div class="sec-head"><div class="sec-title">Campaign List</div></div>
+        <div style="overflow-x:auto" id="camp-table"></div>
+        <div style="margin-top:12px;font-size:12px;color:var(--textD);font-style:italic" id="camp-footer"></div>
+      </div>
+
+      <!-- Analysis: Scope + Tier -->
+      <div class="g2 fade-in fade-d3" style="margin-top:20px">
+        <div class="card">
+          <div class="sec-head"><div class="sec-title">Effectiveness by Scope</div></div>
+          <table class="tbl">
+            <thead><tr><th>Scope</th><th>Campaigns</th><th>Avg Engaged</th><th>Avg CPA <span class="roi-tip" title="CPA = Cost ÷ Engaged (cost per user acquired)">i</span></th><th>Sybil Rate</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:600;color:var(--blue)">Users</td><td class="tbl-mono">6</td><td class="tbl-mono">1,840</td><td class="tbl-mono">$0.32</td><td><span class="tag tag-green">3.2%</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--teal)">Both</td><td class="tbl-mono">8</td><td class="tbl-mono">2,640</td><td class="tbl-mono">$0.42</td><td><span class="tag tag-green">6.8%</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--purple)">Gravii Pool</td><td class="tbl-mono">4</td><td class="tbl-mono">3,210</td><td class="tbl-mono">$0.56</td><td><span class="tag tag-amber">11.2%</span></td></tr>
+            </tbody>
+          </table>
+          <div style="margin-top:12px;font-size:12px;color:var(--textD);font-style:italic">Users scope shows lowest CPA ($0.32/user). Gravii Pool has widest reach but higher sybil rate and cost.</div>
+        </div>
+        <div class="card">
+          <div class="sec-head"><div class="sec-title">Effectiveness by Tier Targeting</div></div>
+          <table class="tbl">
+            <thead><tr><th>Target Tier</th><th>Campaigns</th><th>Avg Engagement</th><th>Avg CPA <span class="roi-tip" title="CPA = Cost ÷ Engaged (cost per user acquired)">i</span></th><th>Retention After</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:600;color:var(--lav)">Black</td><td class="tbl-mono">3</td><td class="tbl-mono">62%</td><td class="tbl-mono">$0.24</td><td class="tbl-mono">88%</td></tr>
+              <tr><td style="font-weight:600;color:var(--amber)">Platinum+</td><td class="tbl-mono">6</td><td class="tbl-mono">48%</td><td class="tbl-mono">$0.31</td><td class="tbl-mono">76%</td></tr>
+              <tr><td style="font-weight:600;color:var(--cream)">Gold+</td><td class="tbl-mono">8</td><td class="tbl-mono">36%</td><td class="tbl-mono">$0.42</td><td class="tbl-mono">68%</td></tr>
+              <tr><td style="font-weight:600;color:var(--textM)">Classic (all)</td><td class="tbl-mono">4</td><td class="tbl-mono">22%</td><td class="tbl-mono">$0.83</td><td class="tbl-mono">42%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+// =============================================
+// MOCK DATA LAYER
+// =============================================
+const PARTNERS = [
+  {name:'Nexus Finance',status:'Active',plan:'Enterprise',products:['R','G','L'],totalUsers:52840,users1st:42100,usersAny:68400,goldRate:68,sybilRate:4,apiQueries:48200,campaigns:6,liveCampaigns:3,avgCpa:0.31,revenue:6800,revGate:4200,revReach:2100,revLens:500,joined:'2025-06-14',lastActive:'2h ago',score:'A+',
+    campaignList:[
+      {name:'ETH Stakers Welcome',scope:'Both',engaged:4280,newIds:620,cost:1019,cpa:0.24,status:'Live'},
+      {name:'Rising Star Program',scope:'Users',engaged:1420,newIds:0,cost:546,cpa:0.38,status:'Live'},
+      {name:'Whale Onboarding',scope:'Gravii Pool',engaged:3810,newIds:2640,cost:1003,cpa:0.26,status:'Live'},
+      {name:'DeFi Power Users',scope:'Both',engaged:2940,newIds:480,cost:1014,cpa:0.34,status:'Completed'},
+      {name:'Early Adopter Rewards',scope:'Users',engaged:1680,newIds:0,cost:764,cpa:0.45,status:'Completed'},
+      {name:'Chain Hopper Special',scope:'Both',engaged:2120,newIds:340,cost:1178,cpa:0.56,status:'Completed'}
+    ],
+    lensReports:[
+      {name:'Q1 2026 Pool Analysis',wallets:42100,date:'Mar 02',status:'Delivered'},
+      {name:'Pre-Campaign Audit',wallets:28400,date:'Jan 15',status:'Delivered'},
+      {name:'Onboarding Report',wallets:18200,date:'Jun 28, 2025',status:'Delivered'}
+    ],
+    tierDist:{black:22,platinum:26,gold:20,classic:32},
+    driveSources:{xray:58,campaign:28,bot:10,agent:4},
+    apiLatency:118,apiErrorRate:0.3,apiPlanLimit:'Negotiated (unlimited)',
+    revenueHistory:[
+      {month:'Mar 2026',gate:4200,reach:2100,lens:500,total:6800,change:'+14%'},
+      {month:'Feb 2026',gate:3800,reach:1600,lens:560,total:5960,change:'+22%'},
+      {month:'Jan 2026',gate:3200,reach:1200,lens:480,total:4880,change:'+18%'},
+      {month:'Dec 2025',gate:2800,reach:800,lens:520,total:4120,change:'+8%'},
+      {month:'Nov 2025',gate:2600,reach:600,lens:600,total:3800,change:'—'}
+    ]
+  },
+  {name:'ChainVault',status:'Active',plan:'Growth',products:['R','G'],totalUsers:38200,users1st:31800,usersAny:54200,goldRate:52,sybilRate:11,apiQueries:22800,campaigns:3,liveCampaigns:2,avgCpa:0.48,revenue:3400,revGate:2400,revReach:1000,revLens:0,joined:'2025-07-22',lastActive:'4h ago',score:'B+',
+    campaignList:[
+      {name:'Diamond Hands Bonus',scope:'Users',engaged:2190,newIds:0,cost:1043,cpa:0.48,status:'Live'},
+      {name:'Stablecoin Savers',scope:'Both',engaged:1840,newIds:310,cost:836,cpa:0.45,status:'Live'},
+      {name:'Vault Keeper Rewards',scope:'Users',engaged:1260,newIds:0,cost:630,cpa:0.50,status:'Completed'}
+    ],
+    lensReports:[],
+    tierDist:{black:14,platinum:18,gold:20,classic:48},
+    driveSources:{xray:62,campaign:24,bot:8,agent:6},
+    apiLatency:134,apiErrorRate:0.8,apiPlanLimit:'50,000/mo',
+    revenueHistory:[
+      {month:'Mar 2026',gate:2400,reach:1000,lens:0,total:3400,change:'+12%'},
+      {month:'Feb 2026',gate:2100,reach:940,lens:0,total:3040,change:'+8%'},
+      {month:'Jan 2026',gate:1900,reach:920,lens:0,total:2820,change:'+15%'}
+    ]
+  },
+  {name:'DeFi Pulse',status:'Active',plan:'Growth',products:['G','L'],totalUsers:32400,users1st:28400,usersAny:39100,goldRate:45,sybilRate:7,apiQueries:18600,campaigns:2,liveCampaigns:1,avgCpa:0.53,revenue:2800,revGate:2200,revReach:0,revLens:600,joined:'2025-08-10',lastActive:'1d ago',score:'B',
+    campaignList:[
+      {name:'Yield Explorer Week',scope:'Both',engaged:960,newIds:180,cost:505,cpa:0.53,status:'Ending'},
+      {name:'DeFi Newcomers',scope:'Gravii Pool',engaged:1420,newIds:980,cost:746,cpa:0.53,status:'Completed'}
+    ],
+    lensReports:[
+      {name:'DeFi User Audit',wallets:28400,date:'Feb 10',status:'Delivered'},
+      {name:'Initial Pool Scan',wallets:15200,date:'Aug 20, 2025',status:'Delivered'}
+    ],
+    tierDist:{black:10,platinum:15,gold:20,classic:55},
+    driveSources:{xray:48,campaign:18,bot:28,agent:6},
+    apiLatency:142,apiErrorRate:0.5,apiPlanLimit:'50,000/mo',
+    revenueHistory:[
+      {month:'Mar 2026',gate:2200,reach:0,lens:600,total:2800,change:'+10%'},
+      {month:'Feb 2026',gate:2000,reach:0,lens:540,total:2540,change:'+6%'}
+    ]
+  },
+  {name:'MetaBridge',status:'Review',plan:'Starter',products:['R','G'],totalUsers:26800,users1st:22600,usersAny:48800,goldRate:41,sybilRate:15,apiQueries:12400,campaigns:2,liveCampaigns:1,avgCpa:0.71,revenue:1800,revGate:1200,revReach:600,revLens:0,joined:'2025-09-05',lastActive:'6h ago',score:'C+',
+    campaignList:[
+      {name:'New User Onboarding',scope:'Gravii Pool',engaged:1820,newIds:1420,cost:1300,cpa:0.71,status:'Live'},
+      {name:'Bridge Users Welcome',scope:'Both',engaged:1140,newIds:280,cost:814,cpa:0.71,status:'Completed'}
+    ],
+    lensReports:[],
+    tierDist:{black:8,platinum:13,gold:20,classic:59},
+    driveSources:{xray:72,campaign:18,bot:6,agent:4},
+    apiLatency:156,apiErrorRate:1.2,apiPlanLimit:'5,000/mo',
+    revenueHistory:[
+      {month:'Mar 2026',gate:1200,reach:600,lens:0,total:1800,change:'+20%'},
+      {month:'Feb 2026',gate:1000,reach:500,lens:0,total:1500,change:'+12%'}
+    ]
+  },
+  {name:'Orbital Labs',status:'Flagged',plan:'Starter',products:['G'],totalUsers:18400,users1st:15200,usersAny:21300,goldRate:33,sybilRate:22,apiQueries:8200,campaigns:0,liveCampaigns:0,avgCpa:0,revenue:990,revGate:990,revReach:0,revLens:0,joined:'2025-10-18',lastActive:'12h ago',score:'D',
+    campaignList:[],
+    lensReports:[],
+    tierDist:{black:4,platinum:9,gold:20,classic:67},
+    driveSources:{xray:100,campaign:0,bot:0,agent:0},
+    apiLatency:168,apiErrorRate:2.4,apiPlanLimit:'5,000/mo',
+    revenueHistory:[
+      {month:'Mar 2026',gate:990,reach:0,lens:0,total:990,change:'+2%'}
+    ]
+  },
+  {name:'ZenProtocol',status:'Active',plan:'Enterprise',products:['R','G','L'],totalUsers:46200,users1st:38900,usersAny:52100,goldRate:61,sybilRate:5,apiQueries:52400,campaigns:4,liveCampaigns:2,avgCpa:0.36,revenue:8200,revGate:5800,revReach:1800,revLens:600,joined:'2025-06-02',lastActive:'30m ago',score:'A',
+    campaignList:[
+      {name:'Chain Hopper Airdrop',scope:'Gravii Pool',engaged:3840,newIds:2810,cost:1371,cpa:0.36,status:'Live'},
+      {name:'Governance Stakers',scope:'Users',engaged:2200,newIds:0,cost:786,cpa:0.36,status:'Live'},
+      {name:'Protocol Explorers',scope:'Both',engaged:1860,newIds:420,cost:664,cpa:0.36,status:'Completed'},
+      {name:'Early Bird ZEN',scope:'Users',engaged:1400,newIds:0,cost:500,cpa:0.36,status:'Completed'}
+    ],
+    lensReports:[
+      {name:'Governance Pool Deep Dive',wallets:38900,date:'Feb 18',status:'Delivered'},
+      {name:'Pre-Launch Audit',wallets:22000,date:'May 28, 2025',status:'Delivered'}
+    ],
+    tierDist:{black:18,platinum:23,gold:20,classic:39},
+    driveSources:{xray:52,campaign:30,bot:12,agent:6},
+    apiLatency:112,apiErrorRate:0.2,apiPlanLimit:'Negotiated (unlimited)',
+    revenueHistory:[
+      {month:'Mar 2026',gate:5800,reach:1800,lens:600,total:8200,change:'+16%'},
+      {month:'Feb 2026',gate:5200,reach:1400,lens:480,total:7080,change:'+20%'},
+      {month:'Jan 2026',gate:4600,reach:1000,lens:300,total:5900,change:'+14%'}
+    ]
+  },
+  {name:'ArcLayer',status:'Active',plan:'Growth',products:['L'],totalUsers:0,users1st:0,usersAny:0,goldRate:0,sybilRate:0,apiQueries:0,campaigns:0,liveCampaigns:0,avgCpa:0,revenue:480,revGate:0,revReach:0,revLens:480,joined:'2026-02-01',lastActive:'3d ago',score:'—',
+    campaignList:[],lensReports:[{name:'Exploratory Analysis',wallets:12000,date:'Feb 08',status:'Delivered'}],
+    tierDist:{black:0,platinum:0,gold:0,classic:0},driveSources:{xray:0,campaign:0,bot:0,agent:0},
+    apiLatency:0,apiErrorRate:0,apiPlanLimit:'—',
+    revenueHistory:[{month:'Mar 2026',gate:0,reach:0,lens:480,total:480,change:'New'}]
+  },
+  {name:'SwapHub',status:'Active',plan:'Free',products:['G'],totalUsers:9800,users1st:8400,usersAny:11200,goldRate:38,sybilRate:9,apiQueries:4200,campaigns:0,liveCampaigns:0,avgCpa:0,revenue:0,revGate:0,revReach:0,revLens:0,joined:'2025-11-12',lastActive:'2d ago',score:'C',
+    campaignList:[],
+    lensReports:[],
+    tierDist:{black:6,platinum:12,gold:20,classic:62},
+    driveSources:{xray:100,campaign:0,bot:0,agent:0},
+    apiLatency:148,apiErrorRate:0.6,apiPlanLimit:'500/mo',
+    revenueHistory:[{month:'Mar 2026',gate:0,reach:0,lens:0,total:0,change:'Free plan'}]
+  }
+];
+
+const CAMPAIGNS = PARTNERS.flatMap(p=>p.campaignList.map(c=>({...c,partner:p.name})));
+
+// =============================================
+// NAVIGATION
+// =============================================
+const pageTitles = {
+  'overview':'Overview','pool-composition':'Pool Composition','pool-cohort':'Cohort Analysis',
+  'pool-explorer':'User Explorer','acq-source':'Source Breakdown','acq-attribution':'Attribution',
+  'acq-funnel':'Funnel','partner-list':'Partner List','partner-perf':'Partner Performance',
+  'partner-detail':'Partner Detail','risk-sybil':'Sybil Monitor','risk-health':'Growth Health',
+  'campaigns':'Campaigns'
+};
+
+function navTo(el){
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+  const pageId = el.dataset.page;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const target = document.getElementById('page-'+pageId);
+  if(target) target.classList.add('active');
+  document.getElementById('pageTitle').textContent = pageTitles[pageId]||pageId;
+  target?.querySelectorAll('.fade-in').forEach(el=>{el.style.animation='none';el.offsetHeight;el.style.animation=''});
+  document.querySelector('.main').scrollTop = 0;
+  animateStats(target);
+  updateChatContext(pageId);
+}
+
+function navToPage(pageId){
+  const item = document.querySelector('.sb-item[data-page="'+pageId+'"]');
+  if(item) navTo(item);
+}
+
+// Period selector
+document.querySelectorAll('.period-btn').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.period-btn').forEach(b=>b.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// Live time
+function updateTime(){
+  const now=new Date();
+  document.getElementById('liveTime').textContent=`${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')} KST`;
+}
+updateTime();setInterval(updateTime,1000);
+
+// Cross-nav
+document.querySelectorAll('.sec-action').forEach(el=>{
+  const t=el.textContent.trim().toLowerCase();
+  if(t.includes('cohort'))el.onclick=()=>navToPage('pool-cohort');
+  else if(t.includes('details')||t.includes('source'))el.onclick=()=>navToPage('acq-source');
+  else if(t.includes('partners')||t.includes('all partners'))el.onclick=()=>navToPage('partner-list');
+  else if(t.includes('campaigns')||t.includes('all campaigns'))el.onclick=()=>navToPage('campaigns');
+  else if(t.includes('performance'))el.onclick=()=>navToPage('partner-perf');
+  else if(t.includes('flywheel')||t.includes('full view'))el.onclick=()=>navToPage('risk-health');
+  if(el.onclick)el.style.cursor='pointer';
+});
+
+// =============================================
+// COUNTING ANIMATION
+// =============================================
+function animateStats(container){
+  if(!container) container=document;
+  container.querySelectorAll('.stat-value').forEach(el=>{
+    const raw=el.textContent.trim();
+    const hasPercent=raw.includes('%');
+    const hasDollar=raw.startsWith('$');
+    const hasPlus=raw.startsWith('+');
+    const cleaned=raw.replace(/[$%+,]/g,'');
+    const num=parseFloat(cleaned);
+    if(isNaN(num)||num===0) return;
+    const duration=800;
+    const start=performance.now();
+    const fmt=(v)=>{
+      let s='';
+      if(hasDollar) s+='$';
+      if(hasPlus&&v>0) s+='+';
+      if(num>=1000){
+        s+=Math.round(v).toLocaleString();
+      } else if(num<10){
+        s+=v.toFixed(num%1!==0?2:0);
+      } else {
+        s+=v.toFixed(num%1!==0?1:0);
+      }
+      if(hasPercent) s+='%';
+      return s;
+    };
+    el.textContent=fmt(0);
+    function tick(now){
+      const p=Math.min((now-start)/duration,1);
+      const ease=1-Math.pow(1-p,3);
+      el.textContent=fmt(num*ease);
+      if(p<1) requestAnimationFrame(tick);
+      else el.textContent=raw;
+    }
+    requestAnimationFrame(tick);
+  });
+}
+// Initial animation
+setTimeout(()=>animateStats(document.getElementById('page-overview')),200);
+
+// =============================================
+// MINI CHARTS
+// =============================================
+(function(){
+  const data=[42,38,45,52,48,55,60,58,63,67,62,70,75,72,78,82,80,85,88,84,90,95,92,98,100,96,105,110,108,115];
+  const max=Math.max(...data);
+  const chart=document.getElementById('growthChart');
+  data.forEach((v,i)=>{
+    const bar=document.createElement('div');bar.className='mini-bar';
+    bar.style.height='0%';bar.style.background='linear-gradient(180deg,var(--hq) 0%,rgba(232,168,124,0.3) 100%)';
+    setTimeout(()=>{bar.style.height=(v/max)*90+'%'},100+i*30);
+    chart.appendChild(bar);
+  });
+})();
+
+function renderSourceTrend(){
+  const chart=document.getElementById('sourceTrendChart');if(!chart)return;
+  const weeks=[[34,18,22,8,3],[36,19,20,9,3],[38,20,19,10,3],[35,22,18,10,4],[37,23,18,10,3],[39,21,19,9,4],[40,22,18,10,3],[38,24,17,10,4],[40,23,18,10,3],[41,24,18,10,4],[42,24,17,11,4],[42,24,18,10,4]];
+  const colors=['var(--teal)','var(--blue)','var(--purple)','var(--amber)','var(--hq)'];
+  weeks.forEach((w,wi)=>{
+    const col=document.createElement('div');col.style.cssText='flex:1;display:flex;flex-direction:column-reverse;gap:1px;height:100%';
+    const total=w.reduce((a,b)=>a+b,0);
+    w.forEach((v,vi)=>{
+      const seg=document.createElement('div');
+      seg.style.cssText=`height:0%;background:${colors[vi]};border-radius:2px;transition:height 0.8s cubic-bezier(0.34,1.56,0.64,1);opacity:0.85`;
+      setTimeout(()=>{seg.style.height=(v/total*100)+'%'},200+wi*60);
+      col.appendChild(seg);
+    });
+    chart.appendChild(col);
+  });
+}
+renderSourceTrend();
+
+// H-bar animation
+setTimeout(()=>{
+  document.querySelectorAll('.hbar-fill').forEach(bar=>{
+    const w=bar.style.width;bar.style.width='0%';
+    setTimeout(()=>{bar.style.width=w},100);
+  });
+},200);
+
+// =============================================
+// DYNAMIC PARTNER DETAIL
+// =============================================
+function showPartnerDetail(name){
+  const p=PARTNERS.find(x=>x.name===name);
+  if(!p) return;
+  const page=document.getElementById('page-partner-detail');
+
+  // Header
+  document.getElementById('pd-name').textContent=p.name;
+  document.getElementById('pd-status').textContent=p.status;
+  document.getElementById('pd-status').className='tag tag-'+(p.status==='Active'?'green':p.status==='Review'?'amber':'red');
+  document.getElementById('pd-plan').textContent=p.plan;
+  document.getElementById('pd-plan').className='tag tag-hq';
+
+  // Products
+  const prodEl=document.getElementById('pd-products');
+  prodEl.innerHTML=p.products.map(x=>`<span class="tag tag-${x==='R'?'teal':x==='G'?'blue':'purple'}">${x==='R'?'Reach':x==='G'?'Gate':'Lens'}</span>`).join('');
+
+  // Dates
+  document.getElementById('pd-joined').textContent=p.joined;
+  document.getElementById('pd-lastactive').textContent=p.lastActive;
+  document.getElementById('pd-lastactive').style.color=p.lastActive.includes('ago')?'var(--green)':'var(--textS)';
+
+  // Stats
+  const stats=document.getElementById('pd-stats');
+  stats.innerHTML=`
+    <div class="stat-card" data-accent="hq"><div class="stat-label">Total Users</div><div class="stat-value">${p.totalUsers.toLocaleString()}</div><div class="stat-sub">Currently connected</div></div>
+    <div class="stat-card" data-accent="hq"><div class="stat-label">Users (1st Touch)</div><div class="stat-value">${p.users1st.toLocaleString()}</div><div class="stat-sub">Primary source</div></div>
+    <div class="stat-card" data-accent="teal"><div class="stat-label">Users (Any Touch)</div><div class="stat-value">${p.usersAny.toLocaleString()}</div><div class="stat-sub">${p.users1st>0?(p.usersAny/p.users1st).toFixed(2)+'× ratio':'—'}</div></div>
+    <div class="stat-card" data-accent="green"><div class="stat-label">Gold+ Rate</div><div class="stat-value">${p.goldRate}%</div><div class="stat-sub">${p.goldRate>61?'Above':'Below'} pool avg (61%)</div></div>
+    <div class="stat-card" data-accent="${p.sybilRate<=8?'green':p.sybilRate<=15?'amber':'red'}"><div class="stat-label">Sybil Rate</div><div class="stat-value">${p.sybilRate}%</div><div class="stat-sub">${p.sybilRate<14.2?'Below':'Above'} pool avg (14.2%)</div></div>
+    <div class="stat-card" data-accent="blue"><div class="stat-label">API Queries (30d)</div><div class="stat-value">${p.apiQueries.toLocaleString()}</div><div class="stat-sub">${p.products.includes('G')?'Active':'Not using Gate'}</div></div>
+    <div class="stat-card" data-accent="teal"><div class="stat-label">Campaign Engaged</div><div class="stat-value">${p.campaignList.reduce((a,c)=>a+c.engaged,0).toLocaleString()}</div><div class="stat-sub">Across ${p.campaigns} campaigns (${p.liveCampaigns} live)</div></div>
+    <div class="stat-card" data-accent="purple"><div class="stat-label">Monthly Revenue</div><div class="stat-value">$${p.revenue.toLocaleString()}</div><div class="stat-sub">${[p.revGate?'Gate $'+p.revGate.toLocaleString():'',p.revReach?'Reach $'+p.revReach.toLocaleString():'',p.revLens?'Lens $'+p.revLens.toLocaleString():''].filter(Boolean).join(' + ')||'Free plan'}</div></div>`;
+
+  // Tier dist
+  const tierEl=document.getElementById('pd-tiers');
+  const td=p.tierDist;
+  tierEl.innerHTML=`
+    <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Black</span><span class="hbar-val" style="color:var(--lav)">${td.black}%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:${td.black}%;background:var(--lav)"></div></div></div>
+    <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Platinum</span><span class="hbar-val" style="color:var(--amber)">${td.platinum}%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:${td.platinum}%;background:var(--amber)"></div></div></div>
+    <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Gold</span><span class="hbar-val" style="color:var(--cream)">${td.gold}%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:${td.gold}%;background:var(--cream)"></div></div></div>
+    <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Classic</span><span class="hbar-val" style="color:var(--textM)">${td.classic}%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:${td.classic}%;background:var(--textD)"></div></div></div>
+    <div style="margin-top:14px;padding:10px 14px;background:rgba(${(td.black+td.platinum+td.gold)>=61?'63,185,80':'227,179,65'},0.04);border:1px solid rgba(${(td.black+td.platinum+td.gold)>=61?'63,185,80':'227,179,65'},0.1);border-radius:10px;font-size:12px;color:var(--textS)">Gold+ rate (${td.black+td.platinum+td.gold}%) is ${(td.black+td.platinum+td.gold)>=61?'above':'below'} pool average</div>`;
+
+  // Drive sources
+  const driveEl=document.getElementById('pd-drives');
+  const ds=p.driveSources;
+  driveEl.innerHTML=`
+    <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">X-RAY Users Link</span><span class="hbar-val" style="color:var(--teal)">${ds.xray}%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:${ds.xray}%;background:var(--teal)"></div></div></div>
+    <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Reach Campaign</span><span class="hbar-val" style="color:var(--blue)">${ds.campaign}%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:${ds.campaign}%;background:var(--blue)"></div></div></div>
+    <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Community Bot</span><span class="hbar-val" style="color:var(--purple)">${ds.bot}%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:${ds.bot}%;background:var(--purple)"></div></div></div>
+    <div class="hbar-wrap"><div class="hbar-header"><span class="hbar-label">Agent API</span><span class="hbar-val" style="color:var(--amber)">${ds.agent}%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:${ds.agent}%;background:var(--amber)"></div></div></div>`;
+
+  // Campaigns table (Reach-dependent)
+  const campEl=document.getElementById('pd-campaigns');
+  const hasReach=p.products.includes('R');
+  const scopeColor=s=>s==='Users'?'blue':s==='Gravii Pool'?'purple':'teal';
+  if(hasReach && p.campaignList.length){
+    campEl.innerHTML=`<table class="tbl">
+    <thead><tr><th>Campaign</th><th>Scope</th><th>Engaged</th><th>New IDs</th><th>Cost</th><th>CPA <span class="roi-tip" title="CPA = Cost ÷ Engaged (cost per user acquired)">i</span></th><th>Status</th></tr></thead>
+    <tbody>${p.campaignList.map(c=>`<tr><td style="font-weight:600;color:var(--text)">${c.name}</td><td><span class="tag tag-${scopeColor(c.scope)}">${c.scope}</span></td><td class="tbl-mono">${c.engaged.toLocaleString()}</td><td class="tbl-mono">${c.newIds.toLocaleString()}</td><td class="tbl-mono">$${c.cost.toLocaleString()}</td><td class="tbl-mono">$${c.cpa.toFixed(2)}</td><td>${c.status==='Live'?'<span class="tag tag-green">Live</span>':c.status==='Ending'?'<span class="tag tag-amber">Ending</span>':`<span style="color:var(--textD)">${c.status}</span>`}</td></tr>`).join('')}
+    </tbody></table>
+    <div style="margin-top:12px;padding:10px 14px;background:rgba(86,212,192,0.04);border:1px solid rgba(86,212,192,0.1);border-radius:10px;font-size:12px;color:var(--textS)">Avg CPA: <span style="font-family:'Space Mono',monospace;font-weight:700;color:var(--green)">$${p.avgCpa.toFixed(2)}</span>/user</div>`;
+  } else if(hasReach){
+    campEl.innerHTML='<div style="padding:20px;text-align:center;color:var(--textD);font-size:13px">No campaigns launched yet</div>';
+  } else {
+    campEl.innerHTML='<div style="padding:24px;text-align:center;border:1px dashed var(--border);border-radius:10px"><div style="font-size:13px;color:var(--textD);margin-bottom:4px">Not using Reach</div><div style="font-size:12px;color:var(--textD);opacity:0.6">This partner has no campaign access</div></div>';
+  }
+
+  // API + Lens (product-aware)
+  const apiEl=document.getElementById('pd-api');
+  const hasGate=p.products.includes('G');
+  const hasLens=p.products.includes('L');
+  let apiHtml='';
+
+  if(hasGate){
+    apiHtml+=`
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid var(--border)"><span style="font-size:13px;color:var(--textM)">Total Queries</span><span style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--blue)">${p.apiQueries.toLocaleString()}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid var(--border)"><span style="font-size:13px;color:var(--textM)">Avg Latency</span><span style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--green)">${p.apiLatency}ms</span></div>
+      <div style="display:flex;justify-content:space-between;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid var(--border)"><span style="font-size:13px;color:var(--textM)">Plan Limit</span><span style="font-family:'Space Mono',monospace;font-size:14px;color:var(--textS)">${p.apiPlanLimit}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid var(--border)"><span style="font-size:13px;color:var(--textM)">Error Rate</span><span style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:${p.apiErrorRate<1?'var(--green)':'var(--red)'}">${p.apiErrorRate}%</span></div>
+    </div>`;
+  } else {
+    apiHtml+='<div style="padding:24px;text-align:center;border:1px dashed var(--border);border-radius:10px;margin-bottom:16px"><div style="font-size:13px;color:var(--textD);margin-bottom:4px">Not using Gate</div><div style="font-size:12px;color:var(--textD);opacity:0.6">No API integration</div></div>';
+  }
+
+  apiHtml+='<div style="font-size:14px;font-weight:700;color:var(--textS);margin-bottom:10px">Lens Reports</div>';
+  if(hasLens && p.lensReports.length){
+    apiHtml+=p.lensReports.map(r=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(188,140,255,0.04);border:1px solid rgba(188,140,255,0.08);border-radius:8px;margin-bottom:6px"><div><span style="font-size:13px;font-weight:600;color:var(--text)">${r.name}</span><div style="font-size:12px;color:var(--textM)">${r.wallets.toLocaleString()} wallets · Delivered ${r.date}</div></div><span class="tag tag-green">Delivered</span></div>`).join('');
+  } else if(hasLens){
+    apiHtml+='<div style="padding:16px;text-align:center;color:var(--textD);font-size:13px">No reports yet</div>';
+  } else {
+    apiHtml+='<div style="padding:24px;text-align:center;border:1px dashed var(--border);border-radius:10px"><div style="font-size:13px;color:var(--textD);margin-bottom:4px">Not using Lens</div><div style="font-size:12px;color:var(--textD);opacity:0.6">No reports requested</div></div>';
+  }
+  apiEl.innerHTML=apiHtml;
+
+  // Revenue history
+  const revEl=document.getElementById('pd-revenue');
+  revEl.innerHTML=`<table class="tbl">
+    <thead><tr><th>Month</th><th>Gate</th><th>Reach</th><th>Lens</th><th>Total</th><th>Change</th></tr></thead>
+    <tbody>${p.revenueHistory.map((r,i)=>`<tr><td style="font-weight:600;color:var(--text)">${r.month}</td><td class="tbl-mono">$${r.gate.toLocaleString()}</td><td class="tbl-mono">$${r.reach.toLocaleString()}</td><td class="tbl-mono">$${r.lens.toLocaleString()}</td><td style="font-family:'Space Mono',monospace;font-weight:700;color:${i===0?'var(--green)':'var(--textS)'}">$${r.total.toLocaleString()}</td><td>${r.change.startsWith('+')?`<span class="stat-delta up">▲ ${r.change}</span>`:`<span class="stat-delta neutral">${r.change}</span>`}</td></tr>`).join('')}
+    </tbody></table>
+    <div style="margin-top:14px;padding:10px 14px;background:rgba(232,168,124,0.04);border:1px solid rgba(232,168,124,0.1);border-radius:10px;font-size:13px;color:var(--textS)">LTV to date: <span style="font-family:'Space Mono',monospace;font-weight:700;color:var(--hq)">$${p.revenueHistory.reduce((a,r)=>a+r.total,0).toLocaleString()}</span></div>`;
+
+  // Navigate
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(pg=>pg.classList.remove('active'));
+  page.classList.add('active');
+  document.getElementById('pageTitle').textContent=name+' — Detail';
+  document.querySelector('.main').scrollTop=0;
+  setTimeout(()=>animateStats(page),100);
+}
+
+// =============================================
+// TABLE FILTERING
+// =============================================
+function togF(el){
+  const group=el.closest('.filter-group');
+  const bar=el.closest('.filter-bar');
+  const isAll=el.textContent.trim().startsWith('All');
+  if(isAll){
+    group.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('f-active'));
+    el.classList.add('f-active');
+  } else {
+    const allBtn=group.querySelector('.fbtn');
+    if(allBtn&&allBtn.textContent.trim().startsWith('All'))allBtn.classList.remove('f-active');
+    el.classList.toggle('f-active');
+    if(!group.querySelectorAll('.fbtn.f-active').length&&allBtn)allBtn.classList.add('f-active');
+  }
+  // Call page-specific filter
+  const page=bar.closest('.page');
+  if(page?.id==='page-partner-list') filterPartnerList();
+  else if(page?.id==='page-campaigns') filterCampaigns();
+  else applyFilters(bar);
+}
+
+function resetF(btn){
+  const bar=btn.closest('.filter-bar');
+  bar.querySelectorAll('.filter-group').forEach(group=>{
+    group.querySelectorAll('.fbtn').forEach((b,i)=>{
+      if(i===0)b.classList.add('f-active');else b.classList.remove('f-active');
+    });
+  });
+  bar.querySelectorAll('.toggle').forEach(t=>t.classList.add('t-on'));
+  const page=bar.closest('.page');
+  if(page?.id==='page-partner-list') renderPartnerList();
+  else if(page?.id==='page-campaigns') renderCampaigns();
+  else applyFilters(bar);
+}
+
+function getActiveFilters(bar){
+  const filters=[];
+  bar.querySelectorAll('.filter-group').forEach(group=>{
+    const active=[];
+    group.querySelectorAll('.fbtn.f-active').forEach(b=>{
+      const t=b.textContent.trim();
+      if(!t.startsWith('All'))active.push(t);
+    });
+    filters.push(active);
+  });
+  return filters;
+}
+
+function applyFilters(bar){
+  const page=bar.closest('.page');
+  if(!page) return;
+  const filters=getActiveFilters(bar);
+  const tables=page.querySelectorAll('.tbl');
+  tables.forEach(tbl=>{
+    const rows=tbl.querySelectorAll('tbody tr');
+    rows.forEach(row=>{
+      const cells=[...row.querySelectorAll('td')].map(td=>td.textContent.trim());
+      const allText=cells.join(' ').toLowerCase();
+      let show=true;
+      filters.forEach(filterGroup=>{
+        if(filterGroup.length===0) return;
+        const match=filterGroup.some(f=>allText.includes(f.toLowerCase()));
+        if(!match) show=false;
+      });
+      row.style.display=show?'':'none';
+    });
+  });
+}
+
+// User search
+// =============================================
+// DYNAMIC PARTNER LIST
+// =============================================
+function renderPartnerList(filtered){
+  const data = filtered || PARTNERS;
+  const statsEl = document.getElementById('pl-stats');
+  const tableEl = document.getElementById('pl-table');
+  const footerEl = document.getElementById('pl-footer');
+  if(!statsEl) return;
+
+  const total = data.length;
+  const usingGate = data.filter(p=>p.products.includes('G')).length;
+  const usingReach = data.filter(p=>p.products.includes('R')).length;
+  const usingLens = data.filter(p=>p.products.includes('L')).length;
+
+  statsEl.innerHTML = `
+    <div class="stat-card" data-accent="hq"><div class="stat-label">Partners</div><div class="stat-value">${total}</div><div class="stat-sub">Matching filters</div></div>
+    <div class="stat-card" data-accent="green"><div class="stat-label">Using Gate</div><div class="stat-value">${usingGate}</div><div class="stat-sub">${total?Math.round(usingGate/total*100)+'%':'-'}</div></div>
+    <div class="stat-card" data-accent="teal"><div class="stat-label">Using Reach</div><div class="stat-value">${usingReach}</div><div class="stat-sub">${total?Math.round(usingReach/total*100)+'%':'-'}</div></div>
+    <div class="stat-card" data-accent="purple"><div class="stat-label">Using Lens</div><div class="stat-value">${usingLens}</div><div class="stat-sub">${total?Math.round(usingLens/total*100)+'%':'-'}</div></div>`;
+
+  const prodTag = arr => arr.map(x=>`<span class="tag tag-${x==='R'?'teal':x==='G'?'blue':'purple'}" style="margin-right:2px">${x}</span>`).join('');
+  const statusColor = s => s==='Active'?'green':s==='Review'?'amber':'red';
+  const totalEngaged = p => p.campaignList.reduce((a,c)=>a+c.engaged,0);
+  const engRate = p => { const e=totalEngaged(p); const u=p.users1st; return u>0&&e>0 ? (e/u*100).toFixed(1)+'%' : '—'; };
+
+  tableEl.innerHTML = `<table class="tbl">
+    <thead><tr><th>Partner</th><th>Status</th><th>Plan</th><th>Products</th><th>Users</th><th>Engaged</th><th>Eng. Rate</th><th>Gold+</th><th>Sybil</th><th>Campaigns</th><th>Joined</th></tr></thead>
+    <tbody>${data.map(p=>`<tr style="cursor:pointer" onclick="showPartnerDetail('${p.name}')">
+      <td style="font-weight:600;color:var(--text)">${p.name}</td>
+      <td><span class="tag tag-${statusColor(p.status)}">${p.status}</span></td>
+      <td class="tbl-mono">${p.plan}</td>
+      <td>${prodTag(p.products)}</td>
+      <td class="tbl-mono">${p.users1st?p.users1st.toLocaleString():'0'}</td>
+      <td class="tbl-mono">${totalEngaged(p)?totalEngaged(p).toLocaleString():'0'}</td>
+      <td class="tbl-mono">${engRate(p)}</td>
+      <td class="tbl-mono">${p.goldRate?p.goldRate+'%':'—'}</td>
+      <td class="tbl-mono">${p.sybilRate?p.sybilRate+'%':'—'}</td>
+      <td class="tbl-mono">${p.campaigns}</td>
+      <td class="tbl-mono">${p.joined}</td>
+    </tr>`).join('')}</tbody></table>`;
+
+  footerEl.textContent = `Showing ${data.length} of ${PARTNERS.length} partners · R = Reach, G = Gate, L = Lens`;
+  animateStats(document.getElementById('page-partner-list'));
+}
+
+function filterPartnerList(){
+  const bar = document.querySelector('#page-partner-list .filter-bar');
+  if(!bar) return;
+  const filters = getActiveFilters(bar);
+  const search = (document.getElementById('pl-search')?.value || '').toLowerCase().trim();
+  let data = [...PARTNERS];
+  if(search) data = data.filter(p=>p.name.toLowerCase().includes(search));
+  if(filters[0].length) data = data.filter(p=>filters[0].some(f=>p.status.toLowerCase()===f.toLowerCase()));
+  if(filters[1].length) data = data.filter(p=>filters[1].some(f=>p.plan.toLowerCase()===f.toLowerCase()));
+  if(filters[2].length) data = data.filter(p=>filters[2].some(f=>{
+    const prod = f==='Reach'?'R':f==='Gate'?'G':'L';
+    return p.products.includes(prod);
+  }));
+  renderPartnerList(data);
+}
+
+// =============================================
+// DYNAMIC CAMPAIGNS
+// =============================================
+function renderCampaigns(filtered){
+  const data = filtered || CAMPAIGNS;
+  const statsEl = document.getElementById('camp-stats');
+  const tableEl = document.getElementById('camp-table');
+  const footerEl = document.getElementById('camp-footer');
+  if(!statsEl) return;
+
+  const live = data.filter(c=>c.status==='Live').length;
+  const totalEngaged = data.reduce((a,c)=>a+c.engaged,0);
+  const totalNewIds = data.reduce((a,c)=>a+c.newIds,0);
+  const totalCost = data.reduce((a,c)=>a+c.cost,0);
+  const avgCpa = totalEngaged>0 ? (totalCost/totalEngaged) : 0;
+  const sybilFiltered = data.length>0 ? 6.8 : 0; // simplified mock
+
+  statsEl.innerHTML = `
+    <div class="stat-card" data-accent="green"><div class="stat-label">Live</div><div class="stat-value">${live}</div><div class="stat-sub">${data.length} total matching</div></div>
+    <div class="stat-card" data-accent="teal"><div class="stat-label">Total Engaged</div><div class="stat-value">${totalEngaged.toLocaleString()}</div><div class="stat-sub">Across filtered campaigns</div></div>
+    <div class="stat-card" data-accent="blue"><div class="stat-label">New IDs</div><div class="stat-value">${totalNewIds.toLocaleString()}</div><div class="stat-sub">First entered through Reach</div></div>
+    <div class="stat-card" data-accent="hq"><div class="stat-label">Avg CPA <span class="roi-tip" title="CPA = Cost ÷ Engaged (cost per user acquired)">i</span></div><div class="stat-value">$${avgCpa.toFixed(2)}</div><div class="stat-sub">Lower is better</div></div>
+    <div class="stat-card" data-accent="green"><div class="stat-label">Total Cost</div><div class="stat-value">$${totalCost.toLocaleString()}</div><div class="stat-sub">Across filtered campaigns</div></div>`;
+
+  const scopeColor = s=>s==='Users'?'blue':s==='Gravii Pool'?'purple':'teal';
+  const statusTag = s=>s==='Live'?'<span class="tag tag-green">Live</span>':s==='Ending'?'<span class="tag tag-amber">Ending</span>':`<span style="color:var(--textD)">${s}</span>`;
+
+  tableEl.innerHTML = `<table class="tbl">
+    <thead><tr><th>Campaign</th><th>Partner</th><th>Scope</th><th>Engaged</th><th>New IDs</th><th>Cost</th><th>CPA <span class="roi-tip" title="CPA = Cost ÷ Engaged (cost per user acquired)">i</span></th><th>Status</th></tr></thead>
+    <tbody>${data.map(c=>`<tr>
+      <td style="font-weight:600;color:var(--text)">${c.name}</td>
+      <td>${c.partner}</td>
+      <td><span class="tag tag-${scopeColor(c.scope)}">${c.scope}</span></td>
+      <td class="tbl-mono">${c.engaged.toLocaleString()}</td>
+      <td class="tbl-mono">${c.newIds.toLocaleString()}</td>
+      <td class="tbl-mono">$${c.cost.toLocaleString()}</td>
+      <td class="tbl-mono">$${c.cpa.toFixed(2)}</td>
+      <td>${statusTag(c.status)}</td>
+    </tr>`).join('')}</tbody></table>`;
+
+  footerEl.textContent = `Showing ${data.length} of ${CAMPAIGNS.length} campaigns · Scope: Users = partner pool only, Gravii Pool = full pool, Both = combined`;
+  animateStats(document.getElementById('page-campaigns'));
+}
+
+function filterCampaigns(){
+  const bar = document.querySelector('#page-campaigns .filter-bar');
+  if(!bar) return;
+  const filters = getActiveFilters(bar);
+  // filters[0]=status, filters[1]=scope, filters[2]=partner
+  let data = [...CAMPAIGNS];
+  if(filters[0].length) data = data.filter(c=>filters[0].some(f=>c.status.toLowerCase()===f.toLowerCase()));
+  if(filters[1].length) data = data.filter(c=>filters[1].some(f=>c.scope.toLowerCase().includes(f.toLowerCase())));
+  if(filters[2].length) data = data.filter(c=>filters[2].some(f=>c.partner.toLowerCase().includes(f.toLowerCase())));
+  renderCampaigns(data);
+}
+
+// =============================================
+// ENHANCED FILTER SYSTEM
+// =============================================
+function searchUser(){
+  const result=document.getElementById('userResult');
+  if(result){result.style.animation='none';result.offsetHeight;result.style.animation='fadeIn 0.4s ease forwards';}
+}
+
+// =============================================
+// GRAVII INSIGHT CHAT
+// =============================================
+const INSIGHTS = {
+  'overview':[
+    'Sybil rate dropped 1.1% this period. Orbital Labs still the biggest contributor at 22%.',
+    '3 new partners joined this month. Pool growth rate at 11.2% MoM — Grade A.',
+    'Revenue MoM +18.2%. Gate drives 66% of MRR.'
+  ],
+  'pool-composition':['Classic tier is 39% of pool but only 12% of value. Gold+ users hold 2.56× average value.'],
+  'pool-cohort':['Newest cohorts show strongest 30d retention at 68%.'],
+  'pool-explorer':['Use search to look up any wallet.'],
+  'acq-source':['Referral has the highest quality: 62% Gold+, 3% sybil, 78% retention — but lowest volume.'],
+  'acq-attribution':['MetaBridge has 2.16× Any/1st ratio — heavy re-engagement of existing users.'],
+  'acq-funnel':['Referral converts best across all stages. Community Bot excels at top-funnel.'],
+  'partner-list':['ArcLayer uses Lens only — consider pitching Gate. Orbital Labs flagged at 22% sybil.'],
+  'partner-perf':['Top 2 partners (ZenProtocol + Nexus) generate 44% of total revenue.'],
+  'campaigns':['Avg CPA: $0.42/user. Users scope shows lowest CPA at $0.32. Higher tier = lower CPA.'],
+  'risk-sybil':['69,187 wallets flagged (14.2%). 8 critical clusters. Orbital Labs worst at 22%.'],
+  'risk-health':['Grade A achieved. Gate contributes 51.5% of pool growth. Net +46,360 IDs this month.'],
+  'partner-detail':['Review product usage. Unused products = upsell opportunity.']
+};
+
+const CHAT_RESPONSES = {
+  'summary':()=>`Here's your current snapshot:\n\n• Total IDs: 487,231 (+3.2%)\n• Active Partners: 34\n• MRR: $33,800 (+18.2%)\n• Growth Grade: A\n• Sybil Rate: 14.2% (improving)\n\nKey highlight: Pool growth crossed 10% MoM threshold. Gate is the primary driver at 51.5% contribution.`,
+  'sybil':()=>`Sybil overview:\n\n• Total flagged: 69,187 (14.2% of pool)\n• Critical clusters: 8\n• Worst partner: Orbital Labs at 22%\n• Best partner: Nexus Finance at 4%\n• Ethereum accounts for 42% of flagged wallets\n\nRecommendation: Review Orbital Labs account — sybil rate is 5.5× above Nexus.`,
+  'revenue':()=>`Revenue breakdown (30d):\n\n• Total MRR: $33,800\n• Gate (API): $22,400 (66%)\n• Reach (Campaign): $8,200 (24%)\n• Lens (Report): $3,200 (10%)\n\nTop earners: ZenProtocol ($8,200), Nexus Finance ($6,800)\nFastest growing: Lens +24% MoM`,
+  'partners':()=>`Partner health:\n\n• 34 active partners\n• 7 using Gate, 4 using Reach, 4 using Lens\n• Flagged: Orbital Labs (22% sybil)\n• Under review: MetaBridge (15% sybil)\n• Upsell targets: ArcLayer (Lens only), SwapHub (Gate Free)\n\n3 partners don't use Reach yet — untapped campaign revenue.`,
+  'campaigns':()=>`Campaign performance:\n\n• 18 live campaigns across 12 partners\n• Total engaged: 84,200 users\n• Avg CPA: $0.42/user\n• Best CPA: ETH Stakers Welcome ($0.24)\n• Users scope: lowest CPA ($0.32), lowest sybil (3.2%)\n• Gravii Pool scope: widest reach but 11.2% sybil`,
+  'growth':()=>`Growth Health: Grade A\n\n• Net Growth: +46,360 IDs (11.2% MoM)\n• Churn: 0.38% (1,840 deleted)\n• Source Diversification: 0.72 (healthy)\n• Gold+ Acquisition: 42%\n\nProduct contributions:\n• Gate: 51.5% of pool growth\n• Reach: 17.5%\n• Lens: pipeline role (6 converted to Gate/Reach)`
+};
+
+let chatOpen = false;
+let currentChatPage = 'overview';
+
+function toggleChat(){
+  chatOpen = !chatOpen;
+  document.getElementById('chatPanel').classList.toggle('open', chatOpen);
+  document.getElementById('chatOverlay').classList.toggle('open', chatOpen);
+  document.getElementById('chatDot').style.display = chatOpen ? 'none' : 'block';
+  if(chatOpen && document.getElementById('chatMessages').children.length === 0){
+    initChat();
+  }
+  if(chatOpen) document.getElementById('chatInput').focus();
+}
+
+function initChat(){
+  const msgs = document.getElementById('chatMessages');
+  const sugs = document.getElementById('chatSuggestions');
+  const page = currentChatPage;
+  const insight = (INSIGHTS[page] || INSIGHTS['overview'])[0];
+
+  msgs.innerHTML = '';
+  addChatMsg('ai', `Welcome to Gravii Insight. I have access to all HQ data.\n\n${insight}\n\nWhat would you like to know?`);
+
+  const suggestions = [
+    {label:'Weekly summary', key:'summary'},
+    {label:'Sybil status', key:'sybil'},
+    {label:'Revenue breakdown', key:'revenue'},
+    {label:'Partner health', key:'partners'},
+    {label:'Campaign performance', key:'campaigns'},
+    {label:'Growth health', key:'growth'}
+  ];
+  sugs.innerHTML = suggestions.map(s=>`<span class="chat-sug" onclick="handleSuggestion('${s.key}')">${s.label}</span>`).join('');
+}
+
+function addChatMsg(type, text){
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = `chat-msg chat-msg-${type}`;
+  if(type === 'ai'){
+    div.innerHTML = `<div class="chat-msg-label">✦ GRAVII INSIGHT</div>${text.replace(/\n/g,'<br>')}`;
+  } else {
+    div.textContent = text;
+  }
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function handleSuggestion(key){
+  const labels = {summary:'Weekly summary',sybil:'Sybil status',revenue:'Revenue breakdown',partners:'Partner health',campaigns:'Campaign performance',growth:'Growth health'};
+  addChatMsg('user', labels[key] || key);
+  setTimeout(()=>{
+    const resp = CHAT_RESPONSES[key];
+    addChatMsg('ai', resp ? resp() : "I don't have specific data on that yet. Try asking about summary, sybil, revenue, partners, campaigns, or growth.");
+  }, 400);
+}
+
+function sendChat(){
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if(!text) return;
+  input.value = '';
+  addChatMsg('user', text);
+
+  setTimeout(()=>{
+    const lower = text.toLowerCase();
+    let key = null;
+    if(lower.includes('summar') || lower.includes('overview') || lower.includes('brief') || lower.includes('snapshot')) key = 'summary';
+    else if(lower.includes('sybil') || lower.includes('fraud') || lower.includes('bot')) key = 'sybil';
+    else if(lower.includes('revenue') || lower.includes('mrr') || lower.includes('money') || lower.includes('earning')) key = 'revenue';
+    else if(lower.includes('partner') || lower.includes('upsell')) key = 'partners';
+    else if(lower.includes('campaign') || lower.includes('cpa') || lower.includes('engage') || lower.includes('reach')) key = 'campaigns';
+    else if(lower.includes('growth') || lower.includes('health') || lower.includes('churn') || lower.includes('grade')) key = 'growth';
+
+    if(key){
+      addChatMsg('ai', CHAT_RESPONSES[key]());
+    } else {
+      addChatMsg('ai', "I can help with: weekly summary, sybil analysis, revenue breakdown, partner health, campaign performance, or growth metrics.\n\nTry asking something like \"How's our revenue?\" or \"Which partners need attention?\"");
+    }
+  }, 500);
+}
+
+// Update chat context on page nav
+function updateChatContext(pageId){
+  currentChatPage = pageId;
+}
+
+// =============================================
+// INITIALIZE DYNAMIC PAGES
+// =============================================
+renderPartnerList();
+renderCampaigns();
+</script>
+</body>
+</html>

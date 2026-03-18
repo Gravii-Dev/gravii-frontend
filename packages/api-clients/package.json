@@ -1,0 +1,17 @@
+{
+  "name": "@gravii/api-clients",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./base": "./src/base.ts",
+    "./landing": "./src/landing.ts",
+    "./partner": "./src/partner.ts",
+    "./user": "./src/user.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  }
+}

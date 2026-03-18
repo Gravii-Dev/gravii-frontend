@@ -1,0 +1,236 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: var(--standing-text);
+}
+
+.rootDark {
+  --standing-text: #f5f2eb;
+  --standing-sub: rgba(255, 255, 255, 0.5);
+  --standing-card-border: rgba(255, 255, 255, 0.1);
+  --standing-card-background: rgba(255, 255, 255, 0.04);
+}
+
+.rootLight {
+  --standing-text: #1a1a1a;
+  --standing-sub: rgba(0, 0, 0, 0.5);
+  --standing-card-border: rgba(0, 0, 0, 0.1);
+  --standing-card-background: rgba(0, 0, 0, 0.02);
+}
+
+.lead {
+  font-family: var(--font-serif);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0 0 18px;
+}
+
+.copy {
+  font-family: var(--font-ui);
+  color: var(--standing-sub);
+  font-size: 17px;
+  line-height: 1.7;
+  margin: 0 0 32px;
+}
+
+.heroCard {
+  border-color: var(--standing-card-border);
+  background: var(--standing-card-background);
+  margin-bottom: 32px;
+  border: 1px solid;
+  border-radius: 14px;
+  padding: 28px 32px;
+}
+
+.heroStats {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.heroLabel {
+  font-family: var(--font-ui);
+  color: var(--standing-sub);
+  display: block;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.heroValue {
+  font-family: var(--font-accent);
+  display: block;
+  font-size: 28px;
+}
+
+.heroValueAccent {
+  color: rgba(230, 220, 250, 0.8);
+}
+
+.heroValuePositive {
+  color: rgba(100, 200, 130, 0.8);
+}
+
+.heroSub {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--standing-sub);
+}
+
+.lockedHero {
+  text-align: center;
+}
+
+.lockedTitle {
+  font-family: var(--font-ui);
+  color: var(--standing-sub);
+  margin: 0 0 14px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 3px;
+}
+
+.lockedCopy {
+  font-family: var(--font-ui);
+  margin: 0 0 18px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.connectButton {
+  font-family: var(--font-ui);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.8);
+  border-radius: 999px;
+  padding: 12px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+}
+
+.categoryRow {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.categoryChip {
+  font-family: var(--font-ui);
+  color: var(--standing-sub);
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 9px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+.categoryChipActive {
+  background: rgba(230, 220, 250, 0.8);
+  color: #1a1a1a;
+}
+
+.tableWrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.tableHeader,
+.row,
+.myRow {
+  display: grid;
+  grid-template-columns: 80px 100px 1fr 1fr 90px;
+  gap: 8px;
+  align-items: center;
+}
+
+.tableHeader {
+  background: var(--standing-card-background);
+  padding: 14px 24px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  font-family: var(--font-ui);
+  color: var(--standing-sub);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.myRow,
+.row {
+  border-color: var(--standing-card-border);
+  padding: 18px 24px;
+  border-radius: 12px;
+  border: 1px solid;
+}
+
+.myRow {
+  background: rgba(230, 220, 250, 0.06);
+  border-color: rgba(230, 220, 250, 0.3);
+  margin-bottom: 4px;
+}
+
+.separator {
+  text-align: center;
+  padding: 8px 0;
+  margin-bottom: 4px;
+  color: rgba(255, 255, 255, 0.2);
+  letter-spacing: 4px;
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rankCell {
+  font-family: var(--font-accent);
+}
+
+.nameCell {
+  font-family: var(--font-ui);
+  color: var(--standing-text);
+}
+
+.subCell {
+  font-family: var(--font-ui);
+  color: var(--standing-sub);
+}
+
+.tierBlack {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.tierPlatinum {
+  color: rgba(200, 200, 220, 0.8);
+}
+
+.tierGold {
+  color: rgba(255, 200, 80, 0.8);
+}
+
+.tierClassic {
+  color: rgba(160, 200, 160, 0.7);
+}
+
+.changeUp {
+  color: rgba(100, 200, 100, 0.8);
+}
+
+.changeDown {
+  color: rgba(200, 100, 100, 0.8);
+}
+
+.changeNeutral {
+  color: rgba(255, 255, 255, 0.25);
+}

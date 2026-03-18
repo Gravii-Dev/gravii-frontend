@@ -1,0 +1,34 @@
+.canvasWrap {
+  position: relative;
+  height: 480px;
+  width: calc(100% + 120px);
+  margin: 0 -60px;
+  overflow: hidden;
+  border-radius: 0;
+  cursor: default;
+}
+
+.light .canvasFade {
+  background: linear-gradient(90deg, #f5f2eb 0%, transparent 8%, transparent 92%, #f5f2eb 100%), linear-gradient(180deg, #f5f2eb 0%, transparent 10%, transparent 90%, #f5f2eb 100%);
+}
+
+.dark .canvasFade {
+  background: linear-gradient(90deg, #1a1a1a 0%, transparent 8%, transparent 92%, #1a1a1a 100%), linear-gradient(180deg, #1a1a1a 0%, transparent 10%, transparent 90%, #1a1a1a 100%);
+}
+
+.canvasFade {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: var(--canvas-fade);
+}
+
+.canvasSurface {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  will-change: transform;
+}

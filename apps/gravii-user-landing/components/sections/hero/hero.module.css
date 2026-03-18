@@ -1,0 +1,512 @@
+.section {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  min-height: 100svh;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 0;
+  background: rgb(236 224 203);
+  box-sizing: border-box;
+  padding:
+    clamp(5.75rem, 10vh, 7.5rem)
+    clamp(1rem, 2.8vw, 2rem)
+    clamp(2rem, 5vh, 3rem);
+}
+
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 2rem;
+  visibility: visible;
+  transition: visibility 0s linear 860ms;
+}
+
+.splash::before,
+.splash::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: calc(50% + 1px);
+  pointer-events: none;
+  transition:
+    transform 860ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 560ms ease,
+    box-shadow 560ms ease;
+}
+
+.splash::before {
+  left: 0;
+  background:
+    radial-gradient(circle at 84% 36%, rgb(255 255 255 / 58%) 0%, rgb(255 255 255 / 12%) 24%, rgb(255 255 255 / 0%) 56%),
+    radial-gradient(circle at 22% 82%, rgb(255 244 215 / 28%) 0%, rgb(255 244 215 / 0%) 44%),
+    linear-gradient(180deg, rgb(231 220 201) 0%, rgb(236 224 203) 100%);
+  transform: translateX(0) skewX(0deg);
+  box-shadow:
+    inset -1px 0 0 rgb(255 255 255 / 24%),
+    18px 0 42px rgb(255 255 255 / 10%);
+}
+
+.splash::after {
+  right: 0;
+  background:
+    radial-gradient(circle at 16% 36%, rgb(255 255 255 / 58%) 0%, rgb(255 255 255 / 12%) 24%, rgb(255 255 255 / 0%) 56%),
+    radial-gradient(circle at 78% 18%, rgb(207 188 156 / 18%) 0%, rgb(207 188 156 / 0%) 34%),
+    linear-gradient(180deg, rgb(231 220 201) 0%, rgb(236 224 203) 100%);
+  transform: translateX(0) skewX(0deg);
+  box-shadow:
+    inset 1px 0 0 rgb(255 255 255 / 24%),
+    -18px 0 42px rgb(255 255 255 / 10%);
+}
+
+.splashLeaving {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.splashTitle {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1em;
+  margin: 0;
+  font-family: var(--font-mystic-dream), var(--next-font-sans), sans-serif;
+  font-size: clamp(3.8rem, 13vw, 10.5rem);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 0.82;
+  text-align: center;
+  text-transform: uppercase;
+  color: rgb(18 17 16 / 86%);
+  text-shadow:
+    0 1px 0 rgb(255 255 255 / 45%),
+    0 10px 36px rgb(115 96 70 / 14%);
+  opacity: 1;
+  transition:
+    opacity 420ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 420ms ease;
+}
+
+.splashLine {
+  display: block;
+  transform: translateX(0) scale(1);
+  opacity: 1;
+  transition:
+    opacity 420ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 860ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 420ms ease;
+}
+
+.splashLeaving::before {
+  filter: blur(8px);
+  transform: translateX(calc(-100% - 2rem)) skewX(-7deg);
+}
+
+.splashLeaving::after {
+  filter: blur(8px);
+  transform: translateX(calc(100% + 2rem)) skewX(7deg);
+}
+
+.splashLeaving .splashTitle {
+  opacity: 0;
+  filter: blur(14px);
+}
+
+.splashLeaving .splashLine:first-child {
+  opacity: 0;
+  transform: translateX(-12vw) scale(0.98);
+  filter: blur(10px);
+}
+
+.splashLeaving .splashLine:last-child {
+  opacity: 0;
+  transform: translateX(12vw) scale(1.04);
+  filter: blur(10px);
+}
+
+.backgroundWrap {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.canvas {
+  display: block;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 280ms ease;
+}
+
+.canvasVisible {
+  opacity: 1;
+}
+
+.fallback {
+  position: absolute;
+  inset: 0;
+  background: rgb(236 224 203);
+}
+
+.status {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 3;
+  border: 1px solid rgb(0 0 0 / 20%);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 90%);
+  padding: 0.25rem 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(0 0 0 / 65%);
+}
+
+.overlay {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: min(100%, 74rem);
+  gap: clamp(0.7rem, 1.8vw, 1.2rem);
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-family: var(--font-mystic-dream), var(--next-font-sans), sans-serif;
+  font-size: clamp(2.6rem, 13.3vw, 11.2rem);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 0.9;
+  color: rgb(0 0 0 / 78%);
+  user-select: none;
+  white-space: nowrap;
+}
+
+.line {
+  display: block;
+}
+
+.lineOffset {
+  padding-left: clamp(0.8rem, 4.8vw, 4.5rem);
+}
+
+.overlay .subtitle {
+  align-self: center;
+  width: 100%;
+  margin: 0;
+  margin-top: clamp(0.5rem, 1.3vw, 1.15rem);
+  font-family: var(--font-gloria-hallelujah), var(--next-font-sans), sans-serif;
+  font-size: clamp(1.15rem, 2.45vw, 1.62rem);
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+  color: rgb(0 0 0 / 66%);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.ctaButton {
+  position: relative;
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  isolation: isolate;
+  margin-top: clamp(0.35rem, 1.1vw, 0.75rem);
+  cursor: pointer;
+  transition:
+    transform 220ms ease,
+    filter 220ms ease;
+}
+
+.ctaOrbit {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.ctaPulse {
+  position: absolute;
+  inset: -0.4rem;
+  border-radius: 999px;
+  opacity: 0;
+  background:
+    radial-gradient(circle at center, rgb(255 255 255 / 18%) 0%, rgb(255 255 255 / 6%) 24%, rgb(255 255 255 / 0%) 66%);
+  filter: blur(11px);
+  transform: scale(0.72);
+}
+
+.ctaCursorOrbit {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 0;
+  height: 0;
+  animation: ctaOrbitSpin 18s linear infinite paused;
+}
+
+.ctaCursorItem {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  transform: translate(-50%, -50%) rotate(var(--cursor-angle)) translateX(14px)
+    scale(0.2);
+  transform-origin: center;
+  transition:
+    transform 360ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 180ms ease;
+  transition-delay: var(--cursor-delay);
+  will-change: transform, opacity;
+}
+
+.ctaCursorGlyph {
+  width: 1rem;
+  height: 1rem;
+  color: rgb(255 255 255 / 92%);
+  filter:
+    drop-shadow(0 0 0.4rem rgb(255 255 255 / 28%))
+    drop-shadow(0 0 0.8rem rgb(255 255 255 / 12%));
+  transform: rotate(var(--cursor-rotation));
+}
+
+.ctaButtonBody {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-height: 3.25rem;
+  padding: 0.82rem 1.85rem;
+  border: 1px solid rgb(255 255 255 / 42%);
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 32%) 0%, rgb(255 255 255 / 11%) 44%, rgb(255 255 255 / 6%) 100%),
+    rgb(255 255 255 / 6%);
+  -webkit-backdrop-filter: blur(16px) saturate(142%) contrast(108%);
+  backdrop-filter: blur(16px) saturate(142%) contrast(108%);
+  box-shadow:
+    0 10px 24px rgb(0 0 0 / 10%),
+    0 36px 64px rgb(0 0 0 / 8%),
+    inset 0 1px 0 rgb(255 255 255 / 92%),
+    inset 0 -1px 0 rgb(255 255 255 / 34%);
+  transition:
+    background-color 220ms ease,
+    color 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    transform 220ms ease,
+    filter 220ms ease;
+}
+
+.ctaButtonBody::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  z-index: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 52%) 0%, rgb(255 255 255 / 4%) 40%, rgb(255 255 255 / 20%) 100%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.ctaButtonBody::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  z-index: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 24%) 0%, rgb(255 255 255 / 0%) 52%, rgb(255 255 255 / 10%) 100%);
+  pointer-events: none;
+}
+
+.ctaButtonText {
+  position: relative;
+  z-index: 1;
+  font-family: var(--next-font-sans), sans-serif;
+  color: rgb(0 0 0 / 92%);
+  text-shadow:
+    0 1px 0 rgb(255 255 255 / 44%),
+    0 0 8px rgb(255 255 255 / 24%);
+  opacity: 1;
+  filter: none;
+}
+
+.ctaButton:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+}
+
+.ctaButton:hover .ctaButtonBody {
+  border-color: rgb(255 255 255 / 56%);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 40%) 0%, rgb(255 255 255 / 14%) 44%, rgb(255 255 255 / 8%) 100%),
+    rgb(255 255 255 / 9%);
+  box-shadow:
+    0 12px 28px rgb(0 0 0 / 11%),
+    0 40px 72px rgb(0 0 0 / 10%),
+    inset 0 1px 0 rgb(255 255 255 / 96%),
+    inset 0 -1px 0 rgb(255 255 255 / 38%);
+}
+
+.ctaButton:hover .ctaButtonText {
+  color: rgb(0 0 0 / 96%);
+  text-shadow:
+    0 1px 0 rgb(255 255 255 / 48%),
+    0 0 10px rgb(255 255 255 / 30%);
+}
+
+.ctaButton:hover .ctaPulse {
+  animation: ctaPulse 1.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.ctaButton:hover .ctaCursorOrbit {
+  animation-play-state: running;
+}
+
+.ctaButton:hover .ctaCursorItem {
+  opacity: 1;
+  transform: translate(-50%, -50%) rotate(var(--cursor-angle))
+    translateX(var(--cursor-radius)) scale(1);
+}
+
+@keyframes ctaPulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.72);
+  }
+
+  22% {
+    opacity: 0.72;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.12);
+  }
+}
+
+@keyframes ctaOrbitSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (width <= 1512px), (height <= 980px) {
+  .section {
+    min-height: 100svh;
+    padding-top: clamp(6.5rem, 11vh, 8rem);
+    padding-bottom: clamp(2rem, 4.2vh, 3rem);
+  }
+
+  .overlay {
+    width: min(100%, 67rem);
+    gap: clamp(0.55rem, 1.3vw, 0.95rem);
+  }
+
+  .label {
+    font-size: clamp(2.2rem, 10.4vw, 8.9rem);
+    line-height: 0.88;
+    letter-spacing: 0.06em;
+  }
+
+  .lineOffset {
+    padding-left: clamp(0.7rem, 3vw, 2.8rem);
+  }
+
+  .subtitle {
+    margin-top: clamp(0.15rem, 0.6vw, 0.55rem);
+    font-size: clamp(1rem, 1.85vw, 1.35rem);
+  }
+}
+
+@media (width <= 900px) {
+  .section {
+    justify-content: flex-start;
+    padding-top: 7rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .overlay {
+    width: 100%;
+  }
+
+  .label {
+    font-size: clamp(2.55rem, 13vw, 6rem);
+    line-height: 0.9;
+  }
+
+  .subtitle {
+    width: auto;
+    align-self: flex-start;
+  }
+}
+
+@media (width <= 640px) {
+  .section {
+    padding:
+      6.25rem
+      1rem
+      2rem;
+  }
+
+  .overlay {
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .label {
+    width: 100%;
+    align-items: center;
+    font-size: clamp(2.5rem, 14vw, 4.8rem);
+    letter-spacing: 0.05em;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .lineOffset {
+    padding-left: 0;
+  }
+
+  .subtitle {
+    align-self: center;
+    margin-top: 0;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  .ctaButton {
+    margin-top: 0.2rem;
+  }
+
+  .ctaButtonBody {
+    min-height: 2.9rem;
+    padding: 0.72rem 1.45rem;
+  }
+
+  .ctaOrbit {
+    display: none;
+  }
+}
