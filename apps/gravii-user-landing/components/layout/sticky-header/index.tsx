@@ -28,6 +28,12 @@ const ORBIT_CURSORS = [
   }),
 ] as const
 
+const userAppUrl =
+  process.env.NEXT_PUBLIC_USER_APP_URL?.trim() ||
+  (process.env.NODE_ENV === 'development'
+    ? 'http://localhost:3003'
+    : 'https://app.gravii.io')
+
 function MousePointerIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" className={s.cursorGlyph}>
@@ -168,11 +174,9 @@ export function StickyHeader() {
       {/* Right Area: Action Button */}
       <div>
         <HeaderPill
-          href="#"
+          href={userAppUrl}
           label="LAUNCH APP"
           className={`${s.pillLink} ${s.actionLink}`}
-          onClick={(e) => e.preventDefault()}
-          ariaDisabled
         />
       </div>
     </header>
