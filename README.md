@@ -71,3 +71,4 @@ bun run typecheck:user-landing
 ## Docs
 
 - `docs/design-foundations-checklist.md`: pre-design-system checklist for visual foundations and shared UI readiness
+# gravii-frontend
