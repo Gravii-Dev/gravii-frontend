@@ -12,6 +12,8 @@ test-results
 .env
 .env.*
 !.env.example
+.local-docs/
+**/.local-docs/
 
 # Tooling and editor state
 .idea

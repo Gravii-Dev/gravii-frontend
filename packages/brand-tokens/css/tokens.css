@@ -1,0 +1,62 @@
+:root {
+  --gravii-ink: #090907;
+  --gravii-paper: #fffdf7;
+  --gravii-canvas: #f7f0e6;
+  --gravii-canvas-dim: #ece2d5;
+  --gravii-canvas-bright: #fffaf2;
+  --gravii-surface: rgb(255 253 247 / 82%);
+  --gravii-surface-strong: rgb(255 250 240 / 96%);
+  --gravii-surface-low: rgb(255 252 246 / 58%);
+  --gravii-ink-muted: rgb(9 9 7 / 64%);
+  --gravii-ink-soft: rgb(9 9 7 / 46%);
+  --gravii-line: rgb(9 9 7 / 12%);
+  --gravii-line-strong: rgb(9 9 7 / 20%);
+  --gravii-blue: #5aa9ff;
+  --gravii-glacier: #e4f2ff;
+  --gravii-gold: #f4d23a;
+  --gravii-gold-soft: #ffefad;
+  --gravii-green: #55db9c;
+  --gravii-green-soft: #99e9c4;
+  --gravii-violet: #ecd7ff;
+  --gravii-violet-soft: #f8f0ff;
+  --gravii-orange: #f15a24;
+  --gravii-radius-xs: 12px;
+  --gravii-radius-sm: 18px;
+  --gravii-radius-card: 1.7rem;
+  --gravii-radius-container: 2.25rem;
+  --gravii-radius-xl: 54px;
+  --gravii-radius-pill: 999px;
+  --gravii-border-width: 1.5px;
+  --gravii-border: var(--gravii-border-width) solid var(--gravii-ink);
+  --gravii-shadow-pop: 0 18px 42px rgb(21 18 11 / 12%);
+  --gravii-shadow-soft: 0 24px 84px rgb(39 31 20 / 13%);
+  --gravii-shadow-card: 0 18px 46px rgb(21 18 11 / 12%);
+  --gravii-ease-elastic: linear(
+    0,
+    0.5737 7.6%,
+    0.8382 11.87%,
+    0.9463 14.19%,
+    1.0292 16.54%,
+    1.0886 18.97%,
+    1.1258 21.53%,
+    1.137 22.97%,
+    1.1424 24.48%,
+    1.1423 26.1%,
+    1.1366 27.86%,
+    1.1165 31.01%,
+    1.0507 38.62%,
+    1.0219 42.57%,
+    0.9995 46.99%,
+    0.9872 51.63%,
+    0.9842 58.77%,
+    1.0011 81.26%,
+    1
+  );
+  --gravii-motion-standard: 240ms cubic-bezier(0.2, 0, 0, 1);
+  --gravii-motion-emphasized: 420ms cubic-bezier(0.2, 0, 0, 1);
+  --gravii-motion-elastic: 0.75s var(--gravii-ease-elastic);
+  --gravii-font-ui: var(--font-sans, var(--font-landing-outfit, var(--next-font-sans), system-ui, sans-serif));
+  --gravii-font-display: var(--font-brand, var(--font-mystic-dream, var(--font-landing-sora), system-ui, sans-serif));
+  --gravii-font-heading: var(--font-brand, var(--font-landing-sora, var(--font-landing-outfit), system-ui, sans-serif));
+  --gravii-font-mono: var(--font-landing-space-mono, "SFMono-Regular", Consolas, monospace);
+}

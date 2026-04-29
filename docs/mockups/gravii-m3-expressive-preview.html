@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gravii M3 Expressive Preview</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700&display=swap");
+
+      :root {
+        color-scheme: light;
+        --bg: #f7f3ed;
+        --bg-ambient: radial-gradient(circle at top left, rgba(217, 231, 239, 0.92), transparent 42%),
+          radial-gradient(circle at 85% 18%, rgba(183, 154, 115, 0.24), transparent 24%),
+          linear-gradient(180deg, #faf7f2 0%, #f1ebe3 100%);
+        --surface: rgba(255, 251, 246, 0.8);
+        --surface-strong: rgba(250, 244, 237, 0.96);
+        --surface-accent: #e9f0f6;
+        --stroke: rgba(39, 68, 92, 0.14);
+        --stroke-strong: rgba(39, 68, 92, 0.24);
+        --text: #1f2b33;
+        --muted: #5f6b73;
+        --primary: #27445c;
+        --primary-hover: #223b4f;
+        --secondary: #5f7e73;
+        --tertiary: #b79a73;
+        --focus: #7d9fd0;
+        --success: #3f7460;
+        --danger: #9b5861;
+        --shadow: 0 24px 70px rgba(56, 50, 44, 0.08);
+        --radius-xl: 34px;
+        --radius-lg: 26px;
+        --radius-md: 20px;
+        --radius-sm: 16px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+      }
+
+      body {
+        background: var(--bg);
+        background-image: var(--bg-ambient);
+        color: var(--text);
+        font-family: "Instrument Sans", "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        line-height: 1.45;
+      }
+
+      .page {
+        width: min(1440px, calc(100vw - 48px));
+        margin: 0 auto;
+        padding: 42px 44px 56px;
+      }
+
+      .shell {
+        border: 1px solid rgba(255, 255, 255, 0.55);
+        border-radius: 42px;
+        background: rgba(255, 251, 246, 0.52);
+        backdrop-filter: blur(26px);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 24px 28px 18px;
+      }
+
+      .brand {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .brand-mark {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        background: linear-gradient(180deg, rgba(39, 68, 92, 0.98), rgba(59, 88, 112, 0.92));
+        color: #eff4f7;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+      }
+
+      .brand-wordmark {
+        font-family: "Cloth", "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+        font-size: 32px;
+        line-height: 1;
+        letter-spacing: 0.02em;
+      }
+
+      .brand-note {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(233, 240, 246, 0.7);
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .nav-pill {
+        padding: 11px 18px;
+        border: 1px solid var(--stroke);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.45);
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .nav-pill.active {
+        border-color: rgba(39, 68, 92, 0.2);
+        background: var(--surface-accent);
+        color: var(--primary);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1.14fr 0.86fr;
+        gap: 24px;
+        padding: 6px 28px 28px;
+      }
+
+      .panel {
+        border: 1px solid rgba(255, 255, 255, 0.48);
+        border-radius: var(--radius-xl);
+        background: var(--surface);
+        backdrop-filter: blur(18px);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.74);
+      }
+
+      .hero-copy {
+        padding: 30px 30px 34px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.58);
+        color: var(--secondary);
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 20px 0 18px;
+        max-width: 11.5ch;
+        font-size: 68px;
+        line-height: 0.98;
+        letter-spacing: -0.055em;
+      }
+
+      .lede {
+        max-width: 53ch;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .actions {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-top: 28px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        min-height: 52px;
+        padding: 0 22px;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        text-decoration: none;
+      }
+
+      .button.primary {
+        background: linear-gradient(180deg, var(--primary) 0%, #23415a 100%);
+        color: #f4f7f9;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 12px 30px rgba(39, 68, 92, 0.16);
+      }
+
+      .button.secondary {
+        border-color: var(--stroke);
+        background: rgba(255, 255, 255, 0.48);
+        color: var(--text);
+      }
+
+      .trust-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 22px;
+      }
+
+      .chip {
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.58);
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .hero-side {
+        display: grid;
+        gap: 18px;
+        padding: 22px;
+      }
+
+      .identity-card {
+        padding: 22px 22px 18px;
+        border-radius: 28px;
+        background: linear-gradient(180deg, rgba(233, 240, 246, 0.88), rgba(248, 244, 239, 0.96));
+        border: 1px solid rgba(39, 68, 92, 0.12);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+      }
+
+      .identity-head,
+      .insight-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+      }
+
+      .panel-label {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .identity-title {
+        margin-top: 10px;
+        font-size: 34px;
+        line-height: 1.04;
+        letter-spacing: -0.045em;
+      }
+
+      .persona-pill {
+        padding: 10px 14px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.72);
+        color: var(--primary);
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .identity-grid,
+      .insight-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .mini-card {
+        padding: 14px 15px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.64);
+        border: 1px solid rgba(39, 68, 92, 0.1);
+      }
+
+      .mini-label {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .mini-value {
+        margin-top: 8px;
+        font-size: 18px;
+        font-weight: 600;
+        letter-spacing: -0.03em;
+      }
+
+      .insight-card {
+        padding: 20px 20px 18px;
+        border-radius: 28px;
+        background: rgba(255, 252, 247, 0.88);
+        border: 1px solid rgba(39, 68, 92, 0.1);
+      }
+
+      .insight-score {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 14px;
+        border-radius: 18px;
+        background: rgba(39, 68, 92, 0.07);
+        color: var(--primary);
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .metric-strong {
+        color: var(--primary);
+      }
+
+      .sections {
+        display: grid;
+        grid-template-columns: 1fr 0.92fr;
+        gap: 24px;
+        padding: 0 28px 28px;
+      }
+
+      .section {
+        padding: 22px;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+
+      .section-title {
+        font-size: 24px;
+        letter-spacing: -0.04em;
+      }
+
+      .section-copy {
+        color: var(--muted);
+        font-size: 14px;
+        max-width: 34ch;
+      }
+
+      .button-specs {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .spec-card {
+        padding: 18px;
+        border: 1px solid var(--stroke);
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.45);
+      }
+
+      .spec-card h3,
+      .tone-grid h3 {
+        margin: 0 0 8px;
+        font-size: 16px;
+        letter-spacing: -0.02em;
+      }
+
+      .spec-card p,
+      .tone-grid p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .tone-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .tone-card {
+        padding: 18px;
+        border-radius: 24px;
+        border: 1px solid var(--stroke);
+        background: rgba(255, 255, 255, 0.4);
+      }
+
+      .palette {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .swatch {
+        padding: 12px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.42);
+        border: 1px solid rgba(39, 68, 92, 0.1);
+      }
+
+      .swatch-color {
+        height: 76px;
+        border-radius: 16px;
+        margin-bottom: 12px;
+      }
+
+      .swatch-name {
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .swatch-value {
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .footnote {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 0 28px 28px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .footnote strong {
+        color: var(--text);
+      }
+
+      @media (max-width: 1100px) {
+        .hero,
+        .sections {
+          grid-template-columns: 1fr;
+        }
+
+        h1 {
+          max-width: 12ch;
+          font-size: 56px;
+        }
+
+        .palette {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 740px) {
+        .page {
+          width: min(100%, calc(100vw - 20px));
+          padding: 10px 10px 24px;
+        }
+
+        .topbar,
+        .hero,
+        .sections,
+        .footnote {
+          padding-left: 16px;
+          padding-right: 16px;
+        }
+
+        .topbar {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 16px;
+        }
+
+        .nav {
+          flex-wrap: wrap;
+        }
+
+        h1 {
+          font-size: 40px;
+          letter-spacing: -0.06em;
+        }
+
+        .lede {
+          font-size: 16px;
+        }
+
+        .actions {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .button-specs,
+        .tone-grid,
+        .palette,
+        .identity-grid,
+        .insight-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <div class="shell">
+        <header class="topbar">
+          <div class="brand">
+            <div class="brand-mark">
+              <div class="brand-badge">GV</div>
+              <div class="brand-wordmark">Gravii</div>
+            </div>
+            <div class="brand-note">`Cloth` shown with fallback serif until the actual font file is supplied</div>
+          </div>
+
+          <nav class="nav" aria-label="Preview sections">
+            <div class="nav-pill active">Identity</div>
+            <div class="nav-pill">Analysis</div>
+            <div class="nav-pill">Persona</div>
+          </nav>
+        </header>
+
+        <section class="hero">
+          <div class="panel hero-copy">
+            <div class="eyebrow">Calm intelligence for wallet behavior</div>
+            <h1>Comfort first. Insight without posture.</h1>
+            <p class="lede">
+              This mock direction translates Material 3 Expressive into a warmer, steadier Gravii language:
+              soft surfaces, rounded states, clear hierarchy, and enough expressiveness to feel human without
+              drifting into generic crypto-tech swagger.
+            </p>
+
+            <div class="actions">
+              <a class="button primary" href="#">Open Gravii ID</a>
+              <a class="button secondary" href="#">Review X-RAY flow</a>
+            </div>
+
+            <div class="trust-row">
+              <div class="chip">Comfortable</div>
+              <div class="chip">Stable</div>
+              <div class="chip">Smart</div>
+              <div class="chip">Warm-neutral surfaces</div>
+              <div class="chip">Rounded, touch-friendly controls</div>
+            </div>
+          </div>
+
+          <div class="panel hero-side">
+            <div class="identity-card">
+              <div class="identity-head">
+                <div>
+                  <div class="panel-label">GRAVII ID preview</div>
+                  <div class="identity-title">Collector with signal-rich habits</div>
+                </div>
+                <div class="persona-pill">Persona: Intentional Curator</div>
+              </div>
+
+              <div class="identity-grid">
+                <div class="mini-card">
+                  <div class="mini-label">Wallet rhythm</div>
+                  <div class="mini-value">Measured, multi-cycle participation</div>
+                </div>
+                <div class="mini-card">
+                  <div class="mini-label">Trust read</div>
+                  <div class="mini-value">Low volatility, high continuity</div>
+                </div>
+                <div class="mini-card">
+                  <div class="mini-label">Signal type</div>
+                  <div class="mini-value">Curated engagement patterns</div>
+                </div>
+                <div class="mini-card">
+                  <div class="mini-label">Tone</div>
+                  <div class="mini-value">Quietly confident, not gamified</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="insight-card">
+              <div class="insight-head">
+                <div>
+                  <div class="panel-label">X-RAY preview</div>
+                  <div class="section-title">Smart analysis that still feels calm</div>
+                </div>
+                <div class="insight-score">Insight confidence <span class="metric-strong">87%</span></div>
+              </div>
+
+              <div class="insight-grid">
+                <div class="mini-card">
+                  <div class="mini-label">Behavior cluster</div>
+                  <div class="mini-value">Long-view utility seeker</div>
+                </div>
+                <div class="mini-card">
+                  <div class="mini-label">Recommended emphasis</div>
+                  <div class="mini-value">Explainable summaries over hype</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="sections">
+          <div class="panel section">
+            <div class="section-header">
+              <div>
+                <div class="panel-label">Pilot components</div>
+                <div class="section-title">Button and surface behavior</div>
+              </div>
+              <div class="section-copy">Friendly, stable, and expressive enough to feel intentional.</div>
+            </div>
+
+            <div class="button-specs">
+              <div class="spec-card">
+                <h3>Primary action</h3>
+                <p>Deep slate blue, soft pill geometry, subtle depth, no flashy gradients.</p>
+                <div style="margin-top: 16px">
+                  <span class="button primary">Start Analysis</span>
+                </div>
+              </div>
+              <div class="spec-card">
+                <h3>Secondary action</h3>
+                <p>Warm translucent surface with reliable contrast and visible state boundaries.</p>
+                <div style="margin-top: 16px">
+                  <span class="button secondary">View Wallet Signals</span>
+                </div>
+              </div>
+              <div class="spec-card">
+                <h3>Panel logic</h3>
+                <p>Use surface layering and border tone before shadow-heavy emphasis.</p>
+                <div style="margin-top: 16px" class="chip">Hover 120–160ms · Press 90–120ms</div>
+              </div>
+            </div>
+
+            <div class="palette">
+              <div class="swatch">
+                <div class="swatch-color" style="background: #27445c"></div>
+                <div class="swatch-name">Primary</div>
+                <div class="swatch-value">#27445C</div>
+              </div>
+              <div class="swatch">
+                <div class="swatch-color" style="background: #d9e7ef"></div>
+                <div class="swatch-name">Primary Container</div>
+                <div class="swatch-value">#D9E7EF</div>
+              </div>
+              <div class="swatch">
+                <div class="swatch-color" style="background: #5f7e73"></div>
+                <div class="swatch-name">Secondary</div>
+                <div class="swatch-value">#5F7E73</div>
+              </div>
+              <div class="swatch">
+                <div class="swatch-color" style="background: #b79a73"></div>
+                <div class="swatch-name">Tertiary</div>
+                <div class="swatch-value">#B79A73</div>
+              </div>
+              <div class="swatch">
+                <div class="swatch-color" style="background: #f7f3ed"></div>
+                <div class="swatch-name">Surface</div>
+                <div class="swatch-value">#F7F3ED</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel section">
+            <div class="section-header">
+              <div>
+                <div class="panel-label">Brand guardrails</div>
+                <div class="section-title">What this should and should not feel like</div>
+              </div>
+            </div>
+
+            <div class="tone-grid">
+              <div class="tone-card">
+                <h3>Should feel</h3>
+                <p>Comfortable, stable, observant, composed, quietly premium.</p>
+              </div>
+              <div class="tone-card">
+                <h3>Should avoid</h3>
+                <p>Neon crypto tropes, dark-mode swagger, over-serious fintech stiffness, flashy self-importance.</p>
+              </div>
+              <div class="tone-card">
+                <h3>Typography</h3>
+                <p>`Cloth` for signature moments only. Use a calm sans for dense UI, data, and repeated product headings.</p>
+              </div>
+              <div class="tone-card">
+                <h3>Recommended pilot</h3>
+                <p>Refactor the `GRAVII ID` and `X-RAY` opening flow first, then scale the token language outward.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="footnote">
+          <div><strong>Preview type:</strong> pre-refactor design mockup, not production UI</div>
+          <div><strong>Next step:</strong> approve the direction, then execute one pilot in `apps/gravii-user-app`</div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

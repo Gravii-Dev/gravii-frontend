@@ -1,0 +1,638 @@
+# Progress Log
+
+Append only. Use newest entries first. Record what changed, how it was checked, and the next handoff point. Do not use this file as a backlog or a plan.
+
+## 2026-04-21
+
+- Ran a post-Lens-integration frontend verification pass across the currently live surfaces:
+  - confirmed `gravii-partner-app` still typechecks and builds after the live Lens integration
+  - confirmed `gravii-user-app` still typechecks, builds, and passes its Vitest suite
+  - confirmed `gravii-user-landing` still typechecks and builds after the live waitlist work
+  - confirmed root Playwright smoke tests still pass for anonymous auth redirects and landing-to-app handoff flows
+- Verification:
+  - `cd /Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app && ~/.bun/bin/bun run typecheck`
+  - `cd /Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app && ~/.bun/bin/bun run build`
+  - `cd /Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app && ~/.bun/bin/bun run typecheck`
+  - `cd /Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app && ~/.bun/bin/bun run test`
+  - `cd /Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app && ~/.bun/bin/bun run build`
+  - `cd /Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing && ~/.bun/bin/bun run typecheck`
+  - `cd /Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing && ~/.bun/bin/bun run build`
+  - `cd /Users/kxwxn/Gravii/FRONTEND && ~/.bun/bin/bun run test:e2e`
+- Next handoff:
+  - Authenticated browser QA remains: use a real Firebase partner account on `/lens` to create a pool, watch progress, rename/delete, filter/paginate wallets, and open wallet drill-down.
+
+## 2026-04-17
+
+- Shipped the first real Gravii design-system pilot inside `gravii-user-app`, grounded in the approved Option A direction:
+  - copied the approved brand SVGs into `apps/gravii-user-app/public/brand`
+  - copied `Cloth` into the app source tree and wired the shipped `Cloth + Geist` pairing through local `next/font`
+  - added a shared `gravii-logo` component that exposes `symbol`, `wordmark`, and `motion` variants from the approved assets
+  - refreshed the shell header and loading state to use the real brand mark instead of placeholder text
+  - rebuilt the `GRAVII ID` presentation around a calmer expressive hero, live metrics, and explicit `X-RAY` / `MY SPACE` routes
+  - rebuilt the `X-RAY` search, loading, result, and history surfaces to match the new Gravii visual language without changing the live User API flow
+- Updated the affected app and feature docs so the new shared brand component, typography pairing, and refreshed profile/X-Ray presentation are reflected in committed English docs.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/public/brand/logo-symbol.svg`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/public/brand/logo-wordmark.svg`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/public/brand/centre-circle.svg`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/public/brand/curve.svg`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/fonts/cloth.woff2`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/fonts/cloth.woff`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/layout.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/globals.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/gravii-logo/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/gravii-logo/gravii-logo.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/profile/profile-content.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/profile/profile-content.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/profile/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/x-ray/x-ray-content.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/x-ray/x-ray-content.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/x-ray/components/x-ray-result-view/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/x-ray/components/x-ray-result-view/x-ray-result-view.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/x-ray/components/x-ray-history-list/x-ray-history-list.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/x-ray/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/PLAN.md`
+- Verification:
+  - `cd /Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app && bun run typecheck`
+  - `cd /Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app && bun run test -- src/app/page.test.tsx src/features/x-ray/x-ray-content.test.tsx`
+  - `cd /Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app && bun run build`
+- Next handoff:
+  - Run a real browser pass on `gravii-user-app` to tune motion-logo geometry, spacing, and copy tone, then decide whether to roll the same visual system into the remaining user-app panels or keep the pilot scoped to `GRAVII ID` and `X-RAY`.
+
+- Integrated the live Partner Lens backend into `gravii-partner-app`:
+  - added shared Lens domain types under `packages/domain-types`
+  - extended the shared partner API client with live `/api/v1/lens/*` methods
+  - added a Lens-specific app adapter that normalizes snake_case Partner API payloads into the shared camelCase shapes
+  - replaced the old preview-only Lens page with a live pool workflow for create/list/get/rename/delete, progress polling, aggregate summary rendering, filtered wallet browsing, and per-wallet X-Ray drill-down
+  - switched the Lens surface status from preview to live and removed the unused preview snapshot data file
+- Updated partner docs and workspace API mapping so the repo now reflects the current truth: Lens is live, while the remaining dashboard-grade partner routes still stay preview-backed.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/packages/domain-types/src/lens.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/packages/domain-types/src/index.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/packages/api-clients/src/partner.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/lib/auth/partner-api.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/lib/partner-data-surfaces.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/lens/lens-api.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/lens/csv.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/lens/lens-page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/lens/lens-page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/lens/data.ts` (deleted)
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/docs/frontend-data-api-map.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/PLAN.md`
+- Verification:
+  - `cd /Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app && ~/.bun/bin/bun run typecheck`
+  - `cd /Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app && ~/.bun/bin/bun run build`
+- Next handoff:
+  - Run an authenticated browser QA pass on `/lens` against the real Firebase + Partner API flow, especially create pool, progress polling, rename/delete, wallet filters, pagination, and drill-down behavior.
+
+- Added a monochrome version of the Gravii motion-logo concept after confirming that the brand logo itself should stay all black:
+  - created a new preview that separates the official static lockup from the product-only motion symbol
+  - removed the earlier temporary color accent idea and relied only on orbit spacing, geometry, and timing to make the motion readable
+  - approximated the official lockup structure directly in SVG so the team can judge the interaction between the stable logo and the animated symbol on the same board
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/docs/mockups/gravii-motion-logo-monochrome.html`
+  - `/Users/kxwxn/Gravii/FRONTEND/docs/mockups/gravii-motion-logo-monochrome.png`
+  - `/Users/kxwxn/Gravii/FRONTEND/README.md`
+- Verification:
+  - `~/.bun/bin/bunx playwright screenshot --device="Desktop Chrome" --full-page "file:///Users/kxwxn/Gravii/FRONTEND/docs/mockups/gravii-motion-logo-monochrome.html" "/Users/kxwxn/Gravii/FRONTEND/docs/mockups/gravii-motion-logo-monochrome.png"`
+- Next handoff:
+  - decide whether the monochrome orbit version is close enough to the approved brand geometry, then either refine the SVG proportions or convert the motion symbol into a production-ready asset.
+
+- Added a dedicated motion-logo concept for the current Gravii symbol so the red arc can rotate continuously without visually colliding with the black core ring:
+  - built a static HTML preview with an animated SVG orbit where the red arc runs on a larger radius than the black ring
+  - showed the same symbol on both light and dark product surfaces so the team can judge whether this should become a reusable motion mark
+  - kept the concept isolated inside `docs/mockups` and did not modify any app runtime code
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/docs/mockups/gravii-motion-logo-preview.html`
+  - `/Users/kxwxn/Gravii/FRONTEND/docs/mockups/gravii-motion-logo-preview.png`
+  - `/Users/kxwxn/Gravii/FRONTEND/README.md`
+- Verification:
+  - `~/.bun/bin/bunx playwright screenshot --device="Desktop Chrome" --full-page "file:///Users/kxwxn/Gravii/FRONTEND/docs/mockups/gravii-motion-logo-preview.html" "/Users/kxwxn/Gravii/FRONTEND/docs/mockups/gravii-motion-logo-preview.png"`
+- Next handoff:
+  - decide whether the orbit geometry and motion speed feel right, then convert the approved symbol into a clean production SVG and a product-ready motion implementation.
+
+- Replaced the earlier too-soft single concept with a clearer A/B visual comparison for the Gravii pre-refactor direction:
+  - created `Option A` with a visibly stronger Material 3 Expressive read through bolder role-color separation, more assertive rounded geometry, and explicit icon treatment
+  - created `Option B` with the same system ideas translated into a calmer Gravii tone so the expressive language remains visible without overpowering the brand
+  - rendered PNG screenshots for both options so the direction can be reviewed without opening the HTML files
+- Kept the work fully inside `docs/mockups` so the product apps remain untouched before the pilot refactor.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/docs/mockups/gravii-m3e-option-a-strong.html`
+  - `/Users/kxwxn/Gravii/FRONTEND/docs/mockups/gravii-m3e-option-a-strong.png`
+  - `/Users/kxwxn/Gravii/FRONTEND/docs/mockups/gravii-m3e-option-b-restrained.html`
+  - `/Users/kxwxn/Gravii/FRONTEND/docs/mockups/gravii-m3e-option-b-restrained.png`
+  - `/Users/kxwxn/Gravii/FRONTEND/README.md`
+- Verification:
+  - `~/.bun/bin/bunx playwright screenshot --device="Desktop Chrome" --full-page "file:///Users/kxwxn/Gravii/FRONTEND/docs/mockups/gravii-m3e-option-a-strong.html" "/Users/kxwxn/Gravii/FRONTEND/docs/mockups/gravii-m3e-option-a-strong.png"`
+  - `~/.bun/bin/bunx playwright screenshot --device="Desktop Chrome" --full-page "file:///Users/kxwxn/Gravii/FRONTEND/docs/mockups/gravii-m3e-option-b-restrained.html" "/Users/kxwxn/Gravii/FRONTEND/docs/mockups/gravii-m3e-option-b-restrained.png"`
+- Next handoff:
+  - choose whether Gravii should anchor closer to option A, option B, or a hybrid, then carry that choice into the first `apps/gravii-user-app` pilot refactor.
+
+## 2026-04-16
+
+- Added a visual preview artifact so the new Gravii design direction can be reviewed before any product-code refactor:
+  - created a static HTML mockup that translates the new brief into a tangible style tile plus `GRAVII ID` / `X-RAY` pilot concept
+  - rendered a PNG screenshot from the mockup for quick non-technical review
+  - kept the preview separate from runtime app code so the design can be reviewed without starting the real refactor
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/docs/mockups/gravii-m3-expressive-preview.html`
+  - `/Users/kxwxn/Gravii/FRONTEND/docs/mockups/gravii-m3-expressive-preview.png`
+  - `/Users/kxwxn/Gravii/FRONTEND/README.md`
+- Verification:
+  - `~/.bun/bin/bunx playwright screenshot --device="Desktop Chrome" "file:///Users/kxwxn/Gravii/FRONTEND/docs/mockups/gravii-m3-expressive-preview.html" "/Users/kxwxn/Gravii/FRONTEND/docs/mockups/gravii-m3-expressive-preview.png"`
+- Next handoff:
+  - review the preview, decide whether the warm-neutral palette and the first `Instrument Sans` pairing feel right, then either revise the mockup or start the `apps/gravii-user-app` pilot refactor.
+
+## 2026-04-16
+
+- Prepared the workspace for a design-system refactor without touching runtime app code:
+  - added a new pre-refactor Gravii design brief grounded in a Material 3 Expressive-inspired direction
+  - translated the current brand inputs into tone, anti-tone, color-role guidance, typography direction, motion guidance, and pilot recommendations
+  - recorded that the logo title font input is `Cloth` and constrained its recommended use to brand-signature moments rather than dense UI
+- Updated the workspace handoff docs so the current active stream is now the design-direction phase rather than implementation.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/docs/design-direction-gravii-m3-expressive.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/PLAN.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/TODO.md`
+- Verification:
+  - manual review of the new design brief for consistency with the existing workspace design-foundation constraints
+  - manual review of the updated docs index and handoff files
+- Next handoff:
+  - approve the brief, confirm the first UI sans pairing against `Cloth`, then start a single pilot refactor in `apps/gravii-user-app` focused on the opening `GRAVII ID` and `X-RAY` experience.
+
+## 2026-04-14
+
+- Smoothed the Launch App Gravii ID bootstrap experience for newly created wallets:
+  - mark newly created sign-ins in session storage after `POST /api/v1/auth/verify`
+  - treat `/api/v1/me/identity` `404` as "still building" instead of a hard failure
+  - poll the live identity endpoint for a short window before showing an error state
+  - keep the loading reveal non-interactive while the first Gravii ID is still being generated
+  - route error actions between direct identity retry and session refresh depending on the returned API status
+- Updated the user-app docs so the current behavior is explicit in both the app README and the profile feature guide.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/lib/auth/user-api.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/auth/user-sign-in-page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/profile/profile-content.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/profile/profile-content.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/profile/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/README.md`
+- Verification:
+  - `~/.bun/bin/bun run typecheck`
+  - `~/.bun/bin/bun run build`
+- Next handoff:
+  - Browser-QA the new-wallet path end-to-end so the loading copy, retry timing, and eventual card reveal feel right against the live User API.
+
+## 2026-04-11
+
+- Realigned the shared landing/user package layer with the currently deployed backend contracts:
+  - added shared landing waitlist request/response types under `packages/domain-types`
+  - added shared user auth, Gravii ID, credits, X-Ray list/lookup/detail types under `packages/domain-types`
+  - replaced the older `packages/api-clients` landing client routes with the live `POST /api/v1/landing/waitlist` contract
+  - replaced the older `packages/api-clients` user auth route names with the live `GET /api/v1/auth/challenge`, `POST /api/v1/auth/verify`, `GET /api/v1/auth/session`, `GET /api/v1/me/identity`, `GET /api/v1/me/credits`, and X-Ray routes
+- Updated workspace docs so the shared package layer now reflects the live Landing API and User API instead of the earlier auth/session plan.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/packages/domain-types/src/landing.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/packages/domain-types/src/user.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/packages/domain-types/src/index.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/packages/api-clients/src/landing.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/packages/api-clients/src/user.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/packages/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/docs/frontend-auth-rollout-status.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/docs/frontend-data-api-map.md`
+- Verification:
+  - `bun run typecheck`
+  - `bun run build:user-app`
+  - `bun run build:user-landing`
+- Next handoff:
+  - Keep the partner preview/live truth pass in place, then move into deployed QA on the landing and authenticated QA on both the user and partner apps.
+
+- Audited the live Partner API again before starting read-data wiring:
+  - confirmed the deployed public Partner API still exposes the live auth/profile contract
+  - verified that the documented public dashboard and population read routes currently return `404`, so those surfaces cannot be honestly wired to live data yet
+- Added an explicit partner data-source status layer so the routed partner product now distinguishes live auth/profile from preview analytics data instead of silently implying the fixture-backed routes are live:
+  - added `src/lib/partner-data-surfaces.ts` to centralize which routed partner surfaces are still preview-backed
+  - added `src/components/ui/partner-data-status` and mounted it across dashboard, analytics, labels, risk, reach, lens, and campaign-manager
+  - changed the dashboard snapshot label from a generic `Snapshot` to `Preview dataset`
+- Updated partner docs and workspace handoff files so the next session starts from the current truth: partner auth/profile are live, while public dashboard/population reads are still waiting on published endpoints.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/lib/partner-data-surfaces.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/components/ui/partner-data-status/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/components/ui/partner-data-status/partner-data-status.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/dashboard/data.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/dashboard/dashboard-page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/analytics/analytics-page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/labels/labels-page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/risk/risk-page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/reach/campaign-builder.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/lens/lens-page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/campaign-manager/campaign-manager-page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/docs/frontend-auth-rollout-status.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/docs/frontend-data-api-map.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/PLAN.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/TODO.md`
+- Verification:
+  - `bun run build:partner-app`
+  - `bun run typecheck`
+- Next handoff:
+  - Run authenticated browser QA on `partner.gravii.io` with the new preview/live callouts in place, then replace each preview-backed route with live Partner API reads only after the corresponding public endpoint is published.
+
+## 2026-04-10
+
+- Finished the live Landing API conversion for the public waitlist in `gravii-user-landing`:
+  - replaced the older CRM-oriented waitlist server action with a live `POST /api/v1/landing/waitlist` submission path
+  - added referral-code passthrough from `?ref=GRV-XXXXXX`
+  - cached successful submissions in `localStorage` so returning visitors immediately see their referral code instead of resubmitting
+  - removed the build-breaking `useSearchParams()` dependency from the visible waitlist form so the home route stays statically prerenderable
+- Finished the first real live-backend pass for `gravii-user-app`:
+  - added `src/lib/auth/user-api.ts` as the live User API adapter for wallet auth, session validation, Gravii ID, credits, X-Ray lookups, history, and detail reads
+  - replaced the older frontend-managed cookie/refresh auth scaffold with the live JWT-in-`localStorage` flow
+  - deleted the now-retired app-local `/api/auth/*`, `/api/me`, and `server-session` files
+  - connected `GRAVII ID` to the live `/api/v1/me/identity` response
+  - connected `X-RAY` to live `/api/v1/me/credits`, `/api/v1/me/xray/lookup-list`, `/api/v1/me/xray/lookup`, and `/api/v1/me/xray/:address`
+  - parked `STANDING`, `DISCOVERY`, and `MY SPACE` behind explicit coming-soon surfaces
+  - moved `MY SPACE` into the main panel strip as panel `05` so the requested `01 -> 05` ordering now matches the backend/frontend rollout note
+- Refreshed outdated user-app tests so the reserved/coming-soon surfaces reflect the current product scope instead of the earlier mock discovery/my-space implementations.
+- Rewrote the active plan and updated the durable backlog so the next session can move straight into hosted QA and final live-data polish instead of the retired partner-auth rollout assumptions.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/app/(site)/actions.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/components/sections/waitlist/form.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/lib/auth/shared.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/lib/auth/user-api.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/auth/auth-provider.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/auth/user-sign-in-page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/auth/user-sign-in-page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/profile/profile-content.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/profile/profile-content.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/profile/profile-view-model.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/x-ray/x-ray-content.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/x-ray/x-ray-content.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/x-ray/x-ray-view-model.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/x-ray/components/x-ray-history-list/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/x-ray/components/x-ray-result-view/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/discovery/discovery-content.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/discovery/discovery-content.test.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/standing/standing-content.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/my-space/my-space-content.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/my-space/my-space-content.test.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/coming-soon/coming-soon-content.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/coming-soon/coming-soon-content.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/launch-app/types.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/launch-app/panel-config.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/launch-panel.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/middleware.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/api/auth/*` (deleted)
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/api/me/route.ts` (deleted)
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/lib/auth/server-session.ts` (deleted)
+  - `/Users/kxwxn/Gravii/FRONTEND/PLAN.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/TODO.md`
+- Verification:
+  - `bun run build:user-landing`
+  - `bun run build:user-app`
+  - `cd apps/gravii-user-app && bun run test`
+  - `bun run typecheck`
+- Next handoff:
+  - Run hosted QA on `gravii.io` and `gravii.io/partners`, then continue with authenticated browser QA on `partner.gravii.io` and the final live-data polish in `app.gravii.io`.
+
+## 2026-04-08
+
+- Grounded `gravii-partner-app` more firmly in the live backend auth/profile contract instead of the older seeded/session-first assumptions:
+  - normalized the live Partner API auth/session/me payloads from snake_case into the app's shared camelCase `PartnerProfile`
+  - added `src/lib/partner-profile.ts` to centralize workspace-name, plan-label, status-label, and last-login formatting
+  - cleared workspace-local scenario/module state on partner sign-out so switching accounts no longer preserves the previous partner's shell configuration
+- Replaced hardcoded partner branding in fixture-backed routed surfaces with the authenticated workspace identity:
+  - campaign drafts, managed campaigns, dashboard insights, and analytics top-protocol labels now derive the partner name from the current authenticated session
+  - the campaign builder now forces stored local drafts back onto the current partner identity instead of keeping stale `Pendle Finance` values from previous sessions
+- Extended the live partner identity deeper into the routed product:
+  - onboarding now shows the active workspace name and plan under `Welcome to Gravii`
+  - the shell now shows the active workspace name and plan under the Gravii logo
+  - settings now display live account email, plan, status, and last-login details
+- Updated the active plan, durable TODOs, and the partner-app README to reflect that this stream is now focused on live partner profile productization while dashboard-grade data remains fixture-backed until the backend read endpoints return.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/lib/auth/partner-api.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/lib/partner-profile.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/lib/workspace-settings.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/auth/auth-provider.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/onboarding/onboarding-page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/onboarding/onboarding-page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/components/layout/app-shell/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/components/layout/app-shell/app-shell.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/dashboard/data.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/dashboard/dashboard-page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/analytics/analytics-page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/settings/settings-page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/reach/data.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/reach/managed-campaigns.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/reach/campaign-builder-model.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/reach/campaign-builder.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/reach/campaign-builder-drafts.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/PLAN.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/TODO.md`
+- Verification:
+  - `bun run build:partner-app`
+  - `bun run typecheck`
+- Next handoff:
+  - Run authenticated browser QA against the live Google login to verify the normalized partner profile flows through onboarding, shell, settings, dashboard, and reach exactly as intended, then keep tightening mockup parity and route performance.
+
+## 2026-04-07
+
+- Added a first targeted performance pass to the partner app after local testing feedback:
+  - the root `/` page now delays rendering the onboarding surface until auth has actually succeeded instead of eagerly mounting the onboarding tree for unauthenticated visitors
+  - the partner sign-in page now prefetches the next destination
+  - the onboarding chooser now prefetches all allowed scenario destinations
+  - the routed shell now prefetches the visible internal navigation hrefs once the authenticated workspace is open
+  - heavy long-form partner routes (`dashboard`, `analytics`, `labels`, `risk`, `reach`, `campaign-manager`) now use `content-visibility` with intrinsic-size hints so offscreen sections defer layout/render work
+- Local inspection showed the app server itself is not the primary bottleneck (`localhost:3001` responded with ~67ms TTFB during testing), which suggests the remaining slowness is more likely tied to dev-mode compilation, Firebase session restore, and route-level client rendering cost.
+- Verification: `bun run build:partner-app` and `bun run typecheck` passed after the performance pass.
+- Next handoff: compare authenticated route transitions in dev vs production mode, then continue route-level performance cleanup if specific surfaces still feel slow after the current prefetch/content-visibility pass.
+
+- Reworked the partner `Campaign Manager` page away from the old generic documentation-style header and back toward the mockup structure:
+  - restored the `Gravii Reach` page title
+  - restored the `Your Campaigns` list header plus inline `All / Live / Ended` filters
+  - switched the primary action back toward the mockup-style `Edit Campaign →` link treatment
+  - updated the report toggle text to `▼ View Report` / `▲ Close Report`
+- Verification: `bun run build:partner-app` and `bun run typecheck` passed after the campaign-manager parity pass.
+- Next handoff: continue route-by-route partner mockup parity, with the next attention points being smaller copy/layout differences inside Dashboard, Analytics, Labels, Risk, Lens, Connect, and Reach rather than the old structural mismatches.
+
+- Added a new partner workspace-access layer so the live Firebase/Partner API profile now sits between login and routed workspace rendering instead of leaving onboarding, shell visibility, and page redirects to drift independently.
+- Introduced `src/lib/workspace-access.ts` in `gravii-partner-app` to centralize:
+  - partner-status gating (`active` vs non-active)
+  - plan-to-module access mapping
+  - visible pages/default href resolution for the routed shell
+  - the allowed onboarding scenarios for the current authenticated partner profile
+- Updated the partner app shell to consume the shared workspace-access state:
+  - root onboarding remains shell-free only after authentication succeeds
+  - inaccessible routed pages now redirect through the shared access layer instead of raw local workspace settings
+  - suspended partners now hit a blocked state instead of entering the routed workspace
+- Updated the onboarding page so it only opens scenarios that are allowed by the current authenticated partner profile, rather than directly assuming every route is available.
+- Fixed the live partner sign-in redirect bug where the sign-in screen and auth provider were ignoring the requested `next` path and always landing on `/`.
+- Verification: `bun run build:partner-app` and `bun run typecheck` passed after the workspace-access/auth redirect refactor.
+- Next handoff: run authenticated browser QA against the live Google login, then continue route-by-route pixel/copy parity work with the new auth/profile-driven access layer in place.
+
+- Continued the partner-app mockup-parity stream by rebuilding the remaining dashboard routes around the prototype's actual typography and card system instead of the older generic app styling.
+- Added the mockup color/token palette back into the partner app globals so the routed surfaces now share the same accent, chart, and CTA variables as the HTML prototype.
+- Replaced the partner app mono/display font mapping to match the mockup more closely:
+  - `Space Mono` now backs the routed page titles and KPI typography
+  - `JetBrains Mono` is preserved for the onboarding eyebrow where the prototype uses it explicitly
+- Updated the route-level card styling for `dashboard`, `analytics`, `labels`, and `risk` so these pages now use the prototype's heavier border, card background, and mono KPI treatment instead of the softer interim theme.
+- Propagated the same prototype card system into `lens`, `connect`, `settings`, and `reach` so the partner routes now share a consistent mockup-driven visual base instead of mixing old and new surfaces.
+- Removed the routed-shell nav icons and sidebar session card so the partner sidebar now matches the mockup more closely; moved the sign-out action into `Settings` to preserve a real product logout path without reintroducing non-mockup shell chrome.
+- Tightened onboarding copy parity by changing the Lens and Gate scenario descriptions to the exact mockup wording.
+- Verification: `bun run build:partner-app` and `bun run typecheck` passed after the partner token/typography parity pass.
+- Next handoff: continue with authenticated browser QA against the mockup and polish route-level spacing/copy details that still differ after login.
+
+## 2026-04-06
+
+- Rebuilt the partner `Lens` route against the mockup page structure instead of the shared `PageHeader + Card` composition:
+  - the page now uses the mockup-style `Gravii Lens` title, centered upload card, report card layout, dashboard handoff banner, and `Launch on Reach` banner
+  - the copy for `Lens — Analyze Your User Pool` now matches the prototype wording more closely
+- Rebuilt the partner `Connect` route around the four mockup module pages instead of the generic catalog surface:
+  - `/connect` now defaults to `X-Ray Users`
+  - `X-Ray Users`, `Gate — API Setup`, `Gate — Community Bot`, and `Gate — Agent API` each render with mockup-style titles, centered hero cards, and module-specific controls/stats
+  - the route no longer falls back to a repeated generic `Connect modules` hub
+- Simplified the partner `Settings` route to match the mockup information architecture:
+  - `Settings` now focuses on the two visible mockup sections only: `Setup` and `Account`
+  - `Re-run onboarding` returns the user to the root chooser
+  - account data now reads from the authenticated partner profile where possible instead of staying fully hard-coded
+- Updated the partner app README and active plan to reflect that onboarding, Reach, Lens, Connect, and Settings are now the baseline parity surfaces, leaving dashboard/analytics/labels/risk as the next major refactor block.
+- Verification: `bun run build:partner-app` and `bun run typecheck` passed after the Lens/Connect/Settings route refactors.
+- Next handoff: continue the partner-app route parity stream with `dashboard`, `analytics`, `labels`, and `risk`, then run authenticated browser QA against the mockup.
+
+- Continued the partner-app mockup-parity refactor with the mockup HTML treated as the page-level source of truth instead of doing isolated bug fixes.
+- Adjusted the live partner auth redirect flow so successful Google sign-in now always lands on the root onboarding chooser first, matching the intended product flow before the routed shell takes over.
+- Rebuilt the Reach `Create Campaign` surface around the mockup structure:
+  - moved away from the old split `form + sticky preview` layout
+  - matched the mockup order of `Drafts -> Create New Campaign -> Step 1/2/3 -> Preview -> Submit`
+  - updated copy, labels, scope messaging, preview wording, and submit button casing
+  - aligned the reach data dictionaries with the mockup more closely by expanding campaign segments, adding the `All` chain/region pills, and switching behavior labels toward the mockup terminology
+- Removed the remaining obvious developer/explanatory header copy from dashboard, analytics, labels, and risk pages and replaced those top headers with mockup-style page titles.
+- Updated the partner app README and active plan to reflect the mockup-parity stream and the onboarding-first post-login behavior.
+- Verification: `bun run build:partner-app` and `bun run typecheck` passed after the Reach/layout/auth redirect changes.
+- Next handoff: continue route-by-route partner-app parity using the mockup HTML as the source of truth, starting with dashboard/analytics/labels/risk visual structure and then lens/connect/settings polish plus browser QA.
+
+- Started the real partner-app refactor against the actual product requirements instead of the older seeded frontend auth scaffold.
+- Replaced the partner cookie/session bootstrap with the live Firebase Google + Partner API bearer flow:
+  - added shared `PartnerProfile` auth types
+  - added live `signInWithGoogle`, `getAuthSession`, and `getAuthMe` partner client methods
+  - rewrote the partner auth provider and sign-in page around Firebase ID tokens and backend session validation
+  - removed the old partner-side app-local auth routes and demo session issuer from the product flow
+- Updated local partner development to `localhost:3001` because the live Partner API CORS allowlist currently accepts `http://localhost:3001` and rejects `http://localhost:3002`.
+- Updated the `/partners` landing CTA dev fallback to match the new partner-app local port.
+- Reworked the Connect module pages so `X-Ray Users`, `Web API`, `Community Bot`, and `Agent API` now render as distinct focused product surfaces instead of a repeated generic catalog/debug view.
+- Kept the onboarding-first routing aligned with the mockup:
+  - `Your ecosystem only` -> `X-Ray Users`
+  - `Expand with Gravii pool` -> `X-Ray Users`
+  - `Discover new users` -> `Create Campaign`
+- Updated workspace docs, the partner app README, and the auth/data rollout notes to reflect the live partner auth model and the new local port.
+- Verification: `bun run build:partner-app`, `bun run build:user-landing`, and `bun run typecheck` passed. Local browser check confirmed the rebuilt partner sign-in page loads on `http://localhost:3001/sign-in`.
+- Next handoff: continue page-by-page partner-app refactoring against the mockup, starting with dashboard/analytics/labels/risk/settings visual parity and then refreshing the E2E coverage for the live Google auth flow.
+
+- Re-aligned the Reach onboarding destinations with the actual partner mockup behavior after verifying the HTML source: `Your ecosystem only` and `Expand with Gravii pool` now route back to `X-Ray Users`, while `Discover new users` remains the only Reach card that opens the Create Campaign flow.
+- Corrected the partner-app onboarding routing so each Reach card lands on its intended surface instead of collapsing into the same flow.
+- Refocused the Connect route to support module-specific entry screens: `/connect?module=gate-api`, `/connect?module=community-bot`, `/connect?module=agent-api`, and `/connect?module=xray-link` now render a dedicated module view instead of the generic combined catalog.
+- Updated the partner-app README to document the intended onboarding-to-surface mapping and the generic `/connect` fallback catalog.
+- Verification: pending targeted partner-app build after the routing refactor.
+- Next handoff: run `bun run build:partner-app`, then manually verify the onboarding cards open distinct surfaces and that Reach scenario defaults still propagate into the campaign builder.
+
+## 2026-03-20
+
+- Reduced the heaviest partner-app dev-time overhead after noticing route transitions felt slower than the actual server response time.
+- Limited eager route prefetching to production only in the partner sign-in screen, onboarding chooser, and routed shell so local `next dev` no longer tries to warm every route bundle during normal testing.
+- Made partner auth session restoration less disruptive by deduplicating in-flight bootstrap requests and avoiding a full `loading` bounce when Firebase token refreshes happen after the workspace is already open.
+- Optimized the Labels page for interaction-heavy filtering:
+  - deferred expensive derived calculations behind `useDeferredValue`
+  - moved selection updates into `startTransition`
+  - lazy-loaded the persona modal
+  - precomputed label card display data instead of redoing the same math inline during every render pass
+- Optimized the Reach and Analytics routes for interaction responsiveness:
+  - Reach now defers the heaviest preview/summary recomputation behind a deferred form state so typing into the builder does not eagerly re-render every derived KPI and preview block
+  - Reach lazily loads the draft strip and preview panel instead of paying that cost before the user reaches them
+  - Analytics now treats dimension/group/region tab changes as non-urgent transitions and drives its heavier summary math from deferred state
+- Applied the same interaction pattern to the Risk route:
+  - risk-level and sort filters now update through transitions
+  - row filtering/sorting runs from deferred state
+  - blocked-wallet lookups now use a `Set` instead of repeated linear `includes` checks during table rendering
+- Tightened dashboard mockup parity in the overview route:
+  - aligned the header CTA treatment and snapshot copy with the HTML prototype
+  - added the `Available Assets` and `IP Geolocation` info tooltips that were still missing from the React version
+  - matched KPI title casing/line breaks more closely to the mockup wording
+- Verification: `bun run build:partner-app` and `bun run typecheck` both passed after rerunning typecheck once the partner app build regenerated `.next/types`.
+- Next handoff: measure the updated partner-app in a real authenticated browser session, then continue route-level performance work in `reach` and `analytics` if the remaining slow path is still client rendering rather than dev compilation.
+
+- Added sign-in bootstrap checks across the user, partner, and admin sign-in pages so existing sessions now skip redundant logins and re-enter the protected shells immediately.
+- Added root Playwright coverage for landing handoff, seeded user auth, seeded partner auth, and seeded admin auth.
+- Fixed a real landing regression uncovered by the new E2E suite: CTA query passthrough was freezing the server-rendered href and dropping marketing params until hydration.
+- Added app-local `GET /api/me` routes for user, partner, and admin surfaces with seeded fallback plus opt-in backend proxy support through the shared `packages/api-clients` package.
+- Added `docs/frontend-data-api-map.md` to clarify which backend data API belongs to which frontend surface and to document that the frontend should call the external APIs rather than the internal engine.
+- Updated repo and app docs to reflect the new E2E entrypoint, fixed local ports, sign-in bootstrap behavior, and `/api/me` proxy-readiness flags.
+- Verification: `bun install`, `bun run typecheck`, `cd apps/gravii-user-app && bun run test`, `bun run build:user-app`, `bun run build:partner-app`, `bun run build:backoffice`, `bun run build:user-landing`, and `bun run test:e2e` all passed.
+- Next handoff: enable backend `/api/v1/me` proxy flags surface by surface as the backend comes online, then start replacing seeded screen hydration with real data endpoints feature by feature.
+
+- Added hostname validation for the user landing CTA destinations so invalid `NEXT_PUBLIC_USER_APP_URL` or `NEXT_PUBLIC_PARTNER_APP_URL` values fall back to the expected app domains instead of silently routing traffic to the wrong surface.
+- Forced the home `LAUNCH APP` CTA to open in the same tab from the landing codepath to avoid the old external-link `_blank` behavior.
+- Fixed the monorepo dev port drift by pinning app `dev` scripts to the documented local ports (`user-landing=3000`, `partner-app=3002`, `user-app=3003`, `backoffice=3004`), which prevents landing CTAs from pointing to the wrong app when `bun run dev` starts everything in parallel.
+- Verified the current repo state with a local production build of `gravii-user-landing`: home `LAUNCH APP` resolves to `https://app.gravii.io/`, and `/partners` `Get Started` CTAs resolve to `https://partner.gravii.io`.
+- Verified the currently deployed `https://www.gravii.io` still serves the older home CTA behavior (`target="_blank"` on `LAUNCH APP`), while the deployed `/partners` `Get Started` hrefs already resolve to `https://partner.gravii.io`.
+- Verification: `bun run build:user-landing`, local `next start --port 3015`, and Playwright checks against both local and deployed landing pages. Dev-port root cause confirmed by inspecting the live local `bun run dev` ports (`3000=partner-app`, `3001=user-app`, `3002=backoffice`, `3003=user-landing`) before pinning the scripts.
+- Next handoff: restart the local dev servers so the fixed ports take effect, then redeploy `gravii-user-landing` so production picks up the same-tab `LAUNCH APP` change and the hostname-guarded CTA routing.
+
+- Added shared frontend auth infrastructure across `gravii-user-app`, `gravii-partner-app`, and `gravii-backoffice`, including auth providers, app-local auth bootstrap routes, refresh-cookie session restoration, route protection, and seeded QA flows.
+- Extended `packages/domain-types` and `packages/api-clients` with shared auth/session models and auth-aware API clients for user, partner, and admin surfaces.
+- Confirmed the active partner acquisition route now lives inside `apps/gravii-user-landing` at `/partners`, then retired the standalone `apps/gravii-partner-landing` app from the active workspace.
+- Updated root and app-level docs to reflect the active four-surface workspace, the `/partners` ownership decision, and the new auth rollout status.
+- Added backend handoff documentation at `docs/backend-auth-handoff.md` and frontend rollout/next-step documentation at `docs/frontend-auth-rollout-status.md`.
+- Fixed a post-sign-in rehydration bug where user, partner, and admin providers could remain in an anonymous UI state after a successful auth exchange until a full remount happened.
+- Verified the user-app fix in a real browser flow against a fresh production build: seeded wallet sign-in now lands on `/` with `SIGN OUT`, and the Profile panel renders the connected state instead of the locked `SIGN IN TO REVEAL` overlay.
+- Reworked the user-app disconnected fallback language across Profile, Discovery, Standing, X-Ray, and My Space so the UI no longer suggests a second wallet connect is required after initial sign-in.
+- Verification: `bun install`, `bun run typecheck`, `bun run build:user-landing`, `bun run build:user-app`, `bun run build:partner-app`, and `bun run build:backoffice` all passed after the standalone partner landing removal.
+- Next handoff: implement the real backend auth contract against `docs/backend-auth-handoff.md`, then swap the frontend app-local seeded auth issuance over to backend proxying.
+
+- Added the root `AGENTS.md` to define workspace-level rules, precedence, and handoff file semantics.
+- Added `PLAN.md`, `PROGRESS.md`, and `TODO.md` with distinct responsibilities for cross-session and cross-agent continuity.
+- Updated the root `README.md` and `.gitignore` to document and support the workflow.
+- Verification: documentation-only change; no app builds or tests were run.
+- Next handoff: start filling `PLAN.md` only when a real multi-step stream begins, append future execution notes here, and keep durable remaining work in `TODO.md`.
+
+## Entry Template
+
+- Date: `YYYY-MM-DD`
+- Summary:
+- Files touched:
+- Verification:
+- Next handoff:
+
+- Date: `2026-04-07`
+- Summary:
+  - Reworked the partner `campaign-manager` route to match the HTML prototype more closely at the card level instead of relying on the shared `Card` wrapper.
+  - Added mockup-style campaign chrome: partner/name header, type/status badges, 14-day sparkline strip, `14d ago / today` labels, and a centered report toggle row.
+  - Added sparkline source data to the managed campaign fixtures so live and ended cards now render the same time-series shape language as the prototype.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/campaign-manager/campaign-manager-page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/campaign-manager/campaign-manager-page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/features/reach/managed-campaigns.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/README.md`
+- Verification:
+  - `bun run build:partner-app`
+  - `bun run typecheck`
+- Next handoff:
+  - Continue route-by-route authenticated QA against the HTML prototype, with the next parity targets being `connect` and any remaining copy/spacing deltas in `campaign-manager`.
+
+- Date: `2026-04-07`
+- Summary:
+  - Added mockup-style mobile navigation to the `/partners` landing route, including the hamburger trigger, modal sheet, CTA handoff, and body scroll lock behavior that the earlier React version was missing.
+  - Expanded the active workstream and docs so partner landing parity now sits alongside partner-app parity instead of being treated as a separate future stream.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/features/partner-landing/landing-navigation.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/features/partner-landing/landing-page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/PLAN.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/TODO.md`
+- Verification:
+  - `bun run build:user-landing`
+  - `bun run build:partner-app`
+  - `bun run typecheck`
+- Next handoff:
+  - Continue `/partners` section-by-section parity work against `Partner_Landing-v2.html`, then resume authenticated browser QA on `gravii-partner-app` to close the remaining spacing/copy gaps route by route.
+
+- Date: `2026-04-07`
+- Summary:
+  - Moved `/partners` off the older parity-first version and back onto `Partner_Landing-v2.html` as the source of truth, carrying over the final Human/Agent product toggle, KYA agent mode, updated category pills, and the change-request copy fixes.
+  - Added the missing landing chrome and interaction pieces that the new React structure required: floating-island nav token updates, hamburger morph state, Human/Agent dimension cards, KYA stepper cards, KYA pricing support, agent-mode-only content, and auto-scroll when switching product dimensions.
+  - Updated stale landing copy to the final product vocabulary (`Strategic Holder`, `Base~Obsidian`, `Reach · Gate · Lens · KYA`, `All products. One contract.`) so the landing content now matches the consolidated change request instead of older pre-v4 wording.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/features/partner-landing/landing-content.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/features/partner-landing/landing-navigation.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/features/partner-landing/landing-page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/features/partner-landing/landing-product-tabs.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/features/partner-landing/landing-sections.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/PLAN.md`
+- Verification:
+  - `bun run build:user-landing`
+  - `bun run typecheck`
+- Next handoff:
+  - Open `/partners` in a real browser and do section-by-section visual QA against `Partner_Landing-v2.html`, then continue partner-app authenticated parity passes route by route.
+
+- Date: `2026-04-07`
+- Summary:
+  - Finished the `/partners` landing parity pass against `Partner_Landing-v2.html` instead of continuing the broader partner-app refactor, keeping the landing as the only active scope for this stream.
+  - Reworked the landing CSS back toward the mockup values: full-screen mobile overlay links, corrected CTA colors, human/agent structure rows, KYA note styling, `engineProductsGrid` / `reachScenarioGrid` / `solutionsGrid`, `First-mover` chrome, and the exact mockup spacing for the compact/wide sections.
+  - Fixed a landing-specific typography regression by loading the mockup Google fonts through `next/font` and overriding the app-global heading font rules so the `/partners` hero, headings, mono labels, and logo now render with the intended `Sora / Outfit / Space Mono / Archivo Black` stack.
+  - Verified the result locally with production builds plus Playwright screenshots against both the live React route and the raw mockup HTML, including the hero after animations complete and the mobile hamburger overlay state.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/features/partner-landing/landing-navigation.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/features/partner-landing/landing-page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/lib/styles/fonts.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/PLAN.md`
+- Verification:
+  - `bun run build:user-landing`
+  - `bun run typecheck:user-landing`
+  - Playwright screenshot comparisons:
+    - `/Users/kxwxn/Gravii/FRONTEND/output/playwright/partner-landing-desktop-anim3.png`
+    - `/Users/kxwxn/Gravii/FRONTEND/output/playwright/partner-landing-mobile-overlay-fixed.png`
+    - `/Users/kxwxn/Gravii/FRONTEND/output/playwright/partner-landing-mockup-desktop-anim.png`
+    - `/Users/kxwxn/Gravii/FRONTEND/output/playwright/partner-landing-mockup-mobile-overlay.png`
+- Next handoff:
+  - Wait for the next `/partners` landing delta or hosted deployment QA request; the active local implementation stream is complete.
+
+- Date: `2026-04-08`
+- Summary:
+  - Matched the `/partners` header animation more closely to `Partner_Landing-v2.html` by aligning the base nav geometry and the floating-island transition values instead of keeping the looser React-side approximation.
+  - Updated the hamburger trigger to the mockup dimensions and motion values so the mobile menu open/close icon and overlay entrance now track the source HTML more faithfully.
+  - Re-ran local browser captures for desktop top state, scrolled floating-nav state, and mobile overlay state to confirm the header/menu animation delta was closed against the mockup-driven implementation.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/features/partner-landing/landing-page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/PROGRESS.md`
+- Verification:
+  - `bun run build:user-landing`
+  - `bun run typecheck:user-landing`
+  - Playwright screenshots:
+    - `/Users/kxwxn/Gravii/FRONTEND/output/playwright/partner-landing-nav-top-current.png`
+    - `/Users/kxwxn/Gravii/FRONTEND/output/playwright/partner-landing-nav-scrolled-current.png`
+    - `/Users/kxwxn/Gravii/FRONTEND/output/playwright/partner-landing-nav-mobile-current.png`
+- Next handoff:
+  - If another `/partners` delta comes in, continue with screenshot-led parity fixes; otherwise move to hosted deployment QA only.
+
+- Date: `2026-04-08`
+- Summary:
+  - Continued the `/partners` parity pass after the header animation fix by tightening the hero/CTA token values to the source HTML instead of leaving close approximations.
+  - Matched the hero overline spacing, subtitle spacing, and primary/secondary CTA hover and border values to the mockup so the first viewport tracks `Partner_Landing-v2.html` more faithfully at rest after the entrance sequence completes.
+  - Re-ran the production build, typecheck, and a fresh post-animation desktop hero capture to verify the first viewport against the mockup reference.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/features/partner-landing/landing-page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/PROGRESS.md`
+- Verification:
+  - `bun run build:user-landing`
+  - `bun run typecheck:user-landing`
+  - Playwright screenshot:
+    - `/Users/kxwxn/Gravii/FRONTEND/output/playwright/partner-landing-hero-current-3200-v2.png`
+- Next handoff:
+  - Continue screenshot-led parity on `/partners`, focusing next on mid-page product/solutions/pricing spacing and exact text chrome if more deltas are reported or observed in hosted QA.
+
+- Date: `2026-04-11`
+- Summary:
+  - Stabilized the root Playwright smoke suite so the workspace now has a trustworthy automated QA baseline for the live landing/user/partner/admin entry flows instead of the earlier flaky local setup.
+  - Reworked Playwright web-server startup to launch each app directly (`next dev`) instead of using the root Turbo wrappers, disabled local server reuse by default, and normalized the handoff assertions so `localhost` and `127.0.0.1` no longer cause false negatives during landing-to-app navigation.
+  - Refreshed the auth/handoff smoke specs to match the current live product contract: anonymous redirects into the live wallet, Google, and workspace sign-in screens plus partner `next` preservation and both landing CTA handoffs.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/playwright.config.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/tests/e2e/auth.spec.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/tests/e2e/landing-handoff.spec.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/PLAN.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/TODO.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/docs/frontend-auth-rollout-status.md`
+- Verification:
+  - `bun run test:e2e`
+- Next handoff:
+  - Use the now-green root smoke suite as the regression guard, then continue authenticated browser QA on `partner.gravii.io` and replace preview partner routes with live data only when the public Partner API publishes read endpoints again.

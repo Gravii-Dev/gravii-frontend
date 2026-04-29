@@ -1,0 +1,19 @@
+{
+  "name": "@gravii/brand-tokens",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./css": {
+      "types": "./css/tokens.css.d.ts",
+      "default": "./css/tokens.css"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  }
+}
