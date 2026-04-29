@@ -4,6 +4,19 @@ import {
 } from './data'
 import styles from './campaign-builder.module.css'
 
+function togglePillValue<T extends string>(current: T[], next: T): T[] {
+  if (next === 'all') {
+    return ['all' as T]
+  }
+
+  const withoutAll = current.filter((value) => value !== ('all' as T))
+  const updated = withoutAll.includes(next)
+    ? withoutAll.filter((value) => value !== next)
+    : [...withoutAll, next]
+
+  return updated.length > 0 ? updated : ['all' as T]
+}
+
 export function ScopePills({
   value,
   onChange,
@@ -46,7 +59,21 @@ export function MultiPills<T extends string>({
           key={option.id}
           type="button"
           className={`${styles.pillButton} ${value.includes(option.id) ? styles.pillButtonActive : ''}`}
-          onClick={() => onToggle(option.id)}
+          onClick={() => {
+            const next = togglePillValue(value, option.id)
+
+            for (const item of next) {
+              if (!value.includes(item)) {
+                onToggle(item)
+              }
+            }
+
+            for (const item of value) {
+              if (!next.includes(item)) {
+                onToggle(item)
+              }
+            }
+          }}
         >
           {option.label}
         </button>

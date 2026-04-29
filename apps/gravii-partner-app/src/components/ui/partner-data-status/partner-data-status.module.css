@@ -1,0 +1,44 @@
+.status {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(110, 174, 255, 0.16);
+  border-radius: 1rem;
+  background:
+    linear-gradient(180deg, rgba(88, 166, 255, 0.08), rgba(88, 166, 255, 0.03)),
+    rgba(10, 14, 22, 0.92);
+  box-shadow: 0 18px 40px rgba(3, 7, 16, 0.18);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-height: 1.6rem;
+  padding: 0.12rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.pillPreview {
+  border: 1px solid rgba(110, 174, 255, 0.22);
+  background: rgba(88, 166, 255, 0.12);
+  color: #d8e6ff;
+}
+
+.pillLive {
+  border: 1px solid rgba(79, 214, 190, 0.22);
+  background: rgba(79, 214, 190, 0.12);
+  color: #ccfff3;
+}
+
+.description {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: rgba(224, 231, 255, 0.78);
+}

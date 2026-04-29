@@ -1,57 +1,37 @@
 'use client'
 
 import {
-  Bot,
-  ChartColumnBig,
-  FolderKanban,
-  LayoutDashboard,
-  Link2,
   Menu,
-  Settings,
-  ShieldAlert,
-  Upload,
-  UsersRound,
-  Waypoints,
   X,
-  Zap
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import type { KeyboardEvent, ReactNode } from 'react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
+import { usePartnerAuth } from '@/features/auth/auth-provider'
 import { cn } from '@/lib/cn'
+import {
+  formatPartnerPlanLabel,
+  getPartnerWorkspaceName
+} from '@/lib/partner-profile'
+import { useWorkspaceAccess } from '@/lib/workspace-access'
 import {
   appShellNavItems,
   campaignHint,
-  getDefaultWorkspaceHref,
   getPageId,
-  getVisiblePageIds,
   insightsHint,
 } from '@/lib/workspace-navigation'
-import { useWorkspaceSettings } from '@/lib/workspace-settings'
 import styles from './app-shell.module.css'
+
+const shouldPrefetchRoutes = process.env.NODE_ENV === 'production'
 
 interface AppShellProps {
   children: ReactNode
 }
 
-const navIconMap = {
-  analyze: Upload,
-  drive: UsersRound,
-  api: Link2,
-  bot: Bot,
-  agent: Zap,
-  overview: LayoutDashboard,
-  analytics: ChartColumnBig,
-  labels: Waypoints,
-  risk: ShieldAlert,
-  settings: Settings,
-  campaigns: Zap,
-  campmanager: FolderKanban
-} as const
-
 export function AppShell({ children }: AppShellProps) {
+  const auth = usePartnerAuth()
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -59,7 +39,7 @@ export function AppShell({ children }: AppShellProps) {
   const [botInput, setBotInput] = useState('')
   const [botLocked, setBotLocked] = useState(false)
   const timersRef = useRef<number[]>([])
-  const workspaceSettings = useWorkspaceSettings()
+  const workspaceAccess = useWorkspaceAccess()
 
   useEffect(
     () => () => {
@@ -72,36 +52,81 @@ export function AppShell({ children }: AppShellProps) {
 
   const activeModuleId = searchParams.get('module')
   const activePageId = getPageId(pathname, activeModuleId)
+  const workspaceName = getPartnerWorkspaceName(auth.session)
+  const workspacePlan = formatPartnerPlanLabel(auth.session?.plan)
   const isCampaignMode = activePageId === 'campaigns' || activePageId === 'campmanager'
   const botPlaceholder = isCampaignMode
     ? 'Describe your campaign in plain English'
     : "Ask about your users' data"
   const botHint = isCampaignMode ? campaignHint : insightsHint
 
-  const visiblePages = useMemo(
-    () => getVisiblePageIds(workspaceSettings.enabledPages),
-    [workspaceSettings.enabledPages]
-  )
-
   useEffect(() => {
-    if (pathname === '/' || !activePageId || visiblePages.has(activePageId)) {
+    if (
+      pathname === '/' ||
+      pathname === '/sign-in' ||
+      !activePageId ||
+      workspaceAccess.visiblePages.has(activePageId)
+    ) {
       return
     }
 
-    router.replace(getDefaultWorkspaceHref(workspaceSettings.enabledPages))
-  }, [activePageId, pathname, router, visiblePages, workspaceSettings.enabledPages])
+    router.replace(workspaceAccess.defaultHref)
+  }, [activePageId, pathname, router, workspaceAccess.defaultHref, workspaceAccess.visiblePages])
 
-  const visibleNavItems = appShellNavItems.filter((item) => visiblePages.has(item.pageId))
+  const visibleNavItems = appShellNavItems.filter((item) =>
+    workspaceAccess.visiblePages.has(item.pageId)
+  )
   const connectVisible = (['drive', 'api', 'bot', 'agent'] as const).some((pageId) =>
-    visiblePages.has(pageId)
+    workspaceAccess.visiblePages.has(pageId)
   )
   const dashboardVisible = (['overview', 'analytics', 'labels', 'risk'] as const).some((pageId) =>
-    visiblePages.has(pageId)
+    workspaceAccess.visiblePages.has(pageId)
   )
-  const lensVisible = visiblePages.has('analyze')
-  const campaignsVisible = visiblePages.has('campaigns')
-  const campaignManagerVisible = visiblePages.has('campmanager')
+  const lensVisible = workspaceAccess.visiblePages.has('analyze')
+  const campaignsVisible = workspaceAccess.visiblePages.has('campaigns')
+  const campaignManagerVisible = workspaceAccess.visiblePages.has('campmanager')
   const reachVisible = campaignsVisible || campaignManagerVisible
+
+  useEffect(() => {
+    if (!shouldPrefetchRoutes || auth.status !== 'authenticated') {
+      return
+    }
+
+    const hrefs = new Set<string>([
+      workspaceAccess.defaultHref,
+      ...visibleNavItems.map((item) => item.href)
+    ])
+
+    for (const href of hrefs) {
+      router.prefetch(href)
+    }
+  }, [auth.status, router, visibleNavItems, workspaceAccess.defaultHref])
+
+  if (pathname === '/sign-in') {
+    return <>{children}</>
+  }
+
+  if (auth.status !== 'authenticated') {
+    return (
+      <div className={styles.authGate}>
+        <div className={styles.authGateTitle}>Restoring your partner workspace…</div>
+        <div className={styles.authGateCopy}>
+          Gravii is validating your Google session and loading the workspace shell.
+        </div>
+      </div>
+    )
+  }
+
+  if (!workspaceAccess.canAccessWorkspace || workspaceAccess.isSuspended) {
+    return (
+      <div className={styles.authGate}>
+        <div className={styles.authGateTitle}>Your Gravii partner workspace is paused.</div>
+        <div className={styles.authGateCopy}>
+          Sign in succeeded, but this partner profile is not marked as active yet. Please contact the Gravii team to restore access.
+        </div>
+      </div>
+    )
+  }
 
   if (pathname === '/') {
     return <>{children}</>
@@ -152,6 +177,10 @@ export function AppShell({ children }: AppShellProps) {
         <div className={styles.sidebarTop}>
           <div className={styles.logo}>
             <span className={styles.logoGlow}>Gravii</span>
+            <div className={styles.logoMeta}>
+              <span className={styles.workspaceName}>{workspaceName}</span>
+              <span className={styles.workspacePlan}>{workspacePlan}</span>
+            </div>
           </div>
 
           <nav className={styles.nav}>
@@ -162,14 +191,13 @@ export function AppShell({ children }: AppShellProps) {
                 <NavLink
                   key={item.pageId}
                   href={item.href}
-                  pageId={item.pageId}
                   isActive={activePageId === item.pageId}
                 >
                   {item.label}
                 </NavLink>
               ))}
 
-            {lensVisible && (connectVisible || dashboardVisible || reachVisible || visiblePages.has('settings')) ? (
+            {lensVisible && (connectVisible || dashboardVisible || reachVisible || workspaceAccess.visiblePages.has('settings')) ? (
               <div className={styles.navDivider} />
             ) : null}
 
@@ -180,14 +208,13 @@ export function AppShell({ children }: AppShellProps) {
                 <NavLink
                   key={item.pageId}
                   href={item.href}
-                  pageId={item.pageId}
                   isActive={activePageId === item.pageId}
                 >
                   {item.label}
                 </NavLink>
               ))}
 
-            {connectVisible && (dashboardVisible || reachVisible || visiblePages.has('settings')) ? (
+            {connectVisible && (dashboardVisible || reachVisible || workspaceAccess.visiblePages.has('settings')) ? (
               <div className={styles.navDivider} />
             ) : null}
 
@@ -198,14 +225,13 @@ export function AppShell({ children }: AppShellProps) {
                 <NavLink
                   key={item.pageId}
                   href={item.href}
-                  pageId={item.pageId}
                   isActive={activePageId === item.pageId}
                 >
                   {item.label}
                 </NavLink>
               ))}
 
-            {dashboardVisible && (reachVisible || visiblePages.has('settings')) ? (
+            {dashboardVisible && (reachVisible || workspaceAccess.visiblePages.has('settings')) ? (
               <div className={styles.navDivider} />
             ) : null}
 
@@ -233,10 +259,10 @@ export function AppShell({ children }: AppShellProps) {
               </div>
             ) : null}
 
-            {reachVisible && visiblePages.has('settings') ? <div className={styles.navDivider} /> : null}
+            {reachVisible && workspaceAccess.visiblePages.has('settings') ? <div className={styles.navDivider} /> : null}
 
-            {visiblePages.has('settings') ? (
-              <NavLink href="/settings" pageId="settings" isActive={activePageId === 'settings'}>
+            {workspaceAccess.visiblePages.has('settings') ? (
+              <NavLink href="/settings" isActive={activePageId === 'settings'}>
                 Settings
               </NavLink>
             ) : null}
@@ -310,19 +336,13 @@ export function AppShell({ children }: AppShellProps) {
 
 interface NavLinkProps {
   href: string
-  pageId: keyof typeof navIconMap
   isActive: boolean
   children: ReactNode
 }
 
-function NavLink({ href, pageId, isActive, children }: NavLinkProps) {
-  const Icon = navIconMap[pageId]
-
+function NavLink({ href, isActive, children }: NavLinkProps) {
   return (
     <Link href={href} className={cn(styles.navItem, isActive && styles.navItemActive)}>
-      <span className={styles.navIcon}>
-        <Icon size={16} strokeWidth={1.9} />
-      </span>
       <span>{children}</span>
     </Link>
   )

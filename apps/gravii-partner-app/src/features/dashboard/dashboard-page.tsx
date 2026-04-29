@@ -1,11 +1,24 @@
-import { ArrowUpRight, ShieldAlert } from 'lucide-react'
+'use client'
 
-import { Card } from '@/components/ui/card'
-import { PageHeader } from '@/components/ui/page-header'
+import { ArrowUpRight } from 'lucide-react'
+import { useMemo } from 'react'
+
+import { PartnerDataStatus } from '@/components/ui/partner-data-status'
 import { WorkspaceHandoffLink } from '@/components/ui/workspace-handoff-link'
-import { formatCompactCurrency, formatCurrency, formatNumber, formatPercent } from '@/lib/format'
+import { usePartnerAuth } from '@/features/auth/auth-provider'
+import {
+  formatCompactCurrency,
+  formatCurrency,
+  formatNumber,
+  formatPercent
+} from '@/lib/format'
+import { getPartnerWorkspaceName } from '@/lib/partner-profile'
 
-import { dashboardSnapshot, type AssetMixCardData, type ChainBreakdownItem } from './data'
+import {
+  getDashboardSnapshot,
+  type AssetMixCardData,
+  type ChainBreakdownItem
+} from './data'
 import styles from './dashboard-page.module.css'
 
 function createConicGradient(segments: AssetMixCardData['segments']): string {
@@ -21,23 +34,44 @@ function createConicGradient(segments: AssetMixCardData['segments']): string {
   return `conic-gradient(${stops.join(', ')})`
 }
 
-function AssetMixCard({ card }: { card: AssetMixCardData }) {
+function InfoTooltip({ body, title }: { body: string; title: string }) {
   return (
-    <Card title={card.title} className={styles.assetCard}>
-      <div className={styles.assetBody}>
-        <div className={styles.ringWrap}>
+    <span className={styles.infoIcon}>
+      ⓘ
+      <span className={styles.infoTooltip}>
+        <strong>{title}</strong> — {body}
+      </span>
+    </span>
+  )
+}
+
+function AssetMixCard({ card }: { card: AssetMixCardData }) {
+  const showAvailabilityTooltip = card.id.startsWith('available-')
+
+  return (
+    <article className={styles.card}>
+      <div className={styles.cardTitle}>
+        {card.title}
+        {showAvailabilityTooltip ? (
+          <InfoTooltip
+            title="Available Assets"
+            body="Assets held by your connected users without active deployment. Not staked, lent, or providing liquidity."
+          />
+        ) : null}
+      </div>
+      <div className={styles.donutWrapper}>
+        <div className={styles.donutContainer}>
           <div
             className={styles.assetRing}
             style={{ backgroundImage: createConicGradient(card.segments) }}
             aria-hidden="true"
           />
-          <div className={styles.assetCenter}>
-            <span className="eyebrow-label">Total</span>
-            <strong>{formatCompactCurrency(card.total)}</strong>
+          <div className={styles.donutCenter}>
+            <div className={styles.donutCenterLabel}>Total</div>
+            <div className={styles.donutCenterValue}>{formatCompactCurrency(card.total)}</div>
           </div>
         </div>
-        <p className={styles.assetHelper}>{card.helper}</p>
-        <div className={styles.legend}>
+        <div className={styles.donutLegend}>
           {card.segments.map((segment) => (
             <div key={segment.label} className={styles.legendItem}>
               <span
@@ -46,207 +80,214 @@ function AssetMixCard({ card }: { card: AssetMixCardData }) {
                 aria-hidden="true"
               />
               <span>{segment.label}</span>
-              <strong>{formatPercent(segment.share)}</strong>
+              <span className={styles.legendValue}>{formatPercent(segment.share)}</span>
             </div>
           ))}
         </div>
       </div>
-    </Card>
+    </article>
   )
 }
 
-function ChainPanel({ title, cards }: { title: string; cards: ChainBreakdownItem[] }) {
+function ChainPanel({
+  panel,
+  title
+}: {
+  panel: ChainBreakdownItem[]
+  title: string
+}) {
   return (
-    <Card title={title} accent="blue">
-      <div className={styles.chainList}>
-        {cards.map((chain) => (
-          <div key={chain.network} className={styles.chainRow}>
-            <div className={styles.chainHeader}>
-              <div className={styles.chainMeta}>
-                <span className={`${styles.chainBadge} ${styles[`chainBadge${chain.tone}`]}`}>
-                  {chain.network}
-                </span>
-                <span className={styles.chainUsers}>
-                  {formatNumber(chain.users)} users · {chain.share}%
-                </span>
-              </div>
-            </div>
-            <div className={styles.segmentTrack} aria-hidden="true">
-              {chain.segments.map((segment) => (
-                <span
-                  key={`${chain.network}-${segment.label}`}
-                  className={styles.segmentFill}
-                  style={{ width: `${segment.share}%`, backgroundColor: segment.color }}
-                />
-              ))}
-            </div>
-            <div className={styles.segmentLegend}>
-              {chain.segments.map((segment) => (
-                <span key={`${chain.network}-${segment.label}-legend`} className={styles.segmentText}>
-                  {segment.label} {segment.share}%
-                </span>
-              ))}
-            </div>
+    <section className={styles.card}>
+      <div className={styles.cardTitle}>{title}</div>
+      {panel.map((chain) => (
+        <div key={chain.network} className={styles.barSection}>
+          <div className={styles.barHeader}>
+            <span className={`${styles.chainBadge} ${styles[`chainBadge${chain.tone}`]}`}>
+              {chain.network}
+            </span>
+            <span className={styles.barMeta}>
+              {formatNumber(chain.users)} users · {chain.share}%
+            </span>
           </div>
-        ))}
-      </div>
-    </Card>
+          <div className={styles.barTrack}>
+            {chain.segments.map((segment) => (
+              <div
+                key={`${chain.network}-${segment.label}`}
+                className={styles.barSegment}
+                style={{ width: `${segment.share}%`, background: segment.color }}
+              >
+                <span className={styles.barSegmentLabel}>{segment.label}</span>
+              </div>
+            ))}
+          </div>
+          <div className={styles.barLegend}>
+            {chain.segments.map((segment) => (
+              <span key={`${chain.network}-${segment.label}-legend`} className={styles.barLegendItem}>
+                <span
+                  className={styles.legendDot}
+                  style={{ backgroundColor: segment.color }}
+                  aria-hidden="true"
+                />
+                {segment.label} {segment.share}%
+              </span>
+            ))}
+          </div>
+        </div>
+      ))}
+    </section>
   )
 }
 
 export function DashboardPage() {
+  const auth = usePartnerAuth()
+  const partnerName = getPartnerWorkspaceName(auth.session)
+  const dashboardSnapshot = useMemo(
+    () => getDashboardSnapshot(partnerName),
+    [partnerName]
+  )
+  const snapshotLabel = dashboardSnapshot.snapshotLabel
+
   return (
     <div className={styles.page}>
-      <PageHeader
-        eyebrow="Partner Intelligence"
-        title="Your connected user base, shaped into product-ready insights."
-        description="The old prototype packed everything into one page. This refactor turns it into a route-based workspace with reusable analytics blocks that can be replaced by live APIs later."
-        actions={
-          <div className={styles.headerActions}>
-            <WorkspaceHandoffLink
-              href="/analytics"
-              requiredPages={['analytics']}
-              className="button-secondary"
-            >
-              Go to User Analytics
-            </WorkspaceHandoffLink>
-            <WorkspaceHandoffLink
-              href="/reach"
-              requiredPages={['campaigns']}
-              className="button-primary"
-            >
-              Launch a campaign
-              <ArrowUpRight size={16} />
-            </WorkspaceHandoffLink>
-          </div>
-        }
-      />
+      <div className={styles.mainHeader}>
+        <h1 className={styles.mainTitle}>Gravii Dashboard</h1>
+        <WorkspaceHandoffLink
+          href="/reach"
+          requiredPages={['campaigns']}
+          className={`${styles.headerCta} button-primary`}
+        >
+          Create Campaign
+        </WorkspaceHandoffLink>
+      </div>
+      <PartnerDataStatus surface="dashboard" />
 
-      <Card accent="teal" className={styles.heroCard}>
-        <div className={styles.heroMeta}>
-          <div>
-            <p className="eyebrow-label">Total connected users</p>
-            <p className="stat-value">{formatNumber(dashboardSnapshot.totalConnectedUsers)}</p>
-          </div>
-          <div className={styles.heroGrowth}>
-            <div>
-              <span>Last 24h</span>
-              <strong>+{formatNumber(dashboardSnapshot.userGrowth.daily)}</strong>
-            </div>
-            <div>
-              <span>Last 7d</span>
-              <strong>+{formatNumber(dashboardSnapshot.userGrowth.weekly)}</strong>
-            </div>
-            <div>
-              <span>Last 30d</span>
-              <strong>+{formatNumber(dashboardSnapshot.userGrowth.monthly)}</strong>
-            </div>
-          </div>
-          <p className={styles.snapshot}>{dashboardSnapshot.snapshotLabel}</p>
+      <div className={styles.sectionLead}>Your Connected Users — Asset Overview</div>
+
+      <section className={styles.heroCard}>
+        <div>
+          <div className={styles.heroLabel}>Total Connected Users</div>
+          <div className={styles.heroValue}>{formatNumber(dashboardSnapshot.totalConnectedUsers)}</div>
         </div>
-      </Card>
+        <div className={styles.heroGrowth}>
+          <div>
+            <div className={styles.heroGrowthLabel}>Last 24h</div>
+            <div className={styles.heroGrowthValue}>+{formatNumber(dashboardSnapshot.userGrowth.daily)}</div>
+          </div>
+          <div>
+            <div className={styles.heroGrowthLabel}>Last 7d</div>
+            <div className={styles.heroGrowthValue}>+{formatNumber(dashboardSnapshot.userGrowth.weekly)}</div>
+          </div>
+          <div>
+            <div className={styles.heroGrowthLabel}>Last 30d</div>
+            <div className={styles.heroGrowthValue}>+{formatNumber(dashboardSnapshot.userGrowth.monthly)}</div>
+          </div>
+        </div>
+        <div className={styles.heroSnapshot}>{snapshotLabel}</div>
+      </section>
 
-      <section className="grid-auto-4">
+      <section className={styles.grid4}>
         {dashboardSnapshot.assetMixCards.map((card) => (
           <AssetMixCard key={card.id} card={card} />
         ))}
       </section>
 
-      <section className="grid-auto-2">
-        {dashboardSnapshot.chainPanels.map((panel) => (
-          <ChainPanel key={panel.title} title={panel.title} cards={panel.cards} />
-        ))}
+      <section className={styles.grid2Half}>
+        <ChainPanel title="Deployed by Chain — Top 3" panel={dashboardSnapshot.chainPanels[0].cards} />
+        <ChainPanel title="Available by Chain — Top 3" panel={dashboardSnapshot.chainPanels[1].cards} />
       </section>
 
-      <section className="grid-auto-2">
-        <Card
-          title="Users by region"
-          eyebrow="Geo mix"
-          action={<span className="pill">IP-estimated only</span>}
-        >
-          <div className={styles.regionList}>
-            {dashboardSnapshot.regionDistribution.map((region) => (
-              <div key={region.code} className={styles.regionRow}>
-                <div className={styles.regionLabel}>
-                  <strong>{region.code}</strong>
-                  <span>{formatNumber(region.users)} users</span>
+      <section className={styles.card}>
+        <div className={styles.cardTitle}>
+          Users by Region — Top 10 Countries
+          <InfoTooltip
+            title="IP Geolocation"
+            body="Region is estimated based on IP address at the time of wallet connection. Does not guarantee user nationality or residence."
+          />
+        </div>
+        <div className={styles.regionBars}>
+          {[
+            ...dashboardSnapshot.regionDistribution,
+            { code: 'Others', users: 28596, share: 9.5, color: 'rgba(255,255,255,0.15)' }
+          ].map((region) => (
+            <div key={region.code} className={styles.regionRow}>
+              <span className={styles.regionCode}>{region.code}</span>
+              <div className={styles.regionTrack}>
+                <div
+                  className={styles.regionFill}
+                  style={{ width: `${region.share}%`, background: region.color }}
+                >
+                  <span>{formatPercent(region.share)}</span>
                 </div>
-                <div className={styles.regionBar}>
-                  <span
-                    className={styles.regionFill}
-                    style={{ width: `${region.share}%`, backgroundColor: region.color }}
-                  />
-                </div>
-                <span className={styles.regionShare}>{formatPercent(region.share)}</span>
               </div>
-            ))}
-          </div>
-        </Card>
-
-        <Card title="Risk & activation priorities" eyebrow="Ops brief" accent="rose">
-          <div className={styles.riskList}>
-            {dashboardSnapshot.riskAlerts.map((alert) => (
-              <article key={alert.cluster} className={styles.riskCard}>
-                <div className={styles.riskHeader}>
-                  <div>
-                    <p className={styles.riskSeverity}>{alert.severity}</p>
-                    <h3>{alert.cluster}</h3>
-                  </div>
-                  <ShieldAlert size={18} />
-                </div>
-                <p>{alert.summary}</p>
-                <strong>{formatNumber(alert.wallets)} wallets</strong>
-              </article>
-            ))}
-          </div>
-        </Card>
+              <span className={styles.regionUsers}>{formatNumber(region.users)}</span>
+            </div>
+          ))}
+        </div>
       </section>
 
-      <section className="grid-auto-4">
+      <div className={styles.analyticsLinkRow}>
+        <WorkspaceHandoffLink
+          href="/analytics"
+          requiredPages={['analytics']}
+          className={styles.analyticsLink}
+        >
+          Want deeper insights? → Go to User Analytics
+        </WorkspaceHandoffLink>
+      </div>
+
+      <section className={styles.grid4}>
         {dashboardSnapshot.commercialKpis.map((kpi) => (
-          <Card key={kpi.label} title={kpi.label}>
-            <p className={styles.kpiValue}>{kpi.value}</p>
-            <p className={styles.kpiHelper}>{kpi.helper}</p>
-          </Card>
+          <article key={kpi.label} className={styles.card}>
+            <div className={styles.cardTitle}>
+              {kpi.labelLines?.map((line) => (
+                <span key={line} className={styles.cardTitleLine}>
+                  {line}
+                </span>
+              )) ?? kpi.label}
+            </div>
+            <div className={styles.kpiValue}>{kpi.value}</div>
+          </article>
         ))}
       </section>
 
-      <section className="grid-auto-4">
+      <section className={styles.grid4}>
         {dashboardSnapshot.activationKpis.map((kpi) => (
-          <Card key={kpi.label} title={kpi.label}>
-            <p className={styles.kpiValue}>{kpi.value}</p>
-            <p className={styles.kpiHelper}>{kpi.helper}</p>
-          </Card>
+          <article key={kpi.label} className={styles.card}>
+            <div className={styles.cardTitle}>{kpi.label}</div>
+            <div className={styles.kpiValue}>{kpi.value}</div>
+          </article>
         ))}
       </section>
 
-      <section className="grid-auto-4">
-        <Card title="Top interacted protocols">
-          <div className={styles.tagRow}>
+      <section className={styles.grid4}>
+        <article className={styles.card}>
+          <div className={styles.cardTitle}>Top 3 Interacted Protocols</div>
+          <div className={styles.kpiTags}>
             {dashboardSnapshot.insights.topProtocols.map((item) => (
-              <span key={item} className="pill">
+              <span key={item} className={styles.kpiTag}>
                 {item}
               </span>
             ))}
           </div>
-        </Card>
-        <Card title="Top funding sources">
-          <div className={styles.tagRow}>
+        </article>
+        <article className={styles.card}>
+          <div className={styles.cardTitle}>Top 3 Funding Sources</div>
+          <div className={styles.kpiTags}>
             {dashboardSnapshot.insights.topFundingSources.map((item) => (
-              <span key={item} className="pill">
+              <span key={item} className={styles.kpiTag}>
                 {item}
               </span>
             ))}
           </div>
-        </Card>
-        <Card title="Net NFT worth">
-          <p className={styles.kpiValue}>{formatCurrency(dashboardSnapshot.insights.nftWorth)}</p>
-          <p className={styles.kpiHelper}>Premium-collector users available for higher-end perks</p>
-        </Card>
-        <Card title="Sybil rate">
-          <p className={styles.kpiValue}>{dashboardSnapshot.insights.sybilRate}%</p>
-          <p className={styles.kpiHelper}>Use Reach risk filtering before broad activation campaigns</p>
-        </Card>
+        </article>
+        <article className={styles.card}>
+          <div className={styles.cardTitle}>Net NFT Worth (Total)</div>
+          <div className={styles.kpiValue}>{formatCurrency(dashboardSnapshot.insights.nftWorth)}</div>
+        </article>
+        <article className={styles.card}>
+          <div className={styles.cardTitle}>Sybil rate</div>
+          <div className={styles.kpiValue}>{dashboardSnapshot.insights.sybilRate}%</div>
+        </article>
       </section>
     </div>
   )

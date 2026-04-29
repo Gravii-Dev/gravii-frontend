@@ -193,6 +193,18 @@ export function writeWorkspaceSettings(state: WorkspaceSettingsState): void {
   window.dispatchEvent(new Event(workspaceSettingsEventName))
 }
 
+export function clearWorkspaceSettings(): void {
+  cachedWorkspaceSettingsSnapshot = defaultWorkspaceSettingsState
+
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  window.localStorage.removeItem(workspaceSettingsStorageKey)
+  window.localStorage.removeItem(activeScenarioStorageKey)
+  window.dispatchEvent(new Event(workspaceSettingsEventName))
+}
+
 export function ensureWorkspacePagesEnabled(
   pageIds: readonly Exclude<PageId, 'settings'>[]
 ): WorkspaceSettingsState {

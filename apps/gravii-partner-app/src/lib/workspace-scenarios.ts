@@ -33,7 +33,7 @@ export const workspaceScenarios = [
   {
     id: 'engage-private',
     title: 'Your ecosystem only',
-    description: 'Target and engage users already on your platform with closed-loop activation.',
+    description: 'Target and engage users already on your platform. No outside exposure — pure internal optimization.',
     destination: '/connect?module=xray-link',
     recommendedModules: ['connect', 'dashboard', 'reach', 'alerts'],
     scopeDefault: 'myusers',
@@ -42,7 +42,7 @@ export const workspaceScenarios = [
   {
     id: 'engage-grow',
     title: 'Expand with Gravii pool',
-    description: 'Reach your existing users and tap into Gravii’s verified network at once.',
+    description: "Reach your existing users and tap into Gravii's verified network at once. You control the mix.",
     destination: '/connect?module=xray-link',
     recommendedModules: ['connect', 'dashboard', 'reach', 'alerts'],
     scopeDefault: 'both',
@@ -51,7 +51,7 @@ export const workspaceScenarios = [
   {
     id: 'engage-acquire',
     title: 'Discover new users',
-    description: 'Handpick verified users from the Gravii pool by tier, persona, and chain.',
+    description: 'Handpick verified users from the Gravii pool by tier, persona, and chain. Solve cold start instantly.',
     destination: '/reach',
     recommendedModules: ['reach', 'connect', 'alerts'],
     scopeDefault: 'discoverNew',
@@ -60,7 +60,7 @@ export const workspaceScenarios = [
   {
     id: 'analyze',
     title: 'See your user pool',
-    description: 'Upload a wallet list first, then inspect the cohort in detail.',
+    description: 'Just a wallet list is all we need — zero engineering cost',
     destination: '/lens',
     recommendedModules: ['lens', 'dashboard'],
     category: 'lens'
@@ -68,7 +68,7 @@ export const workspaceScenarios = [
   {
     id: 'verify-api',
     title: 'Web API',
-    description: 'Use Gate API for real-time verification on wallet connect.',
+    description: 'Real-time verification on your platform',
     destination: '/connect?module=gate-api',
     recommendedModules: ['connect', 'dashboard', 'alerts'],
     category: 'gate'
@@ -76,7 +76,7 @@ export const workspaceScenarios = [
   {
     id: 'verify-bot',
     title: 'Community Bot',
-    description: 'Drive Discord or Telegram verification without product engineering.',
+    description: 'Discord / Telegram — No code needed',
     destination: '/connect?module=community-bot',
     recommendedModules: ['connect'],
     category: 'gate'
@@ -84,7 +84,7 @@ export const workspaceScenarios = [
   {
     id: 'verify-agent',
     title: 'Agent API',
-    description: 'Expose boolean verification checks for AI-native experiences.',
+    description: 'Let your AI agents verify users instantly',
     destination: '/connect?module=agent-api',
     recommendedModules: ['connect'],
     category: 'gate'

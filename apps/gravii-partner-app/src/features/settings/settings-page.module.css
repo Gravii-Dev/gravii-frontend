@@ -1,120 +1,107 @@
 .page {
   display: grid;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
-.value {
-  margin: 0 0 0.35rem;
-  font-family: var(--font-display);
-  font-size: 1.8rem;
-  line-height: 1;
-  letter-spacing: -0.05em;
-}
-
-.helper,
-.scenarioCard p,
-.moduleRow p,
-.noteBlock p,
-.preferenceHeader p {
-  margin: 0;
-  line-height: 1.65;
-  color: var(--text-secondary);
-}
-
-.scenarioList,
-.moduleList,
-.preferenceList {
-  display: grid;
-  gap: 0.9rem;
-}
-
-.scenarioCard,
-.preferenceCard {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, 0.02);
-  padding: 1rem;
-  text-align: left;
-  color: inherit;
-}
-
-.scenarioCardActive {
-  border-color: rgba(110, 174, 255, 0.3);
-  background: rgba(110, 174, 255, 0.08);
-}
-
-.scenarioHeader,
-.preferenceHeader,
-.moduleRow {
+.mainHeader {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: 1rem;
 }
 
-.scenarioHeader h3,
-.moduleRow h3,
-.preferenceHeader h3 {
-  margin: 0 0 0.25rem;
-  font-size: 1rem;
+.mainTitle {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+  text-shadow:
+    0 0 20px rgba(255, 255, 255, 0.15),
+    0 0 40px rgba(255, 255, 255, 0.05);
 }
 
-.scenarioTags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.55rem;
-  margin-top: 0.8rem;
+.card {
+  border: 2px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  padding: 20px;
+  box-shadow: var(--shadow-card);
 }
 
-.moduleRow {
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.02);
-  padding: 1rem;
-}
-
-.toggle {
-  position: relative;
-  width: 3.2rem;
-  height: 1.9rem;
-  flex-shrink: 0;
-  border: 1px solid var(--border-strong);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.toggle span {
-  position: absolute;
-  top: 0.18rem;
-  left: 0.22rem;
-  width: 1.3rem;
-  height: 1.3rem;
-  border-radius: 999px;
-  background: white;
-  transition: transform 140ms ease;
-}
-
-.toggleActive {
-  background: rgba(79, 214, 190, 0.22);
-  border-color: rgba(79, 214, 190, 0.4);
-}
-
-.toggleActive span {
-  transform: translateX(1.24rem);
-}
-
-.preferenceCard strong {
-  margin-top: 0.9rem;
-  display: inline-block;
+.cardTitle {
+  margin-bottom: 16px;
+  font-size: 16px;
+  font-weight: 700;
   color: var(--text-primary);
 }
 
-.noteBlock {
-  display: grid;
-  gap: 0.9rem;
+.cardCopy {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
 }
 
-.setupLink {
+.inlineAction {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-size: inherit;
+  font-weight: 600;
   color: var(--brand-blue);
-  text-decoration: none;
+}
+
+.accountGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.accountActions {
+  margin-top: 1rem;
+}
+
+.accountItem {
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 1rem;
+}
+
+.accountLabel {
+  margin-bottom: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.accountValue {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.planValue {
+  color: var(--brand-teal);
+}
+
+.signOutButton {
+  border: 1px solid var(--border-card);
+  border-radius: 10px;
+  background: transparent;
+  padding: 0.7rem 0.95rem;
+  color: var(--text-primary);
+  font: inherit;
+}
+
+.signOutButton:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+@media (max-width: 720px) {
+  .accountGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

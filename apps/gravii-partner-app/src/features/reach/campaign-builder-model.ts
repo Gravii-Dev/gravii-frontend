@@ -78,7 +78,7 @@ function normalizeCampaignFormState(form: CampaignFormState): CampaignFormState 
   }
 }
 
-export function createInitialState(): CampaignFormState {
+export function createInitialState(partnerName = 'Partner Workspace'): CampaignFormState {
   let scope: ScopeId = 'both'
   const scenario = getWorkspaceScenario(readWorkspaceSettings().scenario)
 
@@ -87,7 +87,7 @@ export function createInitialState(): CampaignFormState {
   }
 
   return {
-    partnerName: 'Pendle Finance',
+    partnerName,
     partnerLogoUrl: '',
     campaignName: 'Yield Booster',
     campaignType: 'Airdrop',
@@ -99,15 +99,15 @@ export function createInitialState(): CampaignFormState {
       '1. Connect wallet\n2. Remain in the eligible segment until campaign start\n3. Claim through the partner landing page',
     scope,
     targetMode: 'behavior',
-    selectedSegments: ['smart-saver', 'active-trader'],
-    selectedBehaviorChains: ['eth', 'base'],
+    selectedSegments: [],
+    selectedBehaviorChains: ['all'],
     valueMetric: 'portfolio',
     valueAssetFilter: 'all',
-    percentile: '10',
-    valueThreshold: '10k',
-    selectedValueChains: ['eth'],
-    activity: '30d',
-    selectedRegions: ['US', 'JP', 'KR'],
+    percentile: 'all',
+    valueThreshold: 'all',
+    selectedValueChains: ['all'],
+    activity: 'all',
+    selectedRegions: ['all'],
     sybilTolerance: 'moderate',
     startDate: addDays(5),
     endDate: addDays(35),
@@ -124,9 +124,10 @@ export function toggleSelection<T extends string>(list: T[], value: T): T[] {
 
 function applyManagedCampaignPreset(
   base: CampaignFormState,
-  campaignId: string | null | undefined
+  campaignId: string | null | undefined,
+  partnerName: string
 ): CampaignFormState {
-  const campaign = getManagedCampaignById(campaignId)
+  const campaign = getManagedCampaignById(campaignId, partnerName)
 
   if (!campaign) {
     return base
@@ -149,11 +150,15 @@ function applyManagedCampaignPreset(
   }
 }
 
-function applyPromptPreset(base: CampaignFormState, prompt: string): CampaignFormState {
+function applyPromptPreset(
+  base: CampaignFormState,
+  prompt: string,
+  partnerName: string
+): CampaignFormState {
   const next = { ...base }
   const lower = prompt.toLowerCase()
 
-  next.partnerName = 'Pendle Finance'
+  next.partnerName = partnerName
   next.campaignName = 'Custom Campaign'
   next.description = `Auto-generated from: "${prompt}"`
 
@@ -166,12 +171,12 @@ function applyPromptPreset(base: CampaignFormState, prompt: string): CampaignFor
     next.campaignName = 'Yield Booster'
     next.campaignType = 'Yield Boost'
     next.targetMode = 'behavior'
-    next.selectedSegments = ['smart-saver', 'market-provider']
+    next.selectedSegments = ['defi-stakers-stables', 'liquidity-providers']
   } else if (lower.includes('airdrop') || lower.includes('drop')) {
     next.campaignName = 'Token Airdrop'
     next.campaignType = 'Airdrop'
     next.targetMode = 'behavior'
-    next.selectedSegments = ['profit-hunter', 'strategic-holder']
+    next.selectedSegments = ['airdrop-hunters', 'long-term-holders']
   } else if (
     lower.includes('cashback') ||
     lower.includes('spending') ||
@@ -192,12 +197,12 @@ function applyPromptPreset(base: CampaignFormState, prompt: string): CampaignFor
     next.campaignName = 'Fee Discount Program'
     next.campaignType = 'Fee Discount'
     next.targetMode = 'behavior'
-    next.selectedSegments = ['active-trader']
+    next.selectedSegments = ['dex-traders']
   } else if (lower.includes('referral') || lower.includes('invite')) {
     next.campaignName = 'Referral Bonus'
     next.campaignType = 'Referral Bonus'
     next.targetMode = 'behavior'
-    next.selectedSegments = ['strategic-holder']
+    next.selectedSegments = ['long-term-holders']
     next.accessType = 'invite'
   }
 
@@ -223,10 +228,10 @@ function applyPromptPreset(base: CampaignFormState, prompt: string): CampaignFor
   }
 
   if (next.targetMode === 'behavior') {
-    next.selectedBehaviorChains = chainMatches.length > 0 ? chainMatches : base.selectedBehaviorChains
+    next.selectedBehaviorChains = chainMatches.length > 0 ? chainMatches : ['all']
     next.selectedValueChains = []
   } else {
-    next.selectedValueChains = chainMatches.length > 0 ? chainMatches : base.selectedValueChains
+    next.selectedValueChains = chainMatches.length > 0 ? chainMatches : ['all']
     next.selectedBehaviorChains = []
   }
 
@@ -251,7 +256,7 @@ function applyPromptPreset(base: CampaignFormState, prompt: string): CampaignFor
   if (next.targetMode === 'value') {
     next.selectedSegments = []
     next.selectedBehaviorChains = []
-    next.selectedValueChains = chainMatches.length > 0 ? chainMatches : base.selectedValueChains
+    next.selectedValueChains = chainMatches.length > 0 ? chainMatches : ['all']
   } else {
     next.selectedValueChains = []
   }
@@ -259,7 +264,7 @@ function applyPromptPreset(base: CampaignFormState, prompt: string): CampaignFor
   return next
 }
 
-export function readStoredDraft(): CampaignFormState | null {
+export function readStoredDraft(partnerName?: string): CampaignFormState | null {
   if (typeof window === 'undefined') {
     return null
   }
@@ -274,10 +279,12 @@ export function readStoredDraft(): CampaignFormState | null {
     const parsed = JSON.parse(raw) as StoredCampaignDraft | CampaignFormState
 
     if ('form' in parsed) {
-      return normalizeCampaignFormState(parsed.form)
+      const normalizedForm = normalizeCampaignFormState(parsed.form)
+      return partnerName ? { ...normalizedForm, partnerName } : normalizedForm
     }
 
-    return normalizeCampaignFormState(parsed)
+    const normalizedForm = normalizeCampaignFormState(parsed)
+    return partnerName ? { ...normalizedForm, partnerName } : normalizedForm
   } catch {
     return null
   }
@@ -300,15 +307,17 @@ export function buildInitialForm({
   initialPrompt,
   initialCampaignId,
   initialDraftId
-}: CampaignBuilderProps): CampaignFormState {
-  let nextForm = createInitialState()
+}: CampaignBuilderProps, partnerName: string): CampaignFormState {
+  let nextForm = {
+    ...createInitialState(partnerName)
+  }
 
   if (initialCampaignId) {
-    nextForm = applyManagedCampaignPreset(nextForm, initialCampaignId)
+    nextForm = applyManagedCampaignPreset(nextForm, initialCampaignId, partnerName)
   }
 
   if (initialDraftId === 'local') {
-    const storedDraft = readStoredDraft()
+    const storedDraft = readStoredDraft(partnerName)
 
     if (storedDraft) {
       nextForm = storedDraft
@@ -316,7 +325,7 @@ export function buildInitialForm({
   }
 
   if (initialPrompt) {
-    nextForm = applyPromptPreset(nextForm, initialPrompt)
+    nextForm = applyPromptPreset(nextForm, initialPrompt, partnerName)
   }
 
   return nextForm

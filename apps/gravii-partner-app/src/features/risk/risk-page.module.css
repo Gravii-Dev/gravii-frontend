@@ -3,116 +3,385 @@
   gap: 1rem;
 }
 
-.distribution,
-.clusterList {
+.page > section,
+.page > div {
+  content-visibility: auto;
+  contain-intrinsic-size: 440px;
+}
+
+.mainHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mainTitle {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+  text-shadow:
+    0 0 20px rgba(255, 255, 255, 0.14),
+    0 0 40px rgba(255, 255, 255, 0.04);
+}
+
+.topGrid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 1rem;
+}
+
+.riskLeft,
+.riskRight {
+  display: grid;
+  gap: 1rem;
+}
+
+.card {
+  border: 2px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+}
+
+.cardTitle,
+.cardTitleTable {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  color: var(--text-secondary);
+}
+
+.donutWrapper {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.donutContainer {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 10rem;
+}
+
+.donutRing {
+  width: 8.75rem;
+  height: 8.75rem;
+  border-radius: 999px;
+}
+
+.donutCenter {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 4.75rem;
+  height: 4.75rem;
+  border-radius: 999px;
+  background: #11151b;
+}
+
+.donutCenterValue {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.donutCenterLabel {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.donutLegend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.legendDot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+}
+
+.legendDotcritical {
+  background: var(--accent-red);
+}
+
+.legendDothigh {
+  background: var(--accent-orange);
+}
+
+.legendDotmedium {
+  background: var(--accent-amber);
+}
+
+.legendDotlow {
+  background: var(--accent-teal);
+}
+
+.legendValue {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-primary);
+}
+
+.miniKpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.miniKpiValue {
+  font-family: var(--font-mono);
+  font-size: 24px;
+  color: var(--text-primary);
+}
+
+.flaggedChainList {
   display: grid;
   gap: 0.9rem;
 }
 
-.barHeader,
-.clusterHeader,
-.tableHead,
-.tableRow {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0.8rem;
+.flaggedChainHeader {
+  display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
 }
 
-.barTrack {
-  overflow: hidden;
-  min-height: 0.8rem;
-  margin-top: 0.3rem;
+.chainBadge {
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.05);
+  padding: 0.2rem 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 700;
 }
 
-.barFill {
-  display: block;
-  min-height: 0.8rem;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #ec718d, #ff8f57);
+.chainBadgecritical {
+  background: rgba(236, 113, 141, 0.16);
+  color: #ffa1b4;
 }
 
-.clusterCard {
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 1rem;
-  background: rgba(255, 255, 255, 0.02);
-  padding: 1rem;
+.chainBadgehigh {
+  background: rgba(255, 143, 87, 0.16);
+  color: #ffb58f;
 }
 
-.clusterHeader h3,
-.clusterHeader p {
-  margin: 0;
+.chainBadgemedium {
+  background: rgba(246, 193, 93, 0.16);
+  color: #ffd68d;
 }
 
-.clusterHeader p,
-.clusterCard span {
+.flaggedChainMeta {
+  font-size: 0.75rem;
   color: var(--text-secondary);
 }
 
-.filters {
+.flaggedTrack {
+  height: 1.25rem;
+  overflow: hidden;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.flaggedFill {
+  height: 100%;
+  border-radius: 4px;
+}
+
+.flaggedFillcritical {
+  background: var(--accent-red);
+}
+
+.flaggedFillhigh {
+  background: var(--accent-orange);
+}
+
+.flaggedFillmedium {
+  background: var(--accent-amber);
+}
+
+.clusterStack {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.clusterCard {
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+.clusterCardcritical {
+  border: 1px solid rgba(236, 113, 141, 0.25);
+  background: rgba(236, 113, 141, 0.06);
+}
+
+.clusterCardhigh {
+  border: 1px solid rgba(255, 143, 87, 0.25);
+  background: rgba(255, 143, 87, 0.06);
+}
+
+.clusterCardmedium {
+  border: 1px solid rgba(246, 193, 93, 0.22);
+  background: rgba(246, 193, 93, 0.06);
+}
+
+.clusterCardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.clusterName {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.riskBadge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.75rem;
+  text-transform: capitalize;
+}
+
+.riskBadgecritical {
+  background: rgba(236, 113, 141, 0.16);
+  color: #ffa1b4;
+}
+
+.riskBadgehigh {
+  background: rgba(255, 143, 87, 0.16);
+  color: #ffb58f;
+}
+
+.riskBadgemedium {
+  background: rgba(246, 193, 93, 0.16);
+  color: #ffd68d;
+}
+
+.clusterWallets {
+  display: grid;
+  justify-items: end;
+}
+
+.clusterWalletValue {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  color: var(--text-primary);
+}
+
+.clusterWalletLabel {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.clusterCardBody {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.clusterDetail {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+.entropyBar {
+  display: inline-flex;
+  width: 4rem;
+  height: 0.45rem;
+  margin-left: 0.45rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.entropyFill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.entropyFillcritical {
+  background: var(--accent-red);
+}
+
+.entropyFillhigh {
+  background: var(--accent-orange);
+}
+
+.entropyFillmedium {
+  background: var(--accent-amber);
+}
+
+.tableHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.tableFilters {
   display: flex;
   gap: 0.6rem;
 }
 
-.filters select {
+.tableFilters select {
   border: 1px solid var(--border-strong);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.04);
-  padding: 0.5rem 0.8rem;
+  padding: 0.45rem 0.8rem;
   color: var(--text-primary);
 }
 
-.table {
+.tableWrap {
   display: grid;
 }
 
 .tableHead,
 .tableRow {
+  display: grid;
   grid-template-columns: minmax(0, 1.2fr) 0.7fr 0.8fr 0.7fr auto;
+  gap: 0.8rem;
+  align-items: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   padding: 0.85rem 0;
 }
 
 .tableHead {
-  color: var(--text-muted);
   font-size: 0.8rem;
-  text-transform: uppercase;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
 .mono {
   font-family: var(--font-mono);
 }
 
-.badge {
-  width: fit-content;
-  border-radius: 999px;
-  padding: 0.25rem 0.65rem;
-  text-transform: capitalize;
-}
-
-.badgecritical {
-  background: rgba(236, 113, 141, 0.16);
-  color: #ffa1b4;
-}
-
-.badgehigh {
-  background: rgba(255, 143, 87, 0.16);
-  color: #ffb58f;
-}
-
-.badgemedium {
-  background: rgba(246, 193, 93, 0.16);
-  color: #ffd68d;
-}
-
 .blockButton {
   border: 0;
   border-radius: 999px;
-  background: #ec718d;
-  padding: 0.55rem 0.8rem;
+  background: #d55d62;
+  padding: 0.55rem 0.85rem;
   color: white;
 }
 
@@ -121,13 +390,30 @@
   color: var(--text-primary);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1080px) {
+  .topGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 860px) {
+  .miniKpis {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tableHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 720px) {
   .tableHead {
     display: none;
   }
 
   .tableRow {
     grid-template-columns: minmax(0, 1fr);
-    gap: 0.5rem;
+    gap: 0.4rem;
   }
 }

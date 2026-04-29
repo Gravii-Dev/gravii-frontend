@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
-import { DM_Sans, JetBrains_Mono, Outfit, Sora, Space_Grotesk } from 'next/font/google'
+import { DM_Sans, JetBrains_Mono, Outfit, Sora, Space_Mono } from 'next/font/google'
 import { Suspense } from 'react'
 
 import { AppShell } from '@/components/layout/app-shell'
+import { PartnerAuthProvider } from '@/features/auth/auth-provider'
 
 import './globals.css'
 
@@ -11,14 +12,15 @@ const outfit = Outfit({
   variable: '--font-sans'
 })
 
-const spaceGrotesk = Space_Grotesk({
+const spaceMono = Space_Mono({
   subsets: ['latin'],
-  variable: '--font-display'
+  variable: '--font-mono',
+  weight: ['400', '700']
 })
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
-  variable: '--font-mono'
+  variable: '--font-jet'
 })
 
 const sora = Sora({
@@ -45,10 +47,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${outfit.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} ${sora.variable} ${dmSans.variable}`}
+        className={`${outfit.variable} ${spaceMono.variable} ${jetbrainsMono.variable} ${sora.variable} ${dmSans.variable}`}
       >
-        <Suspense fallback={children}>
-          <AppShell>{children}</AppShell>
+        <Suspense fallback={null}>
+          <PartnerAuthProvider>
+            <AppShell>{children}</AppShell>
+          </PartnerAuthProvider>
         </Suspense>
       </body>
     </html>

@@ -1,126 +1,143 @@
 'use client'
 
-import { Sparkles } from 'lucide-react'
-
-import { Card } from '@/components/ui/card'
-
 import type { CampaignFormState } from './campaign-builder-model'
 import styles from './campaign-builder.module.css'
 
 interface CampaignBuilderPreviewProps {
   eligibilitySummary: string
-  estimatedReach: number
   form: CampaignFormState
-  hasSavedDraft: boolean
   previewTags: string[]
   resolvedCampaignType: string
   resolvedCtaLabel: string
 }
 
+function buildAccessState(accessType: CampaignFormState['accessType'], ctaLabel: string) {
+  if (accessType === 'invite') {
+    return {
+      badge: 'INVITE ONLY',
+      buttonLabel: 'REQUEST ACCESS →',
+      buttonClassName: `${styles.previewButton} ${styles.previewButtonInvite}`,
+      toneClassName: styles.previewInviteTone
+    }
+  }
+
+  if (accessType === 'closed') {
+    return {
+      badge: 'CLOSED',
+      buttonLabel: 'CLOSED',
+      buttonClassName: `${styles.previewButton} ${styles.previewButtonClosed}`,
+      toneClassName: styles.previewClosedTone
+    }
+  }
+
+  return {
+    badge: 'ELIGIBLE',
+    buttonLabel: `${ctaLabel.toUpperCase()} →`,
+    buttonClassName: styles.previewButton,
+    toneClassName: styles.previewEligibleTone
+  }
+}
+
 export function CampaignBuilderPreview({
   eligibilitySummary,
-  estimatedReach,
   form,
-  hasSavedDraft,
   previewTags,
   resolvedCampaignType,
   resolvedCtaLabel
 }: CampaignBuilderPreviewProps) {
-  const accessState =
-    form.accessType === 'invite'
-      ? {
-          badge: 'INVITE ONLY',
-          cta: 'REQUEST ACCESS',
-          ctaVariant: styles.previewButtonInvite
-        }
-      : form.accessType === 'closed'
-        ? {
-            badge: 'CLOSED',
-            cta: 'CLOSED',
-            ctaVariant: styles.previewButtonClosed
-          }
-        : {
-            badge: 'ELIGIBLE',
-            cta: resolvedCtaLabel,
-            ctaVariant: ''
-          }
+  const accessState = buildAccessState(form.accessType, resolvedCtaLabel)
+  const partnerInitial = (form.partnerName || 'Partner Name').slice(0, 1).toUpperCase()
+  const periodText =
+    form.startDate && form.endDate ? `${form.startDate} - ${form.endDate}` : 'Not scheduled'
 
   return (
-    <div className={styles.previewColumn}>
-      <Card title="Live preview" eyebrow="User-facing output" accent="teal" className={styles.previewCard}>
-        <div className={styles.previewStack}>
-            <div className={styles.previewPartner}>
-            <div className={styles.previewIdentity}>
-              <div className={styles.previewLogo}>
-                {form.partnerLogoUrl ? (
-                  <div
-                    aria-hidden="true"
-                    className={styles.previewLogoImage}
-                    style={{ backgroundImage: `url(${form.partnerLogoUrl})` }}
-                  />
-                ) : (
-                  <span>{form.partnerName.slice(0, 1).toUpperCase()}</span>
-                )}
-              </div>
-              <div>
-                <p className={styles.previewPartnerName}>{form.partnerName || 'Partner name'}</p>
-                <p className={styles.previewPartnerMeta}>{estimatedReach.toLocaleString()} eligible users</p>
-              </div>
-            </div>
-            <span className={styles.previewEligibility}>{accessState.badge}</span>
-          </div>
+    <div className={styles.previewStack}>
+      <div className={`${styles.stepHeader} ${styles.previewStepHeader}`}>
+        Preview — How users will see this campaign
+      </div>
 
-          <div className={styles.previewCampaign}>
-            <div className={styles.previewCampaignHeader}>
-              <div>
-                <h3>{form.campaignName || 'Campaign name'}</h3>
-                <p>{resolvedCampaignType}</p>
-              </div>
-              <span className={styles.previewCategory}>{form.category}</span>
-            </div>
-
-            <div className={styles.previewTags}>
-              {previewTags.length > 0 ? (
-                previewTags.map((tag) => (
-                  <span key={tag} className={styles.previewTag}>
-                    {tag}
-                  </span>
-                ))
+      <div className={styles.previewSectionLabel}>PARTNER CARD</div>
+      <div className={styles.previewPartnerCard}>
+        <div className={styles.previewPartnerTop}>
+          <div className={styles.previewIdentity}>
+            <div className={styles.previewLogo}>
+              {form.partnerLogoUrl ? (
+                <div
+                  aria-hidden="true"
+                  className={styles.previewLogoImage}
+                  style={{ backgroundImage: `url(${form.partnerLogoUrl})` }}
+                />
               ) : (
-                <span className={styles.previewTagPlaceholder}>No targeting tags selected</span>
+                <span>{partnerInitial}</span>
               )}
             </div>
-
-            <p className={styles.previewDescription}>{form.description}</p>
-
-            <div className={styles.previewFoot}>
-              <div>
-                <span className="eyebrow-label">Qualification</span>
-                <p>{eligibilitySummary}</p>
-              </div>
-              <button
-                type="button"
-                className={`${styles.previewButton} ${accessState.ctaVariant}`}
-              >
-                {accessState.cta}
-              </button>
-            </div>
+            <span className={styles.previewPartnerName}>{form.partnerName || 'Partner Name'}</span>
           </div>
-
-          <div className={styles.signalCard}>
-            <div className={styles.signalHeader}>
-              <Sparkles size={16} />
-              <span>Launch signal</span>
-            </div>
-            <p>
-              {estimatedReach > 30000
-                ? 'Broad enough for acquisition. Consider stricter sybil settings only if payout cost is high.'
-                : 'Focused segment. Great for premium access, cashback pilots, or invite-only launches.'}
-            </p>
-            {hasSavedDraft ? <span className={styles.signalMeta}>Saved draft available for reloading</span> : null}
-          </div>
+          <span className={`${styles.previewStatus} ${accessState.toneClassName}`}>{accessState.badge}</span>
         </div>
-      </Card>
+        <div className={styles.previewPartnerMeta}>1 campaign</div>
+        <div className={styles.previewTagRow}>
+          {previewTags.length > 0 ? (
+            previewTags.map((tag) => (
+              <span key={tag} className={styles.previewTag}>
+                {tag}
+              </span>
+            ))
+          ) : (
+            <span className={styles.previewTagPlaceholder}>No targeting tags selected</span>
+          )}
+        </div>
+      </div>
+
+      <div className={styles.previewSectionLabel}>CAMPAIGN DETAIL</div>
+      <div className={styles.previewDetailCard}>
+        <div className={styles.previewDetailTop}>
+          <span className={styles.previewCampaignName}>{form.campaignName || 'Campaign Name'}</span>
+          <span className={`${styles.previewStatus} ${accessState.toneClassName}`}>{accessState.badge}</span>
+        </div>
+
+        <div className={styles.previewMetaRow}>
+          <span className={styles.previewTypeBadge}>{resolvedCampaignType}</span>
+          <span className={styles.previewCategory}>{form.category}</span>
+        </div>
+
+        <div className={styles.previewMetaRow}>
+          <span className={styles.previewChainBadge}>
+            {form.targetMode === 'behavior'
+              ? form.selectedBehaviorChains
+                  .filter((chain) => chain !== 'all')
+                  .map((chain) => chain.toUpperCase())
+                  .join(' · ') || 'All Chains'
+              : form.selectedValueChains
+                  .filter((chain) => chain !== 'all')
+                  .map((chain) => chain.toUpperCase())
+                  .join(' · ') || 'All Chains'}
+          </span>
+          <span className={styles.previewPeriod}>{periodText}</span>
+        </div>
+
+        <div className={styles.previewTagRow}>
+          {previewTags.length > 0 ? (
+            previewTags.map((tag) => (
+              <span key={tag} className={styles.previewTag}>
+                {tag}
+              </span>
+            ))
+          ) : (
+            <span className={styles.previewTagPlaceholder}>No targeting tags selected</span>
+          )}
+        </div>
+
+        <p className={styles.previewDescription}>
+          {form.description || 'Campaign description will appear here...'}
+        </p>
+
+        <div className={styles.previewEligibilityText}>{eligibilitySummary}</div>
+
+        <button type="button" className={accessState.buttonClassName}>
+          {accessState.buttonLabel}
+        </button>
+      </div>
     </div>
   )
 }

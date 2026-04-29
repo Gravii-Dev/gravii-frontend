@@ -3,84 +3,138 @@
   gap: 1rem;
 }
 
-.tabs,
-.pills,
-.inlineControls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
+.page > section,
+.page > div {
+  content-visibility: auto;
+  contain-intrinsic-size: 560px;
 }
 
-.tab,
-.pill,
-.infoButton,
-.labelCard {
+.mainHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mainTitle {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+  text-shadow:
+    0 0 20px rgba(255, 255, 255, 0.14),
+    0 0 40px rgba(255, 255, 255, 0.04);
+}
+
+.segTabs,
+.filterPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.segTab,
+.filterPill,
+.infoButton {
   border: 1px solid var(--border-strong);
+  border-radius: 999px;
   background: rgba(255, 255, 255, 0.03);
+  padding: 0.55rem 0.85rem;
   color: var(--text-secondary);
 }
 
-.tab,
-.pill,
-.infoButton {
-  border-radius: 999px;
-  padding: 0.62rem 0.9rem;
-}
-
-.tabActive,
-.pillActive {
-  background: rgba(79, 214, 190, 0.12);
-  border-color: rgba(79, 214, 190, 0.28);
+.segTabActive,
+.filterPillActive {
+  background: rgba(110, 174, 255, 0.1);
+  border-color: rgba(110, 174, 255, 0.28);
   color: var(--text-primary);
 }
 
-.filterGrid,
-.valueFilterStack {
+.card {
+  border: 2px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+}
+
+.cardTitle {
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  color: var(--text-secondary);
+}
+
+.filterBar {
   display: grid;
   gap: 1rem;
 }
 
-.filterSummary,
-.labelPct,
-.threshold {
-  margin: 0;
-  color: var(--text-secondary);
+.filterSection {
+  display: grid;
+  gap: 1rem;
+}
+
+.filterGroup {
+  display: grid;
+  gap: 0.4rem;
 }
 
 .filterLabel,
-.controlLabel {
-  margin: 0 0 0.4rem;
-  font-size: 0.9rem;
+.inlineFilterLabel {
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--text-primary);
 }
 
-.inlineControls {
-  align-items: center;
+.filterSummary,
+.labelPct,
+.threshold,
+.footerNote {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
 }
 
-.labelHeader {
+.summaryHighlight {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.inlineFilterRow {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.labelGridHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.85rem;
   font-weight: 600;
+  color: var(--text-primary);
 }
 
 .labelGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.9rem;
+  gap: 0.85rem;
 }
 
 .labelCard {
-  border-radius: 1.2rem;
+  border: 1px solid var(--border-card);
+  border-radius: 1rem;
+  background: var(--bg-card);
   padding: 1rem;
   text-align: left;
+  color: inherit;
 }
 
 .labelCardActive {
-  border-color: rgba(110, 174, 255, 0.3);
+  border-color: rgba(110, 174, 255, 0.28);
   background: rgba(110, 174, 255, 0.08);
 }
 
@@ -88,61 +142,152 @@
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 0.65rem;
-  margin-bottom: 0.45rem;
+  gap: 0.6rem;
 }
 
 .checkbox {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.2rem;
-  height: 1.2rem;
+  display: inline-grid;
+  place-items: center;
+  width: 1.15rem;
+  height: 1.15rem;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.08);
+  font-size: 0.75rem;
   color: var(--text-primary);
-  font-size: 0.8rem;
 }
 
 .labelName {
-  color: var(--text-primary);
+  font-size: 0.85rem;
   font-weight: 600;
+  color: var(--text-primary);
 }
 
 .chainBar {
   display: flex;
   overflow: hidden;
-  min-height: 0.55rem;
-  margin: 0.7rem 0;
+  height: 0.6rem;
+  margin: 0.65rem 0;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.04);
 }
 
 .chainBar span {
-  height: 0.55rem;
+  height: 100%;
 }
 
-.metric {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: 2rem;
+.summarySection {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.summaryLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.kpiValue {
+  font-family: var(--font-mono);
+  font-size: 28px;
   line-height: 1;
-  letter-spacing: -0.05em;
+  color: var(--text-primary);
+}
+
+.grid2Half {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.rankList {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.rankItem {
+  display: grid;
+  grid-template-columns: minmax(0, 8rem) minmax(0, 1fr) auto;
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.rankName,
+.rankVal {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.rankVal {
+  color: var(--text-primary);
+}
+
+.rankBarTrack {
+  height: 0.9rem;
+  overflow: hidden;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.rankBar {
+  height: 100%;
+}
+
+.rankBarone {
+  background: var(--chart-1);
+}
+
+.rankBartwo {
+  background: var(--chart-2);
+}
+
+.rankBarthree {
+  background: var(--chart-3);
+}
+
+.rankBarfour {
+  background: var(--chart-4);
+}
+
+.rankBaramber {
+  background: var(--accent-amber);
+}
+
+.rankBareth {
+  background: #627eea;
+}
+
+.rankBarbase {
+  background: #0052ff;
+}
+
+.rankBararb {
+  background: #28a0f0;
 }
 
 @media (max-width: 1100px) {
   .labelGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .summaryGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
-@media (max-width: 700px) {
-  .labelGrid {
+@media (max-width: 720px) {
+  .labelGrid,
+  .summaryGrid,
+  .grid2Half {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .labelHeader {
-    flex-direction: column;
-    align-items: flex-start;
+  .rankItem {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

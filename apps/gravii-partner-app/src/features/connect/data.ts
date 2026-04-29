@@ -12,18 +12,18 @@ export interface IntegrationModule {
 export const integrationModules = [
   {
     id: 'xray-link',
-    title: 'X-Ray Link',
+    title: 'X-Ray Users',
     category: 'No-code acquisition',
     description:
-      'Share a unique partner link and let Gravii profile wallets before they ever touch your internal tooling.',
-    ctaLabel: 'Copy invite link',
-    secondaryLabel: 'Preview referral flow',
+      "Share your unique link and let Gravii profile wallets before they ever touch your internal tooling.",
+    ctaLabel: 'Copy link',
+    secondaryLabel: 'Launch on Reach',
     tone: 'teal',
     detail: 'https://gravii.io/ref/PARTNER_CODE'
   },
   {
     id: 'gate-api',
-    title: 'Gate API',
+    title: 'Web API',
     category: 'Developer integration',
     description:
       'Query tier, persona, value range, and risk posture at wallet connect with a single authenticated request.',
