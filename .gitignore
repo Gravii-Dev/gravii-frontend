@@ -21,7 +21,8 @@ test-results
 .cursor
 *.tsbuildinfo
 **/.playwright-cli
-**/output/playwright
+output/
+tmp/
 
 # Transition backups
 tooling/backups
