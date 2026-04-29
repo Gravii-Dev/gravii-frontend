@@ -1,90 +1,682 @@
 .page {
   display: grid;
+  gap: 1.25rem;
+}
+
+.mainHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: 1rem;
 }
 
-.uploadCard {
-  overflow: hidden;
-}
-
-.uploadBody {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 1.25rem;
-  align-items: center;
-}
-
-.uploadIcon {
-  display: grid;
-  place-items: center;
-  width: 3.2rem;
-  height: 3.2rem;
-  border-radius: 1rem;
-  background: rgba(110, 174, 255, 0.14);
-  color: #a7cbff;
-}
-
-.uploadBody h2,
-.reportCard h3 {
+.mainTitle {
   margin: 0;
+  font-family: var(--font-mono);
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--text-primary);
 }
 
-.uploadBody p,
-.reportCard p,
-.noteRow p,
-.handoffCard p {
-  margin: 0;
+.mainSubcopy {
+  margin: 0.5rem 0 0;
+  max-width: 44rem;
+  font-size: 0.95rem;
   line-height: 1.65;
   color: var(--text-secondary);
 }
 
-.reportCard {
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.02);
-  padding: 1rem;
-}
-
-.reportCard h3 {
-  margin-bottom: 0.45rem;
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  line-height: 1;
-  letter-spacing: -0.05em;
-}
-
-.noteList {
+.topGrid {
   display: grid;
-  gap: 0.9rem;
+  grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+  gap: 1rem;
 }
 
-.noteRow {
-  display: flex;
-  gap: 0.85rem;
-}
-
-.noteBullet {
-  width: 0.7rem;
-  height: 0.7rem;
-  margin-top: 0.45rem;
-  flex-shrink: 0;
-  border-radius: 999px;
-  background: var(--brand-teal);
-}
-
-.handoffCard {
+.reportStack {
   display: grid;
   gap: 1rem;
 }
 
-.handoffActions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.8rem;
+.composerCard,
+.poolListCard,
+.reportCard,
+.walletsCard,
+.detailCard,
+.emptyStateCard,
+.distributionCard,
+.metricCard,
+.jsonCard,
+.reachBanner,
+.progressCard {
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.025)),
+    rgba(10, 14, 22, 0.9);
+  box-shadow: var(--shadow-card);
 }
 
-@media (max-width: 820px) {
-  .uploadBody {
+.composerCard,
+.poolListCard,
+.reportCard,
+.walletsCard,
+.detailCard,
+.emptyStateCard {
+  padding: 1.35rem;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.cardEyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.cardMeta {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.75rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.2rem 0.7rem;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.composerForm,
+.renameField,
+.fieldGroup,
+.filterField {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.fieldLabel {
+  display: grid;
+  gap: 0.45rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.textInput,
+.textArea,
+.selectInput {
+  width: 100%;
+  border: 1px solid var(--border-strong);
+  border-radius: 0.95rem;
+  background: rgba(255, 255, 255, 0.035);
+  padding: 0.85rem 0.95rem;
+  color: var(--text-primary);
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease;
+}
+
+.textInput::placeholder,
+.textArea::placeholder {
+  color: var(--text-muted);
+}
+
+.textInput:focus,
+.textArea:focus,
+.selectInput:focus {
+  outline: none;
+  border-color: rgba(88, 166, 255, 0.36);
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.14);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.textArea {
+  min-height: 11rem;
+  resize: vertical;
+  line-height: 1.55;
+}
+
+.selectInput {
+  appearance: none;
+}
+
+.chainGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.chainChip {
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.035);
+  padding: 0.48rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: capitalize;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.chainChip:hover {
+  transform: translateY(-1px);
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+
+.chainChipActive {
+  border-color: rgba(86, 212, 192, 0.34);
+  background: rgba(86, 212, 192, 0.12);
+  color: #d4fff7;
+}
+
+.fileRow {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+}
+
+.fileButton {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.72rem 0.95rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.18);
+}
+
+.fileInput {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.fileHint {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.parseSummary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.parseSummary span {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.34rem 0.7rem;
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+}
+
+.heroActionRow {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.poolList {
+  display: grid;
+  gap: 0.75rem;
+  max-height: 32rem;
+  overflow-y: auto;
+}
+
+.poolCard {
+  display: grid;
+  gap: 0.55rem;
+  width: 100%;
+  border: 1px solid var(--border-subtle);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.95rem 1rem;
+  text-align: left;
+  color: inherit;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease;
+}
+
+.poolCard:hover {
+  transform: translateY(-1px);
+  border-color: var(--border-hover);
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.poolCardActive {
+  border-color: rgba(88, 166, 255, 0.34);
+  background:
+    linear-gradient(180deg, rgba(88, 166, 255, 0.11), rgba(88, 166, 255, 0.04)),
+    rgba(255, 255, 255, 0.045);
+}
+
+.poolCardHeader,
+.poolMeta,
+.progressHeader,
+.progressMeta,
+.distributionMeta,
+.paginationRow,
+.detailMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.poolName,
+.detailAddress {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.poolStatus {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.55rem;
+  border: 1px solid rgba(86, 212, 192, 0.18);
+  border-radius: 999px;
+  background: rgba(86, 212, 192, 0.08);
+  padding: 0.14rem 0.62rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #d4fff7;
+}
+
+.poolMeta,
+.poolTimestamp,
+.poolFacts,
+.progressMeta,
+.metricDetail,
+.emptyCopy,
+.reachBannerCopy,
+.walletPreviewState,
+.walletPreviewTitle,
+.detailMeta {
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.poolTimestamp {
+  color: var(--text-muted);
+}
+
+.poolHeaderRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: end;
+}
+
+.renameRow,
+.inlineActions,
+.bannerLinks {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.poolFacts {
+  display: grid;
+  gap: 0.4rem;
+  text-align: right;
+}
+
+.progressCard,
+.distributionCard,
+.metricCard,
+.jsonCard {
+  padding: 1rem;
+}
+
+.progressTrack,
+.distributionTrack {
+  overflow: hidden;
+  width: 100%;
+  height: 0.7rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--brand-teal), var(--brand-blue));
+}
+
+.metricsGrid,
+.summaryGrid,
+.detailMetrics {
+  display: grid;
+  gap: 1rem;
+}
+
+.metricsGrid,
+.detailMetrics {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.summaryGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.metricLabel,
+.sectionTitle {
+  margin: 0 0 0.45rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.metricValue {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--text-primary);
+}
+
+.distributionList {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.distributionRow {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.distributionLabel,
+.distributionValue {
+  font-size: 0.84rem;
+  color: var(--text-primary);
+}
+
+.distributionValue {
+  font-family: var(--font-mono);
+}
+
+.distributionFill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(188, 140, 255, 0.95), rgba(88, 166, 255, 0.95));
+}
+
+.filterGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.filterField {
+  font-size: 0.79rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.filterActions {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.walletTableWrap {
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.walletTableHead,
+.walletRow {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.45fr) repeat(5, minmax(0, 1fr));
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.walletTableHead {
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0.85rem 1rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.walletRow {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  background: transparent;
+  padding: 0.9rem 1rem;
+  text-align: left;
+  color: var(--text-secondary);
+  transition: background-color 140ms ease;
+}
+
+.walletRow:last-child {
+  border-bottom: 0;
+}
+
+.walletRow:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.walletRowActive {
+  background:
+    linear-gradient(180deg, rgba(88, 166, 255, 0.1), rgba(88, 166, 255, 0.035)),
+    rgba(255, 255, 255, 0.04);
+}
+
+.walletAddress {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.detailStack {
+  display: grid;
+  gap: 1rem;
+}
+
+.detailHero {
+  display: grid;
+  gap: 0.65rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.025);
+  padding: 1rem;
+}
+
+.detailAddress {
+  overflow-wrap: anywhere;
+  font-size: 1rem;
+}
+
+.detailMeta span {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.22rem 0.62rem;
+}
+
+.jsonPre {
+  overflow: auto;
+  margin: 0;
+  border-radius: 0.9rem;
+  background: rgba(2, 6, 14, 0.92);
+  padding: 1rem;
+  font-family: var(--font-jet);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: #d7e0ef;
+}
+
+.walletPreviewState {
+  display: grid;
+  gap: 0.45rem;
+  border: 1px dashed var(--border-subtle);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 1rem;
+}
+
+.walletPreviewTitle {
+  margin: 0;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.paginationRow {
+  margin-top: 1rem;
+}
+
+.reachBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 1.2rem;
+}
+
+.bannerLink,
+.reachLink {
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.bannerLink {
+  color: var(--brand-blue);
+}
+
+.reachLink {
+  color: var(--brand-teal);
+}
+
+.errorCopy,
+.noticeCopy {
+  margin: 0;
+  border-radius: 0.95rem;
+  padding: 0.8rem 0.95rem;
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+.errorCopy {
+  border: 1px solid rgba(248, 81, 73, 0.18);
+  background: rgba(248, 81, 73, 0.09);
+  color: #ffd9d6;
+}
+
+.noticeCopy {
+  border: 1px solid rgba(86, 212, 192, 0.18);
+  background: rgba(86, 212, 192, 0.08);
+  color: #d5fff7;
+}
+
+@media (max-width: 1180px) {
+  .topGrid,
+  .poolHeaderRow,
+  .summaryGrid,
+  .metricsGrid,
+  .detailMetrics {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .poolFacts {
+    text-align: left;
+  }
+
+  .filterGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 920px) {
+  .walletTableHead {
+    display: none;
+  }
+
+  .walletRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .mainHeader,
+  .cardHeader,
+  .reachBanner,
+  .paginationRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .composerCard,
+  .poolListCard,
+  .reportCard,
+  .walletsCard,
+  .detailCard,
+  .emptyStateCard {
+    padding: 1rem;
+  }
+
+  .filterGrid,
+  .walletRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .walletTableWrap {
+    border-radius: 0.9rem;
   }
 }
