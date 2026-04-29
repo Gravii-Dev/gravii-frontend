@@ -1,7 +1,7 @@
 export type PanelId = "profile" | "discovery" | "leaderboard" | "lookup" | "myspace";
 
 export type PanelConfig = {
-  id: Exclude<PanelId, "myspace">;
+  id: PanelId;
   num: string;
   tab: string;
   sub: string;
