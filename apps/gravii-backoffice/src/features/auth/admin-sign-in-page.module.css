@@ -1,0 +1,125 @@
+.page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 32px;
+  background:
+    radial-gradient(circle at top left, rgba(232, 168, 124, 0.16), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(109, 74, 255, 0.14), transparent 30%),
+    #071019;
+}
+
+.panel {
+  width: min(100%, 520px);
+  padding: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 28px;
+  background: rgba(9, 18, 30, 0.88);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.36);
+  color: #f4f7fb;
+}
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #8ea3b8;
+}
+
+.title {
+  margin: 12px 0 10px;
+  font-size: clamp(34px, 5vw, 46px);
+  line-height: 0.96;
+}
+
+.copy {
+  margin: 0;
+  color: #8ea3b8;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.label {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8ea3b8;
+}
+
+.input {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 14px 16px;
+  color: #f4f7fb;
+  font: inherit;
+}
+
+.input:focus {
+  outline: none;
+  border-color: rgba(232, 168, 124, 0.8);
+}
+
+.button {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-top: 18px;
+  padding: 15px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.button:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+.button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.buttonCopy {
+  display: grid;
+  gap: 4px;
+  text-align: left;
+}
+
+.buttonTitle {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.buttonHint {
+  color: #8ea3b8;
+  font-size: 13px;
+}
+
+.status {
+  min-height: 22px;
+  margin-top: 18px;
+  color: #f4b8b8;
+  font-size: 13px;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 24px;
+  color: #8ea3b8;
+  font-size: 13px;
+}
