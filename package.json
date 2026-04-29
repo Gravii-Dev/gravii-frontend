@@ -11,20 +11,20 @@
     "build": "turbo run build",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
+    "test:e2e": "playwright test",
     "typecheck:user-landing": "turbo run typecheck --filter=gravii-user-landing",
     "dev:backoffice": "turbo run dev --filter=gravii-backoffice",
     "dev:user-landing": "turbo run dev --filter=gravii-user-landing",
     "dev:user-app": "turbo run dev --filter=gravii-user-app",
     "dev:partner-app": "turbo run dev --filter=gravii-partner-app",
-    "dev:partner-landing": "turbo run dev --filter=gravii-partner-landing",
     "build:backoffice": "turbo run build --filter=gravii-backoffice",
     "build:user-landing": "turbo run build --filter=gravii-user-landing",
     "build:user-app": "turbo run build --filter=gravii-user-app",
     "build:partner-app": "turbo run build --filter=gravii-partner-app",
-    "build:partner-landing": "turbo run build --filter=gravii-partner-landing",
     "lint:user-landing": "turbo run lint --filter=gravii-user-landing"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "turbo": "^2.5.4"
   }
 }

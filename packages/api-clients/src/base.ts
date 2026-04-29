@@ -8,6 +8,12 @@ export interface ApiClientConfig {
   fetch?: typeof fetch
   defaultHeaders?: HeadersInit | undefined
   getHeaders?: (() => HeadersInit | Promise<HeadersInit>) | undefined
+  getAccessToken?:
+    | (() => string | null | undefined | Promise<string | null | undefined>)
+    | undefined
+  onUnauthorized?:
+    | ((error: ApiClientError) => string | null | undefined | Promise<string | null | undefined>)
+    | undefined
 }
 
 export interface JsonRequestOptions<TBody> {
@@ -35,6 +41,22 @@ export class ApiClientError extends Error {
 
 function normalizeBaseUrl(baseUrl: string): string {
   return baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl
+}
+
+function readRuntimeEnv(envKeys: readonly string[]): string | undefined {
+  if (typeof process === 'undefined') {
+    return undefined
+  }
+
+  for (const envKey of envKeys) {
+    const value = process.env[envKey]
+
+    if (typeof value === 'string' && value.trim().length > 0) {
+      return value.trim()
+    }
+  }
+
+  return undefined
 }
 
 function buildUrl(baseUrl: string, path: string, query?: QueryParams): URL {
@@ -110,42 +132,79 @@ export function createJsonApiClient(config: ApiClientConfig) {
       options: JsonRequestOptions<TBody>
     ): Promise<TResponse> {
       const url = buildUrl(config.baseUrl, options.path, options.query)
-      const runtimeHeaders = config.getHeaders ? await config.getHeaders() : undefined
       const hasJsonBody = options.body !== undefined
 
-      const headers = mergeHeaders(
-        hasJsonBody ? { 'content-type': 'application/json' } : undefined,
-        config.defaultHeaders,
-        runtimeHeaders,
-        options.headers
-      )
+      const requestOnce = async (accessToken?: string | null) => {
+        const runtimeHeaders = config.getHeaders ? await config.getHeaders() : undefined
+        const resolvedAccessToken =
+          accessToken ?? (config.getAccessToken ? await config.getAccessToken() : undefined)
+        const headers = mergeHeaders(
+          hasJsonBody ? { 'content-type': 'application/json' } : undefined,
+          config.defaultHeaders,
+          runtimeHeaders,
+          resolvedAccessToken ? { authorization: `Bearer ${resolvedAccessToken}` } : undefined,
+          options.headers
+        )
 
-      const requestInit: RequestInit = {
-        method: options.method,
-        headers
+        const requestInit: RequestInit = {
+          method: options.method,
+          headers
+        }
+
+        if (hasJsonBody) {
+          requestInit.body = JSON.stringify(options.body)
+        }
+
+        if (options.signal) {
+          requestInit.signal = options.signal
+        }
+
+        return fetchImpl(url, requestInit)
       }
 
-      if (hasJsonBody) {
-        requestInit.body = JSON.stringify(options.body)
-      }
-
-      if (options.signal) {
-        requestInit.signal = options.signal
-      }
-
-      const response = await fetchImpl(url, requestInit)
-
-      const parsedBody = await parseResponseBody(response)
+      let response = await requestOnce()
+      let parsedBody = await parseResponseBody(response)
 
       if (!response.ok) {
-        throw new ApiClientError(`Request failed with status ${response.status}`, {
+        const error = new ApiClientError(`Request failed with status ${response.status}`, {
           status: response.status,
           url: url.toString(),
           body: parsedBody
         })
+
+        if (response.status === 401 && config.onUnauthorized) {
+          const refreshedAccessToken = await config.onUnauthorized(error)
+
+          if (refreshedAccessToken) {
+            response = await requestOnce(refreshedAccessToken)
+            parsedBody = await parseResponseBody(response)
+          }
+        }
+
+        if (!response.ok) {
+          throw new ApiClientError(`Request failed with status ${response.status}`, {
+            status: response.status,
+            url: url.toString(),
+            body: parsedBody
+          })
+        }
       }
 
       return parsedBody as TResponse
     }
   }
+}
+
+export function resolveApiBaseUrl(options: {
+  override?: string | undefined
+  envKeys: readonly string[]
+  fallback: string
+}): string {
+  const override = options.override?.trim()
+
+  if (override) {
+    return override
+  }
+
+  return readRuntimeEnv(options.envKeys) ?? options.fallback
 }

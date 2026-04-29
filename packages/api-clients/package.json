@@ -6,10 +6,14 @@
   "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
+    "./admin": "./src/admin.ts",
     "./base": "./src/base.ts",
     "./landing": "./src/landing.ts",
     "./partner": "./src/partner.ts",
     "./user": "./src/user.ts"
+  },
+  "dependencies": {
+    "@gravii/domain-types": "workspace:*"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json"
