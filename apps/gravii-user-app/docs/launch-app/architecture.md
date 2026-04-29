@@ -9,10 +9,11 @@ This document describes the target architecture needed to turn the current Next.
 Current repository:
 
 - Next.js frontend only
-- single-page prototype UI
-- no real auth
-- no real API client
-- no persistent state
+- single-page product shell
+- live wallet sign-in against the User API now exists
+- shared API client scaffolding now exists
+- live Gravii ID and X-Ray backend reads now exist
+- `Standing`, `Discovery`, and `My Space` remain reserved as coming-soon surfaces
 
 Current shared platform context from knowledgebase:
 
@@ -43,7 +44,7 @@ Owned by this repo.
 Responsibilities:
 
 - wallet connect UI
-- session bootstrap
+- client-side JWT bootstrap
 - route and surface rendering
 - client-side loading, error, and empty states
 - event instrumentation
@@ -51,10 +52,18 @@ Responsibilities:
 
 Recommended frontend additions:
 
-- wallet provider integration
-- typed API client
-- server/client boundary cleanup
+- final browser QA against the live auth/data contracts
+- partner/admin alignment with their live backend auth contracts
+- remaining product-data hydration beyond Gravii ID and X-Ray
 - reusable feature modules instead of one giant component
+
+Current frontend readiness already includes:
+
+- direct wallet sign-in against the live User API
+- client-side JWT persistence and session validation
+- live Gravii ID loading
+- live X-Ray credits, lookup history, lookup runs, and detail reads
+- explicit coming-soon reservations for the remaining three surfaces
 
 ### 2. Session Service
 
@@ -62,13 +71,13 @@ Responsibilities:
 
 - wallet challenge generation
 - signature verification
-- session issuance
-- session refresh and logout
+- JWT issuance
+- session validation
 
 Notes:
 
-- can live inside Gravii API or a dedicated auth layer
-- should not duplicate wallet verification logic across repos
+- the Launch App now calls this backend contract directly from the browser
+- wallet verification and JWT issuance are not duplicated inside the Next.js app anymore
 
 ### 3. Profile and Label Service
 
@@ -133,14 +142,16 @@ Responsibilities:
 Use for:
 
 - rendering
-- lightweight API proxying if needed
 - session-aware page shells
+- browser wallet interaction
+- direct client calls to the authenticated User API
 
 Do not use as the primary place for:
 
 - blockchain analysis jobs
 - heavy ranking computation
 - long-running eligibility pipelines
+- app-local auth issuance or cookie-backed refresh handling
 
 ### Gravii Backend
 
@@ -158,7 +169,7 @@ Use for:
 ```text
 Connect wallet
   -> verify session
-  -> request profile snapshot
+  -> request live Gravii ID
   -> render profile and metrics
 ```
 
@@ -184,10 +195,9 @@ Request partner catalog
 
 ```text
 Submit analysis request
-  -> triage target wallet
-  -> run provider orchestration
-  -> compute result
-  -> persist history
+  -> request live lookup
+  -> refresh lookup history and credits
+  -> request persisted detail
   -> render result
 ```
 
@@ -246,18 +256,18 @@ Need:
 
 ## Implementation Phases
 
-### Phase 1: Replace Mock Reads
+### Phase 1: Live Identity and X-Ray
 
-- real session bootstrap
-- real profile read endpoint
+- live JWT session bootstrap
+- live Gravii ID endpoint
+- live X-Ray credits/history/detail
+- keep the remaining surfaces reserved instead of shipping stale mocks
+
+### Phase 2: Replace Reserved Surfaces
+
 - real campaign read endpoints
 - real leaderboard read endpoints
-
-### Phase 2: Replace Mock Writes and Jobs
-
-- real campaign opt-in
-- real X-Ray request lifecycle
-- real X-Ray history
+- real My Space feed
 
 ### Phase 3: Production Hardening
 
@@ -268,13 +278,12 @@ Need:
 
 ## Architecture Decisions to Lock Soon
 
-- whether session lives in this repo or shared backend
 - whether personalized feeds are precomputed or assembled on request
 - whether X-Ray runs synchronously, asynchronously, or hybrid
 - what database is authoritative for campaign and profile read models
 
 ## Open Questions
 
-- Should Launch App proxy Gravii API through Next.js route handlers, or call it directly from the client with a session token?
+- The app now uses a same-origin Next.js rewrite for browser-side `/api/v1/*` calls so local and hosted browser sessions are not blocked by backend CORS policy. Should that remain a lightweight transport boundary only, or grow into richer server-side proxy logic later?
 - Will wallet analysis results be eventually consistent across Profile and X-Ray, or separately versioned?
 - Will ranking jobs and profile jobs share the same storage backend?

@@ -2,7 +2,7 @@
 
 Launch App is Gravii's end-user product. It lets a connected wallet holder view a Gravii profile, discover campaigns, review personalized benefits, inspect leaderboard standing, and run wallet analysis on any address.
 
-This repository currently contains a refactored product prototype implemented with Next.js App Router and Bun. The UI is production-like, but the data layer is still mock-driven. No real wallet connection, persistent storage, or backend API integration exists in this repo yet.
+This repository now runs as a live-backend-connected frontend for the current Launch App rollout. Wallet sign-in, Gravii ID, and X-Ray use the production User API, while the remaining surfaces stay explicitly marked as coming soon until their backend surfaces are ready.
 
 ## Tech Stack
 
@@ -29,21 +29,21 @@ bun run typecheck
 bun run build
 ```
 
-By default, `bun run dev` starts the Next.js dev server. If port `3000` is occupied, Next.js will automatically move to the next available port.
+`bun run dev` starts the app on `http://localhost:3003` so landing handoff stays stable inside the shared workspace.
 
 Within the shared frontend workspace, Turbopack is configured to resolve from the parent workspace root so the app can still be run directly from this directory or orchestrated from the shared root.
 
 ## Current App Surfaces
 
-The current prototype is a single-page experience with five main surfaces:
+The current product shell is a single-page experience with five ordered surfaces:
 
-1. `Profile`
-2. `My Space`
-3. `Discovery`
-4. `X-Ray`
-5. `Standing`
+1. `GRAVII ID`
+2. `X-RAY`
+3. `STANDING`
+4. `DISCOVERY`
+5. `MY SPACE`
 
-The route shell now lives in [page.tsx](/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.tsx), and each surface renders from its own feature module plus shared layout primitives under `src/components/layout`.
+The route shell lives in [page.tsx](/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.tsx), and each surface renders from its own feature module plus shared layout primitives under `src/components/layout`.
 
 ## Repository Structure
 
@@ -51,6 +51,10 @@ The route shell now lives in [page.tsx](/Users/kxwxn/Gravii/FRONTEND/apps/gravii
 src/
   app/
     globals.css
+    fonts/
+      cloth.woff
+      cloth.woff2
+      geist-latin.woff2
     layout.tsx
     page.module.css
     page.tsx
@@ -59,15 +63,15 @@ src/
       launch-panel/
         index.tsx
         launch-panel.module.css
-      my-space-dock/
-        index.tsx
-        my-space-dock.module.css
       panel-shell/
         index.tsx
         panel-shell.module.css
     ui/
       action-button/
         action-button.module.css
+        index.tsx
+      gravii-logo/
+        gravii-logo.module.css
         index.tsx
       grain-overlay/
         index.tsx
@@ -76,7 +80,6 @@ src/
         launch-primitives.module.css
   features/
     launch-app/
-      campaign-data.ts
       panel-config.ts
       types.ts
     discovery/
@@ -102,12 +105,19 @@ src/
       standing-content.tsx
       standing-data.ts
     x-ray/
-      look-up-data.ts
       x-ray-content.module.css
       x-ray-content.tsx
+      x-ray-view-model.ts
   lib/
-    gravii-fonts.ts
-    simplex-noise.ts
+    auth/
+      shared.ts
+      user-api.ts
+public/
+  brand/
+    centre-circle.svg
+    curve.svg
+    logo-symbol.svg
+    logo-wordmark.svg
 docs/
   launch-app/
     product-scope.md
@@ -132,15 +142,21 @@ docs/
 
 ## Current Prototype Status
 
-The current implementation is still a prototype. The following parts are mocked in the UI:
+Current live-backed parts:
 
-- wallet connection and authentication state
-- Gravii profile data
-- campaign and partner catalog
-- eligibility checks
-- opt-in state
-- X-Ray pricing, payment, and analysis result
-- leaderboard positions and ranking deltas
+- wallet challenge/signature sign-in against the User API
+- 24 hour JWT session validation against the User API
+- live `GRAVII ID` loading through `/api/v1/me/identity`, including short bootstrap polling for newly created wallets and the refreshed branded identity presentation
+- live X-Ray credits, lookup history, fresh lookup runs, and detail reads with the new Gravii-branded analytical surface
+- browser-side auth and user reads now go through a same-origin Next.js `/api/v1/*` rewrite before reaching the User API so local development is not blocked by backend CORS policy
+
+Current intentionally reserved parts:
+
+- `STANDING`
+- `DISCOVERY`
+- `MY SPACE`
+
+These three surfaces now render explicit coming-soon states instead of the older mock product flows.
 
 The main route shell lives in [page.tsx](/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.tsx), while all five product surfaces render through feature modules under `src/features`.
 

@@ -4,7 +4,9 @@ import styles from "./x-ray-history-list.module.css";
 
 type AnalysisHistoryRow = {
   date: string;
+  id: string;
   wallet: string;
+  walletAddress: string;
   persona: string;
 };
 
@@ -40,7 +42,7 @@ export default function XRayHistoryList({
 
       <div className={styles.list}>
         {rows.map((row) => (
-          <button key={`${row.date}-${row.wallet}`} type="button" className={styles.row} onClick={() => onSelect(row.wallet)}>
+          <button key={row.id} type="button" className={styles.row} onClick={() => onSelect(row.walletAddress)}>
             <span className={styles.rowMeta}>{row.date}</span>
             <span className={styles.wallet}>{row.wallet}</span>
             <span className={styles.persona}>{row.persona}</span>

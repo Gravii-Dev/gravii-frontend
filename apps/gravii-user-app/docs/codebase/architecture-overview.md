@@ -1,6 +1,6 @@
 # Codebase Architecture Overview
 
-This document explains how the current Launch App prototype is organized at the code level.
+This document explains how the current Launch App frontend is organized at the code level.
 
 It is intentionally different from the product and backend architecture documents under `docs/launch-app`. Those documents describe the target product and platform. This document describes how the current frontend code is assembled today.
 
@@ -13,10 +13,11 @@ Architecture describes the major responsibility boundaries in the app and how da
 In this repository, the high-level frontend architecture is:
 
 1. `src/app/page.tsx` acts as the single route entry point.
-2. `src/features/launch-app/use-launch-shell.ts` owns shared shell state such as the active panel and mock connection state.
-3. `src/components/layout/*` renders the panel system around the feature content.
-4. `src/features/*` renders each product surface and computes feature-specific UI state.
-5. `src/features/launch-app/mock-repository.ts` and feature data files provide mock data to the screens.
+2. `src/features/auth/auth-provider.tsx` owns client-side User API session bootstrap and sign-in routing.
+3. `src/features/launch-app/use-launch-shell.ts` owns shared shell state such as the active and hovered panel.
+4. `src/components/layout/*` renders the panel system around the feature content.
+5. `src/features/*` renders each product surface and computes feature-specific UI state.
+6. `src/lib/auth/user-api.ts` owns User API calls and wire-to-view model normalization for live auth, Gravii ID, and X-Ray data.
 
 ### Folder Structure
 
@@ -54,32 +55,38 @@ The shell includes:
 - the top header in `src/app/page.tsx`
 - the active or hovered panel state in `src/features/launch-app/use-launch-shell.ts`
 - the panel opening and closing behavior in `src/components/layout/launch-panel`
-- the dedicated `My Space` dock in `src/components/layout/my-space-dock`
+- the shared expanded frame in `src/components/layout/panel-shell`
 
 The shell does not own the full internal logic of Profile, Discovery, X-Ray, or Standing. It only places those features inside the panel system and coordinates top-level interaction.
 
 ## Current Runtime Model
 
-The prototype is currently a single-route, client-driven application.
+The app is currently a single-route, client-driven frontend with live User API integration for auth, Gravii ID, and X-Ray.
 
 Important implications:
 
 - The main route is `/`.
 - Most interactive code is client-side.
-- There are no real API calls, wallet SDK calls, server actions, or persistent writes in the current implementation.
-- The sign-in state is simulated in local React state.
-- Screen data is mock data stored in TypeScript files.
+- Wallet sign-in uses an injected EVM wallet on `/sign-in`.
+- The browser stores the User API JWT and revalidates it through the User API.
+- Browser API reads go through the same-origin `/api/v1/*` rewrite before reaching the User API.
+- `GRAVII ID` and `X-RAY` use live backend reads.
+- `STANDING`, `DISCOVERY`, and `MY SPACE` are reserved coming-soon surfaces.
+- Some mock-era data and view-model files still exist but are no longer the active runtime path for reserved surfaces.
 
 At runtime, the flow is roughly:
 
 ```text
 Root route
   -> HomePage (`src/app/page.tsx`)
+  -> UserAuthProvider (`src/features/auth/auth-provider.tsx`)
   -> useLaunchShell()
-  -> LaunchPanel / MySpaceDock
+  -> LaunchPanel / PanelShell
   -> feature content component
   -> feature-local state or view-model
-  -> launchMockRepository / feature mock data
+  -> User API helper or reserved coming-soon state
+  -> Next.js /api/v1 rewrite
+  -> Gravii User API
 ```
 
 ## Surface Map
@@ -90,34 +97,35 @@ The product currently exposes five surfaces:
 
 - Folder: `src/features/profile`
 - Product label in the UI: `GRAVII ID`
-- Main job: show the current user's identity summary
+- Main job: load and render the current user's live Gravii identity summary
 - Extra visual system: the persona infinite canvas
 
 ### 2. My Space
 
 - Folder: `src/features/my-space`
 - Product label in the UI: `MY SPACE`
-- Main job: show grouped, personalized campaign opportunities
-- Local interaction state: category filter, open sections, expanded card, mock opt-in state
+- Main job: reserve the future personalized benefits surface
+- Current state: coming soon
 
 ### 3. Discovery
 
 - Folder: `src/features/discovery`
 - Product label in the UI: `DISCOVERY`
-- Main job: explore the broader campaign and partner catalog
-- Local interaction state: category filter, status filter, search query, selected partner
+- Main job: reserve the future campaign discovery surface
+- Current state: coming soon
 
 ### 4. X-Ray
 
 - Folder: `src/features/x-ray`
 - Product label in the UI: `X-RAY`
-- Main job: simulate wallet analysis request, payment confirmation, loading, history, and result display
+- Main job: run live wallet analysis lookups, show credits, reopen history, and render persisted result details
 
 ### 5. Standing
 
 - Folder: `src/features/standing`
 - Product label in the UI: `STANDING`
-- Main job: show leaderboard categories, ranking context, and the user's standing
+- Main job: reserve the future ranked standing surface
+- Current state: coming soon
 
 ## Shared Systems
 
@@ -130,10 +138,9 @@ It owns:
 - cross-surface panel metadata in `panel-config.ts`
 - shared type definitions in `types.ts`
 - shell state in `use-launch-shell.ts`
-- mock repository access in `mock-repository.ts`
-- shared campaign data in `campaign-data.ts`
+- legacy mock repository and campaign data files that should be audited before the design system migration
 
-This folder exists because the prototype needs an "app-level feature layer" that is above the individual screens but below the route entry and layout components.
+This folder exists because the app needs an app-level feature layer that is above the individual screens but below the route entry and layout components.
 
 ### `src/components/layout`
 
@@ -141,9 +148,9 @@ This folder owns the panel frame itself.
 
 It contains:
 
-- `launch-panel`: the standard vertical panel wrapper for Profile, Discovery, Standing, and X-Ray
-- `my-space-dock`: the separate dock-style wrapper for My Space
+- `launch-panel`: the standard vertical panel wrapper for the five current panels
 - `panel-shell`: the shared expanded panel frame with the common header and footer
+- `my-space-dock`: a legacy or alternate My Space layout primitive that is not part of the current `src/app/page.tsx` runtime path
 
 These components know how the app opens and frames content, but they do not own the business logic inside each feature.
 
@@ -163,6 +170,8 @@ This folder owns non-visual helpers with lower-level responsibilities.
 
 It currently contains:
 
+- `auth/user-api.ts`: User API client helpers and payload normalization
+- `auth/shared.ts`: user sign-in route helpers
 - `simplex-noise.ts`: math helpers used by the grain effect
 - `gravii-fonts.ts`: shared font name constants
 
@@ -205,16 +214,16 @@ Current tests focus on key interactions instead of full visual verification.
 Covered today:
 
 - panel open and close behavior
-- mock sign-in toggling
-- My Space category filtering and opt-in state
-- Discovery filtering and detail view
-- X-Ray payment flow and result rendering
+- sign-out button behavior through the mocked auth provider
+- reserved Discovery and My Space coming-soon states
+- X-Ray session-required behavior
+- X-Ray live-flow rendering through mocked User API helpers
 
 The test setup mocks browser APIs such as canvas, `ResizeObserver`, and `matchMedia` so these UI systems can render in `jsdom`.
 
-## What Changes When Real APIs Arrive
+## What Changes As More APIs Arrive
 
-The current structure is already pointing toward a production-ready direction, but some responsibilities will shift:
+The current structure is already partially live-backed, but more responsibilities will shift as Standing, Discovery, and My Space receive backend contracts.
 
 ### Things that will likely stay the same
 
@@ -225,26 +234,31 @@ The current structure is already pointing toward a production-ready direction, b
 
 ### Things that will likely change
 
-- mock repository reads will be replaced by feature-local API adapters or shared typed clients
-- simulated connection state will be replaced by a real session or wallet integration
-- mock opt-in state will move to backend writes
-- X-Ray loading will become request-driven rather than timer-driven
+- remaining mock-era files will be removed or replaced by feature-local API adapters
+- future campaign catalog, eligibility, opt-in, and leaderboard data will move to backend-backed reads and writes
+- auth/session hardening may move some access decisions out of purely client-side state
+- feature-level API orchestration may move out of large surface components when the live contracts expand
 
 ### Things that may be added later
 
 - feature-local `api.ts` or `queries.ts` files
 - a session provider or global store if session state becomes broader than the shell
 - route expansion if each surface eventually becomes its own URL
+- shared design system primitives once the redesign begins
 
 ## Reading Order Recommendation
 
 For someone new to the project, the most useful order is:
 
 1. `src/app/page.tsx`
-2. `src/features/launch-app/use-launch-shell.ts`
-3. `src/components/layout/README.md`
-4. each feature README under `src/features/*`
-5. `src/components/ui/README.md`
-6. `src/lib/README.md`
+2. `src/features/auth/auth-provider.tsx`
+3. `src/lib/auth/user-api.ts`
+4. `src/features/launch-app/use-launch-shell.ts`
+5. `src/components/layout/README.md`
+6. each feature README under `src/features/*`
+7. `src/components/ui/README.md`
+8. `src/lib/README.md`
+9. `docs/codebase/current-project-analysis.md`
+10. `docs/design-system/launch-app-design-system-plan.md`
 
 That order mirrors the real runtime layering of the app.
