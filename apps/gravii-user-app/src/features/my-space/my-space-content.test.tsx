@@ -1,39 +1,31 @@
 import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 
 import MySpaceContent from "./my-space-content";
 
 describe("MySpaceContent", () => {
-  it("filters campaigns by category, expands a benefit card, and records opt-in state", async () => {
-    const user = userEvent.setup();
-
+  it("renders the reserved dashboard state when connected", () => {
     render(<MySpaceContent dark connected onConnect={() => {}} onNavigate={() => {}} />);
 
-    await user.click(screen.getByRole("button", { name: "Wealth & Finance" }));
-
-    expect(screen.getByText("Yield Booster")).toBeInTheDocument();
-    expect(screen.queryByText("Community Airdrop")).not.toBeInTheDocument();
-
-    await user.click(screen.getByRole("button", { name: /Yield Booster/ }));
-    await user.click(screen.getByRole("button", { name: "OPT IN →" }));
-
-    expect(screen.getByRole("button", { name: "OPTED IN ✓" })).toBeInTheDocument();
+    expect(screen.getByText("My Space")).toBeInTheDocument();
+    expect(screen.getByText("Your private feed is being composed.")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "My Space will become the personal room for matched benefits, saved claims, and concierge-style curation. The shell is ready now, while persistence and benefit matching move behind the scenes."
+      )
+    ).toBeInTheDocument();
   });
 
-  it("shows the locked state when the wallet is not connected", async () => {
-    const user = userEvent.setup();
+  it("keeps the reserved state when disconnected", () => {
     const onConnect = vi.fn();
     const onNavigate = vi.fn();
 
     render(<MySpaceContent dark connected={false} onConnect={onConnect} onNavigate={onNavigate} />);
 
-    expect(screen.getByText("GET YOUR GRAVII ID")).toBeInTheDocument();
-
-    await user.click(screen.getByRole("button", { name: "Reveal My Profile" }));
-    await user.click(screen.getByRole("button", { name: "Connect Wallet" }));
-
-    expect(onNavigate).toHaveBeenCalledWith("profile");
-    expect(onConnect).toHaveBeenCalledTimes(1);
+    expect(screen.getByText("Your private feed is being composed.")).toBeInTheDocument();
+    expect(screen.getByText("Surface reserved")).toBeInTheDocument();
+    expect(screen.getByText("Live route locked")).toBeInTheDocument();
+    expect(onNavigate).not.toHaveBeenCalled();
+    expect(onConnect).not.toHaveBeenCalled();
   });
 });

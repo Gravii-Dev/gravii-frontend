@@ -127,27 +127,36 @@
 }
 
 .actionButton {
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: transparent;
-  color: rgba(255, 255, 255, 0.78);
-  border-radius: 999px;
-  padding: 10px 18px;
-  font-family: var(--font-ui);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  cursor: pointer;
+  --button-font-size: 0.75rem;
+  --button-pad-y: 0.9em;
+  --button-pad-x: 1.45em;
+  --button-front: rgba(255, 255, 255, 0.04);
+  --button-front-hover: rgba(255, 255, 255, 0.08);
+  --button-text: rgba(255, 255, 255, 0.82);
+  --button-back: var(--slush-glacier);
+  --button-back-text: var(--slush-dark);
+  --button-border-color: rgba(255, 255, 255, 0.12);
+  --button-back-border-color: rgba(255, 255, 255, 0.12);
 }
 
 .primaryAction {
-  background: rgba(100, 200, 130, 0.8);
-  border-color: rgba(100, 200, 130, 0.2);
-  color: #1a1a1a;
+  --button-front: rgba(100, 200, 130, 0.84);
+  --button-front-hover: rgba(123, 220, 149, 0.92);
+  --button-text: #1a1a1a;
+  --button-back: var(--slush-yellow);
+  --button-back-text: var(--slush-dark);
+  --button-border-color: rgba(100, 200, 130, 0.28);
+  --button-back-border-color: rgba(100, 200, 130, 0.28);
 }
 
 .warningAction {
-  border-color: rgba(255, 200, 80, 0.3);
-  color: rgba(255, 200, 80, 0.9);
+  --button-front: rgba(255, 200, 80, 0.08);
+  --button-front-hover: rgba(255, 200, 80, 0.14);
+  --button-text: rgba(255, 200, 80, 0.92);
+  --button-back: var(--slush-orange);
+  --button-back-text: var(--slush-light);
+  --button-border-color: rgba(255, 200, 80, 0.3);
+  --button-back-border-color: rgba(255, 200, 80, 0.3);
 }
 
 .qualifyList {

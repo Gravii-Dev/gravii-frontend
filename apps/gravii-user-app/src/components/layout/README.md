@@ -11,7 +11,7 @@ The layout layer answers questions such as:
 - How does a panel look when collapsed?
 - How does a panel expand?
 - How is the common panel header rendered?
-- How does the dedicated `My Space` dock behave compared with the other panels?
+- How does the five-panel strip behave when every surface, including `My Space`, uses the same ordered shell?
 
 It does not answer questions such as:
 
@@ -27,7 +27,7 @@ Those concerns belong to feature folders.
 
 Primary job:
 
-- render one of the standard vertical panels used by Profile, Discovery, Standing, and X-Ray
+- render one of the standard vertical panels used by all five Launch App surfaces
 
 Responsibilities:
 
@@ -42,6 +42,9 @@ Important details:
 - it receives metadata from `src/features/launch-app/panel-config.ts`
 - it renders the passed children inside the shared `PanelShell`
 - it can optionally render `GrainOverlay` for the Discovery panel
+- it uses the current Slush-inspired card language: thick borders, restrained premium color fills, elastic hover radius changes, and a two-face hover preview where the moving front card reveals the panel background before the back face settles in
+- the X-Ray preview uses a soft thermal field rather than visible scan-line decoration so the surface stays calmer and more premium
+- on small screens, the five-panel strip stays intact and becomes a horizontal scroll surface instead of collapsing into a different layout
 
 What it does not own:
 
@@ -51,27 +54,11 @@ What it does not own:
 
 ### `my-space-dock`
 
-Primary job:
+Legacy note:
 
-- render the special dock-like entry and expanded frame for `My Space`
-
-Why it exists separately:
-
-- `My Space` is visually treated differently from the standard vertical strip panels
-- it needs its own preview layout and compact behavior
-
-Responsibilities:
-
-- render preview and expanded states
-- forward hover and open events back to the shell
-- apply the dock-specific grain and styling
-- reuse `PanelShell` for the expanded state so the app still feels structurally consistent
-
-What it does not own:
-
-- campaign grouping
-- category filtering
-- opt-in state
+- this component remains in the repo as a reference to the earlier dock-based `My Space` treatment
+- the active product shell no longer uses it
+- current work should treat `My Space` as panel `05` inside the shared strip
 
 ### `panel-shell`
 
@@ -82,10 +69,10 @@ Primary job:
 Responsibilities:
 
 - draw the shared header
-- render the panel number, title, and sublabel
+- render the shared title treatment
 - provide the close button
 - render the body content passed from the feature
-- render the footer label
+- preserve the expanded panel's oversized display typography and elastic entrance rhythm
 
 Why it matters:
 
@@ -103,7 +90,7 @@ What it does not own:
 The normal expanded flow is:
 
 1. `HomePage` decides which panel is active.
-2. `LaunchPanel` or `MySpaceDock` receives that state.
+2. `LaunchPanel` receives that state.
 3. The layout component mounts `PanelShell`.
 4. `PanelShell` wraps the feature content.
 

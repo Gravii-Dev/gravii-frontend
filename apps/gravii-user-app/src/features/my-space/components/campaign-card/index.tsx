@@ -1,5 +1,6 @@
 "use client";
 
+import ActionButton from "@/components/ui/action-button";
 import { SharedTagChip } from "@/components/ui/launch-primitives";
 import type { CampaignWithPartner } from "@/features/launch-app/types";
 
@@ -89,31 +90,31 @@ export default function CampaignCard({
 
           <div className={styles.actionRow}>
             {campaign.eligible === true ? (
-              <button
-                type="button"
+              <ActionButton
+                size="panel"
                 className={`${styles.actionButton} ${isOptedIn ? styles.actionOptedIn : styles.actionOptIn}`}
                 onClick={onOptIn}
               >
                 {isOptedIn ? "OPTED IN ✓" : "OPT IN →"}
-              </button>
+              </ActionButton>
             ) : null}
 
             {campaign.eligible === false && campaign.partnerStatus === "INVITE ONLY" ? (
-              <button type="button" className={`${styles.actionButton} ${styles.actionInviteOnly}`}>
+              <ActionButton size="panel" className={`${styles.actionButton} ${styles.actionInviteOnly}`}>
                 INVITE ONLY — REQUEST ACCESS
-              </button>
+              </ActionButton>
             ) : null}
 
             {campaign.eligible === false && campaign.partnerStatus !== "INVITE ONLY" ? (
-              <button type="button" className={`${styles.actionButton} ${styles.actionQualify}`} onClick={() => onNavigate?.("discovery")}>
+              <ActionButton size="panel" className={`${styles.actionButton} ${styles.actionQualify}`} onClick={() => onNavigate?.("discovery")}>
                 HOW TO QUALIFY →
-              </button>
+              </ActionButton>
             ) : null}
 
             {campaign.eligible === null ? (
-              <button type="button" className={`${styles.actionButton} ${styles.actionNotify}`}>
+              <ActionButton size="panel" className={`${styles.actionButton} ${styles.actionNotify}`}>
                 NOTIFY ME WHEN LIVE
-              </button>
+              </ActionButton>
             ) : null}
           </div>
         </div>

@@ -215,41 +215,64 @@
 }
 
 .actionButton {
-  border-radius: 999px;
-  padding: 12px 22px;
-  font-family: var(--font-ui);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  cursor: pointer;
+  --button-font-size: 0.78rem;
+  --button-pad-y: 0.92em;
+  --button-pad-x: 1.55em;
+  --button-front: rgba(255, 255, 255, 0.04);
+  --button-front-hover: rgba(255, 255, 255, 0.08);
+  --button-text: var(--campaign-card-text);
+  --button-back: var(--slush-glacier);
+  --button-back-text: var(--slush-dark);
+  --button-border-color: rgba(255, 255, 255, 0.16);
+  --button-back-border-color: rgba(255, 255, 255, 0.16);
 }
 
 .actionOptIn {
-  color: #1a1a1a;
-  border: 1px solid rgba(100, 200, 130, 0.12);
-  background: rgba(100, 200, 130, 0.8);
+  --button-front: rgba(100, 200, 130, 0.84);
+  --button-front-hover: rgba(123, 220, 149, 0.92);
+  --button-text: #1a1a1a;
+  --button-back: var(--slush-yellow);
+  --button-back-text: var(--slush-dark);
+  --button-border-color: rgba(100, 200, 130, 0.22);
+  --button-back-border-color: rgba(100, 200, 130, 0.22);
 }
 
 .actionOptedIn {
-  color: rgba(100, 200, 130, 0.9);
-  border: 1px solid rgba(100, 200, 130, 0.3);
-  background: rgba(100, 200, 130, 0.06);
+  --button-front: rgba(100, 200, 130, 0.08);
+  --button-front-hover: rgba(100, 200, 130, 0.14);
+  --button-text: rgba(100, 200, 130, 0.92);
+  --button-back: var(--slush-green);
+  --button-back-text: var(--slush-dark);
+  --button-border-color: rgba(100, 200, 130, 0.3);
+  --button-back-border-color: rgba(100, 200, 130, 0.3);
 }
 
 .actionInviteOnly {
-  color: rgba(200, 180, 240, 0.7);
-  border: 1px solid rgba(200, 180, 240, 0.2);
-  background: transparent;
+  --button-front: rgba(200, 180, 240, 0.06);
+  --button-front-hover: rgba(200, 180, 240, 0.12);
+  --button-text: rgba(200, 180, 240, 0.78);
+  --button-back: var(--slush-violet);
+  --button-back-text: var(--slush-dark);
+  --button-border-color: rgba(200, 180, 240, 0.24);
+  --button-back-border-color: rgba(200, 180, 240, 0.24);
 }
 
 .actionQualify {
-  color: rgba(255, 200, 80, 0.9);
-  border: 1px solid rgba(255, 200, 80, 0.3);
-  background: transparent;
+  --button-front: rgba(255, 200, 80, 0.07);
+  --button-front-hover: rgba(255, 200, 80, 0.13);
+  --button-text: rgba(255, 200, 80, 0.92);
+  --button-back: var(--slush-orange);
+  --button-back-text: var(--slush-light);
+  --button-border-color: rgba(255, 200, 80, 0.3);
+  --button-back-border-color: rgba(255, 200, 80, 0.3);
 }
 
 .actionNotify {
-  color: var(--campaign-card-sub);
-  border: 1px solid currentColor;
-  background: transparent;
+  --button-front: transparent;
+  --button-front-hover: rgba(255, 255, 255, 0.08);
+  --button-text: var(--campaign-card-sub);
+  --button-back: var(--slush-glacier);
+  --button-back-text: var(--slush-dark);
+  --button-border-color: currentColor;
+  --button-back-border-color: currentColor;
 }
