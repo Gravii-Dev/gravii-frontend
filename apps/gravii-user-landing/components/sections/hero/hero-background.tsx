@@ -6,6 +6,7 @@ import s from './hero.module.css'
 
 const HERO_BOOT_DELAY_MS = 240
 const DESKTOP_BREAKPOINT_PX = 1024
+const SHOW_RENDER_STATUS = process.env.NODE_ENV === 'development'
 
 const LazyHeroBackgroundWebGL = dynamic(
   () =>
@@ -323,7 +324,9 @@ export function HeroBackground({ onSettled }: HeroBackgroundProps) {
         />
       ) : null}
       {renderMode === 'static' ? <div className={s.fallback} aria-hidden="true" /> : null}
-      {statusMessage ? <div className={s.status}>{statusMessage}</div> : null}
+      {SHOW_RENDER_STATUS && statusMessage ? (
+        <div className={s.status}>{statusMessage}</div>
+      ) : null}
     </div>
   )
 }

@@ -1,9 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+
 import { cn } from '@/lib/cn'
+
+import type { LandingDimension } from './landing-page'
+import { AuthHandoffLink } from './auth-handoff-link'
 import {
   integrationCards,
+  kyaPlans,
   lensPreviewTabs,
   reachAudienceCards,
   reachPreviewTabs,
@@ -17,20 +22,20 @@ import {
 } from './landing-constants'
 import styles from './landing-page.module.css'
 
-type ProductTabId = "engage" | "verify" | "analyze" | "users";
+type ProductTabId = 'engage' | 'verify' | 'analyze' | 'users'
 
 type ProductTab = {
-  id: ProductTabId;
-  label: string;
-  accent: "teal" | "blue" | "purple";
-};
+  id: ProductTabId
+  label: string
+  accent: 'teal' | 'blue' | 'purple'
+}
 
 const productTabs: readonly ProductTab[] = [
-  { id: "engage", label: "Reach — Campaign", accent: "teal" },
-  { id: "verify", label: "Gate — API", accent: "blue" },
-  { id: "analyze", label: "Lens — Report", accent: "purple" },
-  { id: "users", label: "For Users — App", accent: "purple" },
-] as const;
+  { id: 'engage', label: 'Reach — Campaign', accent: 'teal' },
+  { id: 'verify', label: 'Gate — API', accent: 'blue' },
+  { id: 'analyze', label: 'Lens — Report', accent: 'purple' },
+  { id: 'users', label: 'For Users — App', accent: 'purple' },
+] as const
 
 function DashboardPreview({
   accent,
@@ -41,27 +46,27 @@ function DashboardPreview({
   previewId,
   tabs,
 }: {
-  accent: "teal" | "purple";
-  ctaHref: string;
-  ctaLabel: string;
-  note: string;
-  noteLarge?: boolean;
-  previewId: string;
-  tabs: readonly PreviewTab[];
+  accent: 'teal' | 'purple'
+  ctaHref: string
+  ctaLabel: string
+  note: string
+  noteLarge?: boolean
+  previewId: string
+  tabs: readonly PreviewTab[]
 }) {
-  const [activeTabId, setActiveTabId] = useState(tabs[0]?.id ?? "");
+  const [activeTabId, setActiveTabId] = useState(tabs[0]?.id ?? '')
 
-  const activeTab = tabs.find((tab) => tab.id === activeTabId) ?? tabs[0];
+  const activeTab = tabs.find((tab) => tab.id === activeTabId) ?? tabs[0]
 
   if (!activeTab) {
-    return null;
+    return null
   }
 
   return (
     <>
       <div className={styles.previewTabs}>
         {tabs.map((tab) => {
-          const isActive = tab.id === activeTab.id;
+          const isActive = tab.id === activeTab.id
 
           return (
             <button
@@ -77,7 +82,7 @@ function DashboardPreview({
             >
               {tab.label}
             </button>
-          );
+          )
         })}
       </div>
 
@@ -102,12 +107,12 @@ function DashboardPreview({
         >
           {note}
         </div>
-        <a className={styles.noteLink} data-accent={accent} href={ctaHref}>
+        <AuthHandoffLink className={styles.noteLink} data-accent={accent} href={ctaHref}>
           {ctaLabel}
-        </a>
+        </AuthHandoffLink>
       </div>
     </>
-  );
+  )
 }
 
 function ReachPanel() {
@@ -119,7 +124,7 @@ function ReachPanel() {
         come to you, not the other way around.
       </p>
 
-      <div className={cn(styles.grid3, styles.featureGridSpacing)}>
+      <div className={cn(styles.reachScenarioGrid, styles.featureGridSpacing)}>
         {reachAudienceCards.map((card) => (
           <article
             className={cn(styles.card, styles.cardTeal, styles.featureCard)}
@@ -163,7 +168,7 @@ function ReachPanel() {
         />
       </div>
     </>
-  );
+  )
 }
 
 function VerifyPanel() {
@@ -201,39 +206,31 @@ function VerifyPanel() {
 
         <pre className={styles.codeBlock}>
           GET /v1/lookup/0x742d...3f8a?level=growth
-          {"\n\n"}
-          {"{"}
-          {"\n  "}
-          <span className={styles.codeKey}>{'"activityGrade"'}</span>:{" "}
-          <span className={styles.codeValue}>{'"A"'}</span>,
-          {"\n  "}
-          <span className={styles.codeKey}>{'"walletStatus"'}</span>:{" "}
-          <span className={styles.codeValue}>{'"Active"'}</span>,
-          {"\n  "}
-          <span className={styles.codeKey}>{'"sybilStatus"'}</span>:{" "}
-          <span className={styles.codeValue}>{'"Clean"'}</span>,
-          {"\n  "}
-          <span className={styles.codeKey}>{'"primaryPersona"'}</span>:{" "}
-          <span className={styles.codeValue}>{'"Diamond Hands"'}</span>,
-          {"\n  "}
-          <span className={styles.codeKey}>{'"riskLevel"'}</span>:{" "}
-          <span className={styles.codeValue}>{'"Clean"'}</span>,
-          {"\n  "}
-          <span className={styles.codeKey}>{'"tier"'}</span>:{" "}
-          <span className={styles.codeValue}>{'"Platinum"'}</span>,
-          {"\n  "}
-          <span className={styles.codeKey}>{'"primaryChain"'}</span>:{" "}
-          <span className={styles.codeValue}>{'"Ethereum"'}</span>,
-          {"\n  "}
-          <span className={styles.codeKey}>{'"availableValueTier"'}</span>:{" "}
-          <span className={styles.codeValue}>{'"High"'}</span>,
-          {"\n  "}
-          <span className={styles.codeKey}>{'"holdingsRange"'}</span>:{" "}
-          <span className={styles.codeValue}>{'"$10K-$100K"'}</span>,
-          {"\n  "}
-          <span className={styles.codeKey}>{'"defiActivity"'}</span>:{" "}
-          <span className={styles.codeValue}>{'"High"'}</span>
-          {"\n}"}
+          {'\n\n'}
+          {'{'}
+          {'\n  '}
+          <span className={styles.codeKey}>{'"activityGrade"'}</span>: <span className={styles.codeValue}>{'"A"'}</span>,
+          {'\n  '}
+          <span className={styles.codeKey}>{'"walletStatus"'}</span>: <span className={styles.codeValue}>{'"Active"'}</span>,
+          {'\n  '}
+          <span className={styles.codeKey}>{'"sybilStatus"'}</span>: <span className={styles.codeValue}>{'"Clean"'}</span>,
+          {'\n  '}
+          <span className={styles.codeKey}>{'"primaryPersona"'}</span>: <span className={styles.codeValue}>{'"Strategic Holder"'}</span>,
+          {'\n  '}
+          <span className={styles.codeKey}>{'"riskLevel"'}</span>: <span className={styles.codeValue}>{'"Clean"'}</span>,
+          {'\n  '}
+          <span className={styles.codeKey}>{'"primaryChain"'}</span>: <span className={styles.codeValue}>{'"Ethereum"'}</span>,
+          {'\n  '}
+          <span className={styles.codeKey}>{'"walletType"'}</span>: <span className={styles.codeValue}>{'"Multi-chain"'}</span>,
+          {'\n  '}
+          <span className={styles.codeKey}>{'"agentProbability"'}</span>: <span className={styles.codeValue}>0.08</span>,
+          {'\n  '}
+          <span className={styles.codeKey}>{'"availableValueTier"'}</span>: <span className={styles.codeValue}>{'"High"'}</span>,
+          {'\n  '}
+          <span className={styles.codeKey}>{'"holdingsRange"'}</span>: <span className={styles.codeValue}>{'"$10K-$100K"'}</span>,
+          {'\n  '}
+          <span className={styles.codeKey}>{'"defiActivity"'}</span>: <span className={styles.codeValue}>{'"High"'}</span>
+          {'\n}'}
         </pre>
       </article>
 
@@ -265,12 +262,12 @@ function VerifyPanel() {
       </div>
 
       <div className={styles.integrationFooter}>
-        <a className={styles.noteLink} data-accent="blue" href={dashboardHref}>
+        <AuthHandoffLink className={styles.noteLink} data-accent="blue" href={dashboardHref}>
           Set up on Dashboard →
-        </a>
+        </AuthHandoffLink>
       </div>
     </>
-  );
+  )
 }
 
 function AnalyzePanel() {
@@ -299,15 +296,14 @@ function AnalyzePanel() {
         data-accent="teal"
       >
         <div className={cn(styles.noteText, styles.noteTextLarge)}>
-          Ready to act on these insights?{" "}
-          <strong>Lens cost is credited when you upgrade to Reach.</strong>
+          Ready to act on these insights? <strong>Lens cost is credited when you upgrade to Reach.</strong>
         </div>
-        <a className={styles.noteLink} data-accent="teal" href={dashboardHref}>
+        <AuthHandoffLink className={styles.noteLink} data-accent="teal" href={dashboardHref}>
           Launch on Reach →
-        </a>
+        </AuthHandoffLink>
       </div>
     </>
-  );
+  )
 }
 
 function UsersPanel() {
@@ -330,46 +326,221 @@ function UsersPanel() {
         ))}
       </div>
     </>
-  );
+  )
 }
 
-export function ProductTabs() {
-  const [activeTabId, setActiveTabId] = useState<ProductTabId>("engage");
-  const [hasInteracted, setHasInteracted] = useState(false);
-
+function AgentPanel() {
   return (
-    <>
-      <div className={styles.pills}>
-        {productTabs.map((tab) => {
-          const isActive = tab.id === activeTabId;
-          const activeAccent =
-            !hasInteracted && tab.id === "engage" && isActive ? "lav" : tab.accent;
-
-          return (
-            <button
-              className={cn(
-                styles.buttonReset,
-                styles.pill,
-                isActive && styles.pillActive,
-              )}
-              data-accent={activeAccent}
-              key={tab.id}
-              onClick={() => {
-                setHasInteracted(true);
-                setActiveTabId(tab.id);
-              }}
-              type="button"
-            >
-              {tab.label}
-            </button>
-          );
-        })}
+    <div className={styles.agentSection}>
+      <div className={styles.agentIntro}>
+        <div className={styles.agentTitle}>GRAVII KYA</div>
+        <p className={styles.agentDescription}>
+          The first on-chain behavioral intelligence API for autonomous agents.
+          Detect, classify, and rate every agent interacting with your protocol.
+        </p>
       </div>
 
-      {activeTabId === "engage" ? <ReachPanel /> : null}
-      {activeTabId === "verify" ? <VerifyPanel /> : null}
-      {activeTabId === "analyze" ? <AnalyzePanel /> : null}
-      {activeTabId === "users" ? <UsersPanel /> : null}
-    </>
-  );
+      <div className={styles.kyaGrid}>
+        <article className={cn(styles.card, styles.cardAmber, styles.kyaCard)}>
+          <div className={styles.kyaStepLabel}>DETECT</div>
+          <div className={styles.kyaCardTitle}>Is this wallet an agent?</div>
+          <div className={styles.featureDescription}>
+            Agent probability scoring (0–1.0) using on-chain behavioral signals
+            — transaction patterns, timing consistency, deployer analysis, and
+            ERC-8004 registry checks.
+          </div>
+        </article>
+        <article className={cn(styles.card, styles.cardAmber, styles.kyaCard)}>
+          <div className={styles.kyaStepLabel}>CLASSIFY</div>
+          <div className={styles.kyaCardTitle}>What kind of agent is it?</div>
+          <div className={styles.featureDescription}>
+            10 agent personas — Speed Trader, Vault Agent, Farm Runner, Yield
+            Agent, LP Agent, and more. Primary + up to 2 secondary personas.
+          </div>
+        </article>
+        <article className={cn(styles.card, styles.cardAmber, styles.kyaCard)}>
+          <div className={styles.kyaStepLabel}>RATE</div>
+          <div className={styles.kyaCardTitle}>How trustworthy is it?</div>
+          <div className={styles.featureDescription}>
+            Agent Rating from AAA to D — based on consistency, performance,
+            longevity, risk profile, and ecosystem engagement.
+          </div>
+        </article>
+      </div>
+
+      <div className={styles.kyaDetailGrid}>
+        <article className={styles.card}>
+          <div className={styles.integrationLabel}>Sample Response</div>
+          <pre className={cn(styles.codeBlock, styles.kyaCode)}>
+            {'{'}
+            {'\n  '}
+            <span className={styles.kyaCodeKey}>{'"agentProbability"'}</span>: <span className={styles.kyaCodeValue}>0.94</span>,
+            {'\n  '}
+            <span className={styles.kyaCodeKey}>{'"agentClassification"'}</span>: <span className={styles.kyaCodeValue}>{'"likely_agent"'}</span>,
+            {'\n  '}
+            <span className={styles.kyaCodeKey}>{'"agentPersona"'}</span>: <span className={styles.kyaCodeValue}>{'"Yield Agent"'}</span>,
+            {'\n  '}
+            <span className={styles.kyaCodeKey}>{'"agentRating"'}</span>: <span className={styles.kyaCodeValue}>{'"AA"'}</span>,
+            {'\n  '}
+            <span className={styles.kyaCodeKey}>{'"riskLevel"'}</span>: <span className={styles.kyaCodeValue}>{'"Clean"'}</span>,
+            {'\n  '}
+            <span className={styles.kyaCodeKey}>{'"operatingChains"'}</span>: [<span className={styles.kyaCodeValue}>{'"Ethereum"'}</span>, <span className={styles.kyaCodeValue}>{'"Arbitrum"'}</span>]
+            {'\n}'}
+          </pre>
+        </article>
+
+        <div>
+          <div className={styles.integrationLabel}>Who needs KYA?</div>
+          <div className={styles.kyaUseCaseList}>
+            {[
+              'DeFi Lending — agent-specific risk parameters',
+              'DEX & Liquidity — distinguish agent LP from human LP',
+              'Agentic Wallet Infra — verify agents on your platform',
+              'Agent Marketplaces — trust scoring for discovery',
+              'DAO Treasury — assess operators before access',
+              'M2M Payments — verify counterparty agents',
+            ].map((item) => (
+              <div className={styles.kyaUseCaseItem} key={item}>
+                {item}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.pricingProductHeader}>
+        <div className={styles.pricingProductTitle} data-accent="amber">
+          KYA Pricing
+        </div>
+        <div className={styles.pricingProductSubtitle}>Same plan structure as Gate. Separate endpoint, separate quota.</div>
+      </div>
+
+      <div className={styles.grid5}>
+        {kyaPlans.map((plan) => (
+          <article className={cn(styles.card, styles.plan)} key={plan.name}>
+            <div className={styles.planName}>{plan.name}</div>
+            <div className={styles.planQuota}>{plan.quota}</div>
+            <div className={styles.planPrice}>
+              {plan.price}
+              {plan.cadence ? (
+                <span className={styles.planCadence}>{plan.cadence}</span>
+              ) : null}
+            </div>
+            {plan.features.map((feature) => (
+              <div className={styles.planFeature} key={feature}>
+                <span className={styles.planFeatureMark} data-accent="amber">
+                  ✓
+                </span>
+                {feature}
+              </div>
+            ))}
+            <a
+              className={cn(styles.planButton, styles.planButtonDefault)}
+              href="mailto:partners@gravii.io"
+            >
+              {plan.cta}
+            </a>
+          </article>
+        ))}
+      </div>
+
+      <div className={styles.kyaPricingNote}>
+        Enterprise KYA available as part of Gate Enterprise bundle. <a href="#pricing">See Enterprise pricing →</a>
+      </div>
+    </div>
+  )
+}
+
+export function ProductTabs({
+  dimension,
+  onDimensionChange,
+}: {
+  dimension: LandingDimension
+  onDimensionChange: (value: LandingDimension) => void
+}) {
+  const [activeTabId, setActiveTabId] = useState<ProductTabId>('engage')
+  const [hasInteracted, setHasInteracted] = useState(false)
+  const sectionRef = useRef<HTMLDivElement>(null)
+
+  function switchDimension(nextDimension: LandingDimension) {
+    onDimensionChange(nextDimension)
+
+    window.requestAnimationFrame(() => {
+      sectionRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
+    })
+  }
+
+  return (
+    <div ref={sectionRef}>
+      <div className={styles.dimensionToggle}>
+        <button
+          className={cn(
+            styles.buttonReset,
+            styles.dimensionToggleButton,
+            dimension === 'human' && styles.dimensionToggleButtonActive,
+          )}
+          data-accent="blue"
+          onClick={() => switchDimension('human')}
+          type="button"
+        >
+          <div className={styles.dimensionToggleLabel}>HUMAN INTELLIGENCE</div>
+          <div className={styles.dimensionToggleCopy}>Gate · Reach · Lens</div>
+        </button>
+        <button
+          className={cn(
+            styles.buttonReset,
+            styles.dimensionToggleButton,
+            dimension === 'agent' && styles.dimensionToggleButtonActive,
+          )}
+          data-accent="amber"
+          onClick={() => switchDimension('agent')}
+          type="button"
+        >
+          <div className={styles.dimensionToggleLabel}>AGENT INTELLIGENCE</div>
+          <div className={styles.dimensionToggleCopy}>KYA</div>
+        </button>
+      </div>
+
+      {dimension === 'human' ? (
+        <>
+          <div className={styles.pills}>
+            {productTabs.map((tab) => {
+              const isActive = tab.id === activeTabId
+              const activeAccent =
+                !hasInteracted && tab.id === 'engage' && isActive ? 'lav' : tab.accent
+
+              return (
+                <button
+                  className={cn(
+                    styles.buttonReset,
+                    styles.pill,
+                    isActive && styles.pillActive,
+                  )}
+                  data-accent={activeAccent}
+                  key={tab.id}
+                  onClick={() => {
+                    setHasInteracted(true)
+                    setActiveTabId(tab.id)
+                  }}
+                  type="button"
+                >
+                  {tab.label}
+                </button>
+              )
+            })}
+          </div>
+
+          {activeTabId === 'engage' ? <ReachPanel /> : null}
+          {activeTabId === 'verify' ? <VerifyPanel /> : null}
+          {activeTabId === 'analyze' ? <AnalyzePanel /> : null}
+          {activeTabId === 'users' ? <UsersPanel /> : null}
+        </>
+      ) : (
+        <AgentPanel />
+      )}
+    </div>
+  )
 }

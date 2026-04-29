@@ -1,4 +1,10 @@
-import { Gloria_Hallelujah } from 'next/font/google'
+import {
+  Archivo_Black,
+  Gloria_Hallelujah,
+  Outfit,
+  Sora,
+  Space_Mono,
+} from 'next/font/google'
 import localFont from 'next/font/local'
 
 const wagerQuyaSans = localFont({
@@ -42,7 +48,43 @@ const gloriaHallelujah = Gloria_Hallelujah({
   variable: '--font-gloria-hallelujah',
 })
 
-const fonts = [wagerQuyaSans, mysticDream, vank, dripdropAltSolid, gloriaHallelujah]
+const outfit = Outfit({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-landing-outfit',
+})
+
+const sora = Sora({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-landing-sora',
+})
+
+const spaceMono = Space_Mono({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  display: 'swap',
+  variable: '--font-landing-space-mono',
+})
+
+const archivoBlack = Archivo_Black({
+  subsets: ['latin'],
+  weight: '400',
+  display: 'swap',
+  variable: '--font-landing-archivo-black',
+})
+
+const fonts = [
+  wagerQuyaSans,
+  mysticDream,
+  vank,
+  dripdropAltSolid,
+  gloriaHallelujah,
+  outfit,
+  sora,
+  spaceMono,
+  archivoBlack,
+]
 const fontsVariable = fonts.map((font) => font.variable).join(' ')
 
 export { fontsVariable }

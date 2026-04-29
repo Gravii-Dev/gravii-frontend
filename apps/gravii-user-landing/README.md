@@ -4,6 +4,9 @@ Gravii Landing is a custom landing page built with Next.js 16, React 19, Bun, GS
 
 The site is structured as a single-page experience with layered motion, section-by-section reveals, custom typography, and a GPU-rendered hero scene. It also includes optional CMS and waitlist integrations inherited from the Satūs starter foundation.
 
+This app also owns the public partner acquisition route at `/partners`, which is the active replacement for the removed standalone partner landing surface.
+The `/partners` route now uses `Partner_Landing-v2.html` plus the consolidated change request as its source of truth, including the dedicated CTA handoff to `partner.gravii.io`, the mockup font stack (`Outfit`, `Sora`, `Space Mono`, `Archivo Black`), the mobile hamburger/full-screen overlay navigation flow, the Human/Agent product toggle, and the KYA agent-mode content/pricing block.
+
 ## Stack
 
 - Next.js 16.1.1
@@ -67,6 +70,7 @@ http://localhost:3000
 The main page is assembled in:
 
 - [app/(site)/page.tsx](/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/app/(site)/page.tsx)
+- [app/(site)/partners/page.tsx](/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/app/(site)/partners/page.tsx)
 
 Current section order:
 
@@ -86,6 +90,8 @@ Key implementation areas:
   [lib/webgpu/pipeline.ts](/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/lib/webgpu/pipeline.ts)
 - Header:
   [components/layout/sticky-header/index.tsx](/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/components/layout/sticky-header/index.tsx)
+- Partner landing route:
+  [features/partner-landing/landing-page.tsx](/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/features/partner-landing/landing-page.tsx)
 - Persona section:
   [components/sections/persona/index.tsx](/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/components/sections/persona/index.tsx)
 - Waitlist section:
@@ -96,6 +102,7 @@ Key implementation areas:
 ```text
 app/
   (site)/                Main landing page route and server actions
+    partners/            Partner marketing and acquisition route
   layout.tsx             Root layout
   robots.ts              Robots metadata
   sitemap.ts             Sitemap generation
@@ -130,16 +137,23 @@ Common variables:
 | Variable | Purpose |
 | --- | --- |
 | `NEXT_PUBLIC_BASE_URL` | Canonical site URL used for metadata and SEO |
+| `NEXT_PUBLIC_USER_APP_URL` | Launch destination for the user app CTA. Invalid hostnames fall back to `app.gravii.io` in production. |
+| `NEXT_PUBLIC_PARTNER_APP_URL` | Partner CTA destination used by `/partners`. Invalid hostnames fall back to `partner.gravii.io` in production. |
 | `SOURCE_MAPS` | Enable production browser source maps when set to `true` |
 | `ANALYZE` | Enable bundle analysis |
 | `NEXT_PUBLIC_FACEBOOK_APP_ID` | Optional social metadata |
+
+Local development expects the fixed workspace ports used by the app scripts:
+
+- user landing: `3000`
+- partner app: `3001`
+- user app: `3003`
+- backoffice: `3004`
 
 Optional integrations supported by the base project:
 
 - Sanity
 - Shopify
-- HubSpot
-- Mailchimp
 - Mandrill
 - Cloudflare Turnstile
 
@@ -153,11 +167,14 @@ There is also a fully wired client form component here:
 
 - [components/sections/waitlist/form.tsx](/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/components/sections/waitlist/form.tsx)
 
-At the moment, the visible landing section uses a presentational input/button layout in:
+The visible landing section now renders the integrated `WaitlistForm` directly, so the live homepage submits to the Landing API instead of a placeholder CRM form.
 
-- [components/sections/waitlist/index.tsx](/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/components/sections/waitlist/index.tsx)
+Current behavior:
 
-If you want real submissions from the live landing page, wire `WaitlistForm` into the visible section or replace the current presentational form markup with the integrated form component.
+- `POST /api/v1/landing/waitlist` is called through the server action
+- `?ref=GRV-XXXXXX` is forwarded as `referral_code`
+- successful submissions are cached in `localStorage` under `gravii_waitlist`
+- returning visitors see their existing referral code instead of resubmitting
 
 ## WebGPU Notes
 
@@ -168,6 +185,7 @@ Important constraints:
 - The current model pipeline is `GLB`-based, not `SVG` or `EPS`
 - Browser support and rendering behavior can differ between Chromium-based browsers and Firefox
 - For model or texture issues, check:
+  - [components/sections/hero/hero-background.tsx](/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/components/sections/hero/hero-background.tsx)
   - [lib/webgpu/glb.ts](/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/lib/webgpu/glb.ts)
   - [lib/webgpu/pipeline.ts](/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/lib/webgpu/pipeline.ts)
 
@@ -192,7 +210,8 @@ bun run build
 3. Verify:
    - hero renders correctly
    - section animations work
-   - waitlist flow is wired if required
+   - `/partners` routes correctly into `partner.gravii.io`
+   - waitlist submission, referral persistence, and return state work
    - metadata routes (`robots.txt`, `sitemap.xml`, `manifest.webmanifest`) resolve correctly
 
 The project was verified locally with:

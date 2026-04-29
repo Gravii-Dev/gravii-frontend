@@ -1,7 +1,7 @@
 'use server'
 
-import { createHash } from 'node:crypto'
 import { headers } from 'next/headers'
+
 import { fetchWithTimeout } from '@/lib/utils/fetch'
 import { rateLimit, rateLimiters } from '@/lib/utils/rate-limit'
 import {
@@ -10,11 +10,13 @@ import {
   normalizeWaitlistEmail,
 } from '@/lib/utils/waitlist'
 
-type WaitlistProvider = 'hubspot' | 'mailchimp'
+type WaitlistResultStatus = 'created' | 'existing'
 
-type WaitlistSubmission = {
+export interface WaitlistSubmission {
   email: string
-  provider: WaitlistProvider
+  referralCode: string
+  resultStatus: WaitlistResultStatus
+  uid: string
 }
 
 type FormState<TData> = {
@@ -26,29 +28,21 @@ type FormState<TData> = {
 
 export type WaitlistActionState = FormState<WaitlistSubmission>
 
-const APP_BASE_URL =
-  process.env.NEXT_PUBLIC_BASE_URL ??
-  (process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : 'http://localhost:3000')
+interface LandingWaitlistResponse {
+  email: string
+  referral_code: string
+  status: WaitlistResultStatus
+  uid: string
+}
 
-const WAITLIST_SUCCESS_MESSAGE = 'You are on the waitlist.'
+const LANDING_API_BASE_URL =
+  process.env.NEXT_PUBLIC_GRAVII_LANDING_API_BASE_URL?.trim() ||
+  process.env.GRAVII_LANDING_API_BASE_URL?.trim() ||
+  'https://gravii-landing-api-1077809741476.europe-west6.run.app'
+
 const WAITLIST_EMAIL_ERROR = 'Enter a valid email address.'
 const WAITLIST_UNAVAILABLE_MESSAGE =
   'Waitlist is temporarily unavailable. Please try again shortly.'
-
-class WaitlistConfigurationError extends Error {
-  override name = 'WaitlistConfigurationError'
-}
-
-class WaitlistRequestError extends Error {
-  override name = 'WaitlistRequestError'
-}
-
-type WaitlistContext = {
-  email: string
-  pageUri: string
-}
 
 export async function joinWaitlistAction(
   _prevState: WaitlistActionState | null,
@@ -58,7 +52,7 @@ export async function joinWaitlistAction(
   if (typeof trapValue === 'string' && trapValue.trim().length > 0) {
     return {
       status: 200,
-      message: WAITLIST_SUCCESS_MESSAGE,
+      message: 'You are on the waitlist.',
     }
   }
 
@@ -84,11 +78,13 @@ export async function joinWaitlistAction(
     }
   }
 
+  const referralCode = readReferralCode(formData.get('referral_code'))
   const requestHeaders = await headers()
   const identifier = getWaitlistRateLimitIdentifier(
     getClientIdentifier(requestHeaders)
   )
   const rateLimitResult = rateLimit(identifier, rateLimiters.strict)
+
   if (!rateLimitResult.success) {
     return {
       status: 429,
@@ -96,34 +92,44 @@ export async function joinWaitlistAction(
     }
   }
 
-  const pageUri = requestHeaders.get('referer') ?? `${APP_BASE_URL}/#waitlist`
-
   try {
-    const provider = await submitToWaitlistProvider({
-      email,
-      pageUri,
-    })
+    const response = await fetchWithTimeout(
+      `${LANDING_API_BASE_URL}/api/v1/landing/waitlist`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          ...(referralCode ? { referral_code: referralCode } : {}),
+        }),
+        timeout: 10_000,
+        cache: 'no-store',
+      }
+    )
 
-    return {
-      status: 200,
-      message: WAITLIST_SUCCESS_MESSAGE,
-      data: {
-        email,
-        provider,
-      },
-    }
-  } catch (error) {
-    console.error('[Waitlist] submission failed', error)
+    if (!response.ok) {
+      const payload = (await response.json().catch(() => null)) as
+        | { error?: string }
+        | null
 
-    if (error instanceof WaitlistConfigurationError) {
       return {
-        status: 503,
-        message:
-          process.env.NODE_ENV === 'development'
-            ? 'Waitlist integration is not configured. Add HubSpot or Mailchimp env vars.'
-            : WAITLIST_UNAVAILABLE_MESSAGE,
+        status: response.status,
+        message: payload?.error ?? WAITLIST_UNAVAILABLE_MESSAGE,
       }
     }
+
+    const payload = (await response.json()) as LandingWaitlistResponse
+
+    return buildSuccessState({
+      email: payload.email,
+      referralCode: payload.referral_code,
+      resultStatus: payload.status,
+      uid: payload.uid,
+    })
+  } catch (error) {
+    console.error('[Waitlist] landing api submission failed', error)
 
     return {
       status: 502,
@@ -132,117 +138,26 @@ export async function joinWaitlistAction(
   }
 }
 
-async function submitToWaitlistProvider(context: WaitlistContext) {
-  if (isHubSpotConfigured()) {
-    await submitToHubSpot(context)
-    return 'hubspot' as const
-  }
+function buildSuccessState(input: WaitlistSubmission): WaitlistActionState {
+  const message =
+    input.resultStatus === 'created'
+      ? `You're on the waitlist. Your referral code is ${input.referralCode}.`
+      : `You're already on the waitlist. Your referral code is ${input.referralCode}.`
 
-  if (isMailchimpConfigured()) {
-    await submitToMailchimp(context.email)
-    return 'mailchimp' as const
-  }
-
-  throw new WaitlistConfigurationError('No waitlist provider configured.')
-}
-
-function isHubSpotConfigured() {
-  return Boolean(
-    process.env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID &&
-      process.env.NEXT_HUBSPOT_FORM_ID
-  )
-}
-
-async function submitToHubSpot({ email, pageUri }: WaitlistContext) {
-  const portalId = process.env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID
-  const formId = process.env.NEXT_HUBSPOT_FORM_ID
-
-  if (!(portalId && formId)) {
-    throw new WaitlistConfigurationError('HubSpot waitlist form is not configured.')
-  }
-
-  const response = await fetchWithTimeout(
-    `https://api.hsforms.com/submissions/v3/integration/submit/${portalId}/${formId}`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(process.env.HUBSPOT_ACCESS_TOKEN
-          ? { Authorization: `Bearer ${process.env.HUBSPOT_ACCESS_TOKEN}` }
-          : {}),
-      },
-      body: JSON.stringify({
-        fields: [
-          {
-            name: 'email',
-            value: email,
-          },
-        ],
-        context: {
-          pageName: 'Gravii Waitlist',
-          pageUri,
-        },
-      }),
-      timeout: 10_000,
-      cache: 'no-store',
-    }
-  )
-
-  if (!response.ok) {
-    const responseBody = await readResponseBody(response)
-    throw new WaitlistRequestError(
-      `HubSpot request failed (${response.status}): ${responseBody}`
-    )
+  return {
+    status: 200,
+    message,
+    data: input,
   }
 }
 
-function isMailchimpConfigured() {
-  return Boolean(
-    process.env.MAILCHIMP_API_KEY &&
-      process.env.MAILCHIMP_SERVER_PREFIX &&
-      process.env.MAILCHIMP_AUDIENCE_ID
-  )
-}
-
-async function submitToMailchimp(email: string) {
-  const apiKey = process.env.MAILCHIMP_API_KEY
-  const serverPrefix = process.env.MAILCHIMP_SERVER_PREFIX
-  const audienceId = process.env.MAILCHIMP_AUDIENCE_ID
-
-  if (!(apiKey && serverPrefix && audienceId)) {
-    throw new WaitlistConfigurationError(
-      'Mailchimp waitlist audience is not configured.'
-    )
+function readReferralCode(rawValue: FormDataEntryValue | null): string | null {
+  if (typeof rawValue !== 'string') {
+    return null
   }
 
-  const subscriberHash = createHash('md5').update(email).digest('hex')
-  const authToken = Buffer.from(`gravii:${apiKey}`).toString('base64')
-
-  const response = await fetchWithTimeout(
-    `https://${serverPrefix}.api.mailchimp.com/3.0/lists/${audienceId}/members/${subscriberHash}`,
-    {
-      method: 'PUT',
-      headers: {
-        Authorization: `Basic ${authToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email_address: email,
-        status: 'subscribed',
-        status_if_new: 'subscribed',
-        tags: ['waitlist'],
-      }),
-      timeout: 10_000,
-      cache: 'no-store',
-    }
-  )
-
-  if (!response.ok) {
-    const responseBody = await readResponseBody(response)
-    throw new WaitlistRequestError(
-      `Mailchimp request failed (${response.status}): ${responseBody}`
-    )
-  }
+  const value = rawValue.trim().toUpperCase()
+  return value.length > 0 ? value : null
 }
 
 function getClientIdentifier(requestHeaders: Headers) {
@@ -257,12 +172,4 @@ function getClientIdentifier(requestHeaders: Headers) {
     requestHeaders.get('x-real-ip') ??
     'unknown'
   )
-}
-
-async function readResponseBody(response: Response) {
-  try {
-    return await response.text()
-  } catch {
-    return 'No response body'
-  }
 }

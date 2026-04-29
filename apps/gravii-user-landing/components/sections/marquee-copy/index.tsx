@@ -26,18 +26,14 @@ const LABELS = [
 ] as const
 
 export function MarqueeCopy() {
-  const forward = [0, 1].flatMap((cycle) =>
-    LABELS.map((label) => ({
-      id: `forward-${cycle}-${label}`,
-      label,
-    }))
-  )
-  const reverse = [0, 1].flatMap((cycle) =>
-    [...LABELS].reverse().map((label) => ({
-      id: `reverse-${cycle}-${label}`,
-      label,
-    }))
-  )
+  const forward = LABELS.map((label) => ({
+    id: `forward-${label}`,
+    label,
+  }))
+  const reverse = [...LABELS].reverse().map((label) => ({
+    id: `reverse-${label}`,
+    label,
+  }))
 
   return (
     <section
@@ -47,10 +43,18 @@ export function MarqueeCopy() {
       <MaskReveal className={s.revealRow} start="top 62%">
         <div className={s.marqueeViewport}>
           <div className={`${s.track} ${s.trackForward}`}>
-            {forward.map((item) => (
-              <span key={item.id} className={s.pill}>
-                {item.label}
-              </span>
+            {[0, 1].map((cycle) => (
+              <div
+                key={`forward-group-${cycle}`}
+                aria-hidden={cycle === 1}
+                className={s.group}
+              >
+                {forward.map((item) => (
+                  <span key={`${item.id}-${cycle}`} className={s.pill}>
+                    {item.label}
+                  </span>
+                ))}
+              </div>
             ))}
           </div>
         </div>
@@ -78,10 +82,18 @@ export function MarqueeCopy() {
       <MaskReveal className={s.revealRow} delay={0.12} start="top 62%">
         <div className={s.marqueeViewport}>
           <div className={`${s.track} ${s.trackReverse}`}>
-            {reverse.map((item) => (
-              <span key={item.id} className={s.pill}>
-                {item.label}
-              </span>
+            {[0, 1].map((cycle) => (
+              <div
+                key={`reverse-group-${cycle}`}
+                aria-hidden={cycle === 1}
+                className={s.group}
+              >
+                {reverse.map((item) => (
+                  <span key={`${item.id}-${cycle}`} className={s.pill}>
+                    {item.label}
+                  </span>
+                ))}
+              </div>
             ))}
           </div>
         </div>

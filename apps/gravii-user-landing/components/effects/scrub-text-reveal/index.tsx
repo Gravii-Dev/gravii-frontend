@@ -131,12 +131,12 @@ export function ScrubTextReveal({
         return
       }
 
-      const revealDistance = viewportHeight * 0.52
+      const revealDistance = viewportHeight * 0.34
       const progress = clamp01(
-        (viewportHeight - bounds.top) / Math.max(1, revealDistance)
+        (viewportHeight * 0.88 - bounds.top) / Math.max(1, revealDistance)
       )
-      const typingProgress = clamp01(progress * 0.92)
-      const resolvedProgress = progress >= 0.94 ? 1 : typingProgress
+      const typingProgress = clamp01(progress * 1.08)
+      const resolvedProgress = progress >= 0.82 ? 1 : typingProgress
       const visibleCount = Math.floor(resolvedProgress * (nodes.length + 1))
 
       if (visibleCount !== lastVisibleCount) {

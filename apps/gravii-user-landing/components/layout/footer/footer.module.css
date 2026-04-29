@@ -1,6 +1,6 @@
 .root {
-  background: rgb(236 224 203);
-  border-top: 1px solid rgb(0 0 0 / 10%);
+  background: var(--gravii-canvas-dim);
+  border-top: var(--gravii-border);
 }
 
 .inner {
@@ -23,7 +23,7 @@
 .brand,
 .copy,
 .link {
-  font-family: var(--next-font-sans), sans-serif;
+  font-family: var(--gravii-font-ui);
   font-weight: 700;
 }
 

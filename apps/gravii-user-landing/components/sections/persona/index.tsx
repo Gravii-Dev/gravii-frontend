@@ -141,11 +141,11 @@ export function Persona() {
             return
           }
 
-          const revealDistance = viewportHeight * 0.68
+          const revealDistance = viewportHeight * 0.38
           const progress = clamp01(
             (viewportHeight * 0.9 - bounds.top) / Math.max(1, revealDistance)
           )
-          const resolvedProgress = progress >= 0.94 ? 1 : clamp01(progress * 0.92)
+          const resolvedProgress = progress >= 0.76 ? 1 : clamp01(progress * 1.1)
           setRevealState(target, resolvedProgress, 0)
         })
       })

@@ -1,7 +1,7 @@
 /* GLOBAL CSS FILE - Contains global styles that shouldn't be reset */
 
 html {
-  --global-font-family: var(--font-mystic-dream), sans-serif;
+  --global-font-family: var(--gravii-font-ui);
   --global-font-weight: 500;
   --global-letter-spacing: 0em;
   --global-font-style: normal;
@@ -25,8 +25,11 @@ html.overflow-hidden {
 body {
   min-height: 100vh;
   overscroll-behavior: none;
-  background-color: var(--color-primary);
-  color: var(--color-secondary);
+  background:
+    radial-gradient(circle at 10% 8%, rgb(244 210 58 / 12%), transparent 24%),
+    radial-gradient(circle at 88% 10%, rgb(90 169 255 / 10%), transparent 26%),
+    linear-gradient(180deg, var(--gravii-paper) 0%, var(--gravii-canvas) 58%, var(--gravii-canvas-dim) 100%);
+  color: var(--gravii-ink);
   display: flex;
   flex-direction: column;
   font-family: var(--global-font-family);
@@ -64,8 +67,8 @@ body textarea {
 
 /* Selection styling */
 *::selection {
-  background-color: var(--color-contrast);
-  color: var(--color-primary);
+  background-color: var(--gravii-ink);
+  color: var(--gravii-paper);
 }
 
 /* SVG icon colors */

@@ -1,7 +1,7 @@
 'use client'
 
 import type { CSSProperties, MouseEvent as ReactMouseEvent } from 'react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from '@/components/ui/link'
 import s from './sticky-header.module.css'
 
@@ -28,11 +28,50 @@ const ORBIT_CURSORS = [
   }),
 ] as const
 
-const userAppUrl =
-  process.env.NEXT_PUBLIC_USER_APP_URL?.trim() ||
-  (process.env.NODE_ENV === 'development'
-    ? 'http://localhost:3003'
-    : 'https://app.gravii.io')
+const passthroughKeys = new Set([
+  'campaign',
+  'code',
+  'ref',
+  'referral',
+  'utm_campaign',
+  'utm_content',
+  'utm_medium',
+  'utm_source',
+  'utm_term',
+])
+
+function resolveDestinationUrl(input: {
+  allowedHostnames: string[]
+  envValue: string | undefined
+  fallback: string
+}): string {
+  const candidate = input.envValue?.trim()
+
+  if (!candidate) {
+    return input.fallback
+  }
+
+  try {
+    const url = new URL(candidate)
+
+    if (input.allowedHostnames.includes(url.hostname)) {
+      return candidate
+    }
+  } catch {
+    return input.fallback
+  }
+
+  return input.fallback
+}
+
+const userAppUrl = resolveDestinationUrl({
+  allowedHostnames: ['app.gravii.io', 'localhost', '127.0.0.1'],
+  envValue: process.env.NEXT_PUBLIC_USER_APP_URL,
+  fallback:
+    process.env.NODE_ENV === 'development'
+      ? 'http://localhost:3003'
+      : 'https://app.gravii.io',
+})
 
 function MousePointerIcon() {
   return (
@@ -111,7 +150,22 @@ function HeaderPill({
 
 export function StickyHeader() {
   const [isVisible, setIsVisible] = useState(true)
+  const [launchAppHref, setLaunchAppHref] = useState(userAppUrl)
   const lastScrollYRef = useRef(0)
+  const resolvedLaunchAppHref = useMemo(() => launchAppHref, [launchAppHref])
+
+  useEffect(() => {
+    const targetUrl = new URL(userAppUrl, window.location.origin)
+    const searchParams = new URLSearchParams(window.location.search)
+
+    for (const [key, value] of searchParams.entries()) {
+      if (passthroughKeys.has(key) && !targetUrl.searchParams.has(key)) {
+        targetUrl.searchParams.set(key, value)
+      }
+    }
+
+    setLaunchAppHref(targetUrl.toString())
+  }, [])
 
   useEffect(() => {
     let frameId = 0
@@ -174,9 +228,10 @@ export function StickyHeader() {
       {/* Right Area: Action Button */}
       <div>
         <HeaderPill
-          href={userAppUrl}
+          href={resolvedLaunchAppHref}
           label="LAUNCH APP"
           className={`${s.pillLink} ${s.actionLink}`}
+          target="_self"
         />
       </div>
     </header>
