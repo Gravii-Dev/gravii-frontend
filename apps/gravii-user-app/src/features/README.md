@@ -72,7 +72,8 @@ Owns the wallet analysis surface.
 Responsibilities:
 
 - search input
-- payment confirmation modal
+- credit status and lookup entitlement messaging
+- reserved credit purchase modal boundary for the future checkout layer
 - loading transition
 - result dashboard
 - paginated history

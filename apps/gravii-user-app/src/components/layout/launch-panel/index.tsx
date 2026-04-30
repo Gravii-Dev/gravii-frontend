@@ -38,13 +38,23 @@ function panelIdClass(panelId: PanelConfig["id"]) {
   if (panelId === "profile") return styles.panelProfile;
   if (panelId === "discovery") return styles.panelDiscovery;
   if (panelId === "leaderboard") return styles.panelStanding;
+  if (panelId === "myspace") return styles.panelMySpace;
   return styles.panelXray;
 }
 
 function titleClass(panelId: PanelConfig["id"]) {
   if (panelId === "profile") return styles.titleProfile;
   if (panelId === "discovery") return styles.titleDiscovery;
+  if (panelId === "myspace") return styles.titleMySpace;
   return styles.titleDefault;
+}
+
+function backLabel(panelId: PanelConfig["id"]) {
+  if (panelId === "profile") return "View Gravii ID";
+  if (panelId === "lookup") return "Run X-Ray";
+  if (panelId === "leaderboard") return "Preview Standing";
+  if (panelId === "discovery") return "Explore Discovery";
+  return "Open My Space";
 }
 
 function PreviewTitle({
@@ -67,10 +77,6 @@ function PreviewTitle({
       <>
         <div className={styles.lookupThermalOverlay}>
           <div className={styles.lookupThermalCore} />
-          <div className={`${styles.lookupThermalLine} ${styles.lookupThermalLine20}`} />
-          <div className={`${styles.lookupThermalLine} ${styles.lookupThermalLine40}`} />
-          <div className={`${styles.lookupThermalLine} ${styles.lookupThermalLine60}`} />
-          <div className={`${styles.lookupThermalLine} ${styles.lookupThermalLine80}`} />
         </div>
         <div className={styles.lookupCenteredTitle}>
           <span className={styles.lookupTitle}>X-RAY</span>
@@ -124,28 +130,26 @@ export default function LaunchPanel({
     >
       {panel.id === "discovery" ? <GrainOverlay variant="panel" active={isActive} /> : null}
 
-      <div className={`${styles.previewLayer} ${isActive ? styles.previewHidden : ""}`} aria-hidden={isActive}>
-        <div className={styles.previewTop}>
-          <span className={styles.previewNumber}>{panel.num}/05</span>
+      <div className={`${styles.flipCard} ${isActive ? styles.previewHidden : ""}`} aria-hidden={isActive}>
+        <div className={styles.flipBack}>
+          <span className={styles.flipBackLabel}>{backLabel(panel.id)}</span>
         </div>
 
-        {!isCollapsed ? (
-          <div className={styles.editorCopy}>
-            <span className={styles.editorText}>&ldquo;{panel.editorCopy}&rdquo;</span>
-          </div>
-        ) : null}
+        <div className={styles.previewLayer}>
+          {!isCollapsed ? (
+            <div className={styles.editorCopy}>
+              <span className={styles.editorText}>&ldquo;{panel.editorCopy}&rdquo;</span>
+            </div>
+          ) : null}
 
-        <PreviewTitle panel={panel} isCollapsed={isCollapsed} />
+          <PreviewTitle panel={panel} isCollapsed={isCollapsed} />
 
-        <div className={styles.panelBrand}>
-          <span className={styles.brandMark}>GRAVII</span>
+          {panel.dark && !isCollapsed ? <div className={styles.scanLine} /> : null}
         </div>
-
-        {panel.dark && !isCollapsed ? <div className={styles.scanLine} /> : null}
       </div>
 
       {isActive ? (
-        <PanelShell num={`${panel.num}/05`} title={panel.tab} sub={`GRAVII — ${panel.sub}`} dark={usesDarkTokens} onClose={onClose}>
+        <PanelShell title={panel.tab} dark={usesDarkTokens} onClose={onClose}>
           {children}
         </PanelShell>
       ) : null}

@@ -1,5 +1,4 @@
 import { MaskReveal } from '@/components/effects/mask-reveal'
-import { ScrubTextReveal } from '@/components/effects/scrub-text-reveal'
 import { WaitlistForm } from './form'
 import s from './waitlist.module.css'
 
@@ -11,12 +10,13 @@ export function Waitlist() {
     >
       <div className={s.inner}>
         <div className={s.titleReveal}>
-          <ScrubTextReveal
-            as="h2"
-            className={s.title}
-            completeAtPageEnd
-            text={`We search.\nYour lifestyle.\nLive different.`}
-          />
+          <h2 className={s.title}>
+            We search.
+            <br />
+            Your lifestyle.
+            <br />
+            Live different.
+          </h2>
         </div>
 
         <MaskReveal className={s.formReveal} delay={0.08} completeAtPageEnd>

@@ -1,0 +1,83 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.dialog {
+  width: min(400px, 100%);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #1a1a1a;
+  padding: 36px 40px;
+  text-align: center;
+}
+
+.kicker {
+  color: rgba(255, 255, 255, 0.4);
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  margin: 0 0 10px;
+  text-transform: uppercase;
+}
+
+.price {
+  color: #f5f2eb;
+  font-family: var(--font-accent);
+  font-size: 24px;
+  margin: 0 0 12px;
+}
+
+.copy {
+  color: rgba(255, 255, 255, 0.6);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0 0 24px;
+}
+
+.hint {
+  color: rgba(255, 255, 255, 0.25);
+  font-family: var(--font-ui);
+  font-size: 11px;
+  margin: 0 0 28px;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.button {
+  --button-font-size: 0.75rem;
+  --button-pad-y: 0.92em;
+  --button-pad-x: 1.65em;
+}
+
+.secondary {
+  --button-front: rgba(255, 255, 255, 0.04);
+  --button-front-hover: rgba(255, 255, 255, 0.1);
+  --button-text: rgba(255, 255, 255, 0.68);
+  --button-back: var(--slush-glacier);
+  --button-back-text: var(--slush-dark);
+  --button-border-color: rgba(255, 255, 255, 0.14);
+  --button-back-border-color: rgba(255, 255, 255, 0.14);
+}
+
+.primary {
+  --button-front: rgba(200, 180, 240, 0.88);
+  --button-front-hover: rgba(220, 200, 255, 0.96);
+  --button-text: #1a1a1a;
+  --button-back: var(--slush-yellow);
+  --button-back-text: var(--slush-dark);
+  --button-border-color: rgba(200, 180, 240, 0.28);
+  --button-back-border-color: rgba(200, 180, 240, 0.28);
+}

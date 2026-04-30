@@ -17,13 +17,21 @@ export function MarqueeNumbers() {
       <MaskReveal className={s.revealViewport} start="top 62%">
         <div className={s.viewport}>
           <div className={s.track}>
-            {CLUSTERS.map((clusterId) => (
-              <div key={clusterId} className={s.cluster}>
-                {STATS.map((stat) => (
-                  <div key={`${clusterId}-${stat.label}`} className={s.stat}>
-                    <span className={s.value}>{stat.value}</span>
-                    <span className={s.label}>{stat.label}</span>
-                    <span className={s.separator}>·</span>
+            {[0, 1].map((cycle) => (
+              <div
+                key={`numbers-group-${cycle}`}
+                aria-hidden={cycle === 1}
+                className={s.group}
+              >
+                {CLUSTERS.map((clusterId) => (
+                  <div key={`${clusterId}-${cycle}`} className={s.cluster}>
+                    {STATS.map((stat) => (
+                      <div key={`${clusterId}-${cycle}-${stat.label}`} className={s.stat}>
+                        <span className={s.value}>{stat.value}</span>
+                        <span className={s.label}>{stat.label}</span>
+                        <span className={s.separator}>·</span>
+                      </div>
+                    ))}
                   </div>
                 ))}
               </div>

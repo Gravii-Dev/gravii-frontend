@@ -1,0 +1,141 @@
+.page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 32px;
+  background:
+    radial-gradient(circle at top left, rgba(88, 166, 255, 0.18), transparent 24%),
+    radial-gradient(circle at bottom right, rgba(86, 212, 192, 0.16), transparent 28%),
+    #0d1117;
+}
+
+.panel {
+  width: min(100%, 560px);
+  padding: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 28px;
+  background: rgba(13, 17, 23, 0.86);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+  color: #f0f4f8;
+}
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #8b95a3;
+}
+
+.title {
+  margin: 12px 0 10px;
+  font-size: clamp(34px, 5vw, 48px);
+  line-height: 0.94;
+}
+
+.copy {
+  margin: 0;
+  color: #b4bcc8;
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.label {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8b95a3;
+}
+
+.input {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 14px 16px;
+  color: #f0f4f8;
+  font: inherit;
+}
+
+.input:focus {
+  outline: none;
+  border-color: rgba(88, 166, 255, 0.8);
+}
+
+.stack {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.button {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 15px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    border-color 140ms ease,
+    transform 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.22);
+}
+
+.button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.buttonLabel {
+  display: grid;
+  gap: 4px;
+  text-align: left;
+}
+
+.buttonTitle {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.buttonHint {
+  font-size: 13px;
+  color: #8b95a3;
+}
+
+.status {
+  min-height: 22px;
+  margin-top: 18px;
+  font-size: 13px;
+  color: #f4b8b8;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+  font-size: 13px;
+  color: #8b95a3;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}

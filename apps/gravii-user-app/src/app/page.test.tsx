@@ -1,20 +1,41 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import HomePage from "./page";
 
+const signOut = vi.fn();
+
+vi.mock("@/features/auth/auth-provider", () => {
+  return {
+    useUserAuth: () => ({
+      beginSignIn: vi.fn(),
+      isAuthenticated: true,
+      refreshSession: vi.fn(),
+      signOut,
+      status: "authenticated",
+      user: {
+        address: "0x7a3b9f2c11111111111111111111111111111111",
+        createdAt: new Date().toISOString(),
+        lastLoginAt: new Date().toISOString(),
+        referralCode: "GRAVII",
+        referredUsersCount: 0,
+      },
+    }),
+  };
+});
+
 describe("HomePage", () => {
-  it("toggles the session button label", async () => {
+  it("calls sign out from the session button", async () => {
     const user = userEvent.setup();
 
     render(<HomePage />);
 
-    const authButton = screen.getByRole("button", { name: "SIGN IN" });
+    const authButton = screen.getByRole("button", { name: "SIGN OUT" });
 
     await user.click(authButton);
 
-    expect(screen.getByRole("button", { name: "SIGN OUT" })).toBeInTheDocument();
+    expect(signOut).toHaveBeenCalledTimes(1);
   });
 
   it("opens a panel and closes it from the shell action", async () => {

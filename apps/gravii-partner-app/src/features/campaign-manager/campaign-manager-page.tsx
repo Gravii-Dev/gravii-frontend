@@ -1,14 +1,14 @@
 'use client'
 
-import { ChevronRight } from 'lucide-react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
-import { Card } from '@/components/ui/card'
-import { PageHeader } from '@/components/ui/page-header'
+import { PartnerDataStatus } from '@/components/ui/partner-data-status'
 import { WorkspaceHandoffLink } from '@/components/ui/workspace-handoff-link'
+import { usePartnerAuth } from '@/features/auth/auth-provider'
+import { getPartnerWorkspaceName } from '@/lib/partner-profile'
 import { useWorkspaceSettings } from '@/lib/workspace-settings'
 
-import { managedCampaigns } from '@/features/reach/managed-campaigns'
+import { getManagedCampaigns } from '@/features/reach/managed-campaigns'
 import styles from './campaign-manager-page.module.css'
 
 type CampaignFilter = 'all' | 'live' | 'ended'
@@ -20,9 +20,12 @@ interface CampaignManagerPageProps {
 export function CampaignManagerPage({
   initialLaunchStatus = null
 }: CampaignManagerPageProps) {
+  const auth = usePartnerAuth()
   const [filter, setFilter] = useState<CampaignFilter>('all')
   const [openReports, setOpenReports] = useState<string[]>([])
   const workspaceSettings = useWorkspaceSettings()
+  const partnerName = getPartnerWorkspaceName(auth.session)
+  const managedCampaigns = useMemo(() => getManagedCampaigns(partnerName), [partnerName])
 
   const launchNotice =
     initialLaunchStatus === 'review-pending'
@@ -37,11 +40,26 @@ export function CampaignManagerPage({
 
   return (
     <div className={styles.page}>
-      <PageHeader
-        eyebrow="Gravii Reach"
-        title="Campaign manager buttons now behave like the prototype again."
-        description="Status filters, report toggles, and edit actions are all restored so the manager page drives back into the Reach form as expected."
-      />
+      <div className={styles.mainHeader}>
+        <h1 className={styles.mainTitle}>Gravii Reach</h1>
+      </div>
+      <PartnerDataStatus surface="campaignManager" />
+
+      <div className={styles.listHeader}>
+        <span className={styles.listTitle}>Your Campaigns</span>
+        <div className={styles.filters}>
+          {(['all', 'live', 'ended'] as const).map((value) => (
+            <button
+              key={value}
+              type="button"
+              className={`${styles.filterButton} ${filter === value ? styles.filterButtonActive : ''}`}
+              onClick={() => setFilter(value)}
+            >
+              {value === 'all' ? 'All' : value === 'live' ? 'Live' : 'Ended'}
+            </button>
+          ))}
+        </div>
+      </div>
 
       {launchNotice ? (
         <div className={styles.notice}>
@@ -57,31 +75,64 @@ export function CampaignManagerPage({
         </div>
       ) : null}
 
-      <div className={styles.filters}>
-        {(['all', 'live', 'ended'] as const).map((value) => (
-          <button
-            key={value}
-            type="button"
-            className={`${styles.filterButton} ${filter === value ? styles.filterButtonActive : ''}`}
-            onClick={() => setFilter(value)}
-          >
-            {value === 'all' ? 'All' : value === 'live' ? 'Live' : 'Ended'}
-          </button>
-        ))}
-      </div>
-
       <div className={styles.list}>
         {visibleCampaigns.map((campaign) => {
           const reportOpen = openReports.includes(campaign.id)
+          const sparklineMax = Math.max(...campaign.sparkline.map((point) => point.value), 1)
 
           return (
-            <Card key={campaign.id} title={campaign.name} eyebrow={`${campaign.partner} · ${campaign.status}`}>
+            <article key={campaign.id} className={styles.card}>
+              <div className={styles.cardTop}>
+                <div className={styles.titleGroup}>
+                  <div className={styles.partner}>{campaign.partner}</div>
+                  <div className={styles.name}>{campaign.name}</div>
+                </div>
+                <div className={styles.badges}>
+                  <span className={styles.typeBadge}>{campaign.type}</span>
+                  <span
+                    className={`${styles.statusBadge} ${
+                      campaign.status === 'live'
+                        ? styles.statusBadgeLive
+                        : campaign.status === 'ended'
+                          ? styles.statusBadgeEnded
+                          : styles.statusBadgeDraft
+                    }`}
+                  >
+                    {campaign.status === 'live' ? 'Live' : campaign.status === 'ended' ? 'Ended' : 'Draft'}
+                  </span>
+                </div>
+              </div>
+
               <div className={styles.campaignCard}>
                 {campaign.progress ? (
                   <div className={styles.progressTrack}>
                     <span className={styles.progressFill} style={{ width: `${campaign.progress}%` }} />
                   </div>
                 ) : null}
+
+                <div className={styles.sparkline} aria-hidden="true">
+                  {campaign.sparkline.map((point) => {
+                    const relativeHeight = Math.round((point.value / sparklineMax) * 100)
+                    const relativeOpacity = Math.min(0.9, 0.45 + point.value / sparklineMax / 2)
+
+                    return (
+                      <span
+                        key={`${campaign.id}-${point.date}`}
+                        className={styles.sparklineBar}
+                        title={`${point.date} · ${point.value.toLocaleString()}`}
+                        style={{
+                          height: `${Math.max(24, relativeHeight)}%`,
+                          opacity: relativeOpacity
+                        }}
+                      />
+                    )
+                  })}
+                </div>
+
+                <div className={styles.sparklineLabels}>
+                  <span>14d ago</span>
+                  <span>today</span>
+                </div>
 
                 <div className={styles.meta}>
                   <span>{campaign.engaged}</span>
@@ -93,15 +144,18 @@ export function CampaignManagerPage({
                     <WorkspaceHandoffLink
                       href={`/reach?campaign=${campaign.id}`}
                       requiredPages={['campaigns']}
-                      className="button-secondary"
+                      className={styles.editLink}
                     >
                       Edit Campaign
-                      <ChevronRight size={16} />
+                      <span aria-hidden="true">→</span>
                     </WorkspaceHandoffLink>
                   ) : null}
+                </div>
+
+                <div className={styles.reportToggleRow}>
                   <button
                     type="button"
-                    className="button-ghost"
+                    className={styles.reportToggle}
                     onClick={() =>
                       setOpenReports((current) =>
                         current.includes(campaign.id)
@@ -110,7 +164,7 @@ export function CampaignManagerPage({
                       )
                     }
                   >
-                    {reportOpen ? 'Close Report' : 'View Report'}
+                    {reportOpen ? '▲ Close Report' : '▼ View Report'}
                   </button>
                 </div>
 
@@ -188,7 +242,7 @@ export function CampaignManagerPage({
                   </div>
                 ) : null}
               </div>
-            </Card>
+            </article>
           )
         })}
       </div>

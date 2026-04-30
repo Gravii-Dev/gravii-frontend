@@ -97,6 +97,15 @@ export type ReachCpaRow = {
   enterpriseCpa: string;
 };
 
+export type KyaPlan = {
+  name: string;
+  price: string;
+  cadence: string;
+  quota: string;
+  features: readonly string[];
+  cta: string;
+};
+
 export const navItems: readonly NavItem[] = [
   { label: "Product", sectionId: "product" },
   { label: "Use Cases", sectionId: "solutions" },
@@ -144,6 +153,12 @@ export const problemItems: readonly ProblemItem[] = [
     title: "Engineering overhead",
     description:
       "Building your own analysis pipeline costs significant time and engineering resources.",
+  },
+  {
+    accent: "amber",
+    title: "Agent blind spot",
+    description:
+      "Autonomous agents are entering your protocol — and you can't tell them apart from humans. No detection, no classification, no trust scoring.",
   },
 ] as const;
 
@@ -344,7 +359,7 @@ export const integrationCards: readonly IntegrationCard[] = [
     eyebrow: "AGENT API",
     title: "For AI Agents",
     description:
-      'Zero-Knowledge Boolean endpoint. "Is this wallet ≥ Platinum AND Yield Explorer?" → true/false. No user data exposed.',
+      'Zero-Knowledge Boolean endpoint. "Is this wallet ≥ Platinum AND Profit Hunter?" → true/false. No user data exposed.',
     tags: ["ZK Boolean", "AI agents", "Pre-paid credits"],
     accent: "amber",
   },
@@ -363,7 +378,7 @@ export const userAppCards: readonly UserAppCard[] = [
     title: "My Space",
     description:
       "Personalized concierge. Recommendations, partner benefits, campaign notifications.",
-    accent: "purple",
+    accent: "cream",
   },
   {
     eyebrow: "CAMPAIGNS",
@@ -388,6 +403,8 @@ export const sectorLabels: readonly string[] = [
   "Protocols",
   "L1/L2 & Infrastructure",
   "Consumer Apps",
+  "CEX & Exchanges",
+  "Crypto Cards",
   "Ecosystem & Governance",
   "Gaming",
 ] as const;
@@ -408,7 +425,7 @@ export const solutionCards: readonly SolutionCard[] = [
     description:
       "Gain instant on-chain insights the moment a wallet connects — value, behavior, risk. Personalize experiences, build a healthier community, and filter threats automatically. Also available as Community Bot (Discord/Telegram) and Agent API (AI agents).",
     example:
-      "Platinum + Diamond Hands → VIP access. Sybil flagged → restricted. Rising Star → beginner onboarding.",
+      "Platinum + Strategic Holder → VIP access. Sybil flagged → restricted. Rising Star → beginner onboarding.",
     accent: "blue",
   },
   {
@@ -417,7 +434,7 @@ export const solutionCards: readonly SolutionCard[] = [
     description:
       "Diagnose your ecosystem health at zero cost. Submit a wallet list — get value distribution, behavioral segments, sybil ratio, chain activity. No Gravii ID needed. No integration. The lightest way to start — then expand to Reach or Gate when ready.",
     example:
-      "50K wallets → 38% Gold+, 12% sybil, top segment: Diamond Hands. Decision: proceed to Reach.",
+      "50K wallets → 38% Gold+, 12% sybil, top segment: Strategic Holder. Decision: proceed to Reach.",
     accent: "purple",
   },
 ] as const;
@@ -456,9 +473,9 @@ export const gatePricingPlans: readonly PricingPlan[] = [
     quota: "20,000/mo",
     features: [
       "Everything in Starter",
-      "Tier (Classic~Black)",
+      "Tier (Base~Obsidian)",
       "Primary Chain + Wallet Type",
-      "Tx Frequency Grade",
+      "Agent Detection",
       "Overage: $0.05/query",
     ],
     cta: "Get Started",
@@ -578,6 +595,11 @@ export const reachPricingPlans: readonly PricingPlan[] = [
 
 export const reachCpaRows: readonly ReachCpaRow[] = [
   {
+    tier: "Base",
+    standardCpa: "$0.8",
+    enterpriseCpa: "$0.64",
+  },
+  {
     tier: "Classic",
     standardCpa: "$4.8",
     enterpriseCpa: "$3.84",
@@ -596,6 +618,69 @@ export const reachCpaRows: readonly ReachCpaRow[] = [
     tier: "Black",
     standardCpa: "$56",
     enterpriseCpa: "$44.8",
+  },
+  {
+    tier: "Obsidian",
+    standardCpa: "$96",
+    enterpriseCpa: "$76.8",
+  },
+] as const;
+
+export const kyaPlans: readonly KyaPlan[] = [
+  {
+    name: "Free",
+    price: "$0",
+    cadence: "/forever",
+    quota: "50/mo",
+    features: ["Agent Probability", "Agent Classification", "Risk Level"],
+    cta: "Get Free API Key",
+  },
+  {
+    name: "Starter",
+    price: "$149",
+    cadence: "/mo",
+    quota: "5,000/mo",
+    features: [
+      "Everything in Free",
+      "Agent Persona + Rating",
+      "Consistency Score",
+      "Operating Chains",
+    ],
+    cta: "Get Started",
+  },
+  {
+    name: "Pro",
+    price: "$349",
+    cadence: "/mo",
+    quota: "20,000/mo",
+    features: [
+      "Everything in Starter",
+      "Performance Quality",
+      "Longevity Score",
+      "Deployer Cluster",
+    ],
+    cta: "Get Started",
+  },
+  {
+    name: "Growth",
+    price: "$799",
+    cadence: "/mo",
+    quota: "50,000/mo",
+    features: [
+      "Everything in Pro",
+      "Cross-chain Flows",
+      "Tx Complexity Grade",
+      "Ecosystem Engagement",
+    ],
+    cta: "Get Started",
+  },
+  {
+    name: "Enterprise",
+    price: "Custom",
+    cadence: "",
+    quota: "200K–1M/mo",
+    features: ["Everything in Growth", "Custom Agent Scoring"],
+    cta: "Contact Us",
   },
 ] as const;
 

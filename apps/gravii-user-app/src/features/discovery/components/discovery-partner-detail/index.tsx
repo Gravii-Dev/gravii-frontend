@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import ActionButton from "@/components/ui/action-button";
 import { SharedTagChip } from "@/components/ui/launch-primitives";
 import type { Partner, SharedContentProps } from "@/features/launch-app/types";
 
@@ -87,37 +88,37 @@ export default function DiscoveryPartnerDetail({
 
                   <div className={styles.actionRow}>
                     {campaign.eligible === true ? (
-                      <button type="button" className={`${styles.actionButton} ${styles.primaryAction}`}>
-                        {connected ? "OPT IN →" : "CONNECT TO OPT IN"}
-                      </button>
+                      <ActionButton size="panel" className={`${styles.actionButton} ${styles.primaryAction}`}>
+                        {connected ? "OPT IN →" : "RESTORE SESSION TO OPT IN"}
+                      </ActionButton>
                     ) : null}
 
                     {campaign.eligible === false && partner.status !== "INVITE ONLY" ? (
-                      <button
-                        type="button"
+                      <ActionButton
+                        size="panel"
                         className={`${styles.actionButton} ${styles.warningAction}`}
                         onClick={() => setQualifyGuide((current) => (current === campaign.name ? null : campaign.name))}
                       >
                         {qualifyGuide === campaign.name ? "HIDE GUIDE" : "HOW TO QUALIFY"}
-                      </button>
+                      </ActionButton>
                     ) : null}
 
                     {campaign.eligible === false && partner.status === "INVITE ONLY" ? (
-                      <button type="button" className={styles.actionButton} onClick={() => onNavigate?.("leaderboard")}>
+                      <ActionButton size="panel" className={styles.actionButton} onClick={() => onNavigate?.("leaderboard")}>
                         REQUEST ACCESS
-                      </button>
+                      </ActionButton>
                     ) : null}
 
                     {campaign.eligible === null ? (
-                      <button type="button" className={styles.actionButton} onClick={onConnect}>
-                        NOTIFY ME
-                      </button>
+                      <ActionButton size="panel" className={styles.actionButton} onClick={onConnect}>
+                        {connected ? "NOTIFY ME" : "RESTORE SESSION FOR ALERTS"}
+                      </ActionButton>
                     ) : null}
 
                     {!connected ? (
-                      <button type="button" className={styles.actionButton} onClick={onConnect}>
-                        Connect Wallet
-                      </button>
+                      <ActionButton size="panel" className={styles.actionButton} onClick={onConnect}>
+                        Open Sign-In
+                      </ActionButton>
                     ) : null}
                   </div>
 

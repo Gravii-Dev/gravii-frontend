@@ -3,288 +3,430 @@
   gap: 1rem;
 }
 
-.headerActions {
+.page > section,
+.page > div {
+  content-visibility: auto;
+  contain-intrinsic-size: 480px;
+}
+
+.mainHeader {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.headerCta {
+  flex-shrink: 0;
+}
+
+.mainTitle {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+  text-shadow:
+    0 0 20px rgba(255, 255, 255, 0.14),
+    0 0 40px rgba(255, 255, 255, 0.04);
+}
+
+.sectionLead {
+  margin-bottom: 0.1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+}
+
+.heroCard,
+.card {
+  border: 2px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-card);
 }
 
 .heroCard {
-  margin-bottom: 0.25rem;
+  display: flex;
+  align-items: flex-end;
+  gap: 2.5rem;
+  border-top: 2px solid var(--brand-blue);
+  padding: 1.5rem 1.75rem;
 }
 
-.heroMeta {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 1rem 2rem;
-  align-items: end;
+.heroLabel,
+.heroGrowthLabel,
+.heroSnapshot {
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.heroValue {
+  margin-top: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 42px;
+  line-height: 1;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
 }
 
 .heroGrowth {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1.25rem;
+  gap: 1.75rem;
+  padding-bottom: 0.4rem;
 }
 
-.heroGrowth div {
-  display: grid;
-  gap: 0.25rem;
-}
-
-.heroGrowth span,
-.snapshot {
-  color: var(--text-muted);
-  font-size: 0.82rem;
-}
-
-.heroGrowth strong {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
+.heroGrowthValue {
+  margin-top: 0.2rem;
+  font-family: var(--font-mono);
+  font-size: 1.125rem;
+  font-weight: 700;
   color: var(--brand-teal);
 }
 
-.snapshot {
-  grid-column: 1 / -1;
-  margin: 0;
+.heroSnapshot {
+  margin-left: auto;
+  padding-bottom: 0.4rem;
+  white-space: nowrap;
 }
 
-.assetCard {
-  min-height: 100%;
-}
-
-.assetBody {
+.grid4 {
   display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1rem;
 }
 
-.ringWrap {
-  position: relative;
+.grid2Half {
   display: grid;
-  place-items: center;
-  min-height: 10rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
 }
 
-.assetRing {
-  width: 9.4rem;
-  height: 9.4rem;
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+.card {
+  padding: 20px;
 }
 
-.assetCenter {
-  position: absolute;
-  display: grid;
-  place-items: center;
-  width: 5.3rem;
-  height: 5.3rem;
-  border-radius: 50%;
-  background: rgba(8, 13, 21, 0.96);
-  text-align: center;
-}
-
-.assetCenter strong {
-  font-family: var(--font-display);
-  font-size: 1.05rem;
-  line-height: 1;
-  letter-spacing: -0.05em;
-}
-
-.assetHelper,
-.kpiHelper {
-  margin: 0;
-  font-size: 0.9rem;
-  line-height: 1.6;
+.cardTitle {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
   color: var(--text-secondary);
 }
 
-.legend {
+.cardTitleLine {
+  display: block;
+  width: 100%;
+}
+
+.infoIcon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.95rem;
+  height: 0.95rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  cursor: default;
+}
+
+.infoTooltip {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 0.45rem);
+  z-index: 20;
+  width: 18rem;
+  display: none;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(14, 18, 24, 0.96);
+  padding: 0.75rem 0.85rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+  font-size: 0.72rem;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--text-secondary);
+}
+
+.infoTooltip strong {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.infoIcon:hover .infoTooltip {
+  display: block;
+}
+
+.donutWrapper {
   display: grid;
-  gap: 0.55rem;
+  gap: 0.95rem;
+}
+
+.donutContainer {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 9.5rem;
+}
+
+.assetRing {
+  width: 7.5rem;
+  height: 7.5rem;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.donutCenter {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 999px;
+  background: #11151b;
+}
+
+.donutCenterLabel {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+}
+
+.donutCenterValue {
+  font-family: var(--font-mono);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.donutLegend {
+  display: grid;
+  gap: 0.5rem;
 }
 
 .legendItem {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
   color: var(--text-secondary);
-  font-size: 0.85rem;
 }
 
 .legendDot {
-  width: 0.6rem;
-  height: 0.6rem;
+  width: 0.55rem;
+  height: 0.55rem;
   border-radius: 999px;
 }
 
-.legendItem strong {
+.legendValue {
   color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
 }
 
-.chainList {
-  display: grid;
-  gap: 1rem;
+.barSection + .barSection {
+  margin-top: 1rem;
 }
 
-.chainRow {
-  display: grid;
-  gap: 0.5rem;
-}
-
-.chainHeader,
-.chainMeta {
+.barHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.8rem;
-  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.45rem;
 }
 
 .chainBadge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   border-radius: 999px;
-  padding: 0.3rem 0.65rem;
-  font-size: 0.76rem;
+  padding: 0.2rem 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
 }
 
 .chainBadgeblue {
-  background: rgba(110, 174, 255, 0.18);
+  background: rgba(110, 174, 255, 0.16);
   color: #9fc8ff;
 }
 
 .chainBadgeamber {
-  background: rgba(246, 193, 93, 0.18);
+  background: rgba(246, 193, 93, 0.16);
   color: #ffd68d;
 }
 
 .chainBadgeteal {
-  background: rgba(79, 214, 190, 0.18);
+  background: rgba(79, 214, 190, 0.16);
   color: #79ecd8;
 }
 
-.chainUsers,
-.segmentText,
-.regionLabel span,
-.regionShare,
-.riskCard p,
-.riskSeverity {
-  font-size: 0.85rem;
+.barMeta {
+  font-size: 0.75rem;
   color: var(--text-secondary);
 }
 
-.segmentTrack {
+.barTrack {
   display: flex;
   overflow: hidden;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.05);
-  min-height: 0.9rem;
+  height: 1.25rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.04);
 }
 
-.segmentFill {
-  height: 0.9rem;
+.barSegment {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.segmentLegend {
+.barSegmentLabel {
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.barLegend {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.65rem;
+  gap: 0.7rem;
+  margin-top: 0.45rem;
 }
 
-.regionList {
-  display: grid;
-  gap: 0.8rem;
+.barLegendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.regionBars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
 }
 
 .regionRow {
-  display: grid;
-  grid-template-columns: minmax(0, 12rem) minmax(0, 1fr) auto;
+  display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 0.5rem;
 }
 
-.regionLabel {
-  display: grid;
-  gap: 0.2rem;
+.regionCode {
+  width: 2rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
 }
 
-.regionBar {
+.regionTrack {
+  flex: 1;
+  height: 1.125rem;
   overflow: hidden;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.05);
-  min-height: 0.95rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .regionFill {
-  display: block;
-  min-height: 0.95rem;
-  border-radius: 999px;
-}
-
-.riskList {
-  display: grid;
-  gap: 0.9rem;
-}
-
-.riskCard {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.02);
-  padding: 1rem;
-}
-
-.riskHeader {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 0.5rem;
+  align-items: center;
+  height: 100%;
+  min-width: 2.5rem;
+  padding-left: 0.4rem;
+  border-radius: 4px;
 }
 
-.riskHeader h3 {
-  margin: 0;
-  font-size: 1rem;
+.regionFill span {
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: white;
 }
 
-.riskSeverity {
-  margin: 0 0 0.25rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+.regionUsers {
+  width: 3.25rem;
+  text-align: right;
+  font-size: 0.625rem;
+  color: var(--text-muted);
 }
 
-.riskCard p {
-  margin: 0 0 0.5rem;
-  line-height: 1.6;
+.analyticsLinkRow {
+  margin-bottom: -0.15rem;
+  text-align: right;
 }
 
-.riskCard strong {
-  color: var(--text-primary);
+.analyticsLink {
+  font-size: 0.8125rem;
+  color: var(--brand-blue);
+  text-decoration: none;
+}
+
+.analyticsLink:hover {
+  color: #8ec5ff;
 }
 
 .kpiValue {
-  margin: 0 0 0.35rem;
-  font-family: var(--font-display);
-  font-size: 2rem;
+  font-family: var(--font-mono);
+  font-size: 28px;
   line-height: 1;
-  letter-spacing: -0.06em;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
 }
 
-.tagRow {
+.kpiTags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.65rem;
+  gap: 0.55rem;
 }
 
-@media (max-width: 900px) {
-  .heroMeta {
+.kpiTag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.4rem 0.7rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 1100px) {
+  .grid4,
+  .grid2Half {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 860px) {
+  .heroCard {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .heroSnapshot {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .grid4,
+  .grid2Half {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .regionRow {
-    grid-template-columns: minmax(0, 1fr);
+  .mainHeader {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

@@ -6,6 +6,7 @@ import { Link } from '@/components/ui/link'
 import { OptionalFeatures } from '@/lib/features'
 import { themes } from '@/lib/styles/colors'
 import { fontsVariable } from '@/lib/styles/fonts'
+import '@gravii/brand-tokens/css'
 import '@/lib/styles/css/index.css'
 import s from './layout.module.css'
 

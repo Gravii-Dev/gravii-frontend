@@ -34,14 +34,46 @@ export interface RiskAlert {
   summary: string
 }
 
-export const dashboardSnapshot = {
+export interface DashboardKpi {
+  helper: string
+  label: string
+  labelLines?: string[]
+  value: string
+}
+
+export interface DashboardSnapshot {
+  totalConnectedUsers: number
+  userGrowth: {
+    daily: number
+    weekly: number
+    monthly: number
+  }
+  snapshotLabel: string
+  assetMixCards: AssetMixCardData[]
+  chainPanels: Array<{
+    title: string
+    cards: ChainBreakdownItem[]
+  }>
+  regionDistribution: RegionDistributionItem[]
+  commercialKpis: DashboardKpi[]
+  activationKpis: DashboardKpi[]
+  insights: {
+    topProtocols: string[]
+    topFundingSources: string[]
+    nftWorth: number
+    sybilRate: number
+  }
+  riskAlerts: RiskAlert[]
+}
+
+const baseDashboardSnapshot = {
   totalConnectedUsers: 301012,
   userGrowth: {
     daily: 847,
     weekly: 4231,
     monthly: 18492
   },
-  snapshotLabel: 'Snapshot · 2026-03-14 00:00 UTC',
+  snapshotLabel: 'Preview dataset · 2026-03-14 00:00 UTC',
   assetMixCards: [
     {
       id: 'deployed-stables',
@@ -181,19 +213,36 @@ export const dashboardSnapshot = {
     { code: 'GB', users: 15954, share: 5.3, color: '#a5b4fc' }
   ] satisfies RegionDistributionItem[],
   commercialKpis: [
-    { label: 'Avg. monthly trading volume', value: '$12,010', helper: 'Per connected wallet' },
-    { label: 'Avg. monthly transaction count', value: '72', helper: 'Across all supported chains' },
-    { label: 'Avg. monthly stablecoin payment', value: '$2,327', helper: 'Ready for targeted cashback' },
-    { label: 'Monthly stablecoin tx count', value: '32', helper: 'Signals payment-native users' }
-  ],
+    {
+      label: 'Avg. Monthly Trading Volume (Per wallet)',
+      labelLines: ['Avg. Monthly Trading Volume', '(Per wallet)'],
+      value: '$12,010',
+      helper: 'Per connected wallet'
+    },
+    {
+      label: 'Avg. Monthly Tx Count',
+      value: '72',
+      helper: 'Across all supported chains'
+    },
+    {
+      label: 'Avg. Monthly Stablecoin Payment',
+      value: '$2,327',
+      helper: 'Ready for targeted cashback'
+    },
+    {
+      label: 'Monthly Stablecoin Tx Count',
+      value: '32',
+      helper: 'Signals payment-native users'
+    }
+  ] satisfies DashboardKpi[],
   activationKpis: [
     { label: 'Active wallets (7d)', value: '114,384', helper: 'Recently transacted' },
     { label: 'Active traders (7d)', value: '12,010', helper: 'High-signal trading cohort' },
-    { label: 'Active protocol users', value: '8,001', helper: 'Users already interacting with DeFi' },
-    { label: 'Cross-chain users', value: '1,777', helper: 'Most adaptable target segment' }
-  ],
+    { label: 'Active Protocol Users', value: '8,001', helper: 'Users already interacting with DeFi' },
+    { label: 'Cross-chain Users', value: '1,777', helper: 'Most adaptable target segment' }
+  ] satisfies DashboardKpi[],
   insights: {
-    topProtocols: ['Pendle Finance', 'Uniswap', 'Curve'],
+    topProtocols: ['Partner Workspace', 'Uniswap', 'Curve'],
     topFundingSources: ['Binance', 'OKX', 'Bybit'],
     nftWorth: 12772030,
     sybilRate: 19
@@ -218,4 +267,14 @@ export const dashboardSnapshot = {
       summary: 'Low risk, high upside users ready for win-back incentives.'
     }
   ] satisfies RiskAlert[]
+} satisfies DashboardSnapshot
+
+export function getDashboardSnapshot(partnerName: string): DashboardSnapshot {
+  return {
+    ...baseDashboardSnapshot,
+    insights: {
+      ...baseDashboardSnapshot.insights,
+      topProtocols: [partnerName, ...baseDashboardSnapshot.insights.topProtocols.slice(1)]
+    }
+  }
 }

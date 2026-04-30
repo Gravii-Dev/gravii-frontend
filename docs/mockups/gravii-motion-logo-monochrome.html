@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gravii Monochrome Motion Logo</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700;800&display=swap");
+
+      :root {
+        color-scheme: light;
+        --bg: #f7f1e8;
+        --surface: rgba(255, 251, 245, 0.78);
+        --surface-strong: rgba(255, 251, 245, 0.94);
+        --text: #151515;
+        --muted: #656565;
+        --stroke: rgba(21, 21, 21, 0.08);
+        --guide: rgba(21, 21, 21, 0.12);
+        --shadow: 0 26px 80px rgba(56, 49, 42, 0.12);
+        --black: #050505;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        min-height: 100%;
+        margin: 0;
+      }
+
+      body {
+        font-family: "Instrument Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at 14% 10%, rgba(0, 0, 0, 0.04), transparent 24%),
+          radial-gradient(circle at 86% 14%, rgba(0, 0, 0, 0.035), transparent 20%),
+          linear-gradient(180deg, #fbf7f2 0%, #efe5d8 100%);
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .page {
+        width: min(1540px, calc(100vw - 40px));
+        margin: 0 auto;
+        padding: 28px 20px 40px;
+      }
+
+      .frame {
+        overflow: hidden;
+        border-radius: 44px;
+        border: 1px solid rgba(255, 255, 255, 0.82);
+        background: linear-gradient(180deg, rgba(255, 251, 245, 0.68), rgba(255, 249, 243, 0.9));
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(16px);
+      }
+
+      .topbar {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 24px 28px 10px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.64);
+        border: 1px solid var(--stroke);
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 9px;
+        height: 9px;
+        border-radius: 999px;
+        background: var(--black);
+      }
+
+      .title {
+        margin: 14px 0 8px;
+        font-size: 42px;
+        line-height: 0.95;
+        letter-spacing: -0.05em;
+      }
+
+      .subtitle {
+        margin: 0;
+        max-width: 64ch;
+        color: var(--muted);
+        font-size: 15px;
+      }
+
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .meta-pill {
+        padding: 10px 14px;
+        border-radius: 999px;
+        border: 1px solid var(--stroke);
+        background: rgba(255, 255, 255, 0.58);
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 0.96fr 1.04fr;
+        gap: 24px;
+        padding: 10px 28px 28px;
+      }
+
+      .panel {
+        border: 1px solid rgba(255, 255, 255, 0.64);
+        background: var(--surface);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78);
+      }
+
+      .official {
+        border-radius: 38px 30px 44px 30px;
+        padding: 24px;
+      }
+
+      .motion {
+        border-radius: 30px 42px 30px 42px;
+        padding: 24px;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 16px;
+      }
+
+      .section-label {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .section-title {
+        margin-top: 8px;
+        font-size: 28px;
+        line-height: 0.96;
+        letter-spacing: -0.05em;
+      }
+
+      .section-copy {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 14px;
+        max-width: 42ch;
+      }
+
+      .logo-stage,
+      .motion-stage {
+        display: grid;
+        place-items: center;
+        min-height: 620px;
+        border-radius: 32px;
+        background:
+          radial-gradient(circle at 50% 46%, rgba(255, 255, 255, 0.85), rgba(247, 241, 232, 0.96)),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.48), rgba(247, 241, 232, 0.54));
+      }
+
+      .lockup-svg {
+        width: min(90%, 540px);
+        height: auto;
+      }
+
+      .motion-svg {
+        width: min(90%, 560px);
+        height: auto;
+        overflow: visible;
+      }
+
+      .ring-fill {
+        fill: var(--black);
+      }
+
+      .ring-cut {
+        fill: #fff9f2;
+      }
+
+      .arc-stroke {
+        fill: none;
+        stroke: var(--black);
+        stroke-width: 58;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .glyph-stroke {
+        fill: none;
+        stroke: var(--black);
+        stroke-width: 34;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .glyph-fill {
+        fill: var(--black);
+      }
+
+      .orbit-guide {
+        fill: none;
+        stroke: var(--guide);
+        stroke-width: 2;
+        stroke-dasharray: 6 10;
+      }
+
+      .motion-core {
+        fill: none;
+        stroke: var(--black);
+        stroke-width: 84;
+      }
+
+      .motion-inner {
+        fill: #fff9f2;
+      }
+
+      .motion-orbit {
+        transform-origin: 320px 320px;
+        animation: orbit-spin 6.8s linear infinite;
+      }
+
+      .spec-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .spec-card {
+        padding: 16px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.64);
+        border: 1px solid var(--stroke);
+      }
+
+      .spec-card strong {
+        display: block;
+        font-size: 15px;
+      }
+
+      .spec-card span {
+        display: block;
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 0 28px 28px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .footer strong {
+        color: var(--text);
+      }
+
+      @keyframes orbit-spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .motion-orbit {
+          animation: none;
+        }
+      }
+
+      @media (max-width: 1180px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+
+        .spec-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 760px) {
+        .page {
+          width: min(100vw, calc(100vw - 12px));
+          padding: 10px 6px 18px;
+        }
+
+        .topbar,
+        .hero,
+        .footer {
+          padding-left: 16px;
+          padding-right: 16px;
+        }
+
+        .topbar,
+        .footer {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .title {
+          font-size: 32px;
+        }
+
+        .logo-stage,
+        .motion-stage {
+          min-height: 440px;
+        }
+
+        .spec-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <div class="frame">
+        <header class="topbar">
+          <div>
+            <div class="eyebrow">Monochrome Motion Direction</div>
+            <h1 class="title">Keep the logo black. Move only the symbol logic.</h1>
+            <p class="subtitle">
+              This version keeps the official lockup monochrome and treats the moving version as a separate product
+              motion mark. The rotation is created only by geometry, orbit spacing, and timing, not by color.
+            </p>
+          </div>
+
+          <div class="meta">
+            <div class="meta-pill">All black</div>
+            <div class="meta-pill">Wordmark stays static</div>
+            <div class="meta-pill">6.8s linear orbit</div>
+          </div>
+        </header>
+
+        <section class="hero">
+          <article class="panel official">
+            <div class="section-head">
+              <div>
+                <div class="section-label">Official static lockup</div>
+                <div class="section-title">Brand stays stable in normal UI</div>
+                <div class="section-copy">
+                  This panel approximates the official all-black logo lockup: the ring symbol on top, the lower arc
+                  still attached in the symbol, and the custom `gravii` wordmark below.
+                </div>
+              </div>
+            </div>
+
+            <div class="logo-stage">
+              <svg class="lockup-svg" viewBox="0 0 760 760" role="img" aria-label="Static Gravii logo lockup">
+                <g transform="translate(130 18)">
+                  <circle class="ring-fill" cx="250" cy="180" r="146"></circle>
+                  <circle class="ring-cut" cx="250" cy="180" r="82"></circle>
+                  <path class="arc-stroke" d="M 88 358 C 133 428 202 468 279 470 C 349 472 416 438 462 362"></path>
+                </g>
+
+                <g transform="translate(48 560)">
+                  <g transform="translate(0 0)">
+                    <circle class="ring-fill" cx="54" cy="40" r="34"></circle>
+                    <circle class="ring-cut" cx="54" cy="40" r="18"></circle>
+                    <path class="glyph-stroke" d="M 24 82 C 34 100 49 110 66 110 C 83 110 98 100 108 82"></path>
+                  </g>
+
+                  <g transform="translate(138 0)">
+                    <path class="glyph-stroke" d="M 30 98 L 30 42 C 30 22 44 8 66 8 L 96 8"></path>
+                  </g>
+
+                  <g transform="translate(284 0)">
+                    <circle class="ring-fill" cx="54" cy="40" r="34"></circle>
+                    <circle class="ring-cut" cx="54" cy="40" r="18"></circle>
+                    <path class="glyph-stroke" d="M 84 42 L 84 94"></path>
+                    <circle class="glyph-fill" cx="86" cy="92" r="14"></circle>
+                  </g>
+
+                  <g transform="translate(454 0)">
+                    <path class="glyph-stroke" d="M 12 8 L 58 100 L 104 8"></path>
+                  </g>
+
+                  <g transform="translate(636 0)">
+                    <circle class="glyph-fill" cx="18" cy="8" r="12"></circle>
+                    <rect class="glyph-fill" x="4" y="28" width="28" height="82" rx="14"></rect>
+                    <circle class="glyph-fill" cx="88" cy="8" r="12"></circle>
+                    <rect class="glyph-fill" x="74" y="28" width="28" height="82" rx="14"></rect>
+                  </g>
+                </g>
+              </svg>
+            </div>
+          </article>
+
+          <article class="panel motion">
+            <div class="section-head">
+              <div>
+                <div class="section-label">Product motion mark</div>
+                <div class="section-title">Orbit outside the core ring</div>
+                <div class="section-copy">
+                  For loading, X-RAY, onboarding, or live analysis states, use the symbol only. The core ring remains
+                  fixed, and a separate all-black orbit arc rotates around it with a clear safety gap.
+                </div>
+              </div>
+            </div>
+
+            <div class="motion-stage">
+              <svg class="motion-svg" viewBox="0 0 640 640" role="img" aria-label="Monochrome animated Gravii symbol">
+                <circle class="orbit-guide" cx="320" cy="320" r="205"></circle>
+                <circle class="motion-core" cx="320" cy="320" r="150"></circle>
+                <circle class="motion-inner" cx="320" cy="320" r="103"></circle>
+
+                <g class="motion-orbit">
+                  <path class="arc-stroke" d="M 143 419 C 172 471 225 504 286 509 C 347 514 405 490 445 449 C 459 435 470 421 478 406"></path>
+                </g>
+              </svg>
+            </div>
+
+            <div class="spec-grid">
+              <div class="spec-card">
+                <strong>Geometry</strong>
+                <span>The moving arc sits on a larger radius than the official ring, so it never reads as touching.</span>
+              </div>
+              <div class="spec-card">
+                <strong>Motion</strong>
+                <span>Use a slow linear spin so the symbol feels analytical and continuous, not playful or flashy.</span>
+              </div>
+              <div class="spec-card">
+                <strong>Usage</strong>
+                <span>Keep this for product states only. Navigation, legal, and brand lockups should stay fully static.</span>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <footer class="footer">
+          <div><strong>Recommended pattern:</strong> static lockup for brand presence, symbol-only motion mark for active product moments.</div>
+          <div><strong>Next step:</strong> if the orbit logic feels right, turn the approved symbol into a clean production SVG and component.</div>
+        </footer>
+      </div>
+    </main>
+  </body>
+</html>

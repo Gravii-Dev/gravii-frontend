@@ -2,7 +2,7 @@
   "name": "gravii-user-app",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --port 3003",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
@@ -11,9 +11,13 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@gravii/api-clients": "workspace:*",
+    "@gravii/brand-tokens": "workspace:*",
+    "@gravii/domain-types": "workspace:*",
     "next": "^16.0.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "viem": "^2.38.6"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",

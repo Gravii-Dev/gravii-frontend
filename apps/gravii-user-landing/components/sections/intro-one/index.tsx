@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { ScrubTextReveal } from '@/components/effects/scrub-text-reveal'
 import s from './intro-one.module.css'
 
 const INTRO_ONE_TITLE = 'Tired of starting from zero?'
@@ -95,12 +94,12 @@ export function IntroOne() {
         return
       }
 
-      const revealDistance = viewportHeight * 0.52
+      const revealDistance = viewportHeight * 0.36
       const progress = clamp01(
-        (viewportHeight - titleBounds.top) / Math.max(1, revealDistance)
+        (viewportHeight * 0.88 - titleBounds.top) / Math.max(1, revealDistance)
       )
-      const typingProgress = clamp01(progress * 0.92)
-      const resolvedProgress = progress >= 0.94 ? 1 : typingProgress
+      const typingProgress = clamp01(progress * 1.08)
+      const resolvedProgress = progress >= 0.82 ? 1 : typingProgress
       const visibleCount = Math.floor(
         resolvedProgress * (charRefs.current.length + 1)
       )
@@ -117,11 +116,11 @@ export function IntroOne() {
 
       const cardsBounds = cardsWrapRef.current.getBoundingClientRect()
       const cardsProgress = clamp01(
-        (viewportHeight * 0.9 - cardsBounds.top) / Math.max(1, viewportHeight * 0.85)
+        (viewportHeight * 0.9 - cardsBounds.top) / Math.max(1, viewportHeight * 0.48)
       )
 
       cardNodes.forEach((node, index) => {
-        const local = clamp01((cardsProgress - index * 0.17) / 0.52)
+        const local = clamp01((cardsProgress - index * 0.1) / 0.34)
 
         setRevealState(node, local, 0)
       })
@@ -191,8 +190,8 @@ export function IntroOne() {
                 cardRefs.current[index] = node
               }}
             >
-              <ScrubTextReveal as="p" className={s.cardTitle} text={card.title} />
-              <ScrubTextReveal as="p" className={s.cardSubtitle} text={card.subtitle} />
+              <p className={s.cardTitle}>{card.title}</p>
+              <p className={s.cardSubtitle}>{card.subtitle}</p>
             </article>
           ))}
         </div>

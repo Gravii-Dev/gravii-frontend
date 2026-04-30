@@ -1,4 +1,5 @@
 import { cn } from '@/lib/cn'
+import type { LandingDimension } from './landing-page'
 import {
   engineProducts,
   flywheelSteps,
@@ -16,6 +17,7 @@ import {
   cardAccentClassMap,
   dashboardHref,
 } from './landing-constants'
+import { AuthHandoffLink } from './auth-handoff-link'
 import { ProductTabs } from './landing-product-tabs'
 import styles from './landing-page.module.css'
 
@@ -109,9 +111,9 @@ export function HeroSection() {
       </p>
 
       <div className={styles.heroCta}>
-        <a className={styles.btnPrimary} href={dashboardHref}>
+        <AuthHandoffLink className={styles.btnPrimary} href={dashboardHref}>
           Get Started
-        </a>
+        </AuthHandoffLink>
         <a className={styles.btnSecondary} href="mailto:partners@gravii.io">
           Book a Demo
         </a>
@@ -139,7 +141,9 @@ export function ProblemsSection() {
         )}
         data-reveal=""
       >
-        Without Gravii, every wallet is a black box.
+        Without Gravii,
+        <br />
+        every wallet is a black box.
       </h2>
 
       <div
@@ -178,7 +182,7 @@ export function ProblemsSection() {
   );
 }
 
-export function EngineSection() {
+export function EngineSection({ dimension }: { dimension: LandingDimension }) {
   return (
     <>
       <section className={styles.sectionWide}>
@@ -199,15 +203,16 @@ export function EngineSection() {
           )}
           data-reveal=""
         >
-          One engine. Three products.
+          One engine. <span className={styles.engineDimensionsAccent}>Two dimensions.</span>
         </h2>
         <p
           className={cn(styles.sectionBody, styles.reveal, styles.revealD2)}
           data-reveal=""
         >
-          At the center is Gravii&apos;s deep on-chain analysis engine. Three
-          independent products deliver this intelligence in different forms.
-          Start with any one. Expand to others.
+          At the center is Gravii&apos;s deep on-chain analysis engine. Human
+          wallets and autonomous agents — analyzed, classified, and rated
+          through one unified platform. Three products for human wallets. One
+          dedicated API for agents.
         </p>
 
         <div
@@ -224,10 +229,27 @@ export function EngineSection() {
             </div>
           </div>
           <div className={styles.engineArrow}>↓</div>
+          <div className={styles.dimensionRow}>
+            <div className={styles.dimensionCard}>
+              <div className={styles.dimensionLabel} data-accent="blue">
+                HUMAN INTELLIGENCE
+              </div>
+              <div className={styles.dimensionCopy}>Gate · Reach · Lens</div>
+            </div>
+            <div className={styles.dimensionCard}>
+              <div className={styles.dimensionLabel} data-accent="amber">
+                AGENT INTELLIGENCE
+              </div>
+              <div className={styles.dimensionCopy}>KYA</div>
+            </div>
+          </div>
         </div>
 
+        <div className={cn(styles.engineMiniTag, styles.reveal, styles.revealD3)} data-reveal="">
+          HUMAN INTELLIGENCE — THREE PRODUCTS
+        </div>
         <div
-          className={cn(styles.grid3, styles.reveal, styles.revealD4)}
+          className={cn(styles.engineProductsGrid, styles.reveal, styles.revealD4)}
           data-reveal=""
         >
           {engineProducts.map((product) => (
@@ -259,16 +281,25 @@ export function EngineSection() {
         </div>
       </section>
 
-      <p className={cn(styles.bridge, styles.reveal)} data-reveal="">
-        Start with any one product. Combine as you grow — Reach to target the
-        right users, Gate for real-time intelligence on your platform, Lens to
-        analyze before you commit.
-      </p>
+      {dimension === 'human' ? (
+        <p className={cn(styles.bridge, styles.reveal)} data-reveal="">
+          Start with any one product. Combine as you grow — Reach to target the
+          right users, Gate for real-time intelligence on your platform, Lens to
+          analyze before you commit. For agent wallets, switch to Agent
+          Intelligence below.
+        </p>
+      ) : null}
     </>
   );
 }
 
-export function ProductSection() {
+export function ProductSection({
+  dimension,
+  onDimensionChange,
+}: {
+  dimension: LandingDimension;
+  onDimensionChange: (value: LandingDimension) => void;
+}) {
   return (
     <section className={styles.section} id="product">
       <div
@@ -302,13 +333,17 @@ export function ProductSection() {
       </p>
 
       <div className={cn(styles.reveal, styles.revealD3)} data-reveal="">
-        <ProductTabs />
+        <ProductTabs dimension={dimension} onDimensionChange={onDimensionChange} />
       </div>
     </section>
   );
 }
 
-export function SolutionsSection() {
+export function SolutionsSection({ dimension }: { dimension: LandingDimension }) {
+  if (dimension === 'agent') {
+    return null
+  }
+
   return (
     <section className={styles.section} id="solutions">
       <div
@@ -346,10 +381,7 @@ export function SolutionsSection() {
         <span className={styles.sectorEtc}>...and beyond.</span>
       </div>
 
-      <div
-        className={cn(styles.grid3Compact, styles.reveal, styles.revealD3)}
-        data-reveal=""
-      >
+      <div className={cn(styles.solutionsGrid, styles.reveal, styles.revealD3)} data-reveal="">
         {solutionCards.map((card) => (
           <article
             className={cn(styles.card, cardAccentClassMap[card.accent])}
@@ -380,7 +412,11 @@ export function SolutionsSection() {
   );
 }
 
-export function PricingSection() {
+export function PricingSection({ dimension }: { dimension: LandingDimension }) {
+  if (dimension === 'agent') {
+    return null
+  }
+
   return (
     <section className={styles.section} id="pricing">
       <div
@@ -617,11 +653,11 @@ export function PricingSection() {
       <div className={cn(styles.card, styles.pricingBundleCard)}>
         <div className={styles.pricingBundleEyebrow}>ENTERPRISE FULL BUNDLE</div>
         <div className={styles.pricingBundleTitle}>
-          All three products. One contract.
+          All products. One contract.
         </div>
         <div className={styles.pricingBundleDescription}>
           From <span className={styles.pricingBundleValue}>$5,000/mo</span> —
-          10% off module sum. Includes Lens S×2 free, CPA 20% discount.
+          Gate + Reach + Lens + KYA. 10% off module sum. Includes Lens S×2 free, CPA 20% discount.
         </div>
         <a className={styles.pricingBundleButton} href="mailto:partners@gravii.io">
           Contact Us
@@ -697,9 +733,9 @@ export function ClosingSection() {
           book a demo to see the full platform.
         </p>
         <div className={cn(styles.ctaActions, styles.reveal, styles.revealD2)} data-reveal="">
-          <a className={styles.btnPrimary} href={dashboardHref}>
+          <AuthHandoffLink className={styles.btnPrimary} href={dashboardHref}>
             Get Started
-          </a>
+          </AuthHandoffLink>
           <a className={styles.btnSecondary} href="mailto:partners@gravii.io">
             Book a Demo
           </a>
@@ -710,7 +746,7 @@ export function ClosingSection() {
         <div className={styles.footerBrand}>Gravii</div>
         <div className={styles.footerLine}>Deterministic On-Chain Intelligence</div>
         <div className={styles.footerLineSmall}>
-          On-chain behavioral intelligence for growth · Reach · Gate · Lens
+          On-chain behavioral intelligence for growth · Reach · Gate · Lens · KYA
         </div>
         <div className={styles.footerCopyright}>
           © 2026 Gravii. All rights reserved.

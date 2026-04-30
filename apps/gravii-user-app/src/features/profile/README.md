@@ -17,7 +17,7 @@ It does that by combining:
 - tier and reputation status
 - summary metrics
 - cross-links into other surfaces such as `My Space` and `X-Ray`
-- a strong visual identity layer through the infinite canvas
+- a branded identity presentation layer that prioritizes persona status over decorative marks
 
 ## Main Files
 
@@ -29,28 +29,24 @@ Responsibilities:
 
 - render the connected state
 - render the disconnected, locked state
-- render hero metrics and summary cards
+- render the profile hero, metrics, and navigation cards
 - expose navigation into `myspace` and `lookup`
-- mount the `InfiniteCanvas` visual system
+- keep the identity loading, retry, and locked states visually aligned with the brand system
 
 Important note:
 
 - this component is the feature's main presentation layer
-- it does not fetch remote data today
-- it reads mock snapshot data and persona definitions
+- it now reads the live Gravii ID payload from the User API
+- it keeps a short bootstrap polling window for newly created wallets until `/api/v1/me/identity` stops returning `404`
+- it still uses local persona definitions to map backend labels into the visual system
+- it no longer mounts the older infinite canvas by default, even though the canvas implementation remains in the folder for future experimentation
 
 ### `profile-view-model.ts`
 
-This file currently exports `PROFILE_SNAPSHOT`.
-
 Responsibilities today:
 
-- provide the mock profile summary used by the surface
-
-Likely future role:
-
-- adapt API profile responses into a UI-friendly shape
-- derive display strings and grouped metrics from backend data
+- adapt the live Gravii ID payload into a UI-friendly snapshot
+- derive display strings and grouped metric labels from backend data
 
 ### `persona-data.ts`
 
@@ -63,22 +59,15 @@ Why it matters:
 
 - the Profile surface is visually and semantically built around the persona system
 
-### `components/infinite-canvas`
-
-Responsibilities:
-
-- render the repeating persona canvas in the background region
-- highlight the active persona when connected
-
-This is described in more detail in `components/infinite-canvas/README.md`.
-
 ## Connected vs Disconnected States
 
 ### Connected
 
 When `connected` is `true`, the surface shows:
 
-- persona hero card
+- a compact ready-state identity bar
+- persona hero panel
+- persona signal, tier, and net-worth summary
 - secondary persona tags
 - tier badge
 - activity and reputation metrics
@@ -89,29 +78,18 @@ When `connected` is `true`, the surface shows:
 
 When `connected` is `false`, the surface shows:
 
-- skeleton placeholders for the hidden profile content
-- a sign-in reveal card
-- the canvas still remains to preserve the identity-oriented visual language
+- a branded locked-state hero
+- preview cards that hint at the hidden identity data
+- a session restore or retry action depending on state
 
 This split is important because it shows the product's intended progression from locked to personalized.
-
-## Why the Infinite Canvas Lives Here
-
-The infinite canvas is not a generic app decoration. It is conceptually tied to the Profile feature.
-
-Reasons:
-
-- it visualizes the persona system
-- it highlights the active persona
-- it reinforces the meaning of the `GRAVII ID` surface
-- its behavior and copy make sense in the context of profile identity, not in a generic shared-effects folder
 
 ## Inputs and Outputs
 
 Current inputs:
 
 - `SharedContentProps`
-- `PROFILE_SNAPSHOT`
+- live Gravii ID responses
 - `PERSONA_ITEMS`
 
 Current outputs:
@@ -129,8 +107,8 @@ Current outputs:
 
 ## What This Feature Does Not Own
 
-- real session or wallet connection
-- profile API calls
+- wallet-provider connection
+- global auth bootstrap
 - cross-feature shell state
 - campaign grouping logic
 - X-Ray analysis logic
@@ -139,10 +117,8 @@ Current outputs:
 
 When real APIs arrive, this folder will likely stay intact.
 
-Likely additions:
+Current production direction:
 
-- feature-local API adapters
-- loading, empty, and error states
-- freshness or computed-at metadata handling
-
-The best production direction is probably to keep the same feature boundary while replacing the mock snapshot with a typed API-backed model.
+- keep this feature boundary intact
+- keep using typed API-backed view models with feature-local loading, bootstrap polling, error, and retry states
+- keep the brand-led presentation local to the feature instead of leaking profile-specific identity UI into global primitives

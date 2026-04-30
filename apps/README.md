@@ -6,12 +6,15 @@ The `apps/` folder uses persona-based internal naming.
 - `gravii-user-landing`: public Gravii landing site
 - `gravii-user-app`: end-user app
 - `gravii-partner-app`: partner-facing app
-- `gravii-partner-landing`: partner-facing landing site
 
 Naming rule:
 
 - use `gravii-<persona>-app` for persona-owned product surfaces when there is also a landing surface
-- use `gravii-<persona>-landing` for marketing surfaces that belong to a specific persona
+- use route ownership inside the active landing app when the persona does not need a separate deployable marketing surface
 - reserve `gravii-backoffice` for the single internal operations surface
 - avoid version suffixes such as `-v1`
 - avoid mixed labels such as `admin`, `lp`, or `launch-app` in internal app IDs once a persona label exists
+
+Current routing note:
+
+- the partner marketing and acquisition route now lives inside `gravii-user-landing` at `/partners`

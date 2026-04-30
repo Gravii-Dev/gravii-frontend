@@ -17,6 +17,7 @@ export interface ManagedCampaign {
   engaged: string
   period: string
   progress?: number
+  sparkline: Array<{ date: string; value: number }>
   report: CampaignReport
   formPreset: {
     targetMode: 'behavior' | 'value'
@@ -28,10 +29,9 @@ export interface ManagedCampaign {
   }
 }
 
-export const managedCampaigns = [
+const baseManagedCampaigns = [
   {
     id: 'yield-booster',
-    partner: 'Pendle Finance',
     name: 'Yield Booster',
     type: 'Yield Boost',
     typeIndex: 1,
@@ -39,6 +39,22 @@ export const managedCampaigns = [
     engaged: '8,420 engaged',
     period: '23 days left',
     progress: 56,
+    sparkline: [
+      { date: '2026 Feb 22', value: 412 },
+      { date: '2026 Feb 23', value: 478 },
+      { date: '2026 Feb 24', value: 561 },
+      { date: '2026 Feb 25', value: 520 },
+      { date: '2026 Feb 26', value: 634 },
+      { date: '2026 Feb 27', value: 698 },
+      { date: '2026 Feb 28', value: 602 },
+      { date: '2026 Mar 1', value: 745 },
+      { date: '2026 Mar 2', value: 812 },
+      { date: '2026 Mar 3', value: 870 },
+      { date: '2026 Mar 4', value: 790 },
+      { date: '2026 Mar 5', value: 724 },
+      { date: '2026 Mar 6', value: 848 },
+      { date: '2026 Mar 7', value: 924 }
+    ],
     report: {
       mode: 'By Behavior',
       criteria: ['Smart Saver · Profit Hunter', 'ETH · Base'],
@@ -63,13 +79,12 @@ export const managedCampaigns = [
     },
     formPreset: {
       targetMode: 'behavior',
-      segments: ['smart-saver', 'profit-hunter'],
+      segments: ['defi-stakers-stables', 'defi-stakers-others'],
       behaviorChains: ['eth', 'base']
     }
   },
   {
     id: 'lending-cashback',
-    partner: 'Pendle Finance',
     name: 'Lending Cashback',
     type: 'Cashback',
     typeIndex: 2,
@@ -77,6 +92,22 @@ export const managedCampaigns = [
     engaged: '14,330 engaged',
     period: '51 days left',
     progress: 34,
+    sparkline: [
+      { date: '2026 Feb 22', value: 711 },
+      { date: '2026 Feb 23', value: 734 },
+      { date: '2026 Feb 24', value: 768 },
+      { date: '2026 Feb 25', value: 792 },
+      { date: '2026 Feb 26', value: 826 },
+      { date: '2026 Feb 27', value: 844 },
+      { date: '2026 Feb 28', value: 872 },
+      { date: '2026 Mar 1', value: 905 },
+      { date: '2026 Mar 2', value: 951 },
+      { date: '2026 Mar 3', value: 989 },
+      { date: '2026 Mar 4', value: 1014 },
+      { date: '2026 Mar 5', value: 1048 },
+      { date: '2026 Mar 6', value: 1092 },
+      { date: '2026 Mar 7', value: 1136 }
+    ],
     report: {
       mode: 'By Value',
       criteria: ['Gold+', 'Avail > $1K · All Chains'],
@@ -107,13 +138,28 @@ export const managedCampaigns = [
   },
   {
     id: 'early-access-v4',
-    partner: 'Pendle Finance',
     name: 'Early Access V4',
     type: 'Early Access',
     typeIndex: 7,
     status: 'ended',
     engaged: '5,210 engaged',
     period: 'Ended 12 days ago',
+    sparkline: [
+      { date: '2026 Feb 22', value: 292 },
+      { date: '2026 Feb 23', value: 316 },
+      { date: '2026 Feb 24', value: 341 },
+      { date: '2026 Feb 25', value: 367 },
+      { date: '2026 Feb 26', value: 389 },
+      { date: '2026 Feb 27', value: 411 },
+      { date: '2026 Feb 28', value: 435 },
+      { date: '2026 Mar 1', value: 418 },
+      { date: '2026 Mar 2', value: 381 },
+      { date: '2026 Mar 3', value: 342 },
+      { date: '2026 Mar 4', value: 296 },
+      { date: '2026 Mar 5', value: 241 },
+      { date: '2026 Mar 6', value: 178 },
+      { date: '2026 Mar 7', value: 119 }
+    ],
     report: {
       mode: 'By Behavior',
       criteria: ['Active Trader', 'ETH'],
@@ -138,14 +184,24 @@ export const managedCampaigns = [
     },
     formPreset: {
       targetMode: 'behavior',
-      segments: ['active-trader'],
+      segments: ['dex-traders'],
       behaviorChains: ['eth']
     }
   }
-] satisfies ManagedCampaign[]
+] as const satisfies Omit<ManagedCampaign, 'partner'>[]
 
 export const campaignDraftStorageKey = 'gravii-partner-campaign-draft'
 
-export function getManagedCampaignById(id: string | null | undefined): ManagedCampaign | null {
-  return managedCampaigns.find((campaign) => campaign.id === id) ?? null
+export function getManagedCampaigns(partnerName: string): ManagedCampaign[] {
+  return baseManagedCampaigns.map((campaign) => ({
+    ...campaign,
+    partner: partnerName
+  }))
+}
+
+export function getManagedCampaignById(
+  id: string | null | undefined,
+  partnerName = 'Partner Workspace'
+): ManagedCampaign | null {
+  return getManagedCampaigns(partnerName).find((campaign) => campaign.id === id) ?? null
 }

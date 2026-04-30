@@ -1,0 +1,322 @@
+.root {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
+  align-items: stretch;
+  gap: 16px;
+  min-height: 100%;
+  padding: clamp(4px, 1.2vw, 14px);
+}
+
+.rootLight {
+  --soon-text: var(--slush-dark);
+  --soon-muted: rgba(0, 0, 0, 0.62);
+  --soon-card: var(--slush-light);
+  --soon-accent: var(--slush-yellow);
+  --soon-line: rgba(9, 9, 7, 0.16);
+  --soon-quiet: rgba(255, 253, 247, 0.7);
+  --soon-shadow: 0 18px 44px rgba(21, 18, 11, 0.09);
+  color: var(--soon-text);
+}
+
+.rootDark {
+  --soon-text: #fffaf2;
+  --soon-muted: rgba(255, 250, 242, 0.62);
+  --soon-card: rgba(18, 18, 18, 0.84);
+  --soon-accent: var(--slush-green);
+  --soon-line: rgba(255, 255, 255, 0.15);
+  --soon-quiet: rgba(255, 255, 255, 0.06);
+  --soon-shadow: 0 20px 52px rgba(0, 0, 0, 0.22);
+  color: var(--soon-text);
+}
+
+.card {
+  position: relative;
+  isolation: isolate;
+  min-height: 100%;
+  padding: clamp(1.3rem, 2.7vw, 2.1rem);
+  overflow: hidden;
+  border: var(--slush-border);
+  border-radius: var(--slush-radius-card);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 34%),
+    radial-gradient(circle at 94% 12%, color-mix(in srgb, var(--soon-accent) 24%, transparent), transparent 32%),
+    var(--soon-card);
+  box-shadow: var(--soon-shadow);
+  text-align: left;
+  animation: fadeInScale var(--slush-duration-default) var(--slush-elastic-ease-out) both;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  right: clamp(1rem, 4vw, 2.4rem);
+  bottom: clamp(1rem, 3vw, 2rem);
+  z-index: -1;
+  width: clamp(88px, 12vw, 136px);
+  aspect-ratio: 1;
+  border: 1px solid var(--soon-line);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%, var(--soon-card) 0 30%, transparent 32%),
+    conic-gradient(from 160deg, var(--soon-accent), transparent 34%, var(--slush-violet), transparent 72%, var(--soon-accent));
+  opacity: 0.5;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  inset: auto 1.4rem 1.4rem 1.4rem;
+  z-index: -1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--soon-line), transparent);
+  opacity: 0.86;
+}
+
+.headerLine {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+.eyebrow {
+  display: inline-flex;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--soon-muted);
+}
+
+.statusPill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 0.75rem;
+  border: 1px solid var(--soon-line);
+  border-radius: 999px;
+  background: var(--soon-quiet);
+  color: var(--soon-muted);
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  max-width: 11.4ch;
+  font-size: clamp(2rem, 4vw, 3.8rem);
+  line-height: 0.88;
+  letter-spacing: -0.055em;
+  text-transform: uppercase;
+  word-spacing: 0.08em;
+}
+
+.copy {
+  margin: 1.1rem 0 0;
+  max-width: 32rem;
+  font-size: 0.94rem;
+  font-weight: 650;
+  line-height: 1.6;
+  color: var(--soon-muted);
+}
+
+.badges {
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  margin-top: 1.35rem;
+}
+
+.badge,
+.badgeMuted {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.52rem 0.86rem;
+  border-radius: 999px;
+  border: var(--slush-border);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.badge {
+  background: var(--soon-accent);
+  color: var(--slush-dark);
+}
+
+.badgeMuted {
+  background: var(--slush-light);
+  color: var(--slush-dark);
+}
+
+.readinessPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 100%;
+  padding: clamp(1rem, 2.1vw, 1.4rem);
+  border: 1px solid var(--soon-line);
+  border-radius: var(--slush-radius-card);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 48%),
+    var(--soon-quiet);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  animation: fadeInUp var(--slush-duration-default) var(--slush-elastic-ease-out) 0.08s both;
+}
+
+.metricGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.metricCard {
+  min-height: 106px;
+  padding: 14px;
+  border: 1px solid var(--soon-line);
+  border-radius: var(--gravii-radius-md);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.14), transparent 42%),
+    var(--soon-card);
+  box-shadow: 0 10px 24px rgba(21, 18, 11, 0.045);
+}
+
+.metricLabel,
+.timelineLabel,
+.stepStatus {
+  display: inline-flex;
+  color: var(--soon-muted);
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.metricValue {
+  display: block;
+  margin-top: 10px;
+  color: var(--soon-text);
+  font-size: clamp(1.35rem, 2vw, 2rem);
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+}
+
+.metricMeta {
+  display: block;
+  margin-top: 8px;
+  color: var(--soon-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.timeline {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  padding: 13px;
+  border: 1px solid var(--soon-line);
+  border-radius: var(--gravii-radius-md);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.14), transparent 38%),
+    var(--soon-card);
+}
+
+.timelineStep {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-height: 34px;
+}
+
+.stepDot {
+  width: 10px;
+  height: 10px;
+  border: 1px solid var(--soon-line);
+  border-radius: 50%;
+  background: var(--soon-muted);
+}
+
+.stepReady {
+  background: var(--slush-green);
+}
+
+.stepBuilding {
+  background: var(--soon-accent);
+}
+
+.stepQueued {
+  background: var(--slush-violet);
+}
+
+.stepLabel {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--soon-text);
+  font-size: 0.88rem;
+  font-weight: 850;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actionDock {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.primaryAction,
+.secondaryAction {
+  min-height: 42px;
+  --button-font-size: 0.72rem;
+  --button-pad-y: 0.86em;
+  --button-pad-x: 1.5em;
+}
+
+.primaryAction {
+  --button-front: var(--soon-accent);
+  --button-front-hover: var(--slush-yellow);
+  --button-text: var(--slush-dark);
+  --button-back: var(--slush-violet);
+  --button-back-text: var(--slush-dark);
+  --button-border-color: var(--slush-dark);
+  --button-back-border-color: var(--slush-dark);
+}
+
+.secondaryAction {
+  --button-front: var(--soon-card);
+  --button-front-hover: color-mix(in srgb, var(--soon-card) 82%, white);
+  --button-text: var(--soon-text);
+  --button-back: var(--slush-glacier);
+  --button-back-text: var(--slush-dark);
+  --button-border-color: var(--soon-line);
+  --button-back-border-color: var(--soon-line);
+}
+
+@media (max-width: 640px) {
+  .root {
+    grid-template-columns: 1fr;
+  }
+
+  .card::before {
+    opacity: 0.34;
+  }
+
+  .metricGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .actionDock {
+    flex-direction: column;
+  }
+}

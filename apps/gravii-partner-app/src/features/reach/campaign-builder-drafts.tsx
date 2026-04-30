@@ -4,31 +4,40 @@ import { ChevronRight } from 'lucide-react'
 
 import { Card } from '@/components/ui/card'
 
-import { draftCampaigns } from './data'
+import type { DraftCampaign } from './data'
 import styles from './campaign-builder.module.css'
 
-type DraftCampaign = (typeof draftCampaigns)[number]
-
 interface CampaignBuilderDraftsProps {
+  drafts: DraftCampaign[]
   onContinueEditing: (draft: DraftCampaign) => void
 }
 
 export function CampaignBuilderDrafts({
+  drafts,
   onContinueEditing
 }: CampaignBuilderDraftsProps) {
   return (
     <section className={styles.draftRow}>
-      {draftCampaigns.map((draft) => (
-        <Card key={draft.campaignName} title={draft.campaignName} eyebrow={`${draft.partnerName} · ${draft.status}`}>
+      {drafts.map((draft) => (
+        <Card key={draft.campaignName} className={styles.mockDraftCard}>
           <div className={styles.draftCardBody}>
-            <p>{draft.summary}</p>
+            <div className={styles.mockDraftTop}>
+              <div>
+                <div className={styles.mockDraftPartner}>{draft.partnerName}</div>
+                <div className={styles.mockDraftName}>{draft.campaignName}</div>
+              </div>
+              <div className={styles.mockDraftBadges}>
+                <span className={styles.mockDraftType}>{draft.type}</span>
+                <span className={styles.mockDraftStatus}>{draft.status}</span>
+              </div>
+            </div>
+            <div className={styles.mockDraftMeta}>Not scheduled</div>
             <button
               type="button"
-              className="button-secondary"
+              className={styles.mockDraftLink}
               onClick={() => onContinueEditing(draft)}
             >
-              Continue editing
-              <ChevronRight size={16} />
+              Continue Editing <ChevronRight size={14} />
             </button>
           </div>
         </Card>

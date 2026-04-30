@@ -1,60 +1,86 @@
 "use client";
 
-import type { ReactElement } from "react";
+import { useEffect, type ReactElement } from "react";
 
 import LaunchPanel from "@/components/layout/launch-panel";
-import MySpaceDock from "@/components/layout/my-space-dock";
+import GraviiLogo from "@/components/ui/gravii-logo";
 import ActionButton from "@/components/ui/action-button";
+import { useUserAuth } from "@/features/auth/auth-provider";
 import DiscoveryContent from "@/features/discovery/discovery-content";
 import { PANELS } from "@/features/launch-app/panel-config";
 import type { PanelId, SharedContentProps } from "@/features/launch-app/types";
 import { useLaunchShell } from "@/features/launch-app/use-launch-shell";
 import MySpaceContent from "@/features/my-space/my-space-content";
 import ProfileContent from "@/features/profile/profile-content";
+import {
+  clearProfileIdentityCache,
+  prefetchProfileIdentity,
+} from "@/features/profile/profile-identity-cache";
 import StandingContent from "@/features/standing/standing-content";
 import XRayContent from "@/features/x-ray/x-ray-content";
 
 import styles from "./page.module.css";
-
-type LaunchPanelId = Exclude<PanelId, "myspace">;
 
 const CONTENT_MAP = {
   profile: ProfileContent,
   discovery: DiscoveryContent,
   lookup: XRayContent,
   leaderboard: StandingContent,
-} satisfies Record<LaunchPanelId, (props: SharedContentProps) => ReactElement | null>;
-
-function panelStripClass(activePanel: PanelId | null) {
-  if (activePanel === "myspace") {
-    return styles.panelStripHidden;
-  }
-
-  if (activePanel) {
-    return styles.panelStripCompact;
-  }
-
-  return styles.panelStripFull;
-}
+  myspace: MySpaceContent,
+} satisfies Record<PanelId, (props: SharedContentProps) => ReactElement | null>;
 
 export default function HomePage() {
+  const auth = useUserAuth();
   const shell = useLaunchShell();
+  const isConnected = auth.isAuthenticated;
+
+  useEffect(() => {
+    if (isConnected) {
+      void prefetchProfileIdentity();
+      return;
+    }
+
+    clearProfileIdentityCache();
+  }, [isConnected]);
+
+  if (auth.status === "loading") {
+    return (
+      <div className={styles.loadingState}>
+        <div className={styles.loadingCard}>
+          <GraviiLogo decorative priority variant="motion" className={styles.loadingLogo} />
+          <div className={styles.loadingCopyStack}>
+            <span className={styles.loadingEyebrow}>GRAVII SESSION</span>
+            <p className={styles.loadingCopy}>Rehydrating your Gravii session…</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.root}>
       <header className={styles.header}>
-        <span className={styles.brand}>GRAVII</span>
+        <div className={styles.brandCluster}>
+          <GraviiLogo decorative priority variant="symbol" spinY className={styles.headerSymbol} />
+          <div className={styles.brandStack}>
+            <GraviiLogo decorative priority variant="wordmark" className={styles.headerWordmark} />
+          </div>
+        </div>
         <ActionButton
           size="compact"
-          className={shell.isConnected ? styles.sessionButtonConnected : styles.sessionButtonDisconnected}
-          pressed={shell.isConnected}
-          onClick={shell.toggleConnection}
+          className={isConnected ? styles.sessionButtonConnected : styles.sessionButtonDisconnected}
+          pressed={isConnected}
+          onClick={isConnected ? () => void auth.signOut() : auth.beginSignIn}
         >
-          {shell.isConnected ? "SIGN OUT" : "SIGN IN"}
+          {isConnected ? "SIGN OUT" : "SIGN IN"}
         </ActionButton>
       </header>
 
-      <div className={`${styles.panelStrip} ${panelStripClass(shell.activePanel)}`}>
+      <div
+        className={`${styles.panelStrip} ${
+          shell.activePanel ? styles.panelStripCompact : styles.panelStripFull
+        }`}
+      >
         {PANELS.map((panel, index) => {
           const Content = CONTENT_MAP[panel.id];
           const darkContent = panel.dark || Boolean(panel.hoverDark);
@@ -72,22 +98,11 @@ export default function HomePage() {
               onClose={shell.closePanel}
               onHoverChange={shell.setHoveredPanel}
             >
-              <Content dark={darkContent} connected={shell.isConnected} onConnect={shell.connect} onNavigate={shell.openPanel} />
+              <Content dark={darkContent} connected={isConnected} onConnect={auth.beginSignIn} onNavigate={shell.openPanel} />
             </LaunchPanel>
           );
         })}
       </div>
-
-      <MySpaceDock
-        isActive={shell.activePanel === "myspace"}
-        hasAnyActivePanel={shell.activePanel !== null}
-        isHovered={shell.hoveredPanel === "myspace" && shell.activePanel !== "myspace"}
-        onOpen={() => shell.openPanel("myspace")}
-        onClose={shell.closePanel}
-        onHoverChange={(hovered) => shell.setHoveredPanel(hovered ? "myspace" : null)}
-      >
-        <MySpaceContent dark connected={shell.isConnected} onConnect={shell.connect} onNavigate={shell.openPanel} />
-      </MySpaceDock>
     </div>
   );
 }

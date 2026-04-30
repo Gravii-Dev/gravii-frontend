@@ -3,8 +3,52 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background: #f5f2eb;
-  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.08);
+  background: transparent;
+  isolation: isolate;
+}
+
+.loadingState {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.loadingCard {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 28px 32px;
+  border: var(--slush-border);
+  border-radius: var(--slush-radius-card);
+  background: var(--slush-light);
+  box-shadow: var(--slush-shadow-pop);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.loadingLogo {
+  width: 88px;
+}
+
+.loadingCopyStack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.loadingEyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--slush-dark);
+}
+
+.loadingCopy {
+  color: var(--gravii-surface-ink);
+  font-size: 15px;
+  line-height: 1.5;
 }
 
 .header {
@@ -14,45 +58,136 @@
   align-items: center;
   justify-content: space-between;
   flex-shrink: 0;
-  padding: 16px 24px;
-  background: #f5f2eb;
-  box-shadow: 0 8px 16px -6px rgba(0, 0, 0, 0.1);
+  margin: 14px 16px 0;
+  padding: 12px 16px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(255, 253, 247, 0.68)),
+    rgba(255, 253, 247, 0.74);
+  border: 1px solid rgba(9, 9, 7, 0.11);
+  border-radius: 22px;
+  box-shadow:
+    0 10px 26px rgba(21, 18, 11, 0.045),
+    inset 0 1px 0 rgba(255, 255, 255, 0.58);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 }
 
-.brand {
-  opacity: 0.6;
-  font-family: var(--font-display);
-  font-size: 13px;
-  color: #1a1a1a;
-  letter-spacing: 3px;
+.brandCluster {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.headerSymbol {
+  width: 38px;
+  filter: drop-shadow(0 8px 16px rgba(21, 18, 11, 0.12));
+}
+
+.brandStack {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.headerWordmark {
+  width: 104px;
 }
 
 .panelStrip {
   position: relative;
   display: flex;
+  flex: 1;
+  gap: 14px;
+  min-height: 0;
+  padding: 16px;
   overflow: hidden;
-  box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.15);
-  transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  scrollbar-width: none;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 30%),
+    rgba(255, 253, 247, 0.14);
+  box-shadow: none;
+  transition: opacity var(--m3e-ease-standard, var(--gravii-ease));
+}
+
+.panelStrip::-webkit-scrollbar {
+  display: none;
 }
 
 .panelStripFull {
-  height: calc(100vh - 48px - 234px);
+  opacity: 1;
 }
 
 .panelStripCompact {
-  height: calc(100vh - 48px - 60px);
-}
-
-.panelStripHidden {
-  height: 0;
+  opacity: 1;
 }
 
 .sessionButtonDisconnected {
-  border-color: transparent;
-  opacity: 0.4;
+  --button-back-hover-opacity: 0;
+  --button-front: var(--slush-light);
+  --button-front-hover: #f7f1e8;
+  --button-text: var(--slush-dark);
+  --button-text-hover: rgba(9, 9, 7, 0.92);
+  --button-border-color: rgba(9, 9, 7, 0.78);
+  --button-back-border-color: rgba(9, 9, 7, 0.78);
+  opacity: 0.88;
 }
 
 .sessionButtonConnected {
-  border-color: rgba(0, 0, 0, 0.2);
-  opacity: 0.7;
+  --button-back-hover-opacity: 0;
+  --button-front: #f2d34e;
+  --button-front-hover: #e8c63a;
+  --button-text: var(--slush-dark);
+  --button-text-hover: rgba(9, 9, 7, 0.96);
+  --button-border-color: rgba(9, 9, 7, 0.82);
+  --button-back-border-color: rgba(9, 9, 7, 0.82);
+  opacity: 1;
+}
+
+@media (max-width: 900px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .loadingCard {
+    width: min(100%, 420px);
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .root {
+    height: auto;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  .header {
+    padding: 16px;
+  }
+
+  .panelStrip {
+    flex: none;
+    height: calc(100svh - 184px);
+    min-height: 620px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .panelStrip > * {
+    min-width: min(76vw, 320px);
+    scroll-snap-align: start;
+  }
+
+  .panelStripCompact > * {
+    min-width: 92px;
+  }
+
+  .panelStripCompact > [aria-expanded="true"] {
+    min-width: min(92vw, 520px);
+  }
 }

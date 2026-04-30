@@ -63,13 +63,12 @@ export default function MySpaceDock({
       <GrainOverlay variant="dock" active={isActive} />
 
       <div className={`${styles.preview} ${isCompact ? styles.previewCompact : ""} ${isActive ? styles.previewHidden : ""}`} aria-hidden={isActive}>
-        <span className={styles.previewNumber}>05/05</span>
         <span className={styles.previewTitle}>MY SPACE</span>
-        {!isCompact ? <span className={styles.previewTagline}>&ldquo;Handpicked for your profile.&rdquo;</span> : null}
+        {!isCompact ? <span className={styles.previewTagline}>&ldquo;Personalized curation, reserved.&rdquo;</span> : null}
       </div>
 
       {isActive ? (
-        <PanelShell className={styles.expanded} num="05/05" title="MY SPACE" sub="GRAVII — CONCIERGE" dark onClose={onClose}>
+        <PanelShell className={styles.expanded} title="MY SPACE" dark onClose={onClose}>
           {children}
         </PanelShell>
       ) : null}

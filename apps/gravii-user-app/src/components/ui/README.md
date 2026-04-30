@@ -27,16 +27,37 @@ Responsibilities:
 - support compact and panel button sizes
 - optionally stop click propagation so nested buttons do not accidentally trigger parent panel actions
 - expose `aria-pressed` for toggle-like cases such as the mock sign-in button
+- render the current Slush-inspired pill treatment with a bordered front face, a colored back face, and a vertical flip reveal on hover or focus
 
 Where it is used:
 
 - shell header sign-in or sign-out action
 - panel close button
+- feature CTA buttons such as analyze, restore session, opt in, and reserved-state actions
 
 Why it matters:
 
 - the panel system uses click handlers at multiple levels
 - stopping propagation by default makes panel controls safer and more predictable
+
+### `gravii-logo`
+
+Primary job:
+
+- render the approved Gravii symbol, wordmark, and motion mark from local brand assets
+
+Responsibilities:
+
+- expose a single API for `symbol`, `wordmark`, and `motion` variants
+- optionally expose a `spinY` treatment for symbol-style usage when the shell needs a continuous vertical-axis rotation
+- keep logo usage inside the app grounded in the shipped SVG assets under `public/brand`
+- provide the symbol-only motion treatment used by session hydration, `GRAVII ID`, and `X-Ray`
+- respect reduced-motion preferences for the animated curve orbit
+
+Why it is shared:
+
+- the same brand mark now appears in the shell header, loading states, and multiple feature surfaces
+- centralizing the asset wiring keeps future logo updates local to one component
 
 ### `grain-overlay`
 
@@ -54,7 +75,7 @@ Responsibilities:
 
 Why it is shared:
 
-- both `launch-panel` and `my-space-dock` can use it
+- `launch-panel` uses it directly and the older dock variant remains available only for legacy reference
 - the effect is not owned by one specific feature
 
 ### `launch-primitives`

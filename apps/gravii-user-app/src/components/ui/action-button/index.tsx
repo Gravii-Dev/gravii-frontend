@@ -6,6 +6,7 @@ import styles from "./action-button.module.css";
 
 type ActionButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children"> & {
   children: ReactNode;
+  backChildren?: ReactNode;
   dark?: boolean;
   size?: "compact" | "panel";
   stopPropagation?: boolean;
@@ -18,6 +19,7 @@ function joinClasses(...classNames: Array<string | false | undefined>) {
 
 export default function ActionButton({
   children,
+  backChildren,
   className,
   dark = false,
   size = "panel",
@@ -41,7 +43,15 @@ export default function ActionButton({
         onClick?.(event);
       }}
     >
-      {children}
+      <span className={styles.inner}>
+        <span className={styles.back} aria-hidden="true">
+          <span className={styles.backText}>{backChildren ?? children}</span>
+        </span>
+        <span className={styles.front}>
+          <span className={styles.frontBackground} aria-hidden="true" />
+          <span className={styles.frontText}>{children}</span>
+        </span>
+      </span>
     </button>
   );
 }

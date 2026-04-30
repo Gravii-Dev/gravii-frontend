@@ -6,7 +6,7 @@
   align-items: center;
   overflow: hidden;
   border-bottom: 0;
-  background: rgb(236 224 203);
+  background: var(--gravii-canvas-dim);
 }
 
 .srOnly {
@@ -35,7 +35,7 @@
 
 .text {
   margin: 0;
-  font-family: var(--font-mystic-dream), var(--next-font-sans), sans-serif;
+  font-family: var(--gravii-font-display);
   font-size: min(clamp(2.82rem, 13.68vw, 13.92rem), calc((100vw - 1.6rem) / 6.9));
   font-weight: 500;
   letter-spacing: 0.015em;
@@ -93,9 +93,11 @@
   aspect-ratio: 1 / 1;
   padding: 1.3rem 1.45rem 1.35rem;
   overflow: hidden;
-  border: 1px solid rgb(255 255 255 / 8%);
-  border-radius: 0.95rem;
-  background: rgb(12 12 12 / 88%);
+  border: var(--gravii-border);
+  border-radius: var(--gravii-radius-card);
+  background:
+    radial-gradient(circle at 16% 10%, rgb(255 255 255 / 8%), transparent 30%),
+    linear-gradient(180deg, rgb(18 18 17 / 94%) 0%, rgb(6 6 5 / 94%) 100%);
   box-shadow:
     0 30px 72px rgb(0 0 0 / 30%),
     0 1px 0 rgb(255 255 255 / 4%);
@@ -144,7 +146,7 @@
 }
 
 .alertTitle {
-  font-family: var(--next-font-sans), sans-serif;
+  font-family: var(--gravii-font-ui);
   font-size: 1.08rem;
   font-weight: 700;
   color: rgb(236 224 203 / 96%);
@@ -156,14 +158,14 @@
 }
 
 .alertWarning {
-  border: 1px solid rgb(211 47 47 / 30%);
-  border-radius: 0.42rem;
+  border: 1px solid rgb(244 210 58 / 36%);
+  border-radius: var(--gravii-radius-xs);
   background: rgb(211 47 47 / 12%);
   padding: 0.9rem 1rem;
 }
 
 .alertWarningCopy {
-  font-family: var(--next-font-sans), sans-serif;
+  font-family: var(--gravii-font-ui);
   font-size: 0.9rem;
   font-weight: 700;
   line-height: 1.55;
@@ -172,16 +174,16 @@
 
 .alertWallet {
   margin-top: auto;
-  border: 1px solid rgb(255 255 255 / 8%);
-  border-radius: 0.42rem;
-  background: rgb(255 255 255 / 4%);
+  border: 1px solid rgb(255 253 247 / 18%);
+  border-radius: var(--gravii-radius-xs);
+  background: rgb(255 253 247 / 7%);
   padding: 0.9rem 1rem;
 }
 
 .alertLabel,
 .alertValue {
   display: block;
-  font-family: var(--next-font-sans), sans-serif;
+  font-family: var(--gravii-font-ui);
   font-weight: 700;
 }
 

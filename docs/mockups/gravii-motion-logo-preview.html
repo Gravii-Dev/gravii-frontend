@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gravii Motion Logo Preview</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700;800&display=swap");
+
+      :root {
+        color-scheme: light;
+        --bg: #f6f1e9;
+        --bg-accent: #d9e7ef;
+        --surface: rgba(255, 251, 246, 0.78);
+        --surface-strong: rgba(255, 251, 246, 0.94);
+        --text: #18252f;
+        --muted: #61707a;
+        --stroke: rgba(24, 37, 47, 0.08);
+        --shadow: 0 28px 80px rgba(56, 49, 42, 0.12);
+        --ring: #050505;
+        --signal: #ff1717;
+        --signal-soft: rgba(255, 23, 23, 0.14);
+        --focus: #2b506d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        min-height: 100%;
+        margin: 0;
+      }
+
+      body {
+        font-family: "Instrument Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at 14% 10%, rgba(217, 231, 239, 0.88), transparent 26%),
+          radial-gradient(circle at 86% 16%, rgba(255, 23, 23, 0.08), transparent 22%),
+          linear-gradient(180deg, #fbf8f2 0%, #efe6db 100%);
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .page {
+        width: min(1480px, calc(100vw - 40px));
+        margin: 0 auto;
+        padding: 30px 20px 40px;
+      }
+
+      .frame {
+        overflow: hidden;
+        border-radius: 44px;
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        background: linear-gradient(180deg, rgba(255, 251, 246, 0.64), rgba(255, 249, 244, 0.88));
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(16px);
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 24px 28px 10px;
+      }
+
+      .brand {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: rgba(217, 231, 239, 0.9);
+        color: var(--focus);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 9px;
+        height: 9px;
+        border-radius: 999px;
+        background: var(--signal);
+        box-shadow: 0 0 0 5px var(--signal-soft);
+      }
+
+      .title {
+        font-size: 40px;
+        line-height: 0.95;
+        letter-spacing: -0.05em;
+        margin: 0;
+      }
+
+      .subtitle {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .badge {
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.58);
+        border: 1px solid var(--stroke);
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 0.92fr 1.08fr;
+        gap: 24px;
+        padding: 8px 28px 28px;
+      }
+
+      .panel {
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        background: var(--surface);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78);
+      }
+
+      .symbol-panel {
+        position: relative;
+        overflow: hidden;
+        border-radius: 40px 30px 46px 30px;
+        padding: 24px;
+      }
+
+      .symbol-panel::before {
+        content: "";
+        position: absolute;
+        right: -60px;
+        top: -40px;
+        width: 220px;
+        height: 220px;
+        border-radius: 999px;
+        background: radial-gradient(circle, rgba(255, 23, 23, 0.08), transparent 68%);
+      }
+
+      .symbol-wrap {
+        display: grid;
+        place-items: center;
+        min-height: 620px;
+        border-radius: 34px;
+        background:
+          radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.78), rgba(246, 241, 233, 0.92)),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.46), rgba(246, 241, 233, 0.5));
+      }
+
+      svg {
+        width: min(92%, 540px);
+        height: auto;
+        overflow: visible;
+      }
+
+      .orbit-track {
+        stroke: rgba(24, 37, 47, 0.08);
+        stroke-width: 2;
+        stroke-dasharray: 5 9;
+        fill: none;
+      }
+
+      .core-ring {
+        fill: none;
+        stroke: var(--ring);
+        stroke-width: 86;
+        stroke-linecap: round;
+      }
+
+      .inner-cut {
+        fill: #fffaf4;
+      }
+
+      .orbit {
+        transform-origin: 320px 320px;
+        animation: orbit-spin 5.8s linear infinite;
+      }
+
+      .signal-arc {
+        fill: none;
+        stroke: var(--signal);
+        stroke-width: 54;
+        stroke-linecap: round;
+        filter: drop-shadow(0 12px 18px rgba(255, 23, 23, 0.2));
+      }
+
+      .signal-core {
+        fill: rgba(255, 23, 23, 0.12);
+      }
+
+      .spec-panel {
+        display: grid;
+        gap: 18px;
+        border-radius: 30px 42px 30px 42px;
+        padding: 26px;
+        background: rgba(255, 252, 247, 0.9);
+      }
+
+      .section-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .section-title {
+        margin: 0;
+        font-size: 28px;
+        line-height: 0.96;
+        letter-spacing: -0.05em;
+      }
+
+      .section-copy {
+        max-width: 40ch;
+        margin: 10px 0 0;
+        color: var(--muted);
+        font-size: 15px;
+      }
+
+      .callout {
+        display: grid;
+        gap: 12px;
+      }
+
+      .callout-card {
+        padding: 16px 18px;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.64);
+        border: 1px solid var(--stroke);
+      }
+
+      .callout-card strong {
+        display: block;
+        font-size: 15px;
+      }
+
+      .callout-card span {
+        display: block;
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .usage-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .usage {
+        border-radius: 26px;
+        overflow: hidden;
+        border: 1px solid var(--stroke);
+        background: var(--surface-strong);
+      }
+
+      .usage.dark {
+        background: linear-gradient(180deg, #10161d 0%, #16202a 100%);
+        color: #edf1f5;
+      }
+
+      .usage-head {
+        padding: 15px 16px 0;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .usage-body {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 16px;
+      }
+
+      .mini-logo {
+        width: 84px;
+        height: 84px;
+        flex: 0 0 auto;
+      }
+
+      .mini-copy strong {
+        display: block;
+        font-size: 16px;
+      }
+
+      .mini-copy span {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .usage.dark .mini-copy span,
+      .usage.dark .usage-head {
+        color: rgba(237, 241, 245, 0.7);
+      }
+
+      .footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 0 28px 28px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .footer strong {
+        color: var(--text);
+      }
+
+      @keyframes orbit-spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .orbit {
+          animation: none;
+        }
+      }
+
+      @media (max-width: 1120px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .page {
+          width: min(100vw, calc(100vw - 12px));
+          padding: 10px 6px 18px;
+        }
+
+        .topbar,
+        .hero,
+        .footer {
+          padding-left: 16px;
+          padding-right: 16px;
+        }
+
+        .topbar,
+        .footer {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .title {
+          font-size: 32px;
+        }
+
+        .symbol-wrap {
+          min-height: 420px;
+        }
+
+        .usage-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <div class="frame">
+        <header class="topbar">
+          <div class="brand">
+            <div class="eyebrow">Motion Logo Concept</div>
+            <h1 class="title">Red signal orbit, not collision.</h1>
+            <p class="subtitle">
+              The red arc is moved to a larger orbit radius so it can rotate continuously around the core ring without
+              visually crashing into it.
+            </p>
+          </div>
+
+          <div class="badge-row">
+            <div class="badge">Shared center point</div>
+            <div class="badge">Outer orbit gap</div>
+            <div class="badge">5.8s linear rotation</div>
+          </div>
+        </header>
+
+        <section class="hero">
+          <article class="panel symbol-panel">
+            <div class="symbol-wrap">
+              <svg viewBox="0 0 640 640" role="img" aria-label="Animated Gravii motion symbol">
+                <circle class="orbit-track" cx="320" cy="320" r="210"></circle>
+                <circle class="core-ring" cx="320" cy="320" r="150"></circle>
+                <circle class="inner-cut" cx="320" cy="320" r="103"></circle>
+
+                <g class="orbit">
+                  <circle class="signal-core" cx="320" cy="320" r="206"></circle>
+                  <path
+                    class="signal-arc"
+                    d="M 139.89 424 C 167.73 472.23 219.8 504.64 279.44 510.96 C 339.09 517.28 397.66 496.59 438.37 455 C 452.69 440.37 464.81 423.75 474.28 405.69"
+                  ></path>
+                </g>
+              </svg>
+            </div>
+          </article>
+
+          <aside class="panel spec-panel">
+            <div class="section-head">
+              <div>
+                <h2 class="section-title">How this should work in the product</h2>
+                <p class="section-copy">
+                  Treat the black ring as the stable Gravii core and the red arc as a moving signal scanner. The
+                  motion should feel steady, analytical, and continuous rather than playful.
+                </p>
+              </div>
+            </div>
+
+            <div class="callout">
+              <div class="callout-card">
+                <strong>Geometry fix</strong>
+                <span>
+                  The red arc sits on a larger radius than the black ring, with a persistent safety gap so the motion
+                  reads as orbit rather than contact.
+                </span>
+              </div>
+              <div class="callout-card">
+                <strong>Motion rule</strong>
+                <span>
+                  Use a constant linear spin. No bounce, no overshoot, no acceleration spikes. It should feel like a
+                  live scan running in the background.
+                </span>
+              </div>
+              <div class="callout-card">
+                <strong>Recommended use</strong>
+                <span>
+                  Best for loading, wallet analysis, hero moments, onboarding, or signal-processing states. Keep the
+                  default brand mark static for routine navigation and small UI placements.
+                </span>
+              </div>
+            </div>
+
+            <div class="usage-grid">
+              <div class="usage">
+                <div class="usage-head">Light surface usage</div>
+                <div class="usage-body">
+                  <svg class="mini-logo" viewBox="0 0 640 640" aria-hidden="true">
+                    <circle class="core-ring" cx="320" cy="320" r="150"></circle>
+                    <circle class="inner-cut" cx="320" cy="320" r="103"></circle>
+                    <path
+                      class="signal-arc"
+                      d="M 139.89 424 C 167.73 472.23 219.8 504.64 279.44 510.96 C 339.09 517.28 397.66 496.59 438.37 455 C 452.69 440.37 464.81 423.75 474.28 405.69"
+                    ></path>
+                  </svg>
+                  <div class="mini-copy">
+                    <strong>Wallet scan starting</strong>
+                    <span>Use the animated version while the product is processing or revealing signal output.</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="usage dark">
+                <div class="usage-head">Dark surface usage</div>
+                <div class="usage-body">
+                  <svg class="mini-logo" viewBox="0 0 640 640" aria-hidden="true">
+                    <circle class="core-ring" cx="320" cy="320" r="150" style="stroke: #f3f4f6"></circle>
+                    <circle class="inner-cut" cx="320" cy="320" r="103" style="fill: #111923"></circle>
+                    <path
+                      class="signal-arc"
+                      d="M 139.89 424 C 167.73 472.23 219.8 504.64 279.44 510.96 C 339.09 517.28 397.66 496.59 438.37 455 C 452.69 440.37 464.81 423.75 474.28 405.69"
+                    ></path>
+                  </svg>
+                  <div class="mini-copy">
+                    <strong>Analysis in progress</strong>
+                    <span>On dark surfaces, keep the same orbit logic and simply invert the core ring color.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        <footer class="footer">
+          <div><strong>Next step:</strong> if this motion logic feels right, convert the symbol into a clean production SVG asset.</div>
+          <div><strong>Important:</strong> keep this as a motion mark, not the always-on default logo in every navbar.</div>
+        </footer>
+      </div>
+    </main>
+  </body>
+</html>

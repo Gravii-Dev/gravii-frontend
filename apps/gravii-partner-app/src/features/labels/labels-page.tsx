@@ -1,10 +1,9 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import dynamic from 'next/dynamic'
+import { startTransition, useDeferredValue, useMemo, useState } from 'react'
 
-import { PersonaModal } from '@/components/ui/persona-modal'
-import { Card } from '@/components/ui/card'
-import { PageHeader } from '@/components/ui/page-header'
+import { PartnerDataStatus } from '@/components/ui/partner-data-status'
 import { formatNumber } from '@/lib/format'
 
 import { chainColorMap, labelSegments } from './data'
@@ -24,9 +23,78 @@ const tivOptions = ['1k', '10k', '50k', '100k'] as const
 type ChainOptionId = (typeof chainOptions)[number]
 type AssetOptionId = (typeof assetOptions)[number]
 
+const holdingsDistribution = [
+  { label: '< $1K', percentage: 42, tone: 'four' },
+  { label: '$1K–$10K', percentage: 30, tone: 'one' },
+  { label: '$10K–$50K', percentage: 18, tone: 'two' },
+  { label: '$50K+', percentage: 10, tone: 'amber' }
+] as const
+
+const tradingDistribution = [
+  { label: '< $1K', percentage: 35, tone: 'four' },
+  { label: '$1K–$10K', percentage: 28, tone: 'one' },
+  { label: '$10K–$100K', percentage: 24, tone: 'two' },
+  { label: '$100K+', percentage: 13, tone: 'amber' }
+] as const
+
+const topChains = [
+  { label: 'Ethereum', percentage: 38, tone: 'eth' },
+  { label: 'Base', percentage: 22, tone: 'base' },
+  { label: 'Arbitrum', percentage: 16, tone: 'arb' }
+] as const
+
+const topOverlap = [
+  { label: 'Long-term Holders', percentage: 62, tone: 'one' },
+  { label: 'DEX Traders', percentage: 48, tone: 'two' },
+  { label: 'Stablecoin Spenders', percentage: 35, tone: 'three' }
+] as const
+
+const PersonaModal = dynamic(
+  () => import('@/components/ui/persona-modal').then((module) => module.PersonaModal),
+  { ssr: false }
+)
+
 function activeMultiplier(activeWindow: ActiveWindow): number {
   const map: Record<ActiveWindow, number> = { all: 1, '7d': 0.35, '30d': 0.58, '90d': 0.82, '90p': 0.18 }
   return map[activeWindow]
+}
+
+function formatOptionLabel(option: string) {
+  const map: Record<string, string> = {
+    all: 'All',
+    black: 'Black',
+    platinum: 'Platinum',
+    gold: 'Gold',
+    classic: 'Classic',
+    stables: 'Stables',
+    native: 'Native',
+    others: 'Others',
+    u1k: '< $1K',
+    '1k10k': '$1K–$10K',
+    '10k50k': '$10K–$50K',
+    '50kp': '$50K+',
+    u500: '< $500',
+    '500_5k': '$500–$5K',
+    '5k20k': '$5K–$20K',
+    '20kp': '$20K+',
+    '10k100k': '$10K–$100K',
+    '100kp': '$100K+',
+    '7d': '≤ 7d',
+    '30d': '≤ 30d',
+    '90d': '≤ 90d',
+    '90p': '90d+',
+    eth: 'ETH',
+    base: 'Base',
+    arb: 'Arbitrum',
+    bsc: 'BSC',
+    poly: 'Polygon',
+    avax: 'Avalanche',
+    hl: 'Hyperliquid',
+    kaia: 'Kaia',
+    sol: 'Solana'
+  }
+
+  return map[option] ?? option
 }
 
 export function LabelsPage() {
@@ -37,55 +105,67 @@ export function LabelsPage() {
   const [activeWindowFilter, setActiveWindowFilter] = useState<ActiveWindow>('all')
   const [showPersonaModal, setShowPersonaModal] = useState(false)
   const [valueFilters, setValueFilters] = useState({
-    chains: [] as string[],
-    tiers: [] as string[],
     assets: [] as string[],
+    chains: [] as string[],
     holdings: [] as string[],
     payments: [] as string[],
-    trading: [] as string[],
-    tiv: [] as string[]
+    tiers: [] as string[],
+    tiv: [] as string[],
+    trading: [] as string[]
   })
+  const deferredSelectedLabelIds = useDeferredValue(selectedLabelIds)
+  const deferredSelectedChains = useDeferredValue(selectedChains)
+  const deferredActiveWindowFilter = useDeferredValue(activeWindowFilter)
+  const deferredValueFilters = useDeferredValue(valueFilters)
+  const selectedLabelIdSet = useMemo(
+    () => new Set(deferredSelectedLabelIds),
+    [deferredSelectedLabelIds]
+  )
+  const windowMultiplier = useMemo(
+    () => activeMultiplier(deferredActiveWindowFilter),
+    [deferredActiveWindowFilter]
+  )
+  const activeLabels = useMemo(
+    () => labelSegments.filter((segment) => selectedLabelIdSet.has(segment.id)),
+    [selectedLabelIdSet]
+  )
+  const labelTotalBase = Math.round(301012 * windowMultiplier)
 
   const filteredBehaviorUsers = useMemo(() => {
-    const multiplier = activeMultiplier(activeWindowFilter)
-
-    if (selectedLabelIds.length === 0) {
-      return Math.round(301012 * multiplier)
+    if (activeLabels.length === 0) {
+      return Math.round(301012 * windowMultiplier)
     }
 
     let total = 0
 
-    for (const label of labelSegments) {
-      if (!selectedLabelIds.includes(label.id)) {
-        continue
-      }
-
+    for (const label of activeLabels) {
       let labelUsers = label.users
 
-      if (selectedChains.length > 0) {
-        const chainPct = selectedChains.reduce((sum, chain) => sum + (label.chains[chain] ?? 0), 0)
-        labelUsers = Math.round(labelUsers * chainPct / 100)
+      if (deferredSelectedChains.length > 0) {
+        const chainPct = deferredSelectedChains.reduce(
+          (sum, chain) => sum + (label.chains[chain] ?? 0),
+          0
+        )
+        labelUsers = Math.round((labelUsers * chainPct) / 100)
       }
 
       total += labelUsers
     }
 
-    if (selectedLabelIds.length > 1) {
-      total = Math.round(total * (1 - 0.08 * (selectedLabelIds.length - 1)))
+    if (activeLabels.length > 1) {
+      total = Math.round(total * (1 - 0.08 * (activeLabels.length - 1)))
     }
 
-    return Math.round(total * multiplier)
-  }, [activeWindowFilter, selectedChains, selectedLabelIds])
+    return Math.round(total * windowMultiplier)
+  }, [activeLabels, deferredSelectedChains, windowMultiplier])
 
   const behaviorSummary = useMemo(() => {
-    const activeLabels = labelSegments.filter((segment) => selectedLabelIds.includes(segment.id))
-
     if (activeLabels.length === 0) {
       return {
-        users: filteredBehaviorUsers,
         avgBal: 4230,
+        retention: 72,
         txFreq: 38,
-        retention: 72
+        users: filteredBehaviorUsers
       }
     }
 
@@ -94,49 +174,87 @@ export function LabelsPage() {
     const retention = Math.round(activeLabels.reduce((sum, item) => sum + item.retention, 0) / activeLabels.length)
 
     return {
-      users: filteredBehaviorUsers,
       avgBal,
+      retention,
       txFreq,
-      retention
+      users: filteredBehaviorUsers
     }
-  }, [filteredBehaviorUsers, selectedLabelIds])
+  }, [activeLabels, filteredBehaviorUsers])
 
-  const valueActiveCount = Object.values(valueFilters).reduce((sum, values) => sum + values.length, 0)
-  const valueFactor = valueActiveCount > 0 ? Math.max(0.1, 1 - valueActiveCount * 0.22) : 1
-  const valueUsers = Math.round(301012 * valueFactor)
-  const valuePortfolio = Math.round(8430 * (0.6 + valueFactor * 0.4))
-  const valuePayment = Math.round(2327 * (0.5 + valueFactor * 0.5))
-  const valueTrading = Math.round(47200 * (0.4 + valueFactor * 0.6))
+  const valueSummary = useMemo(() => {
+    const activeCount = Object.values(deferredValueFilters).reduce(
+      (sum, values) => sum + values.length,
+      0
+    )
+    const factor = activeCount > 0 ? Math.max(0.1, 1 - activeCount * 0.22) : 1
+
+    return {
+      valueActiveCount: activeCount,
+      valuePayment: Math.round(2327 * (0.5 + factor * 0.5)),
+      valuePortfolio: Math.round(8430 * (0.6 + factor * 0.4)),
+      valueTrading: Math.round(47200 * (0.4 + factor * 0.6)),
+      valueUsers: Math.round(301012 * factor)
+    }
+  }, [deferredValueFilters])
+
+  const behaviorLabelCards = useMemo(
+    () =>
+      labelSegments.map((segment) => {
+        let displayUsers = segment.users
+
+        if (deferredSelectedChains.length > 0) {
+          const chainPct = deferredSelectedChains.reduce(
+            (sum, chain) => sum + (segment.chains[chain] ?? 0),
+            0
+          )
+          displayUsers = Math.round((displayUsers * chainPct) / 100)
+        }
+
+        displayUsers = Math.round(displayUsers * windowMultiplier)
+
+        return {
+          chains: segment.chains,
+          displayPct: ((displayUsers / labelTotalBase) * 100).toFixed(1),
+          displayUsers,
+          id: segment.id,
+          isSelected: selectedLabelIdSet.has(segment.id),
+          name: segment.name,
+          threshold: segment.threshold
+        }
+      }),
+    [deferredSelectedChains, labelTotalBase, selectedLabelIdSet, windowMultiplier]
+  )
 
   const toggleMulti = <T extends string>(current: T[], next: T): T[] =>
     current.includes(next) ? current.filter((value) => value !== next) : [...current, next]
 
   const toggleLabel = (labelId: number) => {
-    setSelectedLabelIds((current) => toggleMulti(current.map(String), String(labelId)).map(Number))
+    startTransition(() => {
+      setSelectedLabelIds((current) =>
+        toggleMulti(current.map(String), String(labelId)).map(Number)
+      )
+    })
   }
-
-  const labelTotalBase = Math.round(301012 * activeMultiplier(activeWindowFilter))
 
   return (
     <div className={styles.page}>
-      <PageHeader
-        eyebrow="User Segments"
-        title="Same segment filters as the prototype, now split into maintainable typed state."
-        description="The important button behaviors are restored here: tab switching, segment selection, filter pills, and the persona mapping modal."
-      />
+      <div className={styles.mainHeader}>
+        <h1 className={styles.mainTitle}>User Segments</h1>
+      </div>
+      <PartnerDataStatus surface="labels" />
 
-      <div className={styles.tabs}>
+      <div className={styles.segTabs}>
         <button
           type="button"
-          className={`${styles.tab} ${tab === 'behavior' ? styles.tabActive : ''}`}
-          onClick={() => setTab('behavior')}
+          className={`${styles.segTab} ${tab === 'behavior' ? styles.segTabActive : ''}`}
+          onClick={() => startTransition(() => setTab('behavior'))}
         >
           By Behavior
         </button>
         <button
           type="button"
-          className={`${styles.tab} ${tab === 'value' ? styles.tabActive : ''}`}
-          onClick={() => setTab('value')}
+          className={`${styles.segTab} ${tab === 'value' ? styles.segTabActive : ''}`}
+          onClick={() => startTransition(() => setTab('value'))}
         >
           By Value
         </button>
@@ -144,15 +262,15 @@ export function LabelsPage() {
 
       {tab === 'behavior' ? (
         <>
-          <Card title="Filters" eyebrow="Behavior targeting">
-            <div className={styles.filterGrid}>
-              <div>
-                <p className={styles.filterLabel}>Chains</p>
-                <div className={styles.pills}>
+          <section className={`${styles.card} ${styles.filterBar}`}>
+            <div className={styles.filterSection}>
+              <div className={styles.filterGroup}>
+                <div className={styles.filterLabel}>Chains</div>
+                <div className={styles.filterPills}>
                   <button
                     type="button"
-                    className={`${styles.pill} ${selectedChains.length === 0 ? styles.pillActive : ''}`}
-                    onClick={() => setSelectedChains([])}
+                    className={`${styles.filterPill} ${selectedChains.length === 0 ? styles.filterPillActive : ''}`}
+                    onClick={() => startTransition(() => setSelectedChains([]))}
                   >
                     All
                   </button>
@@ -160,22 +278,26 @@ export function LabelsPage() {
                     <button
                       key={chain}
                       type="button"
-                      className={`${styles.pill} ${selectedChains.includes(chain) ? styles.pillActive : ''}`}
-                      onClick={() => setSelectedChains((current) => toggleMulti(current, chain))}
+                      className={`${styles.filterPill} ${selectedChains.includes(chain) ? styles.filterPillActive : ''}`}
+                      onClick={() =>
+                        startTransition(() =>
+                          setSelectedChains((current) => toggleMulti(current, chain))
+                        )
+                      }
                     >
-                      {chain.toUpperCase()}
+                      {formatOptionLabel(chain)}
                     </button>
                   ))}
                 </div>
               </div>
 
-              <div>
-                <p className={styles.filterLabel}>Assets</p>
-                <div className={styles.pills}>
+              <div className={styles.filterGroup}>
+                <div className={styles.filterLabel}>Assets</div>
+                <div className={styles.filterPills}>
                   <button
                     type="button"
-                    className={`${styles.pill} ${selectedAssets.length === 0 ? styles.pillActive : ''}`}
-                    onClick={() => setSelectedAssets([])}
+                    className={`${styles.filterPill} ${selectedAssets.length === 0 ? styles.filterPillActive : ''}`}
+                    onClick={() => startTransition(() => setSelectedAssets([]))}
                   >
                     All
                   </button>
@@ -183,58 +305,54 @@ export function LabelsPage() {
                     <button
                       key={asset}
                       type="button"
-                      className={`${styles.pill} ${selectedAssets.includes(asset) ? styles.pillActive : ''}`}
-                      onClick={() => setSelectedAssets((current) => toggleMulti(current, asset))}
+                      className={`${styles.filterPill} ${selectedAssets.includes(asset) ? styles.filterPillActive : ''}`}
+                      onClick={() =>
+                        startTransition(() =>
+                          setSelectedAssets((current) => toggleMulti(current, asset))
+                        )
+                      }
                     >
-                      {asset}
+                      {formatOptionLabel(asset)}
                     </button>
                   ))}
                 </div>
               </div>
             </div>
-            <p className={styles.filterSummary}>
-              <strong>{selectedLabelIds.length || 'All'} labels</strong> ·{' '}
-              <strong>{selectedChains.length || 'All'} chains</strong> ·{' '}
-              <strong>{formatNumber(filteredBehaviorUsers)} users</strong>
-            </p>
-          </Card>
 
-          <div className={styles.inlineControls}>
-            <div className={styles.controlLabel}>Last Active</div>
-            <div className={styles.pills}>
+            <div className={styles.filterSummary}>
+              <span className={styles.summaryHighlight}>{selectedLabelIds.length || 0} labels</span> ·{' '}
+              <span className={styles.summaryHighlight}>
+                {selectedChains.length === 0 ? 'All chains' : `${selectedChains.length} chains`}
+              </span>{' '}
+              · <span className={styles.summaryHighlight}>{formatNumber(filteredBehaviorUsers)} users</span>
+            </div>
+          </section>
+
+          <div className={styles.inlineFilterRow}>
+            <span className={styles.inlineFilterLabel}>Last Active</span>
+            <div className={styles.filterPills}>
               {(['all', '7d', '30d', '90d', '90p'] as const).map((value) => (
                 <button
                   key={value}
                   type="button"
-                  className={`${styles.pill} ${activeWindowFilter === value ? styles.pillActive : ''}`}
-                  onClick={() => setActiveWindowFilter(value)}
+                  className={`${styles.filterPill} ${activeWindowFilter === value ? styles.filterPillActive : ''}`}
+                  onClick={() => startTransition(() => setActiveWindowFilter(value))}
                 >
-                  {value === 'all' ? 'All' : value === '90p' ? '90d+' : `≤ ${value}`}
+                  {formatOptionLabel(value)}
                 </button>
               ))}
             </div>
           </div>
 
-          <div className={styles.labelHeader}>
-            <span>Click segments to filter</span>
+          <div className={styles.labelGridHeader}>
+            Click segments to filter ↓{' '}
             <button type="button" className={styles.infoButton} onClick={() => setShowPersonaModal(true)}>
-              Persona mapping
+              ⓘ
             </button>
           </div>
 
-          <section className={styles.labelGrid}>
-            {labelSegments.map((segment) => {
-              let displayUsers = segment.users
-
-              if (selectedChains.length > 0) {
-                const chainPct = selectedChains.reduce((sum, chain) => sum + (segment.chains[chain] ?? 0), 0)
-                displayUsers = Math.round(displayUsers * chainPct / 100)
-              }
-
-              displayUsers = Math.round(displayUsers * activeMultiplier(activeWindowFilter))
-              const displayPct = ((displayUsers / labelTotalBase) * 100).toFixed(1)
-
-              return (
+          <div className={styles.labelGrid}>
+            {behaviorLabelCards.map((segment) => (
                 <button
                   key={segment.id}
                   type="button"
@@ -242,11 +360,11 @@ export function LabelsPage() {
                   onClick={() => toggleLabel(segment.id)}
                 >
                   <div className={styles.labelCardHeader}>
-                    <span className={styles.checkbox}>{selectedLabelIds.includes(segment.id) ? '✓' : ''}</span>
+                    <span className={styles.checkbox}>{segment.isSelected ? '✓' : ''}</span>
                     <span className={styles.labelName}>{segment.name}</span>
-                    <strong>{formatNumber(displayUsers)}</strong>
+                    <strong>{formatNumber(segment.displayUsers)}</strong>
                   </div>
-                  <p className={styles.labelPct}>{displayPct}% of total</p>
+                  <p className={styles.labelPct}>{segment.displayPct}% of total</p>
                   <div className={styles.chainBar}>
                     {Object.entries(segment.chains).map(([chain, value]) => (
                       <span
@@ -257,49 +375,49 @@ export function LabelsPage() {
                   </div>
                   <p className={styles.threshold}>{segment.threshold}</p>
                 </button>
-              )
-            })}
+              ))}
+          </div>
+
+          <section className={styles.summarySection}>
+            <div className={styles.summaryLabel}>Filtered Results</div>
+            <div className={styles.summaryGrid}>
+              <article className={styles.card}><div className={styles.cardTitle}>Filtered Users</div><div className={styles.kpiValue}>{formatNumber(behaviorSummary.users)}</div></article>
+              <article className={styles.card}><div className={styles.cardTitle}>Avg Balance</div><div className={styles.kpiValue}>${formatNumber(behaviorSummary.avgBal)}</div></article>
+              <article className={styles.card}><div className={styles.cardTitle}>Avg Tx Frequency</div><div className={styles.kpiValue}>{behaviorSummary.txFreq}/mo</div></article>
+              <article className={styles.card}><div className={styles.cardTitle}>Retention Rate (30d)</div><div className={styles.kpiValue}>{behaviorSummary.retention}%</div></article>
+            </div>
           </section>
 
-          <section className="grid-auto-4">
-            <Card title="Filtered users">
-              <p className={styles.metric}>{formatNumber(behaviorSummary.users)}</p>
-            </Card>
-            <Card title="Avg balance">
-              <p className={styles.metric}>${formatNumber(behaviorSummary.avgBal)}</p>
-            </Card>
-            <Card title="Avg Tx frequency">
-              <p className={styles.metric}>{behaviorSummary.txFreq}/mo</p>
-            </Card>
-            <Card title="Retention rate (30d)">
-              <p className={styles.metric}>{behaviorSummary.retention}%</p>
-            </Card>
-          </section>
+          <div className={styles.footerNote}>
+            These segments can be used as targeting criteria when creating a campaign
+          </div>
         </>
       ) : (
         <>
-          <Card title="Value filters" eyebrow="Value targeting">
-            <div className={styles.valueFilterStack}>
+          <section className={`${styles.card} ${styles.filterBar}`}>
+            <div className={styles.filterSection}>
               {[
                 { key: 'chains', label: 'Chains', options: chainOptions },
                 { key: 'tiers', label: 'Tier', options: tierOptions },
-                { key: 'assets', label: 'Asset type', options: assetOptions },
+                { key: 'assets', label: 'Asset Type', options: assetOptions },
                 { key: 'holdings', label: 'Holdings', options: holdOptions },
                 { key: 'payments', label: 'Payment', options: paymentOptions },
                 { key: 'trading', label: 'Trading Vol', options: tradingOptions },
                 { key: 'tiv', label: 'Available Value', options: tivOptions }
               ].map((group) => (
-                <div key={group.key}>
-                  <p className={styles.filterLabel}>{group.label}</p>
-                  <div className={styles.pills}>
+                <div key={group.key} className={styles.filterGroup}>
+                  <div className={styles.filterLabel}>{group.label}</div>
+                  <div className={styles.filterPills}>
                     <button
                       type="button"
-                      className={`${styles.pill} ${valueFilters[group.key as keyof typeof valueFilters].length === 0 ? styles.pillActive : ''}`}
+                      className={`${styles.filterPill} ${valueFilters[group.key as keyof typeof valueFilters].length === 0 ? styles.filterPillActive : ''}`}
                       onClick={() =>
-                        setValueFilters((current) => ({
-                          ...current,
-                          [group.key]: []
-                        }))
+                        startTransition(() =>
+                          setValueFilters((current) => ({
+                            ...current,
+                            [group.key]: []
+                          }))
+                        )
                       }
                     >
                       All
@@ -308,40 +426,101 @@ export function LabelsPage() {
                       <button
                         key={option}
                         type="button"
-                        className={`${styles.pill} ${valueFilters[group.key as keyof typeof valueFilters].includes(option) ? styles.pillActive : ''}`}
+                        className={`${styles.filterPill} ${valueFilters[group.key as keyof typeof valueFilters].includes(option) ? styles.filterPillActive : ''}`}
                         onClick={() =>
-                          setValueFilters((current) => ({
-                            ...current,
-                            [group.key]: toggleMulti(current[group.key as keyof typeof valueFilters], option)
-                          }))
+                          startTransition(() =>
+                            setValueFilters((current) => ({
+                              ...current,
+                              [group.key]: toggleMulti(current[group.key as keyof typeof valueFilters], option)
+                            }))
+                          )
                         }
                       >
-                        {option}
+                        {formatOptionLabel(option)}
                       </button>
                     ))}
                   </div>
                 </div>
               ))}
             </div>
-            <p className={styles.filterSummary}>
-              <strong>{valueActiveCount || 'All'} filters</strong> ·{' '}
-              <strong>{formatNumber(valueUsers)} users</strong>
-            </p>
-          </Card>
+            <div className={styles.filterSummary}>
+              <span className={styles.summaryHighlight}>
+                {valueSummary.valueActiveCount === 0 ? 'All filters' : `${valueSummary.valueActiveCount} filters`}
+              </span>{' '}
+              · <span className={styles.summaryHighlight}>{formatNumber(valueSummary.valueUsers)} users</span>
+            </div>
+          </section>
 
-          <section className="grid-auto-4">
-            <Card title="Filtered users">
-              <p className={styles.metric}>{formatNumber(valueUsers)}</p>
-            </Card>
-            <Card title="Avg portfolio">
-              <p className={styles.metric}>${formatNumber(valuePortfolio)}</p>
-            </Card>
-            <Card title="Avg monthly payment">
-              <p className={styles.metric}>${formatNumber(valuePayment)}</p>
-            </Card>
-            <Card title="Avg trading volume">
-              <p className={styles.metric}>${formatNumber(valueTrading)}</p>
-            </Card>
+          <section className={styles.summarySection}>
+            <div className={styles.summaryLabel}>Filtered Results</div>
+            <div className={styles.summaryGrid}>
+              <article className={styles.card}><div className={styles.cardTitle}>Filtered Users</div><div className={styles.kpiValue}>{formatNumber(valueSummary.valueUsers)}</div></article>
+              <article className={styles.card}><div className={styles.cardTitle}>Avg Portfolio</div><div className={styles.kpiValue}>${formatNumber(valueSummary.valuePortfolio)}</div></article>
+              <article className={styles.card}><div className={styles.cardTitle}>Avg Monthly Payment</div><div className={styles.kpiValue}>${formatNumber(valueSummary.valuePayment)}</div></article>
+              <article className={styles.card}><div className={styles.cardTitle}>Avg Trading Volume</div><div className={styles.kpiValue}>${formatNumber(valueSummary.valueTrading)}</div></article>
+            </div>
+          </section>
+
+          <section className={styles.grid2Half}>
+            <article className={styles.card}>
+              <div className={styles.cardTitle}>Holdings Distribution</div>
+              <div className={styles.rankList}>
+                {holdingsDistribution.map((item) => (
+                  <div key={item.label} className={styles.rankItem}>
+                    <span className={styles.rankName}>{item.label}</span>
+                    <div className={styles.rankBarTrack}>
+                      <div className={`${styles.rankBar} ${styles[`rankBar${item.tone}`]}`} style={{ width: `${item.percentage}%` }} />
+                    </div>
+                    <span className={styles.rankVal}>{item.percentage}%</span>
+                  </div>
+                ))}
+              </div>
+            </article>
+            <article className={styles.card}>
+              <div className={styles.cardTitle}>Trading Volume Distribution</div>
+              <div className={styles.rankList}>
+                {tradingDistribution.map((item) => (
+                  <div key={item.label} className={styles.rankItem}>
+                    <span className={styles.rankName}>{item.label}</span>
+                    <div className={styles.rankBarTrack}>
+                      <div className={`${styles.rankBar} ${styles[`rankBar${item.tone}`]}`} style={{ width: `${item.percentage}%` }} />
+                    </div>
+                    <span className={styles.rankVal}>{item.percentage}%</span>
+                  </div>
+                ))}
+              </div>
+            </article>
+          </section>
+
+          <section className={styles.grid2Half}>
+            <article className={styles.card}>
+              <div className={styles.cardTitle}>Top Chains</div>
+              <div className={styles.rankList}>
+                {topChains.map((item) => (
+                  <div key={item.label} className={styles.rankItem}>
+                    <span className={styles.rankName}>{item.label}</span>
+                    <div className={styles.rankBarTrack}>
+                      <div className={`${styles.rankBar} ${styles[`rankBar${item.tone}`]}`} style={{ width: `${item.percentage}%` }} />
+                    </div>
+                    <span className={styles.rankVal}>{item.percentage}%</span>
+                  </div>
+                ))}
+              </div>
+            </article>
+            <article className={styles.card}>
+              <div className={styles.cardTitle}>Top Segment Overlap</div>
+              <div className={styles.rankList}>
+                {topOverlap.map((item) => (
+                  <div key={item.label} className={styles.rankItem}>
+                    <span className={styles.rankName}>{item.label}</span>
+                    <div className={styles.rankBarTrack}>
+                      <div className={`${styles.rankBar} ${styles[`rankBar${item.tone}`]}`} style={{ width: `${item.percentage}%` }} />
+                    </div>
+                    <span className={styles.rankVal}>{item.percentage}%</span>
+                  </div>
+                ))}
+              </div>
+            </article>
           </section>
         </>
       )}

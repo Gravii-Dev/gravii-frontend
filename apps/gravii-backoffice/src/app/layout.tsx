@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
+
+import { AdminAuthProvider } from "@/features/auth/auth-provider";
+import { AdminShell } from "@/features/auth/admin-shell";
 
 import "./globals.css";
 
@@ -22,7 +26,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <Suspense fallback={null}>
+          <AdminAuthProvider>
+            <AdminShell>{children}</AdminShell>
+          </AdminAuthProvider>
+        </Suspense>
+      </body>
     </html>
   );
 }

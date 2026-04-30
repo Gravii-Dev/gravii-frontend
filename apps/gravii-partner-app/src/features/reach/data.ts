@@ -108,57 +108,81 @@ export const ctaOptions = [
   'Custom'
 ] as const
 
-export const draftCampaigns = [
+const baseDraftCampaigns = [
   {
-    partnerName: 'Pendle Finance',
     campaignName: 'Fee Discount Program',
     type: 'Fee Discount',
     status: 'Draft',
     summary: 'Platinum tier yield seekers on Ethereum and Base'
   }
-] satisfies DraftCampaign[]
+] as const satisfies Omit<DraftCampaign, 'partnerName'>[]
+
+export function getDraftCampaigns(partnerName: string): DraftCampaign[] {
+  return baseDraftCampaigns.map((draft) => ({
+    ...draft,
+    partnerName
+  }))
+}
 
 export const scopeOptions = [
   {
     id: 'myusers',
-    label: 'Your users only',
-    description: 'Targeting users on your platform only. No CPA.',
+    label: 'Your Users Only',
+    description: 'Targeting users connected to your service via Drive or Verify API.',
     multiplier: 0.12
   },
   {
     id: 'discoverNew',
-    label: 'Discover new users',
-    description: 'Targeting new users from the Gravii verified pool. Solve cold start instantly.',
+    label: 'Discover New Users',
+    description: 'Targeting new users from the Gravii verified pool.',
     multiplier: 1
   },
   {
     id: 'both',
     label: 'Both',
-    description: 'Targeting your own users and new users from the Gravii pool. Maximum reach.',
+    description: 'Targeting both your connected users and the Gravii verified pool.',
     multiplier: 1.08
   }
 ] satisfies ScopeOption[]
 
 export const segmentOptions = [
-  { id: 'smart-saver', label: 'Smart Saver', persona: 'Yield-friendly stable users', reachWeight: 0.22 },
-  { id: 'loyal-supporter', label: 'Loyal Supporter', persona: 'Long-term staking loyalists', reachWeight: 0.18 },
-  { id: 'profit-hunter', label: 'Profit Hunter', persona: 'Fast-moving opportunity seekers', reachWeight: 0.16 },
-  { id: 'active-trader', label: 'Active Trader', persona: 'High-frequency DEX activity', reachWeight: 0.2 },
-  { id: 'market-provider', label: 'Market Provider', persona: 'Liquidity-first LP cohort', reachWeight: 0.14 },
-  { id: 'strategic-holder', label: 'Strategic Holder', persona: 'Long-horizon conviction wallets', reachWeight: 0.1 }
+  { id: 'defi-stakers-stables', label: 'DeFi Stakers (Stables)', persona: 'Smart Saver', reachWeight: 0.18 },
+  { id: 'defi-stakers-native', label: 'DeFi Stakers (Native)', persona: 'Loyal Supporter', reachWeight: 0.16 },
+  { id: 'defi-stakers-others', label: 'DeFi Stakers (Others)', persona: 'Profit Hunter', reachWeight: 0.09 },
+  { id: 'dex-traders', label: 'DEX Traders', persona: 'Active Trader', reachWeight: 0.13 },
+  { id: 'liquidity-providers', label: 'Liquidity Providers', persona: 'Market Provider', reachWeight: 0.11 },
+  { id: 'long-term-holders', label: 'Long-term Holders', persona: 'Strategic Holder', reachWeight: 0.1 },
+  { id: 'stablecoin-spenders', label: 'Stablecoin Spenders', persona: 'Cash Manager', reachWeight: 0.2 },
+  { id: 'stablecoin-whales', label: 'Stablecoin Whales', persona: 'Wealth Guard', reachWeight: 0.08 },
+  { id: 'native-token-whales', label: 'Native Token Whales', persona: 'Major Investor', reachWeight: 0.07 },
+  { id: 'nft-whales', label: 'NFT Whales', persona: 'NFT Collector', reachWeight: 0.05 },
+  { id: 'paper-hands', label: 'Paper Hands', persona: 'Swing Trader', reachWeight: 0.04 },
+  { id: 'cherry-pickers', label: 'Cherry Pickers', persona: 'Target Buyer', reachWeight: 0.04 },
+  { id: 'high-frequency-wallets', label: 'High Frequency Wallets', persona: 'Power User', reachWeight: 0.05 },
+  { id: 'sybil', label: 'Sybil', persona: 'Unique Player', reachWeight: 0.03 },
+  { id: 'bridge-users', label: 'Bridge Users', persona: 'Chain Hopper', reachWeight: 0.06 },
+  { id: 'airdrop-hunters', label: 'Airdrop Hunters', persona: 'Reward Seeker', reachWeight: 0.05 },
+  { id: 'dormant-wallets', label: 'Dormant Wallets', persona: 'Dormant Account', reachWeight: 0.03 },
+  { id: 'new-wallets', label: 'New Wallets', persona: 'New Voyager', reachWeight: 0.08 },
+  { id: 'governance-participants', label: 'Governance Participants', persona: 'Community Leader', reachWeight: 0.05 },
+  { id: 'rapid-growth-wallets', label: 'Rapid Growth Wallets', persona: 'Rising Star', reachWeight: 0.03 }
 ] satisfies SegmentOption[]
 
 export const chainOptions = [
-  { id: 'eth', label: 'Ethereum', reachWeight: 0.42 },
+  { id: 'all', label: 'All', reachWeight: 1 },
+  { id: 'eth', label: 'ETH', reachWeight: 0.42 },
   { id: 'base', label: 'Base', reachWeight: 0.22 },
   { id: 'arb', label: 'Arbitrum', reachWeight: 0.16 },
   { id: 'bsc', label: 'BSC', reachWeight: 0.11 },
   { id: 'poly', label: 'Polygon', reachWeight: 0.08 },
-  { id: 'sol', label: 'Solana', reachWeight: 0.07 },
-  { id: 'kaia', label: 'Kaia', reachWeight: 0.05 }
+  { id: 'avax', label: 'Avalanche', reachWeight: 0.06 },
+  { id: 'hl', label: 'Hyperliquid', reachWeight: 0.04 },
+  { id: 'kaia', label: 'Kaia', reachWeight: 0.05 },
+  { id: 'sol', label: 'Solana', reachWeight: 0.07 }
 ] satisfies ChainOption[]
 
 export const regionOptions = [
+  { id: 'all', label: 'All', reachWeight: 1 },
   { id: 'US', label: 'US', reachWeight: 0.182 },
   { id: 'JP', label: 'JP', reachWeight: 0.145 },
   { id: 'KR', label: 'KR', reachWeight: 0.121 },
@@ -166,7 +190,10 @@ export const regionOptions = [
   { id: 'TH', label: 'TH', reachWeight: 0.084 },
   { id: 'SG', label: 'SG', reachWeight: 0.072 },
   { id: 'DE', label: 'DE', reachWeight: 0.061 },
-  { id: 'GB', label: 'GB', reachWeight: 0.053 }
+  { id: 'GB', label: 'GB', reachWeight: 0.053 },
+  { id: 'VN', label: 'VN', reachWeight: 0.047 },
+  { id: 'ID', label: 'ID', reachWeight: 0.041 },
+  { id: 'others', label: 'Others', reachWeight: 0.09 }
 ] satisfies RegionOption[]
 
 export const activityOptions = [
@@ -213,7 +240,7 @@ export const assetFilterOptions = [
 ] satisfies AssetFilterOption[]
 
 export const percentileOptions = [
-  { id: 'all', label: 'All users', multiplier: 1 },
+  { id: 'all', label: 'All Users', multiplier: 1 },
   { id: '5', label: 'Black', multiplier: 0.05 },
   { id: '10', label: 'Platinum', multiplier: 0.1 },
   { id: '20', label: 'Gold', multiplier: 0.2 },

@@ -1,0 +1,76 @@
+.shell {
+  min-height: 100vh;
+  background: #071019;
+  color: #f4f7fb;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 22px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(7, 16, 25, 0.92);
+  backdrop-filter: blur(12px);
+}
+
+.brandBlock {
+  display: grid;
+  gap: 4px;
+}
+
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #8ea3b8;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.sessionBlock {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sessionMeta {
+  display: grid;
+  gap: 2px;
+  text-align: right;
+}
+
+.sessionName {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.sessionEmail {
+  font-size: 12px;
+  color: #8ea3b8;
+}
+
+.signOutButton {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  background: transparent;
+  padding: 8px 14px;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.signOutButton:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.content {
+  min-height: calc(100vh - 73px);
+}

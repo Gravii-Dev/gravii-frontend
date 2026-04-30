@@ -1,8 +1,14 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { startTransition, useState } from 'react'
+import { startTransition, useEffect, useMemo, useState } from 'react'
 
+import { usePartnerAuth } from '@/features/auth/auth-provider'
+import {
+  formatPartnerPlanLabel,
+  getPartnerWorkspaceName
+} from '@/lib/partner-profile'
+import { useWorkspaceAccess } from '@/lib/workspace-access'
 import {
   getWorkspaceScenario,
   type WorkspaceScenarioId
@@ -13,6 +19,8 @@ import {
 } from '@/lib/workspace-settings'
 
 import styles from './onboarding-page.module.css'
+
+const shouldPrefetchRoutes = process.env.NODE_ENV === 'production'
 
 interface ScenarioCardProps {
   title: string
@@ -47,10 +55,33 @@ function ScenarioCard({
 }
 
 export function OnboardingPage() {
+  const auth = usePartnerAuth()
   const router = useRouter()
   const [pendingScenario, setPendingScenario] = useState<WorkspaceScenarioId | null>(null)
+  const workspaceAccess = useWorkspaceAccess()
+  const workspaceName = getPartnerWorkspaceName(auth.session)
+  const planLabel = formatPartnerPlanLabel(auth.session?.plan)
+  const allowedScenarioIds = useMemo(
+    () => new Set(workspaceAccess.allowedScenarioIds),
+    [workspaceAccess.allowedScenarioIds]
+  )
+  const allowedDestinations = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          workspaceAccess.allowedScenarioIds
+            .map((scenarioId) => getWorkspaceScenario(scenarioId)?.destination)
+            .filter((destination): destination is string => Boolean(destination))
+        )
+      ),
+    [workspaceAccess.allowedScenarioIds]
+  )
 
   const openScenario = (scenarioId: WorkspaceScenarioId) => {
+    if (!allowedScenarioIds.has(scenarioId)) {
+      return
+    }
+
     const scenario = getWorkspaceScenario(scenarioId)
 
     if (!scenario) {
@@ -65,6 +96,38 @@ export function OnboardingPage() {
     })
   }
 
+  if (auth.status !== 'authenticated') {
+    return null
+  }
+
+  if (!workspaceAccess.canAccessWorkspace || workspaceAccess.isSuspended) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.container}>
+          <header className={styles.header}>
+            <div className={styles.eyebrow}>Workspace unavailable</div>
+            <h1 className={styles.title}>
+              This partner workspace is currently unavailable.
+            </h1>
+            <p className={styles.subtitle}>
+              Your partner account needs to be reactivated before Gravii can open the onboarding workspace.
+            </p>
+          </header>
+        </div>
+      </div>
+    )
+  }
+
+  useEffect(() => {
+    if (!shouldPrefetchRoutes) {
+      return
+    }
+
+    for (const destination of allowedDestinations) {
+      router.prefetch(destination)
+    }
+  }, [allowedDestinations, router])
+
   return (
     <div className={styles.page}>
       <div className={styles.cosmicGlow} aria-hidden="true" />
@@ -76,6 +139,11 @@ export function OnboardingPage() {
             Welcome to <span>Gravii</span>
           </h1>
           <p className={`${styles.subtitle} ${styles.fadeInTwo}`}>How would you like to get started?</p>
+          <div className={`${styles.workspaceSummary} ${styles.fadeInTwo}`}>
+            <span className={styles.workspaceName}>{workspaceName}</span>
+            <span className={styles.workspaceDivider}>·</span>
+            <span>{planLabel}</span>
+          </div>
         </header>
 
         <section className={styles.panel}>

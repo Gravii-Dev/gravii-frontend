@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { SiteNav } from './landing-navigation'
 import {
   ClosingSection,
@@ -15,8 +15,11 @@ import {
 import { useLandingEffects } from './use-landing-effects'
 import styles from './landing-page.module.css'
 
+export type LandingDimension = 'human' | 'agent'
+
 export function LandingPage() {
   const pageRef = useRef<HTMLDivElement>(null)
+  const [dimension, setDimension] = useState<LandingDimension>('human')
   const { isScrolled } = useLandingEffects(pageRef)
 
   return (
@@ -25,10 +28,10 @@ export function LandingPage() {
       <SiteNav isScrolled={isScrolled} />
       <HeroSection />
       <ProblemsSection />
-      <EngineSection />
-      <ProductSection />
-      <SolutionsSection />
-      <PricingSection />
+      <EngineSection dimension={dimension} />
+      <ProductSection dimension={dimension} onDimensionChange={setDimension} />
+      <SolutionsSection dimension={dimension} />
+      <PricingSection dimension={dimension} />
       <WhyNowSection />
       <ClosingSection />
     </div>

@@ -1,0 +1,920 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gravii M3 Expressive Option A</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700;800&family=Public+Sans:wght@400;500;600;700&display=swap");
+
+      :root {
+        color-scheme: light;
+        --bg: #f8f5ef;
+        --text: #15202b;
+        --muted: #53606f;
+        --primary: #365cff;
+        --primary-deep: #1e3fc7;
+        --primary-soft: #dce4ff;
+        --secondary: #008d77;
+        --secondary-soft: #cff4ea;
+        --tertiary: #ff9a4f;
+        --tertiary-soft: #ffe1c8;
+        --surface: rgba(255, 253, 250, 0.88);
+        --surface-strong: #fffaf2;
+        --surface-alt: rgba(240, 244, 255, 0.85);
+        --stroke: rgba(21, 32, 43, 0.1);
+        --shadow: 0 30px 90px rgba(40, 57, 97, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        min-height: 100%;
+        margin: 0;
+      }
+
+      body {
+        font-family: "Instrument Sans", "Public Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+        background:
+          radial-gradient(circle at 10% 12%, rgba(54, 92, 255, 0.16), transparent 24%),
+          radial-gradient(circle at 86% 18%, rgba(255, 154, 79, 0.2), transparent 22%),
+          radial-gradient(circle at 84% 70%, rgba(0, 141, 119, 0.18), transparent 26%),
+          linear-gradient(180deg, #fcfaf6 0%, #f2eee8 100%);
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .page {
+        width: min(1540px, calc(100vw - 40px));
+        margin: 0 auto;
+        padding: 28px 20px 42px;
+      }
+
+      .frame {
+        position: relative;
+        overflow: hidden;
+        border-radius: 48px;
+        background: linear-gradient(180deg, rgba(255, 252, 248, 0.68), rgba(255, 249, 241, 0.84));
+        border: 1px solid rgba(255, 255, 255, 0.75);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(24px);
+      }
+
+      .frame::before,
+      .frame::after {
+        content: "";
+        position: absolute;
+        border-radius: 999px;
+        filter: blur(6px);
+        opacity: 0.9;
+        pointer-events: none;
+      }
+
+      .frame::before {
+        top: -80px;
+        left: -40px;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(54, 92, 255, 0.24), transparent 62%);
+        animation: floatA 9s ease-in-out infinite;
+      }
+
+      .frame::after {
+        right: -50px;
+        top: 180px;
+        width: 260px;
+        height: 260px;
+        background: radial-gradient(circle, rgba(255, 154, 79, 0.24), transparent 60%);
+        animation: floatB 11s ease-in-out infinite;
+      }
+
+      .topbar {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        padding: 24px 28px 10px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .brand-mark {
+        width: 52px;
+        height: 52px;
+        border-radius: 18px 24px 16px 26px;
+        background: linear-gradient(160deg, #365cff 0%, #6b85ff 55%, #8fd2ff 100%);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.32);
+      }
+
+      .brand-copy {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .wordmark {
+        font-family: "Cloth", "Iowan Old Style", "Palatino Linotype", serif;
+        font-size: 35px;
+        line-height: 0.95;
+        letter-spacing: 0.02em;
+      }
+
+      .meta {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.65);
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .nav-pill {
+        padding: 11px 17px;
+        border-radius: 999px;
+        border: 1px solid rgba(21, 32, 43, 0.08);
+        background: rgba(255, 255, 255, 0.45);
+        color: var(--muted);
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .nav-pill.active {
+        background: linear-gradient(180deg, rgba(220, 228, 255, 0.96), rgba(203, 223, 255, 0.95));
+        color: var(--primary-deep);
+        border-color: rgba(54, 92, 255, 0.15);
+      }
+
+      .hero {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        grid-template-columns: 1.08fr 0.92fr;
+        gap: 24px;
+        padding: 8px 28px 26px;
+      }
+
+      .hero-copy,
+      .visual-stage {
+        position: relative;
+        border: 1px solid rgba(255, 255, 255, 0.54);
+        background: var(--surface);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.76);
+      }
+
+      .hero-copy {
+        overflow: hidden;
+        border-radius: 44px 44px 34px 58px;
+        padding: 32px 32px 34px;
+      }
+
+      .hero-copy::before {
+        content: "";
+        position: absolute;
+        inset: auto -80px -90px auto;
+        width: 260px;
+        height: 260px;
+        border-radius: 999px;
+        background: radial-gradient(circle, rgba(0, 141, 119, 0.18), transparent 64%);
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 15px;
+        border-radius: 999px;
+        background: linear-gradient(180deg, rgba(220, 228, 255, 0.96), rgba(237, 242, 255, 0.95));
+        color: var(--primary-deep);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--tertiary);
+        box-shadow: 0 0 0 6px rgba(255, 154, 79, 0.18);
+      }
+
+      h1 {
+        margin: 22px 0 14px;
+        max-width: 10ch;
+        font-size: 76px;
+        line-height: 0.92;
+        letter-spacing: -0.065em;
+      }
+
+      .lede {
+        max-width: 48ch;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .cta-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-top: 28px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        min-height: 56px;
+        padding: 0 22px;
+        border-radius: 999px;
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: -0.015em;
+        text-decoration: none;
+      }
+
+      .button.primary {
+        background: linear-gradient(180deg, #4b73ff 0%, #3154ee 100%);
+        color: #fbfcff;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 18px 32px rgba(54, 92, 255, 0.26);
+      }
+
+      .button.secondary {
+        border: 1px solid rgba(21, 32, 43, 0.08);
+        background: rgba(255, 255, 255, 0.62);
+        color: var(--text);
+      }
+
+      .signal-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .signal-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 14px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.7);
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .signal-chip strong {
+        color: var(--text);
+      }
+
+      .visual-stage {
+        overflow: hidden;
+        border-radius: 58px 34px 58px 34px;
+        padding: 22px;
+        background:
+          radial-gradient(circle at 16% 12%, rgba(54, 92, 255, 0.12), transparent 22%),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(248, 244, 236, 0.9));
+      }
+
+      .orbit {
+        position: absolute;
+        inset: 34px 26px auto auto;
+        width: 148px;
+        height: 148px;
+        border-radius: 999px;
+        border: 1px dashed rgba(54, 92, 255, 0.22);
+        animation: spin 14s linear infinite;
+      }
+
+      .orbit::before,
+      .orbit::after {
+        content: "";
+        position: absolute;
+        border-radius: 999px;
+      }
+
+      .orbit::before {
+        top: -10px;
+        left: 58px;
+        width: 20px;
+        height: 20px;
+        background: var(--tertiary);
+      }
+
+      .orbit::after {
+        bottom: 6px;
+        right: 8px;
+        width: 14px;
+        height: 14px;
+        background: var(--secondary);
+      }
+
+      .hero-stack {
+        display: grid;
+        gap: 14px;
+        min-height: 100%;
+      }
+
+      .focus-card {
+        padding: 22px;
+        border-radius: 34px 24px 40px 24px;
+        background: linear-gradient(180deg, rgba(220, 228, 255, 0.95), rgba(248, 250, 255, 0.94));
+        border: 1px solid rgba(54, 92, 255, 0.12);
+      }
+
+      .focus-head,
+      .sub-card-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+      }
+
+      .label {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .focus-title {
+        margin-top: 10px;
+        max-width: 12ch;
+        font-size: 34px;
+        line-height: 1;
+        letter-spacing: -0.05em;
+      }
+
+      .icon-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 54px;
+        height: 54px;
+        border-radius: 20px 24px 18px 24px;
+        background: linear-gradient(180deg, rgba(54, 92, 255, 0.16), rgba(54, 92, 255, 0.06));
+      }
+
+      .icon-badge svg,
+      .mini-icon svg {
+        width: 24px;
+        height: 24px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .focus-grid,
+      .sub-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .mini-card {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 12px;
+        align-items: start;
+        padding: 14px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid rgba(21, 32, 43, 0.08);
+      }
+
+      .mini-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 16px;
+        color: var(--primary-deep);
+        background: rgba(54, 92, 255, 0.12);
+      }
+
+      .mini-icon.secondary {
+        color: var(--secondary);
+        background: rgba(0, 141, 119, 0.12);
+      }
+
+      .mini-icon.tertiary {
+        color: #d8771f;
+        background: rgba(255, 154, 79, 0.16);
+      }
+
+      .mini-copy strong {
+        display: block;
+        font-size: 15px;
+        line-height: 1.25;
+      }
+
+      .mini-copy span {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .sub-card {
+        padding: 18px 18px 20px;
+        border-radius: 28px 36px 28px 24px;
+        background: rgba(255, 252, 247, 0.92);
+        border: 1px solid rgba(21, 32, 43, 0.08);
+      }
+
+      .score-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 13px;
+        border-radius: 20px;
+        background: linear-gradient(180deg, rgba(255, 225, 200, 0.96), rgba(255, 244, 233, 0.96));
+        color: #b65f14;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .panels {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 24px;
+        padding: 0 28px 28px;
+      }
+
+      .panel {
+        border: 1px solid rgba(255, 255, 255, 0.54);
+        background: rgba(255, 252, 247, 0.82);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.76);
+      }
+
+      .motion-panel {
+        border-radius: 32px 42px 32px 42px;
+        padding: 22px;
+      }
+
+      .spec-panel {
+        border-radius: 40px 28px 40px 28px;
+        padding: 22px;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 16px;
+      }
+
+      .section-title {
+        font-size: 25px;
+        line-height: 1;
+        letter-spacing: -0.05em;
+      }
+
+      .section-copy {
+        max-width: 30ch;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .motion-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .motion-item {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 12px;
+        align-items: start;
+        padding: 14px;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.68);
+      }
+
+      .motion-index {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 16px;
+        background: linear-gradient(180deg, rgba(54, 92, 255, 0.96), rgba(83, 114, 255, 0.96));
+        color: white;
+        font-weight: 800;
+      }
+
+      .motion-item strong {
+        display: block;
+        font-size: 15px;
+      }
+
+      .motion-item span {
+        display: block;
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .spec-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .spec-card {
+        padding: 16px;
+        border-radius: 24px;
+        border: 1px solid rgba(21, 32, 43, 0.08);
+        background: rgba(255, 255, 255, 0.62);
+      }
+
+      .spec-card h3 {
+        margin: 0 0 8px;
+        font-size: 16px;
+        letter-spacing: -0.02em;
+      }
+
+      .spec-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .swatches {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .swatch {
+        padding: 10px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.58);
+        border: 1px solid rgba(21, 32, 43, 0.06);
+      }
+
+      .swatch-color {
+        height: 72px;
+        border-radius: 16px;
+      }
+
+      .swatch strong {
+        display: block;
+        margin-top: 10px;
+        font-size: 13px;
+      }
+
+      .swatch span {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .footer-note {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 0 28px 28px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .footer-note strong {
+        color: var(--text);
+      }
+
+      @keyframes floatA {
+        0%,
+        100% {
+          transform: translate3d(0, 0, 0);
+        }
+        50% {
+          transform: translate3d(16px, 24px, 0);
+        }
+      }
+
+      @keyframes floatB {
+        0%,
+        100% {
+          transform: translate3d(0, 0, 0);
+        }
+        50% {
+          transform: translate3d(-20px, 12px, 0);
+        }
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (max-width: 1180px) {
+        .hero,
+        .panels {
+          grid-template-columns: 1fr;
+        }
+
+        .spec-grid,
+        .swatches {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 760px) {
+        .page {
+          width: min(100vw, calc(100vw - 12px));
+          padding: 10px 6px 18px;
+        }
+
+        .topbar,
+        .hero,
+        .panels,
+        .footer-note {
+          padding-left: 16px;
+          padding-right: 16px;
+        }
+
+        .topbar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        h1 {
+          font-size: 50px;
+        }
+
+        .focus-grid,
+        .sub-grid,
+        .spec-grid,
+        .swatches {
+          grid-template-columns: 1fr;
+        }
+
+        .cta-row,
+        .footer-note {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <div class="frame">
+        <header class="topbar">
+          <div class="brand">
+            <div class="brand-mark"></div>
+            <div class="brand-copy">
+              <div class="wordmark">Gravii</div>
+              <div class="meta">Option A · stronger Material 3 Expressive read · `Cloth` still shown with fallback serif</div>
+            </div>
+          </div>
+          <nav class="nav" aria-label="Preview sections">
+            <div class="nav-pill active">Identity</div>
+            <div class="nav-pill">Signals</div>
+            <div class="nav-pill">Motion</div>
+            <div class="nav-pill">Role Colors</div>
+          </nav>
+        </header>
+
+        <section class="hero">
+          <article class="hero-copy">
+            <div class="eyebrow"><span class="eyebrow-dot"></span> M3 Expressive pushed forward</div>
+            <h1>More shape. More role color. More presence.</h1>
+            <p class="lede">
+              This version intentionally makes the Material 3 Expressive influence easier to feel: stronger container
+              colors, more varied rounded geometry, visible icon language, and clearer action hierarchy. It is still
+              calibrated away from loud crypto-tech posturing.
+            </p>
+
+            <div class="cta-row">
+              <a class="button primary" href="#">Run X-RAY now</a>
+              <a class="button secondary" href="#">Review persona breakdown</a>
+            </div>
+
+            <div class="signal-row">
+              <div class="signal-chip"><strong>Primary</strong> deep blue focus</div>
+              <div class="signal-chip"><strong>Secondary</strong> teal trust cue</div>
+              <div class="signal-chip"><strong>Tertiary</strong> apricot warmth</div>
+              <div class="signal-chip"><strong>Shape</strong> intentional corner variance</div>
+            </div>
+          </article>
+
+          <aside class="visual-stage">
+            <div class="orbit" aria-hidden="true"></div>
+            <div class="hero-stack">
+              <section class="focus-card">
+                <div class="focus-head">
+                  <div>
+                    <div class="label">GRAVII ID</div>
+                    <div class="focus-title">Collector behavior with stable intent signals</div>
+                  </div>
+                  <div class="icon-badge" style="color: var(--primary-deep)">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M12 3l7 4v5c0 4.5-2.9 7.8-7 9-4.1-1.2-7-4.5-7-9V7l7-4Z"></path>
+                      <path d="m9.5 12 1.7 1.8 3.5-4"></path>
+                    </svg>
+                  </div>
+                </div>
+
+                <div class="focus-grid">
+                  <div class="mini-card">
+                    <div class="mini-icon">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4 12h16"></path>
+                        <path d="M12 4v16"></path>
+                      </svg>
+                    </div>
+                    <div class="mini-copy">
+                      <strong>Measured activity rhythm</strong>
+                      <span>Signals are grouped into readable buckets instead of raw dashboard noise.</span>
+                    </div>
+                  </div>
+                  <div class="mini-card">
+                    <div class="mini-icon secondary">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4 14c2.6 0 4.1-1.7 4.1-4.1C8.1 7.3 9.8 6 12 6s3.9 1.3 3.9 3.9c0 2.4 1.5 4.1 4.1 4.1"></path>
+                        <path d="M12 6v12"></path>
+                      </svg>
+                    </div>
+                    <div class="mini-copy">
+                      <strong>Comfortable trust cues</strong>
+                      <span>Teal and blue containers make the analysis feel supported, not clinical.</span>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="sub-card">
+                <div class="sub-card-head">
+                  <div>
+                    <div class="label">X-RAY</div>
+                    <div class="section-title">Explainable insight, not a black-box flex</div>
+                  </div>
+                  <div class="score-pill">Insight confidence 87%</div>
+                </div>
+
+                <div class="sub-grid">
+                  <div class="mini-card">
+                    <div class="mini-icon tertiary">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M5 18 19 6"></path>
+                        <path d="M9 6h10v10"></path>
+                      </svg>
+                    </div>
+                    <div class="mini-copy">
+                      <strong>Action hierarchy</strong>
+                      <span>Primary CTA is clearly louder, but the supporting path still feels premium.</span>
+                    </div>
+                  </div>
+                  <div class="mini-card">
+                    <div class="mini-icon">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4 16c2.5 0 3.5-8 8-8s5.5 8 8 8"></path>
+                        <path d="M4 12c2.5 0 3.5-4 8-4s5.5 4 8 4"></path>
+                      </svg>
+                    </div>
+                    <div class="mini-copy">
+                      <strong>Expressive shape language</strong>
+                      <span>The cards, pills, and icon containers feel more intentional than a generic soft UI.</span>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </aside>
+        </section>
+
+        <section class="panels">
+          <div class="panel motion-panel">
+            <div class="section-head">
+              <div>
+                <div class="label">Motion read</div>
+                <div class="section-title">What should animate</div>
+              </div>
+              <div class="section-copy">These motions are visible enough to feel expressive, but still short and utility-led.</div>
+            </div>
+
+            <div class="motion-list">
+              <div class="motion-item">
+                <div class="motion-index">1</div>
+                <div>
+                  <strong>Hero entry cascade</strong>
+                  <span>Wordmark, eyebrow, headline, and action row step in over 260–340ms with slight vertical travel.</span>
+                </div>
+              </div>
+              <div class="motion-item">
+                <div class="motion-index">2</div>
+                <div>
+                  <strong>Floating support shapes</strong>
+                  <span>Ambient blobs drift slowly so the screen feels alive even before interaction starts.</span>
+                </div>
+              </div>
+              <div class="motion-item">
+                <div class="motion-index">3</div>
+                <div>
+                  <strong>Soft press feedback</strong>
+                  <span>CTA buttons compress by 1–2% and deepen in color around 100ms instead of flashing or bouncing.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel spec-panel">
+            <div class="section-head">
+              <div>
+                <div class="label">Why this reads more M3E</div>
+                <div class="section-title">Shape, icons, and role colors are doing more work</div>
+              </div>
+            </div>
+
+            <div class="spec-grid">
+              <div class="spec-card">
+                <h3>Stronger color separation</h3>
+                <p>Primary, secondary, and tertiary containers now feel intentionally different instead of softly adjacent.</p>
+              </div>
+              <div class="spec-card">
+                <h3>Visible icon treatment</h3>
+                <p>Icon containers carry hierarchy and echo the same rounded geometry system as the cards.</p>
+              </div>
+              <div class="spec-card">
+                <h3>More expressive corners</h3>
+                <p>Rounded forms are varied enough to feel designed, not just uniformly soft.</p>
+              </div>
+            </div>
+
+            <div class="swatches">
+              <div class="swatch">
+                <div class="swatch-color" style="background: #365cff"></div>
+                <strong>Primary</strong>
+                <span>#365CFF</span>
+              </div>
+              <div class="swatch">
+                <div class="swatch-color" style="background: #dce4ff"></div>
+                <strong>Primary Container</strong>
+                <span>#DCE4FF</span>
+              </div>
+              <div class="swatch">
+                <div class="swatch-color" style="background: #008d77"></div>
+                <strong>Secondary</strong>
+                <span>#008D77</span>
+              </div>
+              <div class="swatch">
+                <div class="swatch-color" style="background: #ff9a4f"></div>
+                <strong>Tertiary</strong>
+                <span>#FF9A4F</span>
+              </div>
+              <div class="swatch">
+                <div class="swatch-color" style="background: #fffaf2"></div>
+                <strong>Surface</strong>
+                <span>#FFFAF2</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <footer class="footer-note">
+          <div><strong>Use this if:</strong> you want users to feel the Material 3 Expressive reference immediately.</div>
+          <div><strong>Tradeoff:</strong> stronger presence means more risk of drifting away from Gravii's quiet side if we overdo it.</div>
+        </footer>
+      </div>
+    </main>
+  </body>
+</html>

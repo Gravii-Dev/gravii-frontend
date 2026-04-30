@@ -1,5 +1,8 @@
 .section {
-  background: rgb(236 224 203);
+  background:
+    radial-gradient(circle at 8% 20%, rgb(244 210 58 / 14%), transparent 24%),
+    radial-gradient(circle at 92% 10%, rgb(90 169 255 / 12%), transparent 25%),
+    var(--gravii-canvas-dim);
   padding: clamp(5.5rem, 10vw, 7.5rem) 1.5rem clamp(5rem, 9vw, 6.5rem);
 }
 
@@ -10,6 +13,11 @@
   align-items: center;
   justify-content: space-between;
   gap: clamp(1.5rem, 4vw, 3rem);
+  border: var(--gravii-border);
+  border-radius: var(--gravii-radius-container);
+  background: var(--gravii-surface);
+  box-shadow: var(--gravii-shadow-pop);
+  padding: clamp(1.2rem, 3vw, 2rem);
 }
 
 .titleReveal {
@@ -26,13 +34,100 @@
 
 .title {
   margin: 0;
-  font-family: var(--font-mystic-dream), var(--next-font-sans), sans-serif;
+  font-family: var(--gravii-font-display);
   font-size: clamp(2rem, 4vw, 3.2rem);
   font-weight: 500;
   line-height: 0.98;
   letter-spacing: 0.02em;
-  color: rgb(0 0 0 / 78%);
+  color: var(--gravii-ink);
   text-wrap: balance;
+}
+
+.returningCard {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1.4rem;
+  border: var(--gravii-border);
+  border-radius: var(--gravii-radius-card);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 44%) 0%, rgb(255 255 255 / 14%) 100%),
+    var(--gravii-surface-strong);
+  box-shadow:
+    0 16px 40px rgb(0 0 0 / 5%),
+    inset 0 1px 0 rgb(255 255 255 / 48%);
+}
+
+.returningEyebrow {
+  margin: 0;
+  font-family: var(--gravii-font-ui);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgb(0 0 0 / 48%);
+}
+
+.returningTitle {
+  margin: 0;
+  font-family: var(--gravii-font-ui);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: rgb(0 0 0 / 84%);
+}
+
+.returningCopy {
+  margin: 0;
+  font-family: var(--gravii-font-ui);
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.55;
+  color: rgb(0 0 0 / 62%);
+}
+
+.referralCodeBox {
+  padding: 0.95rem 1rem;
+  border: 1px dashed var(--gravii-line-strong);
+  border-radius: var(--gravii-radius-sm);
+  background: var(--gravii-surface-low);
+  font-family: var(--gravii-font-ui);
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-align: center;
+  text-transform: uppercase;
+  color: rgb(0 0 0 / 78%);
+}
+
+.returningActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.secondaryButton {
+  border: var(--gravii-border);
+  border-radius: var(--gravii-radius-sm);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 36%) 0%, rgb(255 255 255 / 10%) 100%),
+    var(--gravii-surface-strong);
+  padding: 0.9rem 1.15rem;
+  font-family: var(--gravii-font-ui);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgb(0 0 0 / 82%);
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.secondaryButton:hover {
+  transform: translateY(-1px);
+  border-color: rgb(0 0 0 / 18%);
+  box-shadow: 0 12px 24px rgb(0 0 0 / 6%);
 }
 
 .form {
@@ -41,11 +136,11 @@
   align-items: center;
   width: 100%;
   padding: 0.38rem;
-  border: 1px solid rgb(0 0 0 / 11%);
-  border-radius: 1.25rem;
+  border: var(--gravii-border);
+  border-radius: var(--gravii-radius-card);
   background:
-    linear-gradient(180deg, rgb(255 255 255 / 32%) 0%, rgb(255 255 255 / 12%) 100%),
-    rgb(255 255 255 / 10%);
+    linear-gradient(180deg, rgb(255 255 255 / 44%) 0%, rgb(255 255 255 / 14%) 100%),
+    var(--gravii-surface-strong);
   box-shadow:
     0 16px 40px rgb(0 0 0 / 5%),
     inset 0 1px 0 rgb(255 255 255 / 48%);
@@ -66,10 +161,10 @@
   flex: 1;
   min-width: 0;
   border: 0;
-  border-radius: 0.95rem;
+  border-radius: var(--gravii-radius-sm);
   background: transparent;
   padding: 1rem 1.15rem;
-  font-family: var(--next-font-sans), sans-serif;
+  font-family: var(--gravii-font-ui);
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.01em;
@@ -104,13 +199,13 @@
 }
 
 .button {
-  border: 1px solid rgb(0 0 0 / 14%);
-  border-radius: 1rem;
+  border: var(--gravii-border);
+  border-radius: var(--gravii-radius-sm);
   background:
-    linear-gradient(180deg, rgb(255 255 255 / 32%) 0%, rgb(255 255 255 / 12%) 100%),
-    rgb(255 255 255 / 10%);
+    linear-gradient(180deg, rgb(255 255 255 / 28%) 0%, rgb(255 255 255 / 7%) 100%),
+    var(--gravii-gold);
   padding: 1rem 1.3rem;
-  font-family: var(--next-font-sans), sans-serif;
+  font-family: var(--gravii-font-ui);
   font-size: 0.88rem;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -126,10 +221,10 @@
 
 .button:hover {
   transform: translateY(-1px);
-  border-color: rgb(0 0 0 / 18%);
+  border-color: var(--gravii-ink);
   background:
-    linear-gradient(180deg, rgb(255 255 255 / 40%) 0%, rgb(255 255 255 / 16%) 100%),
-    rgb(255 255 255 / 16%);
+    linear-gradient(180deg, rgb(255 255 255 / 32%) 0%, rgb(255 255 255 / 8%) 100%),
+    var(--gravii-glacier);
   box-shadow: 0 12px 24px rgb(0 0 0 / 6%);
 }
 
@@ -142,7 +237,7 @@
 
 .status {
   margin: 0.85rem 0 0;
-  font-family: var(--next-font-sans), sans-serif;
+  font-family: var(--gravii-font-ui);
   font-size: 0.82rem;
   font-weight: 600;
   letter-spacing: 0.01em;
@@ -191,7 +286,12 @@
     padding: 0.5rem;
   }
 
-  .button {
+  .button,
+  .secondaryButton {
     width: 100%;
+  }
+
+  .returningActions {
+    flex-direction: column;
   }
 }

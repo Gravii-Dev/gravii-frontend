@@ -12,6 +12,8 @@ test-results
 .env
 .env.*
 !.env.example
+.local-docs/
+**/.local-docs/
 
 # Tooling and editor state
 .idea
@@ -19,7 +21,8 @@ test-results
 .cursor
 *.tsbuildinfo
 **/.playwright-cli
-**/output/playwright
+output/
+tmp/
 
 # Transition backups
 tooling/backups

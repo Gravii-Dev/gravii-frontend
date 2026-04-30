@@ -19,12 +19,12 @@ App status:
 | User App | `apps/gravii-user-app` | yes | no | Local git exists, but no remote is configured |
 | Backoffice | `apps/gravii-backoffice` | no | no confirmed connection from this workspace | Managed only as a folder inside `FRONTEND` right now |
 | Partner App | `apps/gravii-partner-app` | no | no confirmed connection from this workspace | Managed only as a folder inside `FRONTEND` right now |
-| Partner Landing | `apps/gravii-partner-landing` | no | no confirmed connection from this workspace | Managed only as a folder inside `FRONTEND` right now |
 
 ## Immediate Interpretation
 
 - The current workspace is structurally a monorepo, but not yet a single Git monorepo.
 - `gravii-user-landing` is the only app that is clearly connected to GitHub from inside this workspace.
+- The public partner acquisition route is now served from `apps/gravii-user-landing` at `/partners`.
 - `gravii-user-app` has local commit history potential, but it is not yet connected to a GitHub remote.
 - Root-level files such as `turbo.json`, `package.json`, `packages/*`, and `docs/*` are not protected by any root git history right now.
 - Nested git repos inside a future monorepo will become confusing unless they are intentionally preserved for a short transition period only.
@@ -112,7 +112,6 @@ After the root monorepo is on GitHub:
    - `apps/gravii-user-app`
    - `apps/gravii-backoffice`
    - `apps/gravii-partner-app`
-   - `apps/gravii-partner-landing`
 3. Keep each deployment independently scoped to its app folder.
 
 This preserves separate deployables while still using one repo.
@@ -128,7 +127,6 @@ After migration:
   - `bun run dev:user-app`
   - `bun run dev:backoffice`
   - `bun run dev:partner-app`
-  - `bun run dev:partner-landing`
 - Run all dev servers together with `bun run dev`
 
 ## Practical Warnings
