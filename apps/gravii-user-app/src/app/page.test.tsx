@@ -1,18 +1,58 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import HomePage from "./page";
 
-const signOut = vi.fn();
+type MockAuthState = {
+  isAuthenticated: boolean;
+  status: "loading" | "authenticated" | "anonymous";
+  user: {
+    address: string;
+    createdAt: string;
+    lastLoginAt: string;
+    referralCode: string;
+    referredUsersCount: number;
+  } | null;
+};
+
+const authMock = {
+  beginSignIn: vi.fn(),
+  refreshSession: vi.fn(),
+  signOut: vi.fn(),
+  state: {
+    isAuthenticated: true,
+    status: "authenticated",
+    user: {
+      address: "0x7a3b9f2c11111111111111111111111111111111",
+      createdAt: new Date().toISOString(),
+      lastLoginAt: new Date().toISOString(),
+      referralCode: "GRAVII",
+      referredUsersCount: 0,
+    },
+  } as MockAuthState,
+};
 
 vi.mock("@/features/auth/auth-provider", () => {
   return {
     useUserAuth: () => ({
-      beginSignIn: vi.fn(),
+      beginSignIn: authMock.beginSignIn,
+      isAuthenticated: authMock.state.isAuthenticated,
+      refreshSession: authMock.refreshSession,
+      signOut: authMock.signOut,
+      status: authMock.state.status,
+      user: authMock.state.user,
+    }),
+  };
+});
+
+describe("HomePage", () => {
+  beforeEach(() => {
+    authMock.beginSignIn.mockReset();
+    authMock.refreshSession.mockReset();
+    authMock.signOut.mockReset();
+    authMock.state = {
       isAuthenticated: true,
-      refreshSession: vi.fn(),
-      signOut,
       status: "authenticated",
       user: {
         address: "0x7a3b9f2c11111111111111111111111111111111",
@@ -21,11 +61,9 @@ vi.mock("@/features/auth/auth-provider", () => {
         referralCode: "GRAVII",
         referredUsersCount: 0,
       },
-    }),
-  };
-});
+    };
+  });
 
-describe("HomePage", () => {
   it("calls sign out from the session button", async () => {
     const user = userEvent.setup();
 
@@ -35,7 +73,25 @@ describe("HomePage", () => {
 
     await user.click(authButton);
 
-    expect(signOut).toHaveBeenCalledTimes(1);
+    expect(authMock.signOut).toHaveBeenCalledTimes(1);
+  });
+
+  it("keeps the launch app visible for anonymous users and starts sign-in from the header", async () => {
+    const user = userEvent.setup();
+    authMock.state = {
+      isAuthenticated: false,
+      status: "anonymous",
+      user: null,
+    };
+
+    render(<HomePage />);
+
+    const authButton = screen.getByRole("button", { name: "SIGN IN" });
+
+    await user.click(authButton);
+
+    expect(authMock.beginSignIn).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("button", { name: "GRAVII ID panel" })).toBeInTheDocument();
   });
 
   it("opens a panel and closes it from the shell action", async () => {

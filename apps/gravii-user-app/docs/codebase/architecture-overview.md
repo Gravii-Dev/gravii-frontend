@@ -13,7 +13,7 @@ Architecture describes the major responsibility boundaries in the app and how da
 In this repository, the high-level frontend architecture is:
 
 1. `src/app/page.tsx` acts as the single route entry point.
-2. `src/features/auth/auth-provider.tsx` owns client-side User API session bootstrap and sign-in routing.
+2. `src/features/auth/auth-provider.tsx` owns client-side User API session bootstrap and explicit sign-in routing.
 3. `src/features/launch-app/use-launch-shell.ts` owns shared shell state such as the active and hovered panel.
 4. `src/components/layout/*` renders the panel system around the feature content.
 5. `src/features/*` renders each product surface and computes feature-specific UI state.
@@ -67,7 +67,7 @@ Important implications:
 
 - The main route is `/`.
 - Most interactive code is client-side.
-- Wallet sign-in uses an injected EVM wallet on `/sign-in`.
+- Anonymous users can land on `/`; wallet sign-in uses an injected EVM wallet only after the explicit `SIGN IN` action routes to `/sign-in`.
 - The browser stores the User API JWT and revalidates it through the User API.
 - Browser API reads go through the same-origin `/api/v1/*` rewrite before reaching the User API.
 - `GRAVII ID` and `X-RAY` use live backend reads.
@@ -215,6 +215,7 @@ Covered today:
 
 - panel open and close behavior
 - sign-out button behavior through the mocked auth provider
+- anonymous launch route behavior and explicit sign-in routing
 - reserved Discovery and My Space coming-soon states
 - X-Ray session-required behavior
 - X-Ray live-flow rendering through mocked User API helpers
