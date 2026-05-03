@@ -9,11 +9,12 @@ Goal:
 Steps:
 
 1. User lands in Launch App.
-2. App shows gated surfaces with connect prompts.
-3. User connects a supported wallet.
-4. App resolves wallet identity and session.
-5. App requests profile summary for the connected wallet.
-6. App renders the Profile surface.
+2. App shows the launch surface in anonymous mode with an explicit `SIGN IN` action.
+3. User chooses `SIGN IN` and enters the `/sign-in` wallet flow.
+4. User connects a supported wallet.
+5. App resolves wallet identity and session.
+6. App requests profile summary for the connected wallet.
+7. App renders the Profile surface.
 
 Success outcome:
 

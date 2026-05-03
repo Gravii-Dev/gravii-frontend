@@ -113,7 +113,7 @@ flowchart TD
 
 - Owns client-side session bootstrap.
 - Exposes `beginSignIn`, `refreshSession`, `signOut`, and current auth state.
-- Redirects anonymous users into the sign-in flow.
+- Keeps anonymous users on the launch route and enters the wallet sign-in flow only through explicit `beginSignIn` actions.
 
 `src/features/auth/user-sign-in-page.tsx`
 
@@ -271,6 +271,7 @@ flowchart TD
 
 - Some documentation still describes the old mock-only prototype state.
 - The auth boundary is mostly browser-side; there is no route-level access boundary yet.
+- Anonymous landing is intentional; individual live surfaces must keep their own session-required states until a route-level access boundary is introduced.
 - JWT persistence is localStorage-based, which should be reviewed before a broader production hardening pass.
 - `tsconfig.json` still allows implicit `any` through `noImplicitAny: false`.
 - Legacy mock-era files remain for Discovery, My Space, and Standing even though the active UI now uses coming-soon content.
@@ -284,7 +285,7 @@ flowchart TD
 Do these before large UI/UX changes.
 
 - Update stale codebase docs so developers do not follow the old mock-only mental model.
-- Add test coverage for sign-in success, sign-in failure, and existing-session redirect behavior.
+- Add test coverage for sign-in success, sign-in failure, and existing-session handoff behavior.
 - Add test coverage for Profile identity loading, bootstrap retry, 401 refresh, and failure actions.
 - Decide whether the rollout needs an explicit route access boundary beyond the current browser-side session handling.
 - Decide whether localStorage JWT persistence is acceptable for this rollout or should move behind a stronger session strategy.

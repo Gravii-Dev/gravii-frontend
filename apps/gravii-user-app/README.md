@@ -145,6 +145,7 @@ docs/
 Current live-backed parts:
 
 - wallet challenge/signature sign-in against the User API
+- anonymous users can land on `/` without an automatic wallet prompt; the header `SIGN IN` action is the only entry into `/sign-in`
 - 24 hour JWT session validation against the User API
 - live `GRAVII ID` loading through `/api/v1/me/identity`, including short bootstrap polling for newly created wallets and the refreshed branded identity presentation
 - live X-Ray credits, lookup history, fresh lookup runs, and detail reads with the new Gravii-branded analytical surface

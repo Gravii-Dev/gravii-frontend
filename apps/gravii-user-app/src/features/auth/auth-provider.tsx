@@ -18,7 +18,6 @@ import {
 import {
   buildUserSignInHref,
   normalizeUserNextPath,
-  userSignInPath,
 } from '@/lib/auth/shared'
 
 type UserAuthStatus = 'loading' | 'authenticated' | 'anonymous'
@@ -92,18 +91,12 @@ export function UserAuthProvider({
     clearUserToken()
     setUser(null)
     setStatus('anonymous')
-    router.replace(buildUserSignInHref('/'))
+    router.replace('/')
   }, [router])
 
   useEffect(() => {
     void bootstrapSession()
   }, [bootstrapSession])
-
-  useEffect(() => {
-    if (status === 'anonymous' && pathname !== userSignInPath) {
-      router.replace(buildUserSignInHref(nextPath))
-    }
-  }, [nextPath, pathname, router, status])
 
   const value = useMemo<UserAuthContextValue>(
     () => ({
