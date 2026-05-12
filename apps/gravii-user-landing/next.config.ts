@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
     process.env.SOURCE_MAPS === 'true' && typeof Bun === 'undefined',
   typedRoutes: true,
   logging: {
+    browserToTerminal: true,
     fetches: {
       fullUrl: true,
     },
@@ -84,7 +85,6 @@ const nextConfig: NextConfig = {
   compress: true,
   experimental: {
     taint: true,
-    browserDebugInfoInTerminal: true,
     serverActions: {
       allowedOrigins: [
         'gravii.io',

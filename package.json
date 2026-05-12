@@ -24,7 +24,25 @@
     "lint:user-landing": "turbo run lint --filter=gravii-user-landing"
   },
   "devDependencies": {
-    "@playwright/test": "^1.58.2",
-    "turbo": "^2.5.4"
+    "@playwright/test": "^1.60.0",
+    "turbo": "2.8.17"
+  },
+  "overrides": {
+    "@babel/plugin-transform-modules-systemjs": "7.29.4",
+    "axios": "1.16.0",
+    "basic-ftp": "5.3.1",
+    "brace-expansion": "1.1.14",
+    "dompurify": "3.4.2",
+    "follow-redirects": "1.16.0",
+    "js-yaml": "3.14.2",
+    "lodash": "4.18.1",
+    "lodash-es": "4.18.1",
+    "picomatch": "2.3.2",
+    "postcss": "8.5.14",
+    "protobufjs": "7.5.7",
+    "smol-toml": "1.6.1",
+    "uuid": "13.0.2",
+    "vite": "7.3.3",
+    "yaml": "2.9.0"
   }
 }

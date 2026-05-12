@@ -2,6 +2,40 @@
 
 Append only. Use newest entries first. Record what changed, how it was checked, and the next handoff point. Do not use this file as a backlog or a plan.
 
+## 2026-05-12
+
+- Cleared the current frontend dependency vulnerability set:
+  - upgraded all workspace apps to `next@16.2.6` so the open GitHub Dependabot Next.js alerts have a patched target once this branch is merged
+  - added root dependency `overrides` for vulnerable transitive packages pulled through Firebase, Sanity, Reown/Wagmi, Vite, PostCSS, lodash, and related tooling
+  - updated the Bun lockfile after the patched dependency graph resolved to `bun audit` 0 vulnerabilities
+  - moved Backoffice and Partner framework interception files from `src/middleware.ts` to `src/proxy.ts` for the current Next.js convention
+  - moved `gravii-user-landing` browser-to-terminal logging out of the deprecated experimental config path
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/package.json`
+  - `/Users/kxwxn/Gravii/FRONTEND/bun.lock`
+  - `/Users/kxwxn/Gravii/FRONTEND/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/PROGRESS.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/package.json`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/package.json`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/next.config.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-backoffice/package.json`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-backoffice/next-env.d.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-backoffice/src/proxy.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-backoffice/src/middleware.ts` (deleted)
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-backoffice/docs/frontend-implementation-standards.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/package.json`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/next-env.d.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/proxy.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/src/middleware.ts` (deleted)
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/README.md`
+- Verification:
+  - `cd /Users/kxwxn/Gravii/FRONTEND && bun audit`
+  - `cd /Users/kxwxn/Gravii/FRONTEND && bun run typecheck`
+  - `cd /Users/kxwxn/Gravii/FRONTEND && bun run build`
+  - `cd /Users/kxwxn/Gravii/FRONTEND && bun run lint` still fails on existing `gravii-user-landing` partner landing style/a11y rules unrelated to the dependency security work.
+- Next handoff:
+  - Merge and deploy this branch to the Vercel project serving `app.gravii.io`; `www.gravii.io` already links to `https://app.gravii.io/`, so the old production UI is a deployment/promote issue, not a landing-link issue.
+
 ## 2026-04-21
 
 - Ran a post-Lens-integration frontend verification pass across the currently live surfaces:
