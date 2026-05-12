@@ -31,13 +31,18 @@ export interface GraviiIdentity {
   defiTvlUsd: number
   homeChain: string
   netWorthUsd: number
+  nftsCollectedCount: number | null
   otherActiveChains: string[]
   portfolioTrend30d: number | null
   reputation: 'trusted' | 'neutral' | 'cautious' | 'flagged'
   reputationFlags: string[]
+  matchedCampaignsCount: number | null
+  standoutMetric: string | null
+  standoutRank: number | null
   tier: string
   topPersona: string
   tradingVolume30d: number
+  transactionsAllTime: number | null
   transactions90d: number
   walletAgeDays: number
 }
@@ -67,6 +72,20 @@ export interface UserXrayLookupResult {
 
 export interface UserXrayDetailResponse {
   xray: Record<string, unknown> | string | null
+}
+
+export type UserXrayCreditBundleId = 'xray_credits_10'
+
+export interface UserXrayCheckoutSessionInput {
+  bundleId: UserXrayCreditBundleId
+  cancelUrl: string
+  successUrl: string
+}
+
+export interface UserXrayCheckoutSession {
+  checkoutUrl: string
+  expiresAt: string | null
+  sessionId: string | null
 }
 
 export class UserApiError extends Error {
@@ -111,14 +130,19 @@ interface GraviiIdentityWire {
   defi_protocols_count: number
   defi_tvl_usd: number
   home_chain: string
+  matched_campaigns_count?: number | null
   net_worth_usd: number
+  nfts_collected_count?: number | null
   other_active_chains: string[]
   portfolio_trend_30d: number | null
   reputation: GraviiIdentity['reputation']
   reputation_flags: string[]
+  standout_metric?: string | null
+  standout_rank?: number | null
   tier: string
   top_persona: string
   trading_volume_30d: number
+  transactions_all_time?: number | null
   transactions_90d: number
   wallet_age_days: number
 }
@@ -144,6 +168,21 @@ interface UserXrayLookupResultWire {
   credit_used?: boolean
   credits_remaining: number
   success: boolean
+}
+
+interface UserXrayCheckoutSessionWire {
+  checkout_session?: {
+    checkout_url?: string
+    expires_at?: string | null
+    id?: string
+    session_id?: string
+    url?: string
+  }
+  checkout_url?: string
+  expires_at?: string | null
+  id?: string
+  session_id?: string
+  url?: string
 }
 
 const DEFAULT_USER_API_BASE_URL =
@@ -189,14 +228,19 @@ function normalizeIdentity(identity: GraviiIdentityWire): GraviiIdentity {
     defiProtocolsCount: identity.defi_protocols_count,
     defiTvlUsd: identity.defi_tvl_usd,
     homeChain: identity.home_chain,
+    matchedCampaignsCount: identity.matched_campaigns_count ?? null,
     netWorthUsd: identity.net_worth_usd,
+    nftsCollectedCount: identity.nfts_collected_count ?? null,
     otherActiveChains: identity.other_active_chains,
     portfolioTrend30d: identity.portfolio_trend_30d,
     reputation: identity.reputation,
     reputationFlags: identity.reputation_flags,
+    standoutMetric: identity.standout_metric ?? null,
+    standoutRank: identity.standout_rank ?? null,
     tier: identity.tier,
     topPersona: identity.top_persona,
     tradingVolume30d: identity.trading_volume_30d,
+    transactionsAllTime: identity.transactions_all_time ?? null,
     transactions90d: identity.transactions_90d,
     walletAgeDays: identity.wallet_age_days,
   }
@@ -223,6 +267,23 @@ function normalizeLookupResult(
     creditUsed: result.credit_used ?? false,
     creditsRemaining: result.credits_remaining,
     success: result.success,
+  }
+}
+
+function normalizeCheckoutSession(
+  session: UserXrayCheckoutSessionWire
+): UserXrayCheckoutSession {
+  const source = session.checkout_session ?? session
+  const checkoutUrl = source.checkout_url ?? source.url
+
+  if (typeof checkoutUrl !== 'string' || checkoutUrl.trim().length === 0) {
+    throw new UserApiError('Checkout session did not include a redirect URL.', 502)
+  }
+
+  return {
+    checkoutUrl,
+    expiresAt: source.expires_at ?? null,
+    sessionId: source.session_id ?? source.id ?? null,
   }
 }
 
@@ -422,6 +483,24 @@ export async function readUserCredits(): Promise<number> {
   })
 
   return payload.credits
+}
+
+export async function createUserXrayCheckoutSession(
+  input: UserXrayCheckoutSessionInput
+): Promise<UserXrayCheckoutSession> {
+  const payload = await userApiFetch<UserXrayCheckoutSessionWire>(
+    '/api/v1/me/xray/checkout-session',
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        bundle_id: input.bundleId,
+        cancel_url: input.cancelUrl,
+        success_url: input.successUrl,
+      }),
+    }
+  )
+
+  return normalizeCheckoutSession(payload)
 }
 
 export async function readUserLookupList(): Promise<UserXrayLookupListResponse> {

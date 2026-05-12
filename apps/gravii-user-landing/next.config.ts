@@ -85,6 +85,14 @@ const nextConfig: NextConfig = {
   experimental: {
     taint: true,
     browserDebugInfoInTerminal: true,
+    serverActions: {
+      allowedOrigins: [
+        'gravii.io',
+        'www.gravii.io',
+        '*.gravii.io',
+        '*.vercel.app',
+      ],
+    },
     optimizePackageImports: [
       '@react-three/drei',
       '@react-three/fiber',

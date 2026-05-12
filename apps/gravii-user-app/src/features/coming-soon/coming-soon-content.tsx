@@ -1,6 +1,7 @@
 'use client'
 
 import ActionButton from '@/components/ui/action-button'
+import GraviiLogo from '@/components/ui/gravii-logo'
 import type { PanelId, SharedContentProps } from '@/features/launch-app/types'
 
 import styles from './coming-soon-content.module.css'
@@ -59,25 +60,27 @@ export default function ComingSoonContent({
 
   return (
     <div className={`${styles.root} ${dark ? styles.rootDark : styles.rootLight}`}>
-      <div className={styles.card}>
+      <div className={styles.card} data-liquid-glass="panel">
+        <GraviiLogo decorative variant="symbol" className={styles.watermark} />
+
         <div className={styles.headerLine}>
           <span className={styles.eyebrow}>{eyebrow}</span>
-          <span className={styles.statusPill}>{sessionLabel}</span>
+          <span className={styles.statusPill} data-liquid-glass="soft">{sessionLabel}</span>
         </div>
 
         <h2 className={styles.title}>{title}</h2>
         <p className={styles.copy}>{copy}</p>
 
         <div className={styles.badges}>
-          <span className={styles.badge}>Surface reserved</span>
-          <span className={styles.badgeMuted}>Live route locked</span>
+          <span className={styles.badge} data-liquid-glass="soft">Surface reserved</span>
+          <span className={styles.badgeMuted} data-liquid-glass="soft">Live route locked</span>
         </div>
       </div>
 
-      <section className={styles.readinessPanel} aria-label={`${eyebrow} readiness`}>
+      <section className={styles.readinessPanel} data-liquid-glass="panel" aria-label={`${eyebrow} readiness`}>
         <div className={styles.metricGrid}>
           {metrics.map((metric) => (
-            <div key={metric.label} className={styles.metricCard}>
+            <div key={metric.label} className={styles.metricCard} data-liquid-glass="soft">
               <span className={styles.metricLabel}>{metric.label}</span>
               <strong className={styles.metricValue}>{metric.value}</strong>
               <span className={styles.metricMeta}>{metric.meta}</span>
@@ -85,7 +88,7 @@ export default function ComingSoonContent({
           ))}
         </div>
 
-        <div className={styles.timeline}>
+        <div className={styles.timeline} data-liquid-glass="soft">
           <span className={styles.timelineLabel}>Launch readiness</span>
           {steps.map((step) => (
             <div key={step.label} className={styles.timelineStep}>

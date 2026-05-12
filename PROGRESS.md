@@ -636,3 +636,780 @@ Append only. Use newest entries first. Record what changed, how it was checked, 
   - `bun run test:e2e`
 - Next handoff:
   - Use the now-green root smoke suite as the regression guard, then continue authenticated browser QA on `partner.gravii.io` and replace preview partner routes with live data only when the public Partner API publishes read endpoints again.
+
+- Date: `2026-05-09`
+- Summary:
+  - Hardened the `gravii-user-app` launch panel flip interaction so the rotating front/back card faces no longer reveal a stale overlay or stationary card shell during hover.
+  - Removed the Discovery preview grain layer from the shared launch panel path and shifted the app toward a more solid deep-forest green material system with opaque surfaces, crisp low-contrast borders, and reduced glass/gradient treatment.
+  - Hid the local Next.js dev indicator for cleaner design QA screenshots and fixed React hooks lint issues surfaced during the verification pass.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/launch-panel.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/globals.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/x-ray/x-ray-content.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/profile/profile-content.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/next.config.mjs`
+  - `/Users/kxwxn/Gravii/FRONTEND/PROGRESS.md`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - `bun run test`
+  - `bun run build`
+  - Playwright screenshots:
+    - `/tmp/gravii-solid-lookup-edge-final.png`
+    - `/tmp/gravii-solid-discovery-edge-final.png`
+    - `/tmp/gravii-solid-xray-open-final.png`
+- Next handoff:
+  - Continue route-by-route dashboard polish, focusing on copy hierarchy, icon treatment, and authenticated data/empty/loading states once the product flows are connected.
+
+- Date: `2026-05-09`
+- Summary:
+  - Switched `gravii-user-app` from the local Geist/brand font pairing to Google `Roboto Flex` via `next/font/google`.
+  - Standardized the app font tokens (`--font-ui`, `--font-display`, `--font-serif`, `--font-accent`) on Roboto Flex and enabled the practical variable axes used by the UI: optical size, width, grade, and variable weight.
+  - Tuned the main launch-panel display typography to use the wider/heavier Roboto Flex treatment so the panels stay bold after removing the prior Impact-style fallback.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/layout.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/globals.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/launch-panel.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/panel-shell/panel-shell.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/lib/gravii-fonts.ts`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - `bun run test`
+  - `bun run build`
+  - Playwright screenshot and computed font check:
+    - `/tmp/gravii-roboto-flex-home.png`
+- Next handoff:
+  - Confirm the Roboto Flex visual weight in browser and adjust width/grade tokens if the display headings feel too narrow or too heavy.
+
+- Date: `2026-05-09`
+- Summary:
+  - Replaced the app color system with the supplied nine-step green ramp only: `#f7fcf5`, `#e5f5e0`, `#c7e9c0`, `#a1d99b`, `#74c476`, `#41ab5d`, `#238b45`, `#006d2c`, `#00441b`.
+  - Standardized card and button primitives so default and hover states use consistent shared color tokens: cards `#006d2c` -> `#238b45`, buttons `#238b45` -> `#41ab5d`.
+  - Added a restrained Material 3 Expressive-inspired shape jiggle on hover for launch panels, reusable cards, and action buttons, using short border-radius/scale keyframes rather than adding another visual layer.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/globals.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/launch-panel.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/action-button/action-button.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/launch-primitives/launch-primitives.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/profile/persona-data.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/profile/components/infinite-canvas/infinite-canvas-renderer.ts`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - `bun run test`
+  - `bun run build`
+  - palette grep: remaining direct hex values are from the supplied green ramp only
+  - Playwright screenshots:
+    - `/tmp/gravii-green-ramp-home.png`
+    - `/tmp/gravii-green-ramp-hover.png`
+    - `/tmp/gravii-green-ramp-xray.png`
+- Next handoff:
+  - If the new all-green system feels too saturated, adjust only token assignments within the same nine-color ramp instead of introducing new hues.
+
+- Date: `2026-05-10`
+- Summary:
+  - Re-composed the `gravii-user-app` color system from the newly supplied seven-color olive/forest palette only: `#96cc76`, `#335a01`, `#8bb269`, `#717d67`, `#434714`, `#83841f`, `#95a880`.
+  - Mapped shared cards to `#434714` with `#717d67` hover states and shared buttons to `#717d67` with `#8bb269` hover states so repeated component classes stay visually consistent.
+  - Updated launch panel hardcoded colors, persona gradients, and the profile infinite-canvas renderer so old nine-step green values no longer remain in direct source colors.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/globals.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/launch-app/panel-config.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/profile/persona-data.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/profile/components/infinite-canvas/infinite-canvas-renderer.ts`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - `bun run test`
+  - `bun run build`
+  - `git diff --check`
+  - palette grep: remaining direct source hex values are from the supplied seven-color palette only
+  - Playwright screenshots:
+    - `/tmp/gravii-olive-palette-home.png`
+    - `/tmp/gravii-olive-palette-hover.png`
+    - `/tmp/gravii-olive-palette-xray.png`
+- Next handoff:
+  - If the olive palette feels too low-contrast or too military, keep the same seven colors but move large surfaces toward `#335a01` and reserve `#717d67` for hover/selected states only.
+
+- Date: `2026-05-10`
+- Summary:
+  - Added Reown AppKit/Wagmi/TanStack Query wallet infrastructure so sign-in can use WalletConnect modal selection instead of an injected-wallet-only flow.
+  - Reworked `GRAVII ID` connected content into a reference-aligned data dashboard covering persona, home chain, standout rank, transactions, active-since, 30D trend, reputation, NFT count, matched campaigns, and X-Ray navigation.
+  - Extended the User API identity normalization with optional production data fields (`standout`, NFT count, matched campaign count, and all-time transactions) while preserving safe fallbacks when the backend has not returned those fields yet.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/package.json`
+  - `/Users/kxwxn/Gravii/FRONTEND/bun.lock`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/layout.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/auth/wallet-appkit-provider.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/auth/user-sign-in-page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/auth/user-sign-in-page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/profile/profile-content.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/profile/profile-content.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/profile/profile-view-model.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/lib/auth/user-api.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/lib/wallet/appkit-config.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/lib/wallet/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/profile/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/lib/README.md`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - `bun run test`
+  - `bun run build`
+  - `git diff --check`
+  - Playwright screenshots with mocked authenticated profile data:
+    - `/tmp/gravii-walletconnect-signin-fixed.png`
+    - `/tmp/gravii-profile-data-dashboard-final.png`
+- Next handoff:
+  - Add `NEXT_PUBLIC_REOWN_PROJECT_ID` or `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` in deployment environments before testing real WalletConnect modal sign-in.
+
+- Date: `2026-05-10`
+- Summary:
+  - Removed unused mock-era runtime files for reserved Discovery, My Space, Standing, and old X-Ray lookup paths so active source no longer carries stale mock repositories or mock view-models.
+  - Updated Sign In to fall back to a browser-injected EVM wallet when WalletConnect/Reown project ID is not configured, preserving WalletConnect modal support for configured environments.
+  - Removed fake replacement behavior from the new Gravii ID fields: all-time transactions, standout rank, NFT count, and matched campaign count now show only when the User API returns those fields.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/auth/user-sign-in-page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/profile/profile-content.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/profile/profile-view-model.ts`
+  - deleted unused mock-era files under `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/{launch-app,discovery,my-space,standing,x-ray}`
+  - documentation updates under `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/docs` and `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - `bun run test`
+  - `bun run build`
+  - `git diff --check`
+  - Playwright injected-wallet fallback sign-in:
+    - `/tmp/gravii-signin-injected-fallback.png`
+- Next handoff:
+  - Production WalletConnect modal still requires `NEXT_PUBLIC_REOWN_PROJECT_ID` or `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID`; local browser-wallet sign-in now works without it.
+
+- Date: `2026-05-10`
+- Summary:
+  - Replaced the current app design-system palette with the supplied soft blush/lavender/violet/deep-purple direction.
+  - Remapped shared semantic tokens, launch panel faces, persona gradients, and the profile infinite-canvas renderer so the old green/olive source colors are no longer used.
+  - Added a primary-button text token so dark-purple buttons keep bright readable text while body/card text remains deep purple.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/globals.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/action-button/action-button.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/launch-app/panel-config.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/profile/persona-data.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/profile/profile-content.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/profile/components/infinite-canvas/infinite-canvas-renderer.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/coming-soon/coming-soon-content.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/x-ray/x-ray-content.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/x-ray/components/x-ray-credit-purchase-modal/x-ray-credit-purchase-modal.module.css`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - `bun run test`
+  - `bun run build`
+  - `git diff --check`
+  - old green/olive palette grep returned no source matches
+  - Playwright token check confirmed `#735caf`, `#ad98ea`, `#e7e1f4`, `#2f254b`, and `#f8edf3`
+  - Playwright screenshots:
+    - `/tmp/gravii-lavender-system-home.png`
+    - `/tmp/gravii-lavender-system-hover.png`
+    - `/tmp/gravii-lavender-system-xray.png`
+- Next handoff:
+  - If this direction should become less pastel, keep the same hue family but move large surfaces one step darker toward `#cfc2f0` and reserve `#f5d7e1` for accents only.
+
+- Date: `2026-05-10`
+- Summary:
+  - Recreated the supplied reference image background directly in CSS using warm pink/lilac radial gradients and a lightweight SVG noise overlay, so no external background asset is required.
+  - Let the app shell reveal the global background by making the main panel strip transparent and converting the header to a frosted liquid-glass surface.
+  - Reworked the shared `ActionButton` primitive with pill-shaped liquid-glass gradients, inner highlights, subtle texture, and softer colored shadows while preserving the existing flip interaction.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/globals.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/action-button/action-button.module.css`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - `bun run test`
+  - `bun run build`
+  - `git diff --check`
+  - Playwright screenshots:
+    - `/tmp/gravii-reference-background-buttons-home-fixed.png`
+    - `/tmp/gravii-reference-background-buttons-xray-fixed.png`
+- Next handoff:
+  - If exact texture matching is required, replace the CSS noise overlay with a licensed exported background image; otherwise the current CSS approach is lighter and easier to tune.
+
+- Date: `2026-05-10`
+- Summary:
+  - Normalized all five launch panel preview faces to the same lavender card color so X-Ray no longer has a separate pink/thermal layer.
+  - Removed liquid-glass styling from shared buttons and card surfaces: no backdrop filters, no inner bevel highlights, no noise texture on buttons, and no card shadows.
+  - Disabled recessed/inset-looking shadows in launch panels, X-Ray/Profile card frames, coming-soon cards, My Space dock, Discovery locked card, Sign In panel/buttons, and X-Ray history rows.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/launch-app/panel-config.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/globals.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/launch-panel.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/action-button/action-button.module.css`
+  - selected feature CSS modules under `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - `bun run test`
+  - `bun run build`
+  - `git diff --check`
+  - Playwright confirmed all launch preview panels compute to `rgb(231, 225, 244)` and `box-shadow: none`
+  - Playwright screenshot:
+    - `/tmp/gravii-solid-panels-home-fixed.png`
+- Next handoff:
+  - If more flatness is needed, remove remaining decorative logo drop-shadows separately; they are not part of the button/card system.
+
+- Date: `2026-05-10`
+- Summary:
+  - Removed the remaining black logo treatment from the header by disabling the header symbol `invert/brightness/drop-shadow` filter.
+  - Removed the shared Gravii logo spin-face drop shadow so animated logo variants do not add black gradients either.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/gravii-logo/gravii-logo.module.css`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - grep confirmed no header/Gravii-logo drop-shadow filters remain
+  - Playwright computed both header image and wrapper `filter: none`
+  - Playwright screenshot:
+    - `/tmp/gravii-header-logo-no-shadow.png`
+- Next handoff:
+  - Header logo now renders the source SVG directly; if the source SVG itself should be recolored, edit the brand asset or add a dedicated non-filter symbol variant.
+
+- Date: `2026-05-10`
+- Summary:
+  - Applied a restrained glass level to the header, launch panel faces, and expanded panel shell so the gradient background remains visible while each surface keeps the lavender product tint.
+  - Removed border-led separation from expanded sections and moved cards/rows toward tinted surfaces (`glass`, blush, lavender, violet, and deep purple where contrast is needed).
+  - Kept shadows, bevels, noise, and liquid-glass highlights disabled so the result stays flat and not recessed.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/globals.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/launch-panel.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/panel-shell/panel-shell.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/action-button/action-button.module.css`
+  - selected feature CSS modules under `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - `bun run test`
+  - `bun run build`
+  - `git diff --check`
+  - Playwright screenshots:
+    - `/tmp/gravii-glass-level1-home.png`
+    - `/tmp/gravii-glass-level1-xray.png`
+    - `/tmp/gravii-glass-level1-profile.png`
+- Next handoff:
+  - If the glass feels too subtle, increase only alpha/blur on the outer shell; avoid reintroducing card shadows, bevels, or borders.
+
+- Date: `2026-05-10`
+- Summary:
+  - Lowered glass/surface opacity substantially so the background gradient is visibly present through the header, launch panels, expanded panel shells, and inner cards.
+  - Converted remaining solid card-like surfaces, badges, locked overlays, and skeleton placeholders to translucent surface tokens.
+  - Made shared `ActionButton` faces partially transparent while keeping shadows, bevels, borders, and noisy highlights disabled.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/globals.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/launch-panel.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/action-button/action-button.module.css`
+  - selected feature CSS modules under `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - `bun run test`
+  - `bun run build`
+  - `git diff --check`
+  - Playwright computed examples: header alpha `0.38`, launch preview alpha `0.5`, active shell alpha `0.48`, X-Ray cards alpha `0.38~0.5`
+  - Playwright screenshots:
+    - `/tmp/gravii-more-transparent-home.png`
+    - `/tmp/gravii-more-transparent-xray.png`
+- Next handoff:
+  - If the user wants even more transparency, reduce only the `--color-card` and `--color-glass-fill*` alpha values another 8-12%; avoid changing component structure.
+
+- Date: `2026-05-10`
+- Summary:
+  - Implemented the production-safe liquid-glass material pass across the shell header, five launch panel faces, expanded panels, shared buttons, X-Ray, Gravii ID, reserved panels, sign-in, and result/history surfaces.
+  - Added shared SVG displacement/rim filters and runtime `data-liquid-glass` backdrop styles because the current Next/Turbopack CSS Module pipeline strips `backdrop-filter` from compiled module CSS.
+  - Preserved the current pink/lavender palette while adding translucent fills, soft rim highlights, and filtered caustic layers without reintroducing black borders or heavy shadows.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/layout.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/globals.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/launch-panel.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/action-button/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/action-button/action-button.module.css`
+  - selected feature components and CSS modules under `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/docs/frontend-implementation-standards.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/README.md`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - `bun run test`
+  - `bun run build`
+  - Playwright confirmed runtime `data-liquid-glass` surfaces compute real `backdrop-filter` values instead of `none`
+  - Playwright screenshots:
+    - `/tmp/gravii-liquid-runtime-home.png`
+    - `/tmp/gravii-liquid-runtime-xray.png`
+    - `/tmp/gravii-liquid-runtime-profile.png`
+    - `/tmp/gravii-liquid-hover-xray.png`
+- Next handoff:
+  - If more realism is needed later, add a separate WebGL/R3F hero or background layer, not WebGL replacements for all DOM cards.
+
+- Date: `2026-05-11`
+- Summary:
+  - Changed active panel layout from flex-width sharing to a full-width active underlay.
+  - Converted inactive panels into a floating overlay rail above the active panel, preserving original panel order and click-to-switch behavior.
+  - Added elastic tuck/expand animations and reserved top safe area in `PanelShell` so content starts below the overlay rail.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/launch-panel.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/panel-shell/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/panel-shell/panel-shell.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/README.md`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - `bun run test`
+  - `bun run build`
+  - `git diff --check`
+  - Playwright verified active panels span the full strip and inactive panels are absolute overlays with higher `z-index`
+  - Playwright screenshots:
+    - `/tmp/gravii-top-overlay-xray.png`
+    - `/tmp/gravii-top-overlay-mobile-xray.png`
+- Next handoff:
+  - If mobile overlay still feels too intrusive, convert the top rail into a smaller icon-only segmented control while keeping the desktop overlay rail unchanged.
+
+- Date: `2026-05-11`
+- Summary:
+  - Fixed the active-panel overlay rail distribution so the four inactive cards use equal widths across the full available top row at desktop, medium, and mobile viewports.
+  - Removed competing tuck/expand keyframes and the expressive hover jiggle from launch-panel switching so active/collapsed panel changes use one smoother geometry transition.
+  - Shortened the expanded shell content entrance to a calmer settle motion instead of stacked elastic fades.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/launch-panel.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/panel-shell/panel-shell.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/README.md`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - `bun run test`
+  - `bun run build`
+  - `git diff --check`
+  - Browser plugin smoke check on `http://localhost:3003/`: loaded app, opened X-Ray, switched to Gravii ID, then switched to Standing with no runtime overlay
+  - Playwright layout measurement confirmed equal inactive-card placement at `1680x980`, `1067x600`, and `390x844`
+  - Playwright screenshots:
+    - `/tmp/gravii-top-overlay-smooth-desktop.png`
+    - `/tmp/gravii-top-overlay-smooth-medium.png`
+    - `/tmp/gravii-top-overlay-smooth-mobile.png`
+- Next handoff:
+  - If switching still feels too strong subjectively, reduce only `--panel-motion-duration` to around `520ms`; avoid reintroducing separate keyframe animations for panel state changes.
+
+- Date: `2026-05-11`
+- Summary:
+  - Reworked launch-panel switching to a staged FLIP motion path: panel positions are measured before/after state changes and animated with compositor-friendly `transform` instead of layout-bound geometry transitions.
+  - Hid preview typography and active dashboard content while the FLIP motion is running, then revealed the expanded shell after the panel settles to prevent text stretching, content smear, and heavy re-rendering during motion.
+  - Reduced glass filter cost during panel movement and blocks repeated pointer interactions until the transition completes.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/launch-panel.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/panel-shell/panel-shell.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/README.md`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - Browser plugin check on `http://localhost:3003/`: reloaded app and switched `X-RAY -> GRAVII ID -> STANDING` without framework overlay
+  - Playwright captured a deliberate mid-motion frame showing glass silhouettes without stretched typography:
+    - `/tmp/gravii-flip-520-mid-motion.png`
+  - Playwright final state screenshot and layout coordinates:
+    - `/tmp/gravii-flip-520-final-standing.png`
+- Next handoff:
+  - If the transition should feel less blank mid-flight, add a lightweight non-scaled motion label layer; do not render the full dashboard content during FLIP movement.
+
+- Date: `2026-05-11`
+- Summary:
+  - Replaced noisy product motion with one restrained motion system: no hover lifts, no expressive jiggle, no 3D panel/button face flip, and no non-uniform panel scaling during state changes.
+  - Changed panel switching to transform/opacity movement with visible preview faces during the transition and a timed fallback so rapid panel switching cannot leave the shell locked in a blank layout-animating state.
+  - Removed unused motion/effect debt: legacy `my-space-dock`, `grain-overlay`, simplex noise helpers, scan-line/thermal/pulse/jiggle keyframes, and obsolete button back-face props.
+  - Updated layout/UI/lib/codebase docs to match the unified panel shell and simplified action button behavior.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/globals.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/launch-panel.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/panel-shell/panel-shell.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/action-button/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/action-button/action-button.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/**/*motion-related CSS`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/docs/codebase/*`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/README.md`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - `bun run test`
+  - `bun run build`
+  - Playwright visual checks on `http://localhost:3003/` for home, X-Ray, Standing, Discovery, close hover, sign-in hover, and rapid `X-RAY -> STANDING` switching.
+  - Reference screenshots:
+    - `/tmp/gravii-motion-staged-xray-120.png`
+    - `/tmp/gravii-motion-staged-xray-500.png`
+    - `/tmp/gravii-motion-staged-standing-120.png`
+    - `/tmp/gravii-motion-staged-standing-500.png`
+- Next handoff:
+  - If motion needs further refinement, capture a short video and tune only the global duration/easing constants; avoid reintroducing per-component keyframe effects.
+
+- Date: `2026-05-11`
+- Summary:
+  - Re-audited the launch app after the motion cleanup across static code, build checks, desktop/mobile browser layout, sign-in, console health, and rapid panel switching.
+  - Fixed a transient logo LCP warning by letting `GraviiLogo` pass explicit image loading hints and making the short session-loading logo eager without reintroducing unused preloads.
+  - Moved the Reown AppKit provider out of the root app shell and into `/sign-in` route layout so the landing shell no longer loads WalletConnect UI assets before sign-in.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/layout.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/sign-in/layout.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/gravii-logo/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/auth/wallet-appkit-provider.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/lib/wallet/README.md`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - `bun run test`
+  - `bun run build`
+  - `git diff --check`
+  - Browser plugin smoke check on `http://localhost:3003/`: app loads, title/content match, panels render, screenshot captured.
+  - Fresh Playwright console check: home has no warnings/errors; `/sign-in` renders and only reports expected local dev WalletConnect/Lit warnings.
+  - Playwright panel audit at `1680x980` and `390x844`: all 5 panels open, active panel occupies the full strip, inactive cards align evenly in the top rail, close button is present, rapid `X-RAY -> STANDING` switching settles with no stuck animation class, no body horizontal overflow.
+  - Reference screenshots:
+    - `/tmp/gravii-audit-desktop-1680-home-final.png`
+    - `/tmp/gravii-audit-desktop-1680-lookup-final.png`
+    - `/tmp/gravii-audit-mobile-390-lookup-final.png`
+    - `/tmp/gravii-audit-sign-in-fresh-fresh.png`
+- Next handoff:
+  - Remaining product risk is not the panel layout: `/sign-in` still emits expected dev-only WalletConnect metadata warnings on localhost because production metadata points to `https://app.gravii.io`.
+
+- Date: `2026-05-11`
+- Summary:
+  - Corrected the header logo regression: the `spinY` logo treatment is now actually connected to the shell header.
+  - Optimized the rotating logo implementation by replacing duplicate Next Image face rendering with CSS-backed front/back faces plus a short side-edge visibility pass for the 90/270 degree moments.
+  - Clarified layout documentation so the measured panel layout transition is not described as a card/button 3D flip effect.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/gravii-logo/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/gravii-logo/gravii-logo.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/README.md`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - `bun run test`
+  - `bun run build`
+  - `git diff --check`
+  - Playwright runtime check on `http://localhost:3003/`: header logo contains the `spinCard`, animation name is `graviiSpinY`, duration is `8.4s`, transform changes after 900ms, and no console warnings/errors were emitted.
+  - Screenshot:
+    - `/tmp/gravii-logo-spin-check-final.png`
+- Next handoff:
+  - Current cards/buttons still do not have 3D hover flip faces; that is a separate design decision from the measured panel layout transition.
+
+- Date: `2026-05-11`
+- Summary:
+  - Reworked the launch shell toward the Raw Materials reference direction: left fixed navigation cards, a new `00 HOME` command surface, and a single main workspace board instead of the previous panel strip layout.
+  - Added app-level home content for session state, product map, and sign-in/Gravii ID routing.
+  - Fixed the first visual pass after screenshot review by reducing the home hero type scale and removing a decorative board line that was visibly bleeding through the hero card.
+  - Updated route tests and local layout/feature documentation to match the new navigation semantics.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.test.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/launch-panel.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/panel-shell/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/panel-shell/panel-shell.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/home/home-content.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/home/home-content.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/launch-app/panel-config.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/launch-app/types.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/launch-app/use-launch-shell.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/launch-app/README.md`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - `bun run test`
+  - `bun run build`
+  - `git diff --check`
+  - Browser plugin attempted first for `http://localhost:3003/`, but the session reported no active Codex browser pane; fallback used standalone Playwright without starting or stopping the user's port `3003` server.
+  - Playwright at `1440x900`: app title and root route load, 6 navigation cards render, default section is `home`, all navigation transitions (`profile`, `lookup`, `leaderboard`, `discovery`, `myspace`, `home`) set `aria-current="page"` and update `data-section`, no framework overlay, no console warnings/errors, no horizontal overflow.
+  - Playwright at `390x844`: 6 navigation cards render, horizontal overflow stays at `0`, and the mobile command-home composition is visible.
+  - Reference screenshots:
+    - `/tmp/gravii-raw-home-final-1778491929857.png`
+    - `/tmp/gravii-raw-xray-final-1778491929857.png`
+    - `/tmp/gravii-raw-mobile-final-1778491929857.png`
+- Next handoff:
+  - The shell direction is now established, but the inner feature surfaces still need a second design pass to fully remove the older glass/purple visual language from X-Ray and other dashboard content.
+
+- Date: `2026-05-11`
+- Summary:
+  - Removed the separate `00 HOME` navigation card from the rail and made the top logo tile the Home navigation control.
+  - Reversed the nav color interaction: section cards now show their configured color by default and return to the neutral paper surface on hover.
+  - Removed visible nav section numbers and changed marker dots so they only appear on the active navigation control.
+  - Added route test coverage for the logo Home control, five-card nav rail, and hidden numeric labels.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.test.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/launch-panel.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/launch-app/README.md`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - `bun run test`
+  - `bun run build`
+  - `git diff --check`
+  - Browser plugin attempted first for `http://localhost:3003/`, but the session still had no active Codex browser pane; fallback used standalone Playwright without starting or stopping the user's port `3003` server.
+  - Playwright at `1440x900`: 5 section cards render in the nav rail, Home exists only as the logo tile control, visible nav numbers count is `0`, inactive dots are hidden, the active dot appears after opening X-Ray, Home logo click returns to `data-section="home"`, no console warnings/errors, and no horizontal overflow.
+  - Playwright at `390x844`: 5 section cards render in the mobile rail, Home is not duplicated inside the rail, and horizontal overflow remains `0`.
+  - Reference screenshots:
+    - `/tmp/gravii-home-logo-nav-1778492522912.png`
+    - `/tmp/gravii-nav-hover-1778492522912.png`
+    - `/tmp/gravii-xray-logo-nav-1778492522912.png`
+    - `/tmp/gravii-mobile-logo-nav-1778492522912.png`
+- Next handoff:
+  - If the color-on/default, color-off/hover interaction feels too loud with all five cards visible, tune only the `panel-config.ts` colors or card dimensions before changing the shell structure again.
+
+- Date: `2026-05-11`
+- Summary:
+  - Unified the product material system so content surfaces no longer mix solid paper cards with reflective/liquid-glass treatments.
+  - Remapped legacy global liquid/glass/purple-green tokens to the current Raw Materials-style solid paper, ink, and orange palette while keeping old token names as compatibility aliases.
+  - Neutralized runtime `data-liquid-glass` backdrop blur, caustic pseudo-layers, and SVG liquid filter usage from `src/app/layout.tsx`.
+  - Simplified shared `ActionButton`, `LaunchPanel`, and `Card` primitive materials so they use solid fills instead of gradients, reflection, or backdrop filters.
+  - Updated UI and design-system docs to describe the current solid material contract instead of the retired liquid-glass runtime.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/globals.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/layout.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/action-button/action-button.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/launch-panel.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/launch-primitives/launch-primitives.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/docs/frontend-implementation-standards.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/docs/design-system/launch-app-design-system-plan.md`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - `bun run test`
+  - `bun run build`
+  - `git diff --check`
+  - Browser plugin attempted first for `http://localhost:3003/`, but the session still had no active Codex browser pane; fallback used standalone Playwright without starting or stopping the user's port `3003` server.
+  - Playwright at `1440x900`: Home, X-Ray, and Gravii ID render with `backdropCount: 0`, no visible nav numbers, no console warnings/errors, and no horizontal overflow.
+  - Playwright at `390x844`: mobile rail still has 5 cards, Home is not duplicated in the rail, no horizontal overflow.
+  - Reference screenshots:
+    - `/tmp/gravii-solid-final-home-1778494014340.png`
+    - `/tmp/gravii-solid-final-xray-1778494014340.png`
+    - `/tmp/gravii-solid-final-profile-1778494014340.png`
+    - `/tmp/gravii-solid-final-mobile-1778494014340.png`
+- Next handoff:
+  - Remaining visual work is content hierarchy polish, not material cleanup: individual feature layouts can still be tightened, but the mixed reflective/glass texture has been neutralized globally.
+
+- Date: `2026-05-11`
+- Summary:
+  - Centered the visible text stack inside each left rail navigation card so the labels sit on the card centerline.
+  - Removed the oversized Home hero wordmark image because the logo tile already owns home navigation and the extra image created an unnecessary visual layer.
+  - Verified the Home surface now renders with only the header/logo image, five centered nav cards, no horizontal overflow, and no console warnings.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/launch-panel.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/home/home-content.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/home/home-content.module.css`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - `bun run test`
+  - `bun run build`
+  - `git diff --check`
+  - Browser plugin was unavailable because there was no active Codex browser pane; fallback used standalone Playwright against the user's existing `http://localhost:3003/` server without starting or stopping it.
+  - Playwright at `1440x980`: 5 nav cards render, each label has center offset `0`, `text-align: center`, only the header logo image remains, no console warnings/errors, and no horizontal overflow.
+  - Reference screenshot: `/tmp/gravii-nav-home-verify-final.png`
+- Next handoff:
+  - X-Ray payment should be implemented as a scoped checkout/credit flow after backend ownership and Stripe webhook persistence are in place.
+
+- Date: `2026-05-11`
+- Summary:
+  - Added the X-Ray-only credit purchase entry point to the live X-Ray surface.
+  - Wired the purchase modal to request `POST /api/v1/me/xray/checkout-session` and redirect to the returned Stripe Checkout URL.
+  - Added success/cancel return URL support with `panel=lookup` and `xray_checkout` status messaging.
+  - Kept credit granting explicitly backend-owned through Stripe webhook fulfillment; the frontend does not mutate credits from a browser return URL.
+  - Updated product, architecture, API contract, business rules, and feature docs for the checkout boundary.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/lib/auth/user-api.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/launch-app/use-launch-shell.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/x-ray/x-ray-content.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/x-ray/x-ray-content.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/x-ray/x-ray-content.test.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/x-ray/components/x-ray-credit-purchase-modal/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/x-ray/components/x-ray-credit-purchase-modal/x-ray-credit-purchase-modal.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/x-ray/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/docs/codebase/architecture-overview.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/docs/codebase/current-project-analysis.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/docs/launch-app/api-contract.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/docs/launch-app/architecture.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/docs/launch-app/business-rules.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/docs/launch-app/product-scope.md`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - `bun run test`
+  - `bun run build`
+  - `git diff --check`
+  - Playwright against the user's existing `http://localhost:3003/` server with API routes mocked for a connected X-Ray session: `panel=lookup` opens the X-Ray panel, `BUY X-RAY CREDITS` renders the checkout modal, the 10-credit bundle appears, no console warnings/errors, and no horizontal overflow.
+  - Reference screenshot: `/tmp/gravii-xray-checkout-modal-final.png`
+- Next handoff:
+  - Backend must implement `POST /api/v1/me/xray/checkout-session`, Stripe price mapping, metadata/idempotency, and webhook fulfillment before real credit purchases can work in production.
+
+- Date: `2026-05-11`
+- Summary:
+  - Updated the Gravii brand assets from the revised symbol export so the ring and lower curve have a wider vertical gap.
+  - Rebuilt the wordmark asset so the revised symbol now acts as the `g` and the exported `r a v ii` paths complete the lockup.
+  - Added separate ring/curve motion behavior in the shared logo primitive and restored a large wordmark treatment on the Home landing surface per the latest product direction.
+  - Added a low-opacity symbol watermark to reserved surfaces so Standing, Discovery, and My Space have a controlled brand use without competing with live content.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/public/brand/logo-symbol.svg`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/public/brand/logo-wordmark.svg`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/gravii-logo/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/gravii-logo/gravii-logo.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/home/home-content.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/home/home-content.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/coming-soon/coming-soon-content.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/coming-soon/coming-soon-content.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/docs/design-system/launch-app-design-system-plan.md`
+- Verification:
+  - `bun run typecheck`
+  - `bun run lint`
+  - Browser plugin tooling was not exposed in this session; fallback used standalone Playwright against `http://localhost:3003/`.
+  - Restarted the local `3003` dev server after Turbopack initially served a stale Home bundle.
+  - Playwright at `1440x1000`: Home renders the large wordmark at `518x106`, the title starts below it without overlap, and Standing renders the reserved watermark at opacity `0.045`.
+  - Playwright at `390x900`: Home renders the large wordmark at `266x54` without horizontal overflow or text collision.
+  - Reference screenshots:
+    - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/output/playwright/gravii-logo-home-desktop.png`
+    - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/output/playwright/gravii-logo-standing-desktop.png`
+    - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/output/playwright/gravii-logo-home-mobile.png`
+- Next handoff:
+  - If the large Home wordmark should feel less typographic and more like a compact logo lockup, tune only the symbol-to-letters gap inside `public/brand/logo-wordmark.svg` before changing the Home layout.
+
+- Date: `2026-05-12`
+- Summary:
+  - Fixed the left navigation hover clipping that made the top border disappear on `GRAVII ID`.
+  - Added a shared product typography scale and applied it across panel shell titles, Home, Gravii ID, X-Ray, reserved panels, shared buttons, and the sign-in route.
+  - Reworked the sidebar session CTA so `SIGN IN` uses the current solid orange/black/beige product language instead of the previous muted pill treatment.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/globals.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/launch-panel.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/panel-shell/panel-shell.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/ui/action-button/action-button.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/auth/user-sign-in-page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/coming-soon/coming-soon-content.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/home/home-content.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/profile/profile-content.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/x-ray/x-ray-content.module.css`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - `bun run test`
+  - `bun run build`
+  - `git diff --check`
+  - Browser plugin failed with an in-app browser tab session mismatch, so validation used standalone Playwright against the user's existing `http://localhost:3003/` server without starting or stopping it.
+  - Playwright at desktop and mobile sizes: nav button overlap `0`, internal nav overlap `0`, nav clipping `0`, horizontal overflow `0`, suspicious tight tracking `0`.
+  - Reference screenshots:
+    - `/tmp/gravii-audit-after-hover-gravii-id.png`
+    - `/tmp/gravii-audit-after-gravii-id.png`
+    - `/tmp/gravii-audit-after-x-ray.png`
+    - `/tmp/gravii-audit-after-sign-in.png`
+- Next handoff:
+  - If the product direction keeps the Raw Materials-style shell, remaining polish should focus on content hierarchy/copy density rather than adding new material effects.
+
+- Date: `2026-05-12`
+- Summary:
+  - Reworked the left navigation to follow the Raw Materials reference mechanics: 178px cards, 104px resting height, transparent default border, color-removing hover state, scroll-progress active dot, and 500ms active-height expansion.
+  - Converted active nav motion from small centered-card expansion to a Raw Materials-style tall section card with bottom-left labels and hidden section numbers.
+  - Added browser-only `scrollIntoView` handling so tall active cards stay reachable inside the hidden-scrollbar sidebar without breaking jsdom tests.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/components/layout/launch-panel/launch-panel.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/launch-app/panel-config.ts`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - `bun run test`
+  - `bun run build`
+  - `git diff --check`
+  - Reference inspected from `https://www.therawmaterials.com/`: their nav uses 226px rail, 178px cards, 104px base height, transparent default border, inactive hover border/color inversion, and GSAP height expansion to section-specific card heights.
+  - Playwright against the existing `http://localhost:3003/` server: no nav overlaps, no horizontal overflow, inactive hover resolves to transparent background plus black border, and X-Ray active height samples smoothly from `104px` to `368px`.
+  - Reference screenshots:
+    - `/tmp/gravii-raw-nav-home-v2.png`
+    - `/tmp/gravii-raw-nav-xray-v2.png`
+    - `/tmp/gravii-raw-nav-hover-profile.png`
+- Next handoff:
+  - Remaining visual gap versus the reference is the animated RM/Lottie-style logo inside the top tile; current implementation uses the existing Gravii SVG symbol instead of adding a new animation asset.
+
+- Date: `2026-05-12`
+- Summary:
+  - Added a light/dark theme toggle to the Gravii user app sidebar footer, styled as a compact two-state pill that matches the current solid Raw Materials-inspired shell.
+  - Implemented a Leonid Kostetskyi-style clicked-origin theme reveal using the native View Transitions API: the new theme clips outward from the toggle position, with reduced-motion and unsupported-browser fallbacks.
+  - Added dark-mode shell tokens for the app root, workspace board, sidebar footer, toggle, logo contrast, and home-card typography so the theme switch is readable after the reveal.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/globals.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/features/home/home-content.module.css`
+- Verification:
+  - `bun run typecheck`
+  - `bun run lint`
+  - `bun run test`
+  - `bun run build`
+  - `git diff --check`
+  - Playwright against the existing `http://localhost:3003/` server, without starting or stopping it: toggle state changed from `light` to `dark`, `data-theme-transitioning` cleared after the transition, no horizontal or vertical document overflow, dark logo filter applied, and dark-mode labels remained readable.
+  - Reference inspected from `https://leonidkostetskyi.com/`: source uses theme controls plus `data-dark` styling with fixed background/noise WebGL layers; implementation matches the perceived clicked-origin theme reveal with browser-native View Transitions rather than introducing a WebGL dependency.
+  - Reference screenshots:
+    - `/tmp/gravii-theme-light.png`
+    - `/tmp/gravii-theme-transition-120ms.png`
+    - `/tmp/gravii-theme-dark-final-2.png`
+- Next handoff:
+  - If exact WebGL/noise parity with the Leonid reference becomes required, implement it as a separate animation layer; the current work intentionally keeps the shell lightweight and avoids adding Three.js/WebGL just for theme switching.
+
+- Date: `2026-05-12`
+- Summary:
+  - Replaced the clicked-origin View Transition theme reveal with a Leonid Kostetskyi-style ink/noise transition layer.
+  - Inspected the live reference implementation at `https://leonidkostetskyi.com/` and matched its key shader behavior: `smoothstep(t + .1, t - .1, noise(gl_FragCoord.xy * 0.2))`.
+  - Generated `public/theme-ink-mask-sprite.png` from that shader threshold so the app reveals the next theme as an organic tie-dye/paint-bleed mask without geometrically distorting UI text or cards.
+  - Added a dedicated transition background layer in the app shell and temporarily makes the workspace board transparent during the transition, so the ink effect reads across the full product surface instead of only at page edges.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.module.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/globals.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/public/theme-ink-mask-sprite.png`
+- Verification:
+  - `bun run typecheck`
+  - `bun run lint`
+  - `bun run test`
+  - `bun run build`
+  - `git diff --check`
+  - Playwright against the existing `http://localhost:3003/` server, without starting or stopping it: light-to-dark and dark-to-light transitions both clear their transition state, remove the temporary ink layer after completion, and keep document overflow at `false`.
+  - Reference screenshots:
+    - `/tmp/gravii-ink-board-120ms.png`
+    - `/tmp/gravii-ink-board-300ms.png`
+    - `/tmp/gravii-ink-board-580ms.png`
+    - `/tmp/gravii-ink-board-light-300ms.png`
+- Next handoff:
+  - This is a shader-derived CSS sprite implementation. If the product later requires live GPU animation rather than a generated mask sprite, replace the sprite layer with a small WebGL canvas using the same fragment shader.

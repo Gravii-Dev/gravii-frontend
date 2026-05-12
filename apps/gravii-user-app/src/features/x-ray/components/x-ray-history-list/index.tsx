@@ -42,7 +42,7 @@ export default function XRayHistoryList({
 
       <div className={styles.list}>
         {rows.map((row) => (
-          <button key={row.id} type="button" className={styles.row} onClick={() => onSelect(row.walletAddress)}>
+          <button key={row.id} type="button" className={styles.row} data-liquid-glass="soft" onClick={() => onSelect(row.walletAddress)}>
             <span className={styles.rowMeta}>{row.date}</span>
             <span className={styles.wallet}>{row.wallet}</span>
             <span className={styles.persona}>{row.persona}</span>

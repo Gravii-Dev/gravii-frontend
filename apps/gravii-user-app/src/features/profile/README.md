@@ -66,11 +66,11 @@ Why it matters:
 When `connected` is `true`, the surface shows:
 
 - a compact ready-state identity bar
-- persona hero panel
-- persona signal, tier, and net-worth summary
+- the reference-aligned persona dashboard card
+- home chain, standout rank, all-time transactions, and active-since cards
 - secondary persona tags
 - tier badge
-- activity and reputation metrics
+- 30D trend, reputation, NFT count, and matched campaign metrics
 - matched campaign navigation
 - X-Ray navigation card
 

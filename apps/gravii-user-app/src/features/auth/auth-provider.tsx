@@ -58,8 +58,6 @@ export function UserAuthProvider({
   }, [nextPath, router])
 
   const bootstrapSession = useCallback(async () => {
-    setStatus('loading')
-
     const nextUser = await readUserSession()
 
     if (nextUser) {
@@ -95,7 +93,13 @@ export function UserAuthProvider({
   }, [router])
 
   useEffect(() => {
-    void bootstrapSession()
+    const timeoutId = window.setTimeout(() => {
+      void bootstrapSession()
+    }, 0)
+
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
   }, [bootstrapSession])
 
   const value = useMemo<UserAuthContextValue>(

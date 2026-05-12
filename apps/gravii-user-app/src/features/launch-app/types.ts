@@ -1,4 +1,4 @@
-export type PanelId = "profile" | "discovery" | "leaderboard" | "lookup" | "myspace";
+export type PanelId = "home" | "profile" | "discovery" | "leaderboard" | "lookup" | "myspace";
 
 export type PanelConfig = {
   id: PanelId;
@@ -6,6 +6,7 @@ export type PanelConfig = {
   tab: string;
   sub: string;
   editorCopy: string;
+  summary: string;
   dark: boolean;
   bg: string;
   bgHover: string;

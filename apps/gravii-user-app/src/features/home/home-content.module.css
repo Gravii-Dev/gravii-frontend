@@ -1,0 +1,199 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(18px, 2vw, 28px);
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.46fr);
+  align-items: end;
+  gap: clamp(24px, 3vw, 56px);
+  min-height: clamp(360px, 47vh, 560px);
+  padding: clamp(32px, 5vw, 76px);
+  overflow: hidden;
+  border: 1.25px solid var(--raw-line);
+  border-radius: 16px;
+  background: var(--raw-paper);
+}
+
+.heroMain {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: clamp(24px, 5vh, 64px);
+}
+
+.heroBrandStack {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: clamp(18px, 2.4vw, 28px);
+}
+
+.kicker,
+.cardLabel {
+  color: color-mix(in srgb, var(--raw-ink) 52%, transparent);
+  font-size: var(--type-eyebrow-size);
+  font-weight: var(--type-eyebrow-weight);
+  letter-spacing: var(--type-eyebrow-tracking);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.title {
+  max-width: 760px;
+  margin: 0;
+  color: var(--raw-ink);
+  font-family: var(--font-display);
+  font-stretch: var(--font-width-display);
+  font-variation-settings: "GRAD" var(--font-grade-display);
+  font-size: var(--type-hero-title);
+  font-weight: var(--type-display-weight);
+  letter-spacing: -0.008em;
+  line-height: 0.88;
+}
+
+.title span {
+  display: block;
+  color: var(--raw-orange);
+}
+
+.heroAside {
+  display: flex;
+  align-self: end;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 340px;
+  color: var(--raw-ink);
+}
+
+.heroAside p {
+  margin: 0;
+  font-size: var(--type-body-large);
+  font-weight: 760;
+  letter-spacing: -0.006em;
+  line-height: 1.2;
+}
+
+.primaryAction {
+  --button-front: var(--raw-orange);
+  --button-front-hover: var(--raw-ink);
+  --button-text: var(--theme-on-accent, #fff8f0);
+  --button-text-hover: var(--theme-on-accent, #fff8f0);
+  align-self: flex-start;
+  --button-min-height: 38px;
+}
+
+.statusGrid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 12px;
+}
+
+.statusCard,
+.mapCard {
+  min-height: 150px;
+  padding: 22px;
+  border: 1.25px solid var(--raw-line);
+  border-radius: 14px;
+  background: var(--raw-paper);
+}
+
+.statusCardStrong {
+  background: var(--raw-ink);
+  color: var(--raw-paper);
+}
+
+.statusCardStrong .cardLabel,
+.statusCardStrong p {
+  color: color-mix(in srgb, var(--raw-paper) 66%, transparent);
+}
+
+.statusCard strong,
+.mapCard strong {
+  display: block;
+  margin-top: 28px;
+  color: inherit;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 2.7vw, 3.25rem);
+  font-weight: var(--type-display-weight);
+  letter-spacing: -0.012em;
+  line-height: 0.94;
+  text-transform: uppercase;
+}
+
+.statusCard p,
+.mapCard p {
+  max-width: 240px;
+  margin: 12px 0 0;
+  color: color-mix(in srgb, var(--raw-ink) 62%, transparent);
+  font-size: var(--type-body);
+  font-weight: var(--type-body-weight);
+  letter-spacing: 0;
+  line-height: 1.34;
+}
+
+.mapGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.mapCard {
+  background: color-mix(in srgb, var(--raw-paper) 88%, var(--raw-paper-strong));
+}
+
+.mapCard span {
+  color: color-mix(in srgb, var(--raw-ink) 52%, transparent);
+  font-size: var(--type-eyebrow-size);
+  font-weight: var(--type-eyebrow-weight);
+  letter-spacing: var(--type-eyebrow-tracking);
+  text-transform: uppercase;
+}
+
+.mapCard strong {
+  margin-top: 34px;
+  color: var(--raw-orange);
+  font-size: clamp(1.8rem, 2.2vw, 2.45rem);
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 980px) {
+  .hero,
+  .statusGrid,
+  .mapGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    min-height: 0;
+  }
+
+  .heroAside {
+    align-self: start;
+  }
+}
+
+@media (max-width: 520px) {
+  .hero {
+    padding: 30px;
+  }
+
+  .heroBrandStack {
+    gap: 18px;
+  }
+
+  .title {
+    max-width: 300px;
+    font-size: clamp(54px, 17vw, 74px);
+    letter-spacing: -0.006em;
+    line-height: 0.86;
+  }
+
+  .heroAside p {
+    font-size: 16px;
+    line-height: 1.16;
+  }
+}

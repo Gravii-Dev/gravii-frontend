@@ -1,53 +1,79 @@
 .backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 9999;
   padding: 20px;
+  background: rgba(10, 8, 6, 0.34);
 }
 
 .dialog {
-  width: min(400px, 100%);
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: #1a1a1a;
-  padding: 36px 40px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: min(440px, 100%);
+  border: 1.25px solid var(--raw-line);
+  border-radius: 16px;
+  background: var(--raw-paper);
+  box-shadow: 0 24px 70px rgba(10, 8, 6, 0.18);
+  padding: 34px 36px;
   text-align: center;
 }
 
+.dialog::before {
+  display: none;
+}
+
 .kicker {
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(10, 8, 6, 0.52);
   font-family: var(--font-ui);
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.2em;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.18em;
   margin: 0 0 10px;
   text-transform: uppercase;
 }
 
 .price {
-  color: #f5f2eb;
-  font-family: var(--font-accent);
-  font-size: 24px;
-  margin: 0 0 12px;
+  color: var(--raw-ink);
+  font-family: var(--font-display);
+  font-size: clamp(34px, 4.2vw, 52px);
+  font-weight: 1000;
+  letter-spacing: -0.018em;
+  line-height: 0.9;
+  margin: 0 0 16px;
+  text-transform: uppercase;
 }
 
 .copy {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(10, 8, 6, 0.72);
   font-family: var(--font-ui);
   font-size: 14px;
-  line-height: 1.6;
+  font-weight: 720;
+  letter-spacing: -0.008em;
+  line-height: 1.35;
   margin: 0 0 24px;
 }
 
 .hint {
-  color: rgba(255, 255, 255, 0.25);
+  color: rgba(10, 8, 6, 0.52);
   font-family: var(--font-ui);
   font-size: 11px;
+  font-weight: 740;
+  letter-spacing: -0.006em;
+  line-height: 1.35;
   margin: 0 0 28px;
+}
+
+.error {
+  margin: -10px 0 22px;
+  color: var(--color-error);
+  font-size: 12px;
+  font-weight: 840;
+  letter-spacing: -0.006em;
+  line-height: 1.35;
 }
 
 .actions {
@@ -63,21 +89,27 @@
 }
 
 .secondary {
-  --button-front: rgba(255, 255, 255, 0.04);
-  --button-front-hover: rgba(255, 255, 255, 0.1);
-  --button-text: rgba(255, 255, 255, 0.68);
-  --button-back: var(--slush-glacier);
-  --button-back-text: var(--slush-dark);
-  --button-border-color: rgba(255, 255, 255, 0.14);
-  --button-back-border-color: rgba(255, 255, 255, 0.14);
+  --button-front: #f4eadf;
+  --button-front-hover: var(--raw-ink);
+  --button-text: var(--raw-ink);
+  --button-text-hover: var(--raw-paper);
+  --button-border-color: transparent;
 }
 
 .primary {
-  --button-front: rgba(200, 180, 240, 0.88);
-  --button-front-hover: rgba(220, 200, 255, 0.96);
-  --button-text: #1a1a1a;
-  --button-back: var(--slush-yellow);
-  --button-back-text: var(--slush-dark);
-  --button-border-color: rgba(200, 180, 240, 0.28);
-  --button-back-border-color: rgba(200, 180, 240, 0.28);
+  --button-front: var(--raw-orange);
+  --button-front-hover: var(--raw-ink);
+  --button-text: var(--raw-paper);
+  --button-text-hover: var(--raw-paper);
+  --button-border-color: transparent;
+}
+
+@media (max-width: 560px) {
+  .dialog {
+    padding: 28px;
+  }
+
+  .actions {
+    flex-direction: column-reverse;
+  }
 }

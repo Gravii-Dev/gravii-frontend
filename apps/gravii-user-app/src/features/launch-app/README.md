@@ -1,6 +1,6 @@
 # `launch-app` Feature Core Guide
 
-This folder contains the shared feature-core for the current Launch App prototype.
+This folder contains the shared feature-core for the current Launch App workspace.
 
 It is easy to mistake this folder for "the whole app," but that is not quite its role. It sits between the route shell and the individual product surfaces.
 
@@ -26,7 +26,6 @@ What it owns:
 
 - panel IDs and panel configuration types
 - shared content props passed into feature surfaces
-- campaign, partner, leaderboard, and related mock-domain types
 
 Why it matters:
 
@@ -37,20 +36,21 @@ Why it matters:
 
 Purpose:
 
-- define the standard panel sequence and display metadata
+- define the standard workspace navigation sequence and display metadata
 
 What it owns:
 
-- panel order
-- panel number labels
+- navigation order, including the Home command section rendered by the logo tile
+- panel number labels for configuration and analytics context, even though the current nav UI hides them
 - preview tab labels
 - editor copy
+- section summaries used by the navigation cards
 - dark or light token preferences
 - hover behavior metadata
 
 Why it matters:
 
-- `src/app/page.tsx` can render the panel strip declaratively
+- `src/app/page.tsx` can render the left navigation rail declaratively
 - layout components can style themselves from data instead of hardcoded branching spread across the app
 
 ### `use-launch-shell.ts`
@@ -63,8 +63,7 @@ What it owns:
 
 - `activePanel`
 - `hoveredPanel`
-- `isConnected`
-- handlers for open, close, connect, toggle connection, and hover updates
+- handlers for navigation selection, home return, and hover updates
 
 Why it matters:
 
@@ -77,54 +76,18 @@ What it does not own:
 - wallet connection
 - any persistent state
 
-### `campaign-data.ts`
-
-Purpose:
-
-- provide shared mock campaign and partner data used by My Space and Discovery
-
-What it owns:
-
-- the benefit category list
-- partner mock data
-- campaign metadata and qualification steps
-
-Why it matters:
-
-- multiple surfaces depend on the same underlying campaign world
-- storing it once helps the prototype stay internally consistent
-
-### `mock-repository.ts`
-
-Purpose:
-
-- provide a centralized mock access layer
-
-What it owns:
-
-- wrapper methods that expose shared prototype data
-
-Why it matters:
-
-- feature screens depend on one access layer instead of importing every data file directly
-- the repository shape hints at how future real data access could be introduced
-
-Today it returns in-memory mock data. Later it can be replaced or adapted into real API access.
-
 ## How This Folder Works With the Rest of the App
 
 The current flow looks like this:
 
 1. `src/app/page.tsx` imports `PANELS` and `useLaunchShell`.
-2. The route renders layout wrappers based on `PANELS`.
+2. The route renders the logo Home control, left navigation, and workspace board based on `PANELS`.
 3. Feature surfaces receive `SharedContentProps`.
-4. Feature screens read data directly or through `launchMockRepository`.
 
 This folder therefore acts as:
 
 - the shared configuration layer
 - the shared shell-state layer
-- the shared mock-domain layer
 
 ## Why This Is Not the Same as `src/lib`
 
@@ -133,8 +96,7 @@ This folder therefore acts as:
 `launch-app` is not low-level. It knows about:
 
 - panels
-- campaigns
-- partners
+- the home command surface
 - shared product surfaces
 - shell connection state
 

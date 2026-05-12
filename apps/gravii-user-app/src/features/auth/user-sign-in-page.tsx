@@ -1,7 +1,10 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useAppKit } from '@reown/appkit/react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import type { Address } from 'viem'
+import { useConnection, useDisconnect, useSignMessage } from 'wagmi'
 
 import {
   clearUserIdentityBootstrapPending,
@@ -12,35 +15,24 @@ import {
   verifyUserWallet,
 } from '@/lib/auth/user-api'
 import { normalizeUserNextPath } from '@/lib/auth/shared'
+import { isWalletConnectConfigured } from '@/lib/wallet/appkit-config'
 
 import styles from './user-sign-in-page.module.css'
 
-declare global {
-  interface Window {
-    ethereum?: {
-      request: (args: {
-        method: string
-        params?: readonly unknown[]
-      }) => Promise<unknown>
-    }
-  }
+type InjectedWalletProvider = {
+  request: (args: {
+    method: string
+    params?: readonly unknown[]
+  }) => Promise<unknown>
 }
 
 type PendingStage =
   | 'bootstrapping'
+  | 'selecting'
   | 'challenge'
   | 'signing'
   | 'verifying'
   | null
-
-function readInjectedWalletAddress(accounts: unknown): string | null {
-  if (!Array.isArray(accounts)) {
-    return null
-  }
-
-  const [firstAccount] = accounts
-  return typeof firstAccount === 'string' ? firstAccount : null
-}
 
 function readReferralCode(searchParams: URLSearchParams, nextPath: string): string | null {
   const directReferral = searchParams.get('ref')?.trim().toUpperCase()
@@ -58,9 +50,41 @@ function readReferralCode(searchParams: URLSearchParams, nextPath: string): stri
   return nestedReferral?.trim().toUpperCase() ?? null
 }
 
+function isEvmAddress(value: unknown): value is Address {
+  return typeof value === 'string' && /^0x[a-fA-F0-9]{40}$/.test(value)
+}
+
+function readWalletAddress(accounts: unknown): Address | null {
+  if (!Array.isArray(accounts)) {
+    return null
+  }
+
+  const [firstAccount] = accounts
+  return isEvmAddress(firstAccount) ? firstAccount : null
+}
+
+function getInjectedWalletProvider(): InjectedWalletProvider | null {
+  const provider = window.ethereum
+
+  if (
+    provider &&
+    typeof provider === 'object' &&
+    'request' in provider &&
+    typeof provider.request === 'function'
+  ) {
+    return provider as InjectedWalletProvider
+  }
+
+  return null
+}
+
 function getStageTitle(stage: PendingStage) {
   if (stage === 'bootstrapping') {
     return 'Checking your Gravii session…'
+  }
+
+  if (stage === 'selecting') {
+    return 'Choose a wallet in WalletConnect.'
   }
 
   if (stage === 'challenge') {
@@ -79,22 +103,31 @@ function getStageTitle(stage: PendingStage) {
 }
 
 function getStageHint(stage: PendingStage) {
+  if (stage === 'selecting') {
+    return 'WalletConnect lets you choose MetaMask, Coinbase Wallet, Rabby, Trust Wallet, and supported mobile wallets from one modal.'
+  }
+
   if (stage === 'verifying') {
     return 'Building your Gravii ID and warming your X-Ray profile. New sign-ups can take around 10–30 seconds.'
   }
 
   if (stage === 'signing') {
-    return 'MetaMask or another injected wallet should open a signing prompt.'
+    return 'Your selected wallet should open a signing prompt. The signature proves wallet ownership without sending a transaction.'
   }
 
-  return 'We use a signed challenge and a 24 hour JWT. No server-side session cookies are required.'
+  return 'We use WalletConnect or a browser wallet fallback plus a signed challenge and a 24 hour JWT.'
 }
 
 export function UserSignInPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const connection = useConnection()
+  const { disconnectAsync } = useDisconnect()
+  const { open } = useAppKit()
+  const { signMessageAsync } = useSignMessage()
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [pendingStage, setPendingStage] = useState<PendingStage>('bootstrapping')
+  const [shouldAuthenticateWallet, setShouldAuthenticateWallet] = useState(false)
 
   const nextPath = useMemo(
     () => normalizeUserNextPath(searchParams.get('next')),
@@ -105,7 +138,7 @@ export function UserSignInPage() {
     [nextPath, searchParams]
   )
 
-  const handleSessionReady = () => {
+  const handleSessionReady = useCallback(() => {
     if (typeof window !== 'undefined') {
       window.location.replace(nextPath)
       return
@@ -113,7 +146,7 @@ export function UserSignInPage() {
 
     router.replace(nextPath)
     router.refresh()
-  }
+  }, [nextPath, router])
 
   useEffect(() => {
     let cancelled = false
@@ -136,32 +169,72 @@ export function UserSignInPage() {
     return () => {
       cancelled = true
     }
-  }, [nextPath, router])
+  }, [handleSessionReady])
 
-  const handleInjectedWallet = async () => {
+  const authenticateWallet = useCallback(async (walletAddress: Address) => {
     setPendingStage('challenge')
     setErrorMessage(null)
 
     try {
-      if (!window.ethereum) {
+      const challenge = await requestUserChallenge(walletAddress)
+
+      setPendingStage('signing')
+      const signature = await signMessageAsync({
+        account: walletAddress,
+        message: challenge.message,
+      })
+
+      setPendingStage('verifying')
+      const result = await verifyUserWallet({
+        address: walletAddress,
+        message: challenge.message,
+        signature,
+        ...(referralCode ? { referralCode } : {}),
+      })
+
+      if (result.status === 'created') {
+        markUserIdentityBootstrapPending()
+      } else {
+        clearUserIdentityBootstrapPending()
+      }
+
+      storeUserToken(result.token)
+      handleSessionReady()
+    } catch (error) {
+      setShouldAuthenticateWallet(false)
+      setErrorMessage(
+        error instanceof Error ? error.message : 'Wallet sign-in failed.'
+      )
+      setPendingStage(null)
+    }
+  }, [handleSessionReady, referralCode, signMessageAsync])
+
+  const authenticateInjectedWallet = useCallback(async () => {
+    setPendingStage('challenge')
+    setErrorMessage(null)
+
+    try {
+      const provider = getInjectedWalletProvider()
+
+      if (!provider) {
         throw new Error(
-          'No injected wallet was detected. Install MetaMask or another EVM wallet to continue.'
+          'No browser wallet was detected. Install MetaMask, Rabby, Coinbase Wallet, or configure WalletConnect.'
         )
       }
 
-      const accounts = await window.ethereum.request({
+      const accounts = await provider.request({
         method: 'eth_requestAccounts',
       })
-      const walletAddress = readInjectedWalletAddress(accounts)
+      const walletAddress = readWalletAddress(accounts)
 
       if (!walletAddress) {
-        throw new Error('No wallet account was returned by the provider.')
+        throw new Error('No EVM wallet account was returned by the provider.')
       }
 
       const challenge = await requestUserChallenge(walletAddress)
 
       setPendingStage('signing')
-      const signature = await window.ethereum.request({
+      const signature = await provider.request({
         method: 'personal_sign',
         params: [challenge.message, walletAddress],
       })
@@ -187,16 +260,62 @@ export function UserSignInPage() {
       storeUserToken(result.token)
       handleSessionReady()
     } catch (error) {
+      setShouldAuthenticateWallet(false)
       setErrorMessage(
         error instanceof Error ? error.message : 'Wallet sign-in failed.'
       )
       setPendingStage(null)
     }
+  }, [handleSessionReady, referralCode])
+
+  useEffect(() => {
+    if (!shouldAuthenticateWallet || !connection.isConnected || !connection.address) {
+      return
+    }
+
+    const walletAddress = connection.address
+    const timeoutId = window.setTimeout(() => {
+      void authenticateWallet(walletAddress)
+    }, 0)
+
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
+  }, [
+    authenticateWallet,
+    connection.address,
+    connection.isConnected,
+    shouldAuthenticateWallet,
+  ])
+
+  const handleWalletConnect = async () => {
+    setErrorMessage(null)
+
+    if (!isWalletConnectConfigured) {
+      await authenticateInjectedWallet()
+      return
+    }
+
+    try {
+      if (connection.isConnected && connection.address) {
+        await disconnectAsync()
+      }
+
+      setShouldAuthenticateWallet(true)
+      setPendingStage('selecting')
+      await open()
+    } catch (error) {
+      setShouldAuthenticateWallet(false)
+      setPendingStage(null)
+      setErrorMessage(
+        error instanceof Error ? error.message : 'WalletConnect modal failed to open.'
+      )
+    }
   }
 
   return (
     <main className={styles.page}>
-      <section className={styles.panel}>
+      <section className={styles.panel} data-liquid-glass="panel">
         <div className={styles.eyebrow}>Gravii Launch App</div>
         <h1 className={styles.title}>Sign in with your wallet.</h1>
         <p className={styles.copy}>{getStageHint(pendingStage)}</p>
@@ -210,8 +329,9 @@ export function UserSignInPage() {
         <div className={styles.stack}>
           <button
             className={`${styles.button} ${styles.buttonPrimary}`}
+            data-liquid-glass="soft"
             disabled={pendingStage !== null}
-            onClick={handleInjectedWallet}
+            onClick={handleWalletConnect}
             type="button"
           >
             <span className={styles.buttonLabel}>
@@ -219,7 +339,7 @@ export function UserSignInPage() {
                 {getStageTitle(pendingStage)}
               </span>
               <span className={styles.buttonHint}>
-                Connect an injected EVM wallet to sign in and unlock your live Gravii ID and X-Ray surfaces.
+                Pick your preferred EVM wallet through WalletConnect. If WalletConnect is not configured locally, Gravii falls back to your browser wallet.
               </span>
             </span>
             <span aria-hidden="true">→</span>
@@ -231,7 +351,7 @@ export function UserSignInPage() {
         </p>
 
         <div className={styles.footer}>
-          <span>JWT session restores on page refresh until the 24h token expires.</span>
+          <span>WalletConnect session + Gravii JWT restore after refresh.</span>
           <span className={styles.mono}>{nextPath}</span>
         </div>
       </section>

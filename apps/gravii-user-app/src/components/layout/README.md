@@ -1,6 +1,6 @@
 # Layout Components Guide
 
-This folder contains the shared structural components that make the Launch App panel system work.
+This folder contains the shared structural components that make the Launch App workspace system work.
 
 These components are responsible for framing and opening the product surfaces. They are not responsible for the business meaning of Profile, Discovery, X-Ray, or the other features.
 
@@ -8,10 +8,10 @@ These components are responsible for framing and opening the product surfaces. T
 
 The layout layer answers questions such as:
 
-- How does a panel look when collapsed?
-- How does a panel expand?
-- How is the common panel header rendered?
-- How does the five-panel strip behave when every surface, including `My Space`, uses the same ordered shell?
+- How does a workspace navigation card look when inactive, hovered, or active?
+- How does the active product surface render inside the main workspace board?
+- How is the common workspace header rendered for non-home sections?
+- How does the logo tile act as the Home entry point for the rest of the app?
 
 It does not answer questions such as:
 
@@ -27,24 +27,24 @@ Those concerns belong to feature folders.
 
 Primary job:
 
-- render one of the standard vertical panels used by all five Launch App surfaces
+- render one of the ordered navigation cards used by the Launch App workspace
 
 Responsibilities:
 
-- render the preview state when the panel is not active
-- handle click and keyboard opening behavior
-- track the active, hovered, collapsed, and idle visual states passed in by the shell
-- choose dark or light visual tokens based on the panel configuration
-- mount `PanelShell` only when the panel is active
+- render the product section affordance in the left navigation rail
+- handle click and keyboard selection behavior
+- track the active and hovered visual states passed in by the shell
+- choose dark or light text treatment based on the panel configuration
+- expose accessible navigation labels for tests and keyboard users
 
 Important details:
 
 - it receives metadata from `src/features/launch-app/panel-config.ts`
-- it renders the passed children inside the shared `PanelShell`
-- it can optionally render `GrainOverlay` for the Discovery panel
-- it uses the current Slush-inspired card language: thick borders, restrained premium color fills, elastic hover radius changes, and a two-face hover preview where the moving front card reveals the panel background before the back face settles in
-- the X-Ray preview uses a soft thermal field rather than visible scan-line decoration so the surface stays calmer and more premium
-- on small screens, the five-panel strip stays intact and becomes a horizontal scroll surface instead of collapsing into a different layout
+- the Home section stays in shell state, but the logo tile renders the Home navigation control instead of a separate `00 HOME` card
+- section cards show their configured color by default, reverse to the neutral paper surface on hover, and show the marker dot only when active
+- active cards expand vertically in the sidebar instead of turning into the workspace body
+- inactive cards remain visible so the user can jump between product surfaces without losing orientation
+- on small screens, the navigation rail becomes a horizontal scroll surface above the workspace board
 
 What it does not own:
 
@@ -52,31 +52,23 @@ What it does not own:
 - the global active panel state
 - any domain logic
 
-### `my-space-dock`
-
-Legacy note:
-
-- this component remains in the repo as a reference to the earlier dock-based `My Space` treatment
-- the active product shell no longer uses it
-- current work should treat `My Space` as panel `05` inside the shared strip
-
 ### `panel-shell`
 
 Primary job:
 
-- render the common expanded frame shared by active panels
+- render the common workspace frame shared by non-home product surfaces
 
 Responsibilities:
 
 - draw the shared header
 - render the shared title treatment
-- provide the close button
+- provide the workspace action button, currently used to return to Home
 - render the body content passed from the feature
-- preserve the expanded panel's oversized display typography and elastic entrance rhythm
+- preserve consistent spacing and editorial display typography across sections
 
 Why it matters:
 
-- it gives the app a consistent expanded frame
+- it gives the app a consistent workspace frame
 - it keeps each feature from duplicating the same shell structure
 
 What it does not own:
@@ -90,13 +82,13 @@ What it does not own:
 The normal expanded flow is:
 
 1. `HomePage` decides which panel is active.
-2. `LaunchPanel` receives that state.
-3. The layout component mounts `PanelShell`.
-4. `PanelShell` wraps the feature content.
+2. `LaunchPanel` renders the active state inside the navigation rail.
+3. `HomePage` renders the matching feature inside the workspace board.
+4. `PanelShell` wraps non-home feature content.
 
 This layering is useful because:
 
-- the route entry stays thin
+- the route entry stays declarative
 - layout rules stay consistent
 - features stay focused on their own content
 

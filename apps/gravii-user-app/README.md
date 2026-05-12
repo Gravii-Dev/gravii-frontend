@@ -73,8 +73,6 @@ src/
       gravii-logo/
         gravii-logo.module.css
         index.tsx
-      grain-overlay/
-        index.tsx
       launch-primitives/
         index.tsx
         launch-primitives.module.css
@@ -144,10 +142,10 @@ docs/
 
 Current live-backed parts:
 
-- wallet challenge/signature sign-in against the User API
+- WalletConnect/Reown AppKit wallet selection backed by the User API challenge/signature sign-in contract
 - anonymous users can land on `/` without an automatic wallet prompt; the header `SIGN IN` action is the only entry into `/sign-in`
 - 24 hour JWT session validation against the User API
-- live `GRAVII ID` loading through `/api/v1/me/identity`, including short bootstrap polling for newly created wallets and the refreshed branded identity presentation
+- live `GRAVII ID` loading through `/api/v1/me/identity`, including short bootstrap polling for newly created wallets and the persona dashboard presentation for persona, chain, rank, activity, reputation, NFTs, matched campaigns, and X-Ray entry
 - live X-Ray credits, lookup history, fresh lookup runs, and detail reads with the new Gravii-branded analytical surface
 - browser-side auth and user reads now go through a same-origin Next.js `/api/v1/*` rewrite before reaching the User API so local development is not blocked by backend CORS policy
 

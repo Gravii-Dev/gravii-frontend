@@ -15,34 +15,35 @@ The goal is not just to restyle screens. The goal is to create a stable product 
 
 ## Current Layout And Reference Decision
 
-The current redesign direction keeps the five-panel Launch App strip as the primary layout.
+The current redesign direction uses a Raw Materials-inspired workspace shell: the logo tile acts as Home, the left rail owns the product sections, and the right board owns the active workspace.
 
 The earlier `Identity Command Center` option is not the active direction for this app. Instead, the design system should improve the existing five ordered surfaces with Slush-inspired foundations from the local reference file at `/Users/kxwxn/Downloads/index.html`.
 
-- high-contrast black and white foundations
-- bright accent tokens inspired by Slush: blue, yellow, violet, green, orange, and glacier
+- high-contrast ink and paper foundations
+- restrained accent tokens: orange for primary action, blue/violet/black for navigation surfaces, and paper for content surfaces
 - heavy uppercase display typography with tight line-height
-- thick black borders on interactive cards and containers
-- pill buttons with a second back layer and elastic hover motion
+- thin ink borders on interactive cards and containers
+- solid pill buttons with tonal hover motion
 - square or rounded card forms with bold color fills
 - smoother hover, focus, and active panel motion using elastic easing
 - polished reserved states for `STANDING`, `DISCOVERY`, and `MY SPACE`
+- no mixed glass, caustic, reflection, or backdrop-blur material inside content surfaces
 
 ## Implemented Foundation Slice
 
-The first implementation slice applies the Slush-inspired direction without replacing the five-panel layout.
+The current implementation slice applies the Raw Materials-inspired direction with a solid material system.
 
-- `src/app/globals.css` owns the Slush color, radius, border, shadow, and elastic easing primitives.
+- `src/app/globals.css` owns the solid paper/ink color, radius, border, shadow, and motion primitives, while legacy token names remain mapped for existing feature modules.
 - font role tokens are resolved on `body` so the Next.js local font variables are available before `--font-ui`, `--font-display`, and `--font-accent` are consumed.
-- `src/app/page.module.css` keeps the five ordered panels and adds a mobile horizontal scroll treatment so the strip remains intact on small screens.
-- `src/components/layout/launch-panel` and `src/components/layout/panel-shell` carry the shared bordered panel shell, oversized active titles, and elastic preview or close affordances.
-- `src/components/ui/action-button` carries the shared pill action pattern with a bordered front layer and colored back layer.
-- `src/features/profile`, `src/features/x-ray`, and `src/features/coming-soon` now use the same thick-border, pop-shadow, accent-fill surface language for live and reserved panel content.
+- `src/app/page.module.css` keeps the logo Home control plus five ordered navigation sections and adds a mobile horizontal scroll treatment for the rail.
+- `src/components/layout/launch-panel` and `src/components/layout/panel-shell` carry the shared solid navigation shell, oversized active titles, and workspace affordances.
+- `src/components/ui/action-button` carries the shared solid pill action pattern.
+- `src/features/profile`, `src/features/x-ray`, and reserved surfaces inherit the same solid paper/ink material contract through global tokens and runtime material neutralization.
 - Connected Gravii ID states prioritize the live persona dashboard first; the larger brand introduction remains for locked, loading, and error states where orientation is still useful.
 - Decorative logo repetition is intentionally reduced inside connected product states; live signals such as reputation, tier, credits, history, and net worth should carry the visual weight.
 - Reserved panels no longer rely on single-message placeholders; each reserved surface now exposes panel-specific readiness metrics, launch-step status, and quick routes back to live surfaces.
-- Panel previews use a stationary bordered shell with one inner front/back flip layer so Slush-style hover motion reads as a real card turn without moving the outer panel frame.
-- Connected Gravii ID states suppress ambient atmosphere gradients behind live dashboard content so colored backgrounds do not read as accidental external panels.
+- Navigation cards use color by default and reverse to paper on hover; marker dots appear only on the active control.
+- Connected product states suppress ambient atmosphere gradients and reflective overlays behind live dashboard content so colored backgrounds do not read as accidental external panels.
 
 ## Design System Principles
 
@@ -90,6 +91,8 @@ The current app already has distinctive brand effects:
 - panel strips
 - textured grain overlays
 - Gravii motion mark
+- large Home wordmark treatment
+- low-opacity reserved-surface symbol watermarks
 - identity/persona canvas
 - X-Ray analytical dashboard visuals
 
@@ -251,11 +254,8 @@ These should support Gravii ID and X-Ray first.
 
 These should stay explicit because they carry cost and motion.
 
-- `GrainOverlay`
 - `MotionLogo`
 - `PersonaCanvas`
-- `ThermalXrayField`
-- `ScanLine`
 
 Each effect component should document:
 
@@ -345,7 +345,7 @@ Exit criteria:
 Deliverables:
 
 - redesign `LaunchPanel` and `PanelShell` against tokens
-- decide whether `MySpaceDock` remains or is removed
+- keep all five surfaces on the unified `LaunchPanel` shell
 - add keyboard and focus behavior checks
 - verify responsive behavior
 
@@ -428,5 +428,4 @@ For each design system migration slice:
 - Should the future design system stay fully CSS Modules-based, or should a separate styling migration be planned?
 - Should Gravii shared design tokens live only inside this app first, or move into a monorepo package later?
 - Should auth/session hardening happen before or after the first visual redesign slice?
-- Should `MySpaceDock` survive as a special product layout, or should all five surfaces use one panel system?
-- Should brand effects such as grain and canvas be always available primitives or feature-specific effects?
+- Should brand effects such as canvas be always available primitives or feature-specific effects?

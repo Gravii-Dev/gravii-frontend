@@ -24,6 +24,7 @@ function readUserApiBaseUrl() {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  devIndicators: false,
   turbopack: {
     root: workspaceRoot,
   },

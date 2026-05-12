@@ -65,7 +65,7 @@ Use for:
 - feature-specific state
 - feature-specific view-model helpers
 - feature-specific child components
-- feature-specific mock data until real APIs arrive
+- feature-specific API adapters or explicit reserved-state content when real APIs are not ready
 
 Current subfolders:
 
@@ -119,7 +119,6 @@ Examples:
 
 - panel metadata
 - shell state
-- mock repository access
 - shared Launch App types
 
 If the app grows, this folder might later be renamed to something like `launch-shell` or `app-core`. For now, it is functioning as the app-level feature layer.
@@ -189,7 +188,6 @@ Examples in the current repo:
 Examples:
 
 - `LaunchPanel`
-- `MySpaceDock`
 - `PanelShell`
 
 ### Move code into `src/lib` when:
@@ -200,7 +198,6 @@ Examples:
 
 Examples:
 
-- simplex noise generation
 - font constant definitions
 
 ## Do We Ever Need `hooks`, `constants`, `store`, `types`, or `effects` Folders?
@@ -254,7 +251,6 @@ Add a shared effects folder when:
 
 In the current codebase:
 
-- `grain-overlay` already behaves like a shared effect
 - `infinite-canvas` is still better understood as Profile-specific
 
 ## Production Growth Strategy

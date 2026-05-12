@@ -63,6 +63,7 @@ Current frontend readiness already includes:
 - client-side JWT persistence and session validation
 - live Gravii ID loading
 - live X-Ray credits, lookup history, lookup runs, and detail reads
+- X-Ray credit purchase entry that redirects to a backend-created Stripe Checkout Session
 - explicit coming-soon reservations for the remaining three surfaces
 
 ### 2. Session Service
@@ -261,6 +262,7 @@ Need:
 - live JWT session bootstrap
 - live Gravii ID endpoint
 - live X-Ray credits/history/detail
+- frontend checkout redirect boundary for X-Ray credits, with backend webhook fulfillment still required
 - keep the remaining surfaces reserved instead of shipping stale mocks
 
 ### Phase 2: Replace Reserved Surfaces
