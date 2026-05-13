@@ -46,7 +46,7 @@
     "next-sanity": "^12.0.10",
     "postprocessing": "^6.38.2",
     "react": "19.2.3",
-    "react-dom": "19.2.3",
+    "react-dom": "19.2.6",
     "tempus": "1.0.0-dev.17",
     "three": "0.182.0",
     "tunnel-rat": "^0.1.2",
