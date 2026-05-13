@@ -271,7 +271,7 @@ flowchart TD
 
 Do these before large UI/UX changes.
 
-- Keep codebase docs aligned with live auth/data behavior.
+- Keep codebase docs aligned with live auth/data behavior so developers do not follow the old mock-only mental model.
 - Add test coverage for sign-in success, sign-in failure, and existing-session handoff behavior.
 - Add test coverage for Profile identity loading, bootstrap retry, 401 refresh, and failure actions.
 - Decide whether the rollout needs an explicit route access boundary beyond the current browser-side session handling.
