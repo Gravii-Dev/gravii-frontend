@@ -17,7 +17,8 @@ In this repository, the high-level frontend architecture is:
 3. `src/features/launch-app/use-launch-shell.ts` owns shared shell state such as the active and hovered panel.
 4. `src/components/layout/*` renders the panel system around the feature content.
 5. `src/features/*` renders each product surface and computes feature-specific UI state.
-6. `src/lib/auth/user-api.ts` owns User API calls and wire-to-view model normalization for live auth, Gravii ID, and X-Ray data.
+6. `src/lib/auth/user-api.ts` owns browser-safe User API calls and wire-to-view model normalization for live auth, Gravii ID, and X-Ray data.
+7. `src/app/api/user-api/[...path]/route.ts` owns the same-origin backend-for-frontend proxy that attaches the httpOnly user session cookie to backend requests.
 
 ### Folder Structure
 
@@ -68,8 +69,8 @@ Important implications:
 - The main route is `/`.
 - Most interactive code is client-side.
 - Anonymous users can land on `/`; wallet sign-in uses WalletConnect/Reown AppKit when configured, with a browser-wallet fallback for local environments, after the explicit `SIGN IN` action routes to `/sign-in`.
-- The browser stores the User API JWT and revalidates it through the User API.
-- Browser API reads go through the same-origin `/api/v1/*` rewrite before reaching the User API.
+- The browser does not store the User API JWT. Wallet verification stores the token in an httpOnly same-origin cookie.
+- Browser API reads go through the same-origin `/api/user-api/*` backend-for-frontend route before reaching the User API.
 - `GRAVII ID` and `X-RAY` use live backend reads.
 - `STANDING`, `DISCOVERY`, and `MY SPACE` are reserved coming-soon surfaces.
 - Mock-era reserved-surface data and view-model files have been removed; reserved surfaces stay empty until backend contracts are ready.
@@ -85,7 +86,7 @@ Root route
   -> feature content component
   -> feature-local state or view-model
   -> User API helper or reserved coming-soon state
-  -> Next.js /api/v1 rewrite
+  -> Next.js /api/user-api BFF
   -> Gravii User API
 ```
 
@@ -169,6 +170,7 @@ This folder owns non-visual helpers with lower-level responsibilities.
 It currently contains:
 
 - `auth/user-api.ts`: User API client helpers and payload normalization
+- `auth/server-user-session.ts`: server-only cookie options and User API base URL resolution for the same-origin BFF
 - `auth/shared.ts`: user sign-in route helpers
 - `gravii-fonts.ts`: shared font name constants
 

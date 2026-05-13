@@ -30,7 +30,17 @@ interface AdminAccessPayload extends AdminRefreshPayload {
 }
 
 function getAdminAuthSecret(): string {
-  return process.env.GRAVII_ADMIN_AUTH_SECRET?.trim() || 'gravii-admin-dev-secret'
+  const configuredSecret = process.env.GRAVII_ADMIN_AUTH_SECRET?.trim()
+
+  if (configuredSecret) {
+    return configuredSecret
+  }
+
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('GRAVII_ADMIN_AUTH_SECRET must be configured in production.')
+  }
+
+  return 'gravii-admin-dev-secret'
 }
 
 function signPayload(payload: object): string {

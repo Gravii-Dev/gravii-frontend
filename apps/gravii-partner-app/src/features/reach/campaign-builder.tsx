@@ -76,7 +76,6 @@ export function CampaignBuilder({
   const [notice, setNotice] = useState<string | null>(() =>
     buildInitialNotice({ initialPrompt, initialCampaignId, initialDraftId })
   )
-  const [hasSavedDraft, setHasSavedDraft] = useState(() => readStoredDraft(partnerName) !== null)
   const [accessControlEnabled, setAccessControlEnabled] = useState(true)
   const deferredForm = useDeferredValue(form)
   const activeScenario = useMemo(
@@ -85,17 +84,16 @@ export function CampaignBuilder({
   )
 
   useEffect(() => {
-    const storedDraft = readStoredDraft(partnerName)
-
-    setHasSavedDraft(storedDraft !== null)
-    setForm((current) =>
-      current.partnerName === partnerName
-        ? current
-        : {
-            ...current,
-            partnerName
-          }
-    )
+    startTransition(() => {
+      setForm((current) =>
+        current.partnerName === partnerName
+          ? current
+          : {
+              ...current,
+              partnerName
+            }
+      )
+    })
   }, [partnerName])
   const lockedScope = activeScenario?.scopeDefault ?? null
   const effectiveScope = lockedScope ?? deferredForm.scope
@@ -722,7 +720,6 @@ export function CampaignBuilder({
               className={styles.draftButton}
               onClick={() => {
                 writeStoredDraft({ ...form, scope: effectiveScope })
-                setHasSavedDraft(true)
                 setNotice('Draft saved locally')
               }}
             >
@@ -733,7 +730,6 @@ export function CampaignBuilder({
               className={styles.launchButton}
               onClick={() => {
                 writeStoredDraft({ ...form, scope: effectiveScope })
-                setHasSavedDraft(true)
                 router.push(
                   workspaceSettings.strictRiskReview
                     ? '/campaign-manager?launch=review-pending'

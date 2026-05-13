@@ -96,6 +96,27 @@ export function OnboardingPage() {
     })
   }
 
+  useEffect(() => {
+    if (
+      !shouldPrefetchRoutes ||
+      auth.status !== 'authenticated' ||
+      !workspaceAccess.canAccessWorkspace ||
+      workspaceAccess.isSuspended
+    ) {
+      return
+    }
+
+    for (const destination of allowedDestinations) {
+      router.prefetch(destination)
+    }
+  }, [
+    allowedDestinations,
+    auth.status,
+    router,
+    workspaceAccess.canAccessWorkspace,
+    workspaceAccess.isSuspended
+  ])
+
   if (auth.status !== 'authenticated') {
     return null
   }
@@ -117,16 +138,6 @@ export function OnboardingPage() {
       </div>
     )
   }
-
-  useEffect(() => {
-    if (!shouldPrefetchRoutes) {
-      return
-    }
-
-    for (const destination of allowedDestinations) {
-      router.prefetch(destination)
-    }
-  }, [allowedDestinations, router])
 
   return (
     <div className={styles.page}>

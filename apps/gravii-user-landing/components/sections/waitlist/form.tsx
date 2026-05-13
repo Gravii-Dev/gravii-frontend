@@ -205,14 +205,13 @@ function WaitlistFormInstance({ onReset }: { onReset: () => void }) {
           </div>
         </div>
 
-        <p
+        <output
           id="waitlist-status"
           className={clsx(s.status, statusClassName)}
-          role="status"
           aria-live="polite"
         >
           {statusMessage}
-        </p>
+        </output>
       </div>
     )
   }

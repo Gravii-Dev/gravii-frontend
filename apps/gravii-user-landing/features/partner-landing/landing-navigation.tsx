@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
+import { Link } from '@/components/ui/link'
 import { cn } from '@/lib/cn'
 
 import { AuthHandoffLink } from './auth-handoff-link'
@@ -33,7 +34,7 @@ function renderNavItem(item: NavItem, onComplete?: () => void) {
   }
 
   return (
-    <a
+    <Link
       className={styles.navLink}
       href={item.href}
       key={item.label}
@@ -42,7 +43,7 @@ function renderNavItem(item: NavItem, onComplete?: () => void) {
       onClick={() => onComplete?.()}
     >
       {item.label}
-    </a>
+    </Link>
   )
 }
 
@@ -70,7 +71,7 @@ function renderMobileNavItem(item: NavItem, onComplete?: () => void) {
   }
 
   return (
-    <a
+    <Link
       className={styles.mobileLink}
       href={item.href}
       key={item.label}
@@ -79,7 +80,7 @@ function renderMobileNavItem(item: NavItem, onComplete?: () => void) {
       onClick={() => onComplete?.()}
     >
       {item.label}
-    </a>
+    </Link>
   )
 }
 
@@ -113,9 +114,9 @@ export function SiteNav({ isScrolled }: { isScrolled: boolean }) {
           <AuthHandoffLink className={styles.navGetStarted} href={dashboardHref}>
             Get Started
           </AuthHandoffLink>
-          <a className={styles.navDemo} href="mailto:partners@gravii.io">
+          <Link className={styles.navDemo} href="mailto:partners@gravii.io">
             Book a Demo
-          </a>
+          </Link>
         </div>
 
         <button
@@ -133,8 +134,13 @@ export function SiteNav({ isScrolled }: { isScrolled: boolean }) {
 
       <div
         className={cn(styles.mobileOverlay, mobileMenuOpen && styles.mobileOverlayOpen)}
-        onClick={() => setMobileMenuOpen(false)}
       >
+        <button
+          aria-label="Close navigation menu"
+          className={styles.mobileOverlayCloseSurface}
+          onClick={() => setMobileMenuOpen(false)}
+          type="button"
+        />
         {navItems.map((item) => renderMobileNavItem(item, () => setMobileMenuOpen(false)))}
         <AuthHandoffLink
           className={cn(styles.mobileLink, styles.mobileLinkGetStarted)}
@@ -143,13 +149,13 @@ export function SiteNav({ isScrolled }: { isScrolled: boolean }) {
         >
           Get Started
         </AuthHandoffLink>
-        <a
+        <Link
           className={cn(styles.mobileLink, styles.mobileLinkDemo)}
           href="mailto:partners@gravii.io"
           onClick={() => setMobileMenuOpen(false)}
         >
           Book a Demo
-        </a>
+        </Link>
       </div>
     </>
   )

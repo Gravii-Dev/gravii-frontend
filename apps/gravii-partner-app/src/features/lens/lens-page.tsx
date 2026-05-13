@@ -8,7 +8,6 @@ import type {
   LensCreatePoolRequest,
   LensPool,
   LensPoolProgress,
-  LensPoolSummary,
   LensPoolWalletDetail,
   LensPoolWalletListResponse,
   LensPoolWalletQuery,

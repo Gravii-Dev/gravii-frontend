@@ -44,7 +44,7 @@ Owned by this repo.
 Responsibilities:
 
 - wallet connect UI
-- client-side JWT bootstrap
+- httpOnly same-origin User API session bootstrap
 - route and surface rendering
 - client-side loading, error, and empty states
 - event instrumentation
@@ -60,7 +60,7 @@ Recommended frontend additions:
 Current frontend readiness already includes:
 
 - direct wallet sign-in against the live User API
-- client-side JWT persistence and session validation
+- httpOnly cookie session persistence and User API session validation
 - live Gravii ID loading
 - live X-Ray credits, lookup history, lookup runs, and detail reads
 - X-Ray credit purchase entry that redirects to a backend-created Stripe Checkout Session
@@ -286,6 +286,6 @@ Need:
 
 ## Open Questions
 
-- The app now uses a same-origin Next.js rewrite for browser-side `/api/v1/*` calls so local and hosted browser sessions are not blocked by backend CORS policy. Should that remain a lightweight transport boundary only, or grow into richer server-side proxy logic later?
+- The app now uses a same-origin Next.js `/api/user-api/*` BFF route for browser-side User API calls. It stores verified JWTs in an httpOnly cookie, attaches backend authorization server-side, and keeps local or hosted browser sessions away from direct backend CORS and token exposure. The remaining question is how much additional backend orchestration should move into this BFF versus staying in the User API.
 - Will wallet analysis results be eventually consistent across Profile and X-Ray, or separately versioned?
 - Will ranking jobs and profile jobs share the same storage backend?

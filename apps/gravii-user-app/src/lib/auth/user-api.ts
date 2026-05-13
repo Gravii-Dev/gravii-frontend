@@ -18,7 +18,6 @@ export interface UserAuthChallenge {
 
 export interface UserAuthVerifyResult {
   status: UserAuthStatus
-  token: string
   user: UserAuthUser
 }
 
@@ -114,7 +113,7 @@ interface UserAuthChallengeWire {
 
 interface UserAuthVerifyResultWire {
   status: UserAuthStatus
-  token: string
+  token?: string
   user: UserAuthUserWire
 }
 
@@ -187,7 +186,7 @@ interface UserXrayCheckoutSessionWire {
 
 const DEFAULT_USER_API_BASE_URL =
   'https://gravii-user-api-1077809741476.europe-west6.run.app'
-const DEFAULT_BROWSER_USER_API_BASE_URL = ''
+const DEFAULT_BROWSER_USER_API_BASE_URL = '/api/user-api'
 
 export const graviiUserPendingXrayWalletKey = 'gravii_pending_xray_wallet'
 export const graviiUserTokenKey = 'gravii_user_token'
@@ -197,7 +196,7 @@ function getUserApiBaseUrl() {
   if (typeof window !== 'undefined') {
     return resolveApiBaseUrl({
       override: undefined,
-      envKeys: ['NEXT_PUBLIC_USER_API_BROWSER_BASE_URL'],
+      envKeys: [],
       fallback: DEFAULT_BROWSER_USER_API_BASE_URL,
     })
   }
@@ -304,7 +303,7 @@ export function getStoredUserToken(): string | null {
     return null
   }
 
-  return window.localStorage.getItem(graviiUserTokenKey)
+  return null
 }
 
 export function storeUserToken(token: string) {
@@ -312,7 +311,9 @@ export function storeUserToken(token: string) {
     return
   }
 
-  window.localStorage.setItem(graviiUserTokenKey, token)
+  if (token.length > 0) {
+    window.localStorage.removeItem(graviiUserTokenKey)
+  }
 }
 
 export function clearUserToken() {
@@ -321,6 +322,19 @@ export function clearUserToken() {
   }
 
   window.localStorage.removeItem(graviiUserTokenKey)
+}
+
+export async function clearUserSession() {
+  clearUserToken()
+
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  await fetch('/api/user-session/logout', {
+    cache: 'no-store',
+    method: 'POST',
+  }).catch(() => undefined)
 }
 
 export function markUserIdentityBootstrapPending() {
@@ -374,7 +388,6 @@ async function userApiFetch<TResponse>(
     authenticated?: boolean
   }
 ): Promise<TResponse> {
-  const token = getStoredUserToken()
   const authenticated = options?.authenticated ?? true
   const headers = new Headers(options?.headers)
 
@@ -382,8 +395,12 @@ async function userApiFetch<TResponse>(
     headers.set('content-type', 'application/json')
   }
 
-  if (authenticated && token) {
-    headers.set('authorization', `Bearer ${token}`)
+  if (authenticated && typeof window === 'undefined') {
+    const token = getStoredUserToken()
+
+    if (token) {
+      headers.set('authorization', `Bearer ${token}`)
+    }
   }
 
   const response = await fetch(`${getUserApiBaseUrl()}${path}`, {
@@ -393,7 +410,7 @@ async function userApiFetch<TResponse>(
   })
 
   if (response.status === 401) {
-    clearUserToken()
+    await clearUserSession()
   }
 
   if (!response.ok) {
@@ -443,17 +460,11 @@ export async function verifyUserWallet(input: {
 
   return {
     status: payload.status,
-    token: payload.token,
     user: normalizeUserAuthUser(payload.user),
   }
 }
 
 export async function readUserSession(): Promise<UserAuthUser | null> {
-  const token = getStoredUserToken()
-  if (!token) {
-    return null
-  }
-
   try {
     const payload = await userApiFetch<UserSessionWire>('/api/v1/auth/session', {
       method: 'GET',
@@ -461,7 +472,7 @@ export async function readUserSession(): Promise<UserAuthUser | null> {
 
     return normalizeUserAuthUser(payload.user)
   } catch {
-    clearUserToken()
+    await clearUserSession()
     return null
   }
 }

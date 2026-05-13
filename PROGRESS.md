@@ -1447,3 +1447,34 @@ Append only. Use newest entries first. Record what changed, how it was checked, 
     - `/tmp/gravii-ink-board-light-300ms.png`
 - Next handoff:
   - This is a shader-derived CSS sprite implementation. If the product later requires live GPU animation rather than a generated mask sprite, replace the sprite layer with a small WebGL canvas using the same fragment shader.
+
+- Date: `2026-05-13`
+- Summary:
+  - Hardened the frontend monorepo security baseline: added shared Next.js security headers to user, partner, and backoffice apps; disabled the Next.js powered-by header; and made the admin auth secret fail closed in production.
+  - Moved the user app browser session away from readable JWT storage. Wallet verification now stores the User API token in an httpOnly same-origin cookie through `/api/user-api/*`, and sign-out clears it through `/api/user-session/logout`.
+  - Fixed repo-wide lint/typecheck blockers across backoffice, partner app, user app, and user landing, including stale E2E expectations for the anonymous user-app landing flow.
+  - Added Dependabot configuration and enabled GitHub repository security features where available: secret scanning, secret scanning push protection, Dependabot security updates, and `main` branch protection.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/.github/dependabot.yml`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-backoffice/next.config.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-backoffice/src/lib/auth/server-session.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-partner-app/next.config.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/next.config.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/api/user-api/[...path]/route.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/api/user-session/logout/route.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/lib/auth/server-user-session.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/lib/auth/user-api.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/tests/e2e/auth.spec.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/tests/e2e/landing-handoff.spec.ts`
+- Verification:
+  - `bun run lint`
+  - `bun run typecheck`
+  - `bun run build`
+  - `bun run test` in `apps/gravii-user-app`
+  - `bun run test` in `apps/gravii-user-landing`
+  - `bun run test:e2e`
+  - `bun audit`
+  - `git diff --check`
+  - Secret scan for `sk_*`, `pk_*`, and `whsec_*` patterns in tracked source returned no matches.
+- Next handoff:
+  - GitHub non-provider secret scanning and validity checks remained disabled after the API update, while standard secret scanning, push protection, and Dependabot security updates are enabled. Add CI status checks and then attach them to branch protection once the first workflow run exists.

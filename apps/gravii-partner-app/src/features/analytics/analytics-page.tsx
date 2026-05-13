@@ -36,16 +36,6 @@ const baseDexProtocols = [
   { label: 'Curve', percentage: 22, tone: 'five' },
   { label: 'SushiSwap', percentage: 15, tone: 'six' }
 ] as const
-const topChains = [
-  { label: 'Ethereum', percentage: 38, tone: 'eth' },
-  { label: 'Base', percentage: 22, tone: 'base' },
-  { label: 'Arbitrum', percentage: 16, tone: 'arb' }
-] as const
-const topOverlap = [
-  { label: 'Long-term Holders', percentage: 62, tone: 'one' },
-  { label: 'DEX Traders', percentage: 48, tone: 'two' },
-  { label: 'Stablecoin Spenders', percentage: 35, tone: 'three' }
-] as const
 const defiCategorySplit = [
   { label: 'LP', percentage: 35, tone: 'one' },
   { label: 'Lending', percentage: 28, tone: 'two' },

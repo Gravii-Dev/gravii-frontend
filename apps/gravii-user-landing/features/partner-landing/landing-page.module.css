@@ -25,7 +25,7 @@
 }
 
 .page {
-  font-family: var(--gravii-font-ui) !important;
+  font-family: var(--gravii-font-ui);
   background:
     radial-gradient(circle at 12% 4%, rgb(244 210 58 / 14%), transparent 26rem),
     radial-gradient(circle at 86% 6%, rgb(90 169 255 / 13%), transparent 24rem),
@@ -331,7 +331,18 @@
   opacity: 1;
 }
 
+.mobileOverlayCloseSurface {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+
 .mobileLink {
+  position: relative;
+  z-index: 1;
   font-family: var(--font-outfit), sans-serif;
   font-size: 24px;
   font-weight: 600;
@@ -2277,7 +2288,7 @@
 
 .navLogo,
 .footerBrand {
-  font-family: var(--font-archivo-black), sans-serif !important;
+  font-family: var(--font-archivo-black), sans-serif;
 }
 
 .heroTitle,
@@ -2286,7 +2297,7 @@
 .pricingProductTitle,
 .ctaTitle,
 .firstMoverTitle {
-  font-family: var(--font-sora), sans-serif !important;
+  font-family: var(--font-sora), sans-serif;
 }
 
 .engineBadgeTitle,
@@ -2303,7 +2314,7 @@
 .userEyebrow,
 .kyaStepLabel,
 .kyaCode {
-  font-family: var(--font-space-mono), monospace !important;
+  font-family: var(--font-space-mono), monospace;
 }
 
 @media (max-width: 900px) {
@@ -2384,7 +2395,7 @@
 /* Final shared-system pass. Kept at the end so it wins over the legacy
    partner landing styles above. */
 .page {
-  font-family: var(--gravii-font-ui) !important;
+  font-family: var(--gravii-font-ui);
   color: var(--gravii-ink);
   background:
     radial-gradient(circle at 12% 4%, rgb(244 210 58 / 14%), transparent 26rem),
@@ -2405,7 +2416,7 @@
 
 .navLogo,
 .footerBrand {
-  font-family: var(--gravii-font-display) !important;
+  font-family: var(--gravii-font-display);
   color: var(--gravii-ink);
   letter-spacing: -0.04em;
 }
@@ -2440,7 +2451,7 @@
 .integrationLabel,
 .pricingLabel,
 .pricingMiniLabel {
-  font-family: var(--gravii-font-mono) !important;
+  font-family: var(--gravii-font-mono);
   color: var(--gravii-ink-soft);
 }
 
@@ -2450,7 +2461,7 @@
 .pricingProductTitle,
 .ctaTitle,
 .firstMoverTitle {
-  font-family: var(--gravii-font-heading) !important;
+  font-family: var(--gravii-font-heading);
   color: var(--gravii-ink);
   text-shadow: none;
 }
@@ -2479,7 +2490,7 @@
 .userEyebrow,
 .kyaStepLabel,
 .kyaCode {
-  font-family: var(--gravii-font-mono) !important;
+  font-family: var(--gravii-font-mono);
 }
 
 .card,
@@ -2617,7 +2628,7 @@
   justify-content: center;
   min-height: 2.85rem;
   overflow: hidden;
-  font-family: var(--gravii-font-mono) !important;
+  font-family: var(--gravii-font-mono);
   font-weight: 800;
   line-height: 1.2;
   text-align: center;

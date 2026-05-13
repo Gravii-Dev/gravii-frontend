@@ -1,9 +1,17 @@
 import { expect, test } from '@playwright/test'
 
-test('user app redirects anonymous traffic to the live wallet sign-in surface', async ({
+test('user app keeps anonymous traffic on the landing shell until explicit sign in', async ({
   page
 }) => {
   await page.goto('http://localhost:3003/')
+
+  await expect(page).toHaveURL('http://localhost:3003/')
+  await expect(
+    page.getByRole('heading', { name: /Wallets become\s+identity\./i })
+  ).toBeVisible()
+  await expect(page.getByText('ANONYMOUS')).toBeVisible()
+
+  await page.locator('main').getByRole('button', { name: 'SIGN IN' }).click()
 
   await expect(page).toHaveURL(/\/sign-in\?next=%2F$/)
   await expect(

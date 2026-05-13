@@ -1,6 +1,5 @@
 'use client'
 
-import { ArrowUpRight } from 'lucide-react'
 import { useMemo } from 'react'
 
 import { PartnerDataStatus } from '@/components/ui/partner-data-status'

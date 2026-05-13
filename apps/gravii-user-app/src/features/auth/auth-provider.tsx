@@ -11,7 +11,7 @@ import {
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 import {
-  clearUserToken,
+  clearUserSession,
   readUserSession,
   type UserAuthUser,
 } from '@/lib/auth/user-api'
@@ -86,7 +86,7 @@ export function UserAuthProvider({
   }, [])
 
   const signOut = useCallback(async () => {
-    clearUserToken()
+    await clearUserSession()
     setUser(null)
     setStatus('anonymous')
     router.replace('/')

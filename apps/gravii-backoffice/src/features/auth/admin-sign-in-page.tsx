@@ -5,7 +5,7 @@ import type {
   AuthSessionResponse,
   ProviderExchangeRequest
 } from '@gravii/domain-types'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import { hasAdminFirebaseConfig, signInAdminWithGoogle } from '@/lib/auth/firebase-client'
@@ -67,7 +67,7 @@ export function AdminSignInPage() {
     [searchParams]
   )
 
-  const handleSuccess = () => {
+  const handleSuccess = useCallback(() => {
     if (typeof window !== 'undefined') {
       window.location.replace(nextPath)
       return
@@ -75,7 +75,7 @@ export function AdminSignInPage() {
 
     router.replace(nextPath)
     router.refresh()
-  }
+  }, [nextPath, router])
 
   useEffect(() => {
     let cancelled = false
@@ -102,7 +102,7 @@ export function AdminSignInPage() {
     return () => {
       cancelled = true
     }
-  }, [nextPath])
+  }, [handleSuccess])
 
   const handleGoogle = async () => {
     setIsPending(true)
