@@ -6,6 +6,7 @@ import { getAddress } from "viem";
 import ActionButton from "@/components/ui/action-button";
 import GraviiLogo from "@/components/ui/gravii-logo";
 import type { SharedContentProps } from "@/features/launch-app/types";
+import XRayCreditPurchaseModal from "@/features/x-ray/components/x-ray-credit-purchase-modal";
 import XRayHistoryList from "@/features/x-ray/components/x-ray-history-list";
 import XRayResultView from "@/features/x-ray/components/x-ray-result-view";
 import {
@@ -16,23 +17,68 @@ import {
   XRAY_SEARCH_STATS,
 } from "@/features/x-ray/x-ray-view-model";
 import {
+  createUserXrayCheckoutSession,
   popPendingXrayWallet,
   readUserCredits,
   readUserLookupList,
   readUserXrayDetail,
   runUserXrayLookup,
+  UserApiError,
 } from "@/lib/auth/user-api";
 
 import styles from "./x-ray-content.module.css";
+
+const XRAY_CREDIT_BUNDLE = {
+  id: "xray_credits_10",
+  label: "10 X-Ray credits",
+} as const;
 
 function joinClasses(...classNames: Array<string | false | undefined>) {
   return classNames.filter(Boolean).join(" ");
 }
 
+function buildXrayCheckoutReturnUrls() {
+  const url = new URL(window.location.href);
+  url.searchParams.set("panel", "lookup");
+
+  const successUrl = new URL(url);
+  successUrl.searchParams.set("xray_checkout", "success");
+
+  const cancelUrl = new URL(url);
+  cancelUrl.searchParams.set("xray_checkout", "cancelled");
+
+  return {
+    cancelUrl: cancelUrl.toString(),
+    successUrl: successUrl.toString(),
+  };
+}
+
+function readCheckoutNotice() {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const checkoutState = new URLSearchParams(window.location.search).get("xray_checkout");
+
+  if (checkoutState === "success") {
+    return "Checkout returned. Credits will appear after payment fulfillment is confirmed.";
+  }
+
+  if (checkoutState === "cancelled") {
+    return "Checkout was cancelled. No X-Ray credits were added.";
+  }
+
+  return null;
+}
+
 export default function XRayContent({ dark, connected, onConnect }: SharedContentProps) {
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
+  const [checkoutNotice, setCheckoutNotice] = useState<string | null>(null);
   const [credits, setCredits] = useState<number | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [historyPage, setHistoryPage] = useState(0);
+  const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
+  const [isCheckoutStarting, setIsCheckoutStarting] = useState(false);
   const [isPanelLoading, setIsPanelLoading] = useState(false);
   const [isResultLoading, setIsResultLoading] = useState(false);
   const [lookupHistory, setLookupHistory] = useState<
@@ -48,6 +94,10 @@ export default function XRayContent({ dark, connected, onConnect }: SharedConten
     () => paginateLookupEntries(lookupHistory, historyPage),
     [historyPage, lookupHistory]
   );
+
+  useEffect(() => {
+    setCheckoutNotice(readCheckoutNotice());
+  }, []);
 
   const openWalletDetail = useCallback(
     async (walletAddress: string, showLoading = true) => {
@@ -169,11 +219,62 @@ export default function XRayContent({ dark, connected, onConnect }: SharedConten
       setHistoryPage(0);
       setResult(mapXrayDetailToViewModel(detail));
     } catch (error) {
+      if (error instanceof UserApiError && error.status === 402) {
+        setErrorMessage("Add X-Ray credits to continue this analysis.");
+        setCheckoutError(null);
+        setIsCheckoutModalOpen(true);
+        return;
+      }
+
       setErrorMessage(
         error instanceof Error ? error.message : "Analysis failed. Please try again."
       );
     } finally {
       setIsResultLoading(false);
+    }
+  };
+
+  const handleOpenCheckout = () => {
+    if (!connected) {
+      onConnect();
+      return;
+    }
+
+    setCheckoutError(null);
+    setIsCheckoutModalOpen(true);
+  };
+
+  const handleStartCheckout = async () => {
+    if (isCheckoutStarting) {
+      return;
+    }
+
+    setIsCheckoutStarting(true);
+    setCheckoutError(null);
+
+    try {
+      const returnUrls = buildXrayCheckoutReturnUrls();
+      const session = await createUserXrayCheckoutSession({
+        bundleId: XRAY_CREDIT_BUNDLE.id,
+        cancelUrl: returnUrls.cancelUrl,
+        successUrl: returnUrls.successUrl,
+      });
+
+      window.location.assign(session.checkoutUrl);
+    } catch (error) {
+      if (error instanceof UserApiError && error.status === 404) {
+        setCheckoutError(
+          "The X-Ray checkout endpoint is not live on the backend yet."
+        );
+      } else {
+        setCheckoutError(
+          error instanceof Error
+            ? error.message
+            : "Unable to start checkout. Please try again."
+        );
+      }
+    } finally {
+      setIsCheckoutStarting(false);
     }
   };
 
@@ -183,7 +284,7 @@ export default function XRayContent({ dark, connected, onConnect }: SharedConten
 
   if (isResultLoading) {
     return (
-      <div className={joinClasses(styles.root, styles.loadingState, dark && styles.rootDark)}>
+      <div className={joinClasses(styles.root, styles.loadingState, dark && styles.rootDark)} data-liquid-glass="panel">
         <GraviiLogo decorative variant="motion" className={styles.loadingMark} />
         <span className={styles.loadingTitle}>X-RAYING ON-CHAIN ACTIVITY</span>
         <p className={styles.loadingCopy}>
@@ -195,7 +296,7 @@ export default function XRayContent({ dark, connected, onConnect }: SharedConten
 
   return (
     <div className={joinClasses(styles.root, dark ? styles.rootDark : styles.rootLight)}>
-      <section className={styles.hero}>
+      <section className={styles.hero} data-liquid-glass="panel">
         <div className={styles.heroCopy}>
           <span className={styles.kicker}>X-RAY</span>
           <h2 className={styles.heroTitle}>
@@ -207,7 +308,7 @@ export default function XRayContent({ dark, connected, onConnect }: SharedConten
           </p>
         </div>
 
-        <div className={styles.creditPanel}>
+        <div className={styles.creditPanel} data-liquid-glass="panel">
           <div className={styles.creditTop}>
             <div className={styles.creditGauge} aria-hidden="true">
               <span>{credits === null ? "…" : credits}</span>
@@ -222,16 +323,30 @@ export default function XRayContent({ dark, connected, onConnect }: SharedConten
 
           <div className={styles.statRail}>
             {XRAY_SEARCH_STATS.map((stat) => (
-              <div key={stat.label} className={styles.statCard}>
+              <div key={stat.label} className={styles.statCard} data-liquid-glass="soft">
                 <span className={styles.statLabel}>{stat.label}</span>
                 <strong className={styles.statValue}>{stat.value}</strong>
               </div>
             ))}
           </div>
+
+          <div className={styles.creditActions}>
+            <ActionButton
+              size="panel"
+              className={styles.creditButton}
+              onClick={handleOpenCheckout}
+              disabled={isPanelLoading}
+            >
+              {connected ? "BUY X-RAY CREDITS" : "SIGN IN TO BUY"}
+            </ActionButton>
+            <p className={styles.creditHint}>
+              Stripe Checkout creates the payment. Backend webhook fulfillment grants credits.
+            </p>
+          </div>
         </div>
       </section>
 
-      <section className={styles.searchPanel}>
+      <section className={styles.searchPanel} data-liquid-glass="panel">
         <label className={styles.searchLabel} htmlFor="xray-wallet-input">
           Wallet address
         </label>
@@ -241,6 +356,7 @@ export default function XRayContent({ dark, connected, onConnect }: SharedConten
             id="xray-wallet-input"
             ref={walletInputRef}
             className={styles.searchInput}
+            data-liquid-glass="soft"
             type="text"
             value={walletInput}
             placeholder="0x000... enter any wallet address"
@@ -252,9 +368,7 @@ export default function XRayContent({ dark, connected, onConnect }: SharedConten
               !walletInput.trim() ? styles.analyzeButtonEmpty : ""
             }`}
             onClick={() => void handleAnalyze()}
-            backChildren={
-              walletInput.trim() ? "RUN X-RAY" : "ENTER WALLET ADDRESS"
-            }
+            title={walletInput.trim() ? "Run X-Ray analysis" : "Enter a wallet address before analysis"}
             aria-disabled={!walletInput.trim()}
           >
             ANALYZE
@@ -267,10 +381,11 @@ export default function XRayContent({ dark, connected, onConnect }: SharedConten
         </p>
 
         {errorMessage ? <p className={styles.errorBanner}>{errorMessage}</p> : null}
+        {checkoutNotice ? <p className={styles.noticeBanner}>{checkoutNotice}</p> : null}
       </section>
 
       {!connected ? (
-        <section className={styles.restorePanel}>
+        <section className={styles.restorePanel} data-liquid-glass="panel">
           <div>
             <span className={styles.creditLabel}>SESSION REQUIRED</span>
             <p className={styles.restoreCopy}>
@@ -280,11 +395,11 @@ export default function XRayContent({ dark, connected, onConnect }: SharedConten
           </div>
 
           <ActionButton size="panel" className={styles.restoreButton} onClick={onConnect}>
-            RESTORE SESSION TO START ANALYZING
+            RESTORE SESSION
           </ActionButton>
         </section>
       ) : (
-        <section className={styles.historyPanel}>
+        <section className={styles.historyPanel} data-liquid-glass="panel">
           <div className={styles.historyHeader}>
             <div>
               <span className={styles.creditLabel}>HISTORY</span>
@@ -316,6 +431,21 @@ export default function XRayContent({ dark, connected, onConnect }: SharedConten
           />
         </section>
       )}
+
+      {isCheckoutModalOpen ? (
+        <XRayCreditPurchaseModal
+          creditBundleLabel={XRAY_CREDIT_BUNDLE.label}
+          errorMessage={checkoutError}
+          isLoading={isCheckoutStarting}
+          onCancel={() => {
+            if (!isCheckoutStarting) {
+              setIsCheckoutModalOpen(false);
+              setCheckoutError(null);
+            }
+          }}
+          onContinue={() => void handleStartCheckout()}
+        />
+      ) : null}
     </div>
   );
 }

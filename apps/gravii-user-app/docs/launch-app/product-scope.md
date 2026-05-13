@@ -163,10 +163,11 @@ The MVP does not need:
 
 Current prototype:
 
-- static UI with mocked data
-- no real authentication
-- no backend writes
-- no durable state
+- live wallet-backed authentication for supported user flows
+- live Gravii ID and X-Ray reads through the User API
+- X-Ray credit checkout entry UX that expects a backend-owned Stripe Checkout Session
+- reserved `Standing`, `Discovery`, and `My Space` surfaces until backend contracts are ready
+- no frontend-side payment fulfillment or credit granting; payment fulfillment remains a backend/webhook responsibility
 
 MVP target:
 

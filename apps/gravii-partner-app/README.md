@@ -48,6 +48,8 @@ The current partner auth flow follows the live backend guide:
 
 There is no app-local cookie session layer for partner auth anymore. Route protection now happens client-side through the auth provider because Firebase persists tokens in IndexedDB rather than HTTP cookies.
 
+Framework request interception uses Next.js `src/proxy.ts`, not `src/middleware.ts`, to stay aligned with the current Next.js file convention.
+
 The auth provider now also keeps session restoration quieter after the first successful bootstrap:
 
 - repeated Firebase token refresh events reuse the same in-flight session bootstrap instead of stacking duplicate Partner API calls

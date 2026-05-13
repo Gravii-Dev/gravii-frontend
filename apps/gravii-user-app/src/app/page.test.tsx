@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import HomePage from "./page";
@@ -76,7 +76,7 @@ describe("HomePage", () => {
     expect(authMock.signOut).toHaveBeenCalledTimes(1);
   });
 
-  it("keeps the launch app visible for anonymous users and starts sign-in from the header", async () => {
+  it("keeps the launch app visible for anonymous users and starts sign-in from the sidebar", async () => {
     const user = userEvent.setup();
     authMock.state = {
       isAuthenticated: false,
@@ -86,26 +86,40 @@ describe("HomePage", () => {
 
     render(<HomePage />);
 
-    const authButton = screen.getByRole("button", { name: "SIGN IN" });
+    const authButton = screen.getAllByRole("button", { name: "SIGN IN" })[0];
 
     await user.click(authButton);
 
     expect(authMock.beginSignIn).toHaveBeenCalledTimes(1);
-    expect(screen.getByRole("button", { name: "GRAVII ID panel" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "HOME navigation" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    expect(screen.getByRole("button", { name: "GRAVII ID navigation" })).toBeInTheDocument();
+
+    const navigation = screen.getByRole("navigation", { name: "Workspace sections" });
+
+    expect(within(navigation).getAllByRole("button")).toHaveLength(5);
+    expect(within(navigation).queryByRole("button", { name: "HOME navigation" })).not.toBeInTheDocument();
+    expect(within(navigation).queryByText("01")).not.toBeInTheDocument();
   });
 
-  it("opens a panel and closes it from the shell action", async () => {
+  it("opens a panel and returns home from the shell action", async () => {
     const user = userEvent.setup();
 
     render(<HomePage />);
 
-    await user.click(screen.getByRole("button", { name: "DISCOVERY panel" }));
+    await user.click(screen.getByRole("button", { name: "DISCOVERY navigation" }));
 
-    expect(screen.getByRole("button", { name: "CLOSE ×" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "DISCOVERY" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "HOME" })).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "CLOSE ×" }));
+    await user.click(screen.getByRole("button", { name: "HOME" }));
 
-    expect(screen.queryByRole("button", { name: "CLOSE ×" })).not.toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "DISCOVERY panel" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "HOME navigation" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    expect(screen.queryByRole("heading", { name: "DISCOVERY" })).not.toBeInTheDocument();
   });
 });

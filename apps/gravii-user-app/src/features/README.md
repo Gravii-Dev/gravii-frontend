@@ -12,7 +12,7 @@ That means a feature folder is the place where a reader can usually find:
 - feature-specific view-model logic
 - local state helpers
 - child components used only by that feature
-- mock data that currently stands in for future API responses
+- backend-backed adapters or explicit reserved-state content when live APIs are not ready
 
 ## Current Feature Map
 
@@ -25,10 +25,21 @@ It owns:
 - shell state
 - shared panel metadata
 - shared Launch App types
-- the mock repository wrapper
-- shared campaign data used by multiple surfaces
+- shared content props and panel IDs used by multiple surfaces
 
 If someone asks "what holds the prototype together above the individual panels?", this folder is part of the answer.
+
+### `home`
+
+Owns the Home command surface rendered from the logo tile entry point.
+
+Responsibilities:
+
+- presenting the app's starting point inside the workspace board
+- carrying the large Gravii wordmark treatment for first-entry brand recognition
+- explaining the current product map and session state
+- routing connected users toward `GRAVII ID`
+- routing anonymous users toward wallet sign-in
 
 ### `profile`
 
@@ -47,11 +58,9 @@ Owns the personalized benefit feed surface.
 
 Responsibilities:
 
-- grouping campaigns by eligibility state
-- handling category filtering
-- tracking local open or closed section state
-- tracking local expanded card state
-- tracking mock opt-in state
+- rendering the reserved personalized feed state
+- linking back into `GRAVII ID` and `X-Ray`
+- staying empty of campaign data until the backend contract is ready
 
 ### `discovery`
 
@@ -59,11 +68,9 @@ Owns the broader campaign exploration surface.
 
 Responsibilities:
 
-- partner search
-- partner status filtering
-- campaign category filtering
-- card-to-detail view transitions
-- qualification guidance UI
+- rendering the reserved partner campaign state
+- explaining the future eligibility and claim path
+- staying empty of catalog data until the backend contract is ready
 
 ### `x-ray`
 
@@ -73,7 +80,7 @@ Responsibilities:
 
 - search input
 - credit status and lookup entitlement messaging
-- reserved credit purchase modal boundary for the future checkout layer
+- X-Ray-only credit purchase modal and Checkout Session redirect boundary
 - loading transition
 - result dashboard
 - paginated history
@@ -84,17 +91,16 @@ Owns the leaderboard surface.
 
 Responsibilities:
 
-- category switching
-- percentile calculation
-- ranking table rendering
-- connected versus locked hero state
+- rendering the reserved rank state
+- explaining the future reputation and cohort model
+- staying empty of leaderboard data until the backend contract is ready
 
 ## Why This Is Better Than a Flat `components/panels` Folder
 
 If all product surfaces lived under one `components/panels` folder, feature logic would become harder to track because:
 
 - state helpers would need another home
-- mock data would need another home
+- backend adapters or reserved-state copy would need another home
 - view-model logic would need another home
 - feature-specific visual systems would need another home
 
@@ -106,7 +112,7 @@ When exploring one surface, start with:
 
 1. the `*-content.tsx` file
 2. the feature README
-3. the feature view-model or state helper
+3. the feature view-model, API adapter, or state helper when one exists
 4. any nested `components/` folder
 
 That usually gives a complete picture of how the surface works.

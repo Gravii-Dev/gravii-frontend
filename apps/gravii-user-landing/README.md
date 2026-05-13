@@ -212,6 +212,7 @@ bun run build
    - section animations work
    - `/partners` routes correctly into `partner.gravii.io`
    - waitlist submission, referral persistence, and return state work
+   - waitlist submission works from both `gravii.io` and `www.gravii.io`
    - metadata routes (`robots.txt`, `sitemap.xml`, `manifest.webmanifest`) resolve correctly
 
 The project was verified locally with:
@@ -243,6 +244,10 @@ Regenerate style config and restart the server:
 bun run setup:styles
 bun dev
 ```
+
+### Waitlist submission returns 403 in production
+
+The waitlist form is backed by a Next.js Server Action. Next.js rejects Server Action POSTs before app code runs when the request `Origin` does not match the forwarded host. The production domains are allowlisted in `next.config.ts`; if a new custom domain, proxy, or preview domain is added, update `experimental.serverActions.allowedOrigins` and redeploy.
 
 ## Notes
 

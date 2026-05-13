@@ -343,6 +343,39 @@ Response:
 
 ## 5. X-Ray
 
+### POST `/api/v1/me/xray/checkout-session`
+
+Purpose:
+
+- create a Stripe Checkout Session for X-Ray-only analysis credits
+- keep Stripe price IDs, metadata, idempotency keys, and credit fulfillment on the backend
+
+Request:
+
+```json
+{
+  "bundle_id": "xray_credits_10",
+  "success_url": "https://app.gravii.io/?panel=lookup&xray_checkout=success",
+  "cancel_url": "https://app.gravii.io/?panel=lookup&xray_checkout=cancelled"
+}
+```
+
+Response:
+
+```json
+{
+  "checkout_url": "https://checkout.stripe.com/c/session_id",
+  "session_id": "cs_live_123",
+  "expires_at": "2026-05-11T12:30:00Z"
+}
+```
+
+Fulfillment rule:
+
+- the frontend must only redirect to `checkout_url`
+- the backend must grant credits from a verified Stripe webhook, not from a browser success return
+- `checkout.session.completed` should be handled idempotently so duplicate webhooks cannot double-grant credits
+
 ### POST `/api/v1/xray/analyses`
 
 Purpose:

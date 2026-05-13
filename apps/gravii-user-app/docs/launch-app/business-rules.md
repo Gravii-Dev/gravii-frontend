@@ -140,6 +140,9 @@ The current prototype shows `0.1 USDC` per analysis.
 MVP rule assumption:
 
 - X-Ray requires either a direct payment or a credit balance before analysis begins
+- Direct payment should be mediated by a backend-created Stripe Checkout Session.
+- Credit balances must be granted from verified webhook fulfillment, not from the frontend return URL.
+- Checkout fulfillment must be idempotent to prevent duplicate credit grants from retried webhooks.
 
 ### 4.3 Analysis Lifecycle
 

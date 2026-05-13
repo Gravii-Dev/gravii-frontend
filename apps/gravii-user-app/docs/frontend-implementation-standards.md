@@ -19,7 +19,7 @@ Current repo characteristics:
 - `TypeScript/TSX` source files
 - a route shell in [src/app/page.tsx](/Users/kxwxn/Gravii/LanunchApp-v1/src/app/page.tsx) with shared layout primitives under `src/components/layout`
 - feature surfaces extracted under `src/features/profile`, `src/features/my-space`, `src/features/discovery`, `src/features/x-ray`, and `src/features/standing`
-- shared Launch App primitives and mock data under `src/features/launch-app`
+- shared Launch App panel primitives under `src/features/launch-app`
 - shared app-wide styles in [src/app/globals.css](/Users/kxwxn/Gravii/LanunchApp-v1/src/app/globals.css)
 
 ## Decisions
@@ -105,6 +105,14 @@ Default rule:
 - shared animation keyframes
 - truly app-wide utility classes when a module is not the right owner
 
+Runtime material exception:
+
+- legacy liquid-glass surfaces may still carry `data-liquid-glass` attributes, but the current app material is solid paper/ink rather than glass
+- `src/app/layout.tsx` uses the stable attributes to neutralize runtime `backdrop-filter` and reflection pseudo-layers across older feature surfaces
+- keep each surface's color fill, radius, and layout styling in CSS Modules
+- do not target hashed CSS Module class names from global CSS; add stable `data-*` attributes on shared primitives or feature surfaces instead
+- do not add new liquid-glass blur, caustic, or reflective texture effects unless the product direction changes again
+
 ## Refactor Direction
 
 Do not keep expanding [src/app/page.tsx](/Users/kxwxn/Gravii/LanunchApp-v1/src/app/page.tsx) beyond route orchestration. Extract new surface logic into `src/features/*` and shared shell pieces into `src/components/layout`.
@@ -122,7 +130,7 @@ For each extraction:
 - move JSX into a feature-local component folder
 - create a colocated `*.module.css` file
 - keep the folder minimal by default: component file plus module CSS
-- move feature-local mock data or helpers next to the feature when practical
+- move feature-local API adapters or helpers next to the feature when practical
 - keep shared primitives separate from feature-specific UI
 
 ## Migration Rules

@@ -15,6 +15,7 @@ This repository started as a single-file HTML prototype. It is being migrated in
 - Typed mock data and navigation metadata: `src/features/hq/data.ts`
 - Derived selectors and filtering logic: `src/features/hq/selectors.ts`
 - Shared feature styling: `src/features/hq/dashboard.module.css`
+- Framework-level route protection and sign-in redirects: `src/proxy.ts`
 
 ## Working Rules
 
@@ -25,6 +26,7 @@ This repository started as a single-file HTML prototype. It is being migrated in
 - Keep dashboard numbers, table rows, and navigation definitions in `src/features/hq/data.ts`.
 - Keep derived calculations, filtering, and sorting in `src/features/hq/selectors.ts`.
 - Keep route/page shells thin. Business logic should stay in the feature layer.
+- Keep framework request interception in `src/proxy.ts`; do not reintroduce `src/middleware.ts` for new Next.js work.
 - During the parity migration, preserving original inline style values is acceptable when they come directly from the prototype.
 - Once a page is fully migrated and behavior is stable, move repeated styling into feature-local CSS Modules.
 

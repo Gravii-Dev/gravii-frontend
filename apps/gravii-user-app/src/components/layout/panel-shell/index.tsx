@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import type { ReactNode, UIEvent } from "react";
 
 import ActionButton from "@/components/ui/action-button";
 
@@ -10,7 +10,9 @@ type PanelShellProps = {
   title: string;
   dark?: boolean;
   className?: string;
-  onClose: () => void;
+  actionLabel?: string;
+  onClose?: () => void;
+  onScrollProgress?: (progress: number) => void;
   children: ReactNode;
 };
 
@@ -22,18 +24,42 @@ export default function PanelShell({
   title,
   dark = false,
   className,
+  actionLabel = "HOME",
   onClose,
+  onScrollProgress,
   children,
 }: PanelShellProps) {
+  function handleScroll(event: UIEvent<HTMLDivElement>) {
+    if (!onScrollProgress) {
+      return;
+    }
+
+    const target = event.currentTarget;
+    const scrollableDistance = target.scrollHeight - target.clientHeight;
+    const progress = scrollableDistance > 0 ? target.scrollTop / scrollableDistance : 0;
+
+    onScrollProgress(Math.min(1, Math.max(0, progress)));
+  }
+
   return (
-    <div className={joinClasses(styles.root, dark ? styles.rootDark : styles.rootLight, className)}>
+    <div
+      className={joinClasses(
+        styles.root,
+        dark ? styles.rootDark : styles.rootLight,
+        className,
+      )}
+      onScroll={handleScroll}
+    >
       <div className={styles.header}>
         <div>
+          <span className={styles.kicker}>GRAVII WORKSPACE</span>
           <h1 className={styles.title}>{title}</h1>
         </div>
-        <ActionButton dark={dark} className={styles.closeButton} onClick={onClose}>
-          CLOSE ×
-        </ActionButton>
+        {onClose ? (
+          <ActionButton dark={dark} className={styles.closeButton} onClick={onClose}>
+            {actionLabel}
+          </ActionButton>
+        ) : null}
       </div>
 
       <div className={styles.divider} />

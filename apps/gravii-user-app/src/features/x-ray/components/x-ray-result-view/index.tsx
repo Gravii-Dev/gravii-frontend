@@ -26,7 +26,7 @@ function MetricCard({
   value: string;
 }) {
   return (
-    <div className={styles.metricCard}>
+    <div className={styles.metricCard} data-liquid-glass="soft">
       <span className={styles.metricLabel}>{label}</span>
       <strong className={styles.metricValue}>{value}</strong>
       <span className={styles.metricMeta}>{meta}</span>
@@ -42,7 +42,7 @@ function Section({
   title: string;
 }) {
   return (
-    <section className={styles.sectionCard}>
+    <section className={styles.sectionCard} data-liquid-glass="panel">
       <span className={styles.sectionTitle}>{title}</span>
       {children}
     </section>
@@ -52,14 +52,14 @@ function Section({
 export default function XRayResultView({ detail, onBack }: XRayResultViewProps) {
   return (
     <div className={styles.root}>
-      <div className={styles.header}>
-        <button type="button" className={styles.backButton} onClick={onBack}>
+      <div className={styles.header} data-liquid-glass="panel">
+        <button type="button" className={styles.backButton} data-liquid-glass="soft" onClick={onBack}>
           ← BACK TO SEARCH
         </button>
         <span className={styles.meta}>ANALYZED</span>
       </div>
 
-      <section className={styles.hero}>
+      <section className={styles.hero} data-liquid-glass="panel">
         <div className={styles.heroCopy}>
           <span className={styles.walletLabel}>WALLET</span>
           <h2 className={styles.walletValue}>{detail.address}</h2>
@@ -68,9 +68,9 @@ export default function XRayResultView({ detail, onBack }: XRayResultViewProps) 
           </p>
 
           <div className={styles.pillRow}>
-            <span className={styles.personaPill}>{detail.primaryPersona}</span>
+            <span className={styles.personaPill} data-liquid-glass="soft">{detail.primaryPersona}</span>
             {detail.adjacentPersonas.map((persona) => (
-              <span key={persona} className={styles.personaPillMuted}>
+              <span key={persona} className={styles.personaPillMuted} data-liquid-glass="soft">
                 {persona}
               </span>
             ))}
@@ -79,7 +79,7 @@ export default function XRayResultView({ detail, onBack }: XRayResultViewProps) 
 
         <div className={styles.heroMark}>
           <GraviiLogo decorative variant="motion" className={styles.mark} />
-          <div className={styles.heroFactCard}>
+          <div className={styles.heroFactCard} data-liquid-glass="soft">
             <span className={styles.sectionTitle}>IDENTITY READ</span>
             <strong className={styles.factValue}>{detail.activeSince}</strong>
             <span className={styles.factMeta}>{detail.activeChains} active chains</span>
@@ -101,7 +101,7 @@ export default function XRayResultView({ detail, onBack }: XRayResultViewProps) 
           <div className={styles.chainList}>
             {detail.byChain.length > 0 ? (
               detail.byChain.map((chain) => (
-                <div key={chain.chain} className={styles.chainRow}>
+                <div key={chain.chain} className={styles.chainRow} data-liquid-glass="soft">
                   <span className={styles.chainName}>{chain.chain}</span>
                   <span className={styles.chainValue}>{chain.value}</span>
                 </div>
@@ -118,7 +118,7 @@ export default function XRayResultView({ detail, onBack }: XRayResultViewProps) 
           <div className={styles.flagWrap}>
             {detail.reputationFlags.length > 0 ? (
               detail.reputationFlags.map((flag) => (
-                <span key={flag} className={styles.flagChip}>
+                <span key={flag} className={styles.flagChip} data-liquid-glass="soft">
                   {flag}
                 </span>
               ))
@@ -136,6 +136,7 @@ export default function XRayResultView({ detail, onBack }: XRayResultViewProps) 
               <div
                 key={`${transaction.date}-${transaction.action}`}
                 className={styles.activityRow}
+                data-liquid-glass="soft"
               >
                 <span className={styles.activityDate}>{transaction.date}</span>
                 <span className={styles.activityAction}>{transaction.action}</span>
@@ -144,7 +145,7 @@ export default function XRayResultView({ detail, onBack }: XRayResultViewProps) 
               </div>
             ))
           ) : (
-            <div className={joinClasses(styles.activityRow, styles.activityRowEmpty)}>
+            <div className={joinClasses(styles.activityRow, styles.activityRowEmpty)} data-liquid-glass="soft">
               <span className={styles.activityAction}>
                 No recent activity was returned for this wallet yet.
               </span>

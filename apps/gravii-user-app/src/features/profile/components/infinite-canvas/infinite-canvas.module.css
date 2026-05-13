@@ -9,11 +9,11 @@
 }
 
 .light .canvasFade {
-  background: linear-gradient(90deg, #f5f2eb 0%, transparent 8%, transparent 92%, #f5f2eb 100%), linear-gradient(180deg, #f5f2eb 0%, transparent 10%, transparent 90%, #f5f2eb 100%);
+  background: linear-gradient(90deg, var(--color-surface-front) 0%, transparent 8%, transparent 92%, var(--color-surface-front) 100%), linear-gradient(180deg, var(--color-surface-front) 0%, transparent 10%, transparent 90%, var(--color-surface-front) 100%);
 }
 
 .dark .canvasFade {
-  background: linear-gradient(90deg, #1a1a1a 0%, transparent 8%, transparent 92%, #1a1a1a 100%), linear-gradient(180deg, #1a1a1a 0%, transparent 10%, transparent 90%, #1a1a1a 100%);
+  background: linear-gradient(90deg, var(--color-surface-front) 0%, transparent 8%, transparent 92%, var(--color-surface-front) 100%), linear-gradient(180deg, var(--color-surface-front) 0%, transparent 10%, transparent 90%, var(--color-surface-front) 100%);
 }
 
 .canvasFade {

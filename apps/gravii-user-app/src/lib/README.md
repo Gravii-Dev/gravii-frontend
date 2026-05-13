@@ -16,23 +16,20 @@ Why it exists:
 
 - visual systems such as the Profile canvas renderer need stable font names
 - centralizing the font strings avoids scattering literal font values through rendering code
+- all exported font aliases currently resolve to Roboto Flex so canvas rendering stays aligned with the app-wide type system
 
-### `simplex-noise.ts`
+### `wallet/`
 
 Purpose:
 
-- provide deterministic simplex noise helpers used by the grain overlay effect
-
-Exports:
-
-- `buildPermTable`
-- `simplex2D`
+- configure Reown AppKit and Wagmi for WalletConnect-based EVM wallet selection
+- centralize the WalletConnect project ID lookup and supported networks
+- keep auth-facing wallet setup separate from feature UI
 
 Why it exists:
 
-- `grain-overlay` needs a lightweight procedural texture source
-- this math is lower-level than a UI component
-- keeping it in `src/lib` prevents the visual component from becoming too overloaded with implementation detail
+- sign-in needs WalletConnect modal support while the User API still owns challenge generation, signature verification, and JWT issuance
+- future wallet-aware surfaces should reuse the same provider configuration instead of creating their own wallet clients
 
 ## Boundary Rule
 

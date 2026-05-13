@@ -10,11 +10,16 @@ export interface ProfileSnapshot {
   homeChain: string
   homeChainMeta: string
   matchedLabel: string
+  matchedCount: string
+  nftsCollected: string
   personaIndex: number
   reputation: string
   reputationFlags: string
+  standoutMeta: string
+  standoutRank: string
   tier: string
   transactionCount: string
+  transactionMeta: string
   trend: string
   trendMeta: string
 }
@@ -25,6 +30,23 @@ function titleCase(input: string) {
     .filter(Boolean)
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(' ')
+}
+
+function compactChainLabel(input: string) {
+  const normalized = input.trim().toLowerCase()
+  const knownLabels: Record<string, string> = {
+    arb: 'ARB',
+    arbitrum: 'ARB',
+    base: 'Base',
+    bnb: 'BSC',
+    bsc: 'BSC',
+    eth: 'ETH',
+    ethereum: 'ETH',
+    optimism: 'OP',
+    polygon: 'Polygon',
+  }
+
+  return knownLabels[normalized] ?? titleCase(input)
 }
 
 function formatCurrency(value: number) {
@@ -39,6 +61,10 @@ function formatNumber(value: number) {
   return new Intl.NumberFormat('en-US').format(value)
 }
 
+function formatOptionalCount(value: number | null) {
+  return value === null ? '—' : formatNumber(value)
+}
+
 function formatPercent(value: number | null) {
   if (value === null) {
     return '—'
@@ -46,6 +72,19 @@ function formatPercent(value: number | null) {
 
   const formatted = Math.abs(value).toFixed(value >= 100 ? 0 : 1)
   return `${value >= 0 ? '+' : '-'}${formatted}%`
+}
+
+function formatMonthYear(input: string) {
+  const date = new Date(input)
+
+  if (Number.isNaN(date.getTime())) {
+    return titleCase(input)
+  }
+
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    year: 'numeric',
+  }).format(date)
 }
 
 function findPersonaIndex(name: string) {
@@ -59,8 +98,16 @@ function findPersonaIndex(name: string) {
 }
 
 export function getProfileSnapshot(identity: GraviiIdentity): ProfileSnapshot {
+  const activeChains = [
+    identity.homeChain,
+    ...identity.otherActiveChains,
+  ]
+    .filter(Boolean)
+    .slice(0, 4)
+    .map(compactChainLabel)
+
   return {
-    activeSince: identity.activeSince,
+    activeSince: formatMonthYear(identity.activeSince),
     alsoIndexes: identity.adjacentPersonas.slice(0, 2).map(findPersonaIndex),
     analyzedAt: identity.analyzedAt,
     defiMeta: `${identity.defiProtocolsCount} protocol${
@@ -68,18 +115,34 @@ export function getProfileSnapshot(identity: GraviiIdentity): ProfileSnapshot {
     }`,
     homeChain: titleCase(identity.homeChain),
     homeChainMeta:
-      identity.otherActiveChains.length > 0
-        ? identity.otherActiveChains.slice(0, 4).map(titleCase).join(' · ')
+      activeChains.length > 0
+        ? activeChains.join(' · ')
         : 'Primary footprint',
     matchedLabel: 'MY SPACE →',
+    matchedCount: formatOptionalCount(identity.matchedCampaignsCount),
+    nftsCollected: formatOptionalCount(identity.nftsCollectedCount),
     personaIndex: findPersonaIndex(identity.topPersona),
     reputation: titleCase(identity.reputation),
     reputationFlags:
       identity.reputationFlags.length > 0
         ? identity.reputationFlags.join(' · ')
         : 'No flags',
+    standoutMeta: identity.standoutMetric
+      ? `in ${titleCase(identity.standoutMetric)}`
+      : 'rank pending',
+    standoutRank:
+      identity.standoutRank === null
+        ? '—'
+        : `#${formatNumber(identity.standoutRank)}`,
     tier: titleCase(identity.tier),
-    transactionCount: formatNumber(identity.transactions90d),
+    transactionCount:
+      identity.transactionsAllTime === null
+        ? '—'
+        : formatNumber(identity.transactionsAllTime),
+    transactionMeta:
+      identity.transactionsAllTime === null
+        ? 'not returned yet'
+        : 'all-time',
     trend: formatPercent(identity.portfolioTrend30d),
     trendMeta: formatCurrency(identity.tradingVolume30d),
   }

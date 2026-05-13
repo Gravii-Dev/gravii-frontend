@@ -1,76 +1,176 @@
 :root {
-  --font-ui: "Inter", system-ui, sans-serif;
-  --font-display: Impact, "Arial Black", system-ui, sans-serif;
-  --font-serif: "Inter", system-ui, sans-serif;
-  --font-accent: Impact, "Arial Black", system-ui, sans-serif;
+  --font-ui: var(--font-roboto-flex), system-ui, sans-serif;
+  --font-display: var(--font-roboto-flex), system-ui, sans-serif;
+  --font-serif: var(--font-roboto-flex), system-ui, sans-serif;
+  --font-accent: var(--font-roboto-flex), system-ui, sans-serif;
+  --font-grade-ui: 0;
+  --font-grade-display: 24;
+  --font-width-ui: 100%;
+  --font-width-display: 112%;
+  --type-eyebrow-size: 0.6875rem;
+  --type-eyebrow-weight: 850;
+  --type-eyebrow-tracking: 0.14em;
+  --type-panel-title: clamp(4.75rem, 7.1vw, 7.4rem);
+  --type-hero-title: clamp(3.5rem, 7.4vw, 7.5rem);
+  --type-section-title: clamp(2.25rem, 3.25vw, 3.9rem);
+  --type-card-title: clamp(1.42rem, 1.9vw, 2.2rem);
+  --type-card-value: clamp(1.35rem, 1.75vw, 2rem);
+  --type-body-large: clamp(0.96rem, 1.12vw, 1.08rem);
+  --type-body: 0.875rem;
+  --type-caption: 0.75rem;
+  --type-display-weight: 960;
+  --type-heading-weight: 900;
+  --type-body-weight: 650;
+  --type-line-tight: 0.94;
+  --type-line-body: 1.56;
+  --type-button-size: 0.72rem;
+  --type-button-tracking: 0.1em;
 
-  /* Slush-inspired system primitives */
-  --slush-dark: #090907;
-  --slush-light: #fffdf7;
-  --slush-glacier: #e4f2ff;
-  --slush-blue: #5aa9ff;
-  --slush-yellow: #f4d23a;
-  --slush-orange: #f15a24;
-  --slush-violet: #ecd7ff;
-  --slush-purple: #5c4ade;
-  --slush-green: #55db9c;
-  --slush-yellow-soft: #ffefad;
-  --slush-violet-soft: #f8f0ff;
-  --slush-green-soft: #99e9c4;
+  /* Raw Materials-inspired solid palette. Legacy --green names stay as aliases for existing modules. */
+  --raw-ink: #090705;
+  --raw-paper: #f2e7db;
+  --raw-paper-strong: #fff8f0;
+  --raw-paper-muted: #ead8ca;
+  --raw-paper-deep: #dcc3b4;
+  --raw-orange: #ff3b0b;
+  --raw-orange-deep: #b82a12;
+  --raw-blue: #2537ff;
+  --raw-violet: #6b00d7;
+  --raw-line: rgba(9, 7, 5, 0.72);
+  --raw-line-soft: rgba(9, 7, 5, 0.22);
+
+  --green-00: var(--raw-paper-strong);
+  --green-01: var(--raw-paper);
+  --green-02: var(--raw-paper-muted);
+  --green-03: var(--raw-paper-deep);
+  --green-04: var(--raw-orange);
+  --green-05: var(--raw-orange);
+  --green-06: var(--raw-orange-deep);
+  --green-07: var(--raw-ink);
+  --green-08: var(--raw-ink);
+  --reference-warm: var(--raw-orange);
+  --reference-rose: var(--raw-paper-muted);
+  --reference-lilac: var(--raw-paper-deep);
+
+  --color-primary: var(--raw-orange);
+  --color-primary-hover: var(--raw-ink);
+  --color-primary-active: var(--raw-orange-deep);
+  --color-primary-soft: var(--raw-paper-deep);
+  --color-primary-subtle: var(--raw-paper-muted);
+  --color-background-primary: var(--raw-paper);
+  --color-background-secondary: var(--raw-paper-strong);
+  --color-background-tertiary: var(--raw-paper-muted);
+  --color-surface-front: var(--raw-paper-strong);
+  --color-surface-back: var(--raw-paper);
+  --color-surface-hover: var(--raw-paper-muted);
+  --color-card: var(--raw-paper-strong);
+  --color-card-hover: var(--raw-paper-muted);
+  --color-button: var(--raw-orange);
+  --color-button-hover: var(--raw-ink);
+  --color-button-active: var(--raw-orange-deep);
+  --color-border-primary: color-mix(in srgb, var(--raw-ink) 18%, transparent);
+  --color-border-secondary: color-mix(in srgb, var(--raw-ink) 42%, transparent);
+  --color-border-strong: color-mix(in srgb, var(--raw-ink) 72%, transparent);
+  --color-text-primary: var(--raw-ink);
+  --color-text-secondary: color-mix(in srgb, var(--raw-ink) 68%, transparent);
+  --color-text-muted: color-mix(in srgb, var(--raw-ink) 48%, transparent);
+  --color-text-accent: var(--raw-orange);
+  --color-text-on-primary: var(--raw-paper-strong);
+  --color-success: var(--raw-orange);
+  --color-warning: var(--raw-orange-deep);
+  --color-error: var(--raw-orange-deep);
+  --color-info: var(--raw-blue);
+  --color-overlay: color-mix(in srgb, var(--raw-ink) 72%, transparent);
+  --color-glass-background: var(--raw-paper-strong);
+  --color-glass-fill: var(--raw-paper-strong);
+  --color-glass-fill-strong: var(--raw-paper-muted);
+  --color-glass-edge: transparent;
+  --color-surface-blush: var(--raw-paper-strong);
+  --color-surface-lavender: var(--raw-paper);
+  --color-surface-violet: var(--raw-paper-muted);
+  --color-surface-purple: var(--raw-ink);
+  --color-shadow-soft: transparent;
+  --color-shadow-strong: transparent;
+  --liquid-glass-blur: none;
+  --liquid-glass-fill: transparent;
+  --liquid-glass-fill-strong: transparent;
+  --liquid-glass-fill-soft: transparent;
+  --liquid-glass-rim: transparent;
+  --liquid-glass-rim-strong: transparent;
+  --liquid-glass-chroma-a: transparent;
+  --liquid-glass-chroma-b: transparent;
+  --liquid-glass-caustic: transparent;
+  --liquid-glass-shadow: transparent;
+  --gradient-primary: var(--raw-orange);
+  --gradient-surface: var(--raw-paper-strong);
+
+  /* Legacy aliases kept so existing components inherit the semantic palette. */
+  --slush-dark: var(--color-background-primary);
+  --slush-light: var(--color-surface-front);
+  --slush-glacier: var(--color-primary-subtle);
+  --slush-blue: var(--color-primary);
+  --slush-yellow: var(--color-primary-soft);
+  --slush-orange: var(--color-primary-hover);
+  --slush-violet: var(--color-surface-hover);
+  --slush-purple: var(--color-primary-active);
+  --slush-green: var(--color-primary);
+  --slush-yellow-soft: var(--color-text-accent);
+  --slush-violet-soft: var(--color-surface-front);
+  --slush-green-soft: var(--color-primary-soft);
+  --gravii-forest-950: var(--color-background-primary);
+  --gravii-forest-900: var(--color-background-secondary);
+  --gravii-forest-850: var(--green-08);
+  --gravii-forest-800: var(--color-surface-front);
+  --gravii-forest-700: var(--color-surface-hover);
+  --gravii-forest-600: var(--color-primary-active);
+  --gravii-emerald-500: var(--color-primary);
+  --gravii-emerald-400: var(--color-primary-hover);
+  --gravii-emerald-300: var(--color-primary-soft);
+  --gravii-mint-200: var(--color-primary-subtle);
+  --gravii-mint-100: var(--color-text-accent);
+  --gravii-mint-50: var(--color-text-primary);
+  --gravii-border-soft: var(--color-border-primary);
+  --gravii-border-strong: var(--color-border-secondary);
   --slush-radius-card: 1.7rem;
   --slush-radius-container: 2.25rem;
-  --slush-border-width: 1.5px;
-  --slush-border: var(--slush-border-width) solid var(--slush-dark);
-  --slush-shadow-pop: 0 18px 42px rgba(21, 18, 11, 0.12);
-  --slush-shadow-soft: 0 1.35rem 4rem rgba(21, 18, 11, 0.14);
-  --slush-duration-default: 0.75s;
-  --slush-duration-medium: 0.85s;
-  --slush-duration-fade: 0.15s;
-  --slush-elastic-ease-out: linear(
-    0,
-    0.5737 7.6%,
-    0.8382 11.87%,
-    0.9463 14.19%,
-    1.0292 16.54%,
-    1.0886 18.97%,
-    1.1258 21.53%,
-    1.137 22.97%,
-    1.1424 24.48%,
-    1.1423 26.1%,
-    1.1366 27.86%,
-    1.1165 31.01%,
-    1.0507 38.62%,
-    1.0219 42.57%,
-    0.9995 46.99%,
-    0.9872 51.63%,
-    0.9842 58.77%,
-    1.0011 81.26%,
-    1
-  );
+  --slush-border-width: 0;
+  --slush-border: var(--slush-border-width) solid var(--gravii-border-soft);
+  --slush-shadow-pop: none;
+  --slush-shadow-soft: none;
+  --motion-duration-instant: 120ms;
+  --motion-duration-fast: 180ms;
+  --motion-duration-standard: 260ms;
+  --motion-duration-slow: 360ms;
+  --motion-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --motion-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --slush-duration-default: var(--motion-duration-standard);
+  --slush-duration-medium: var(--motion-duration-slow);
+  --slush-duration-fade: var(--motion-duration-instant);
+  --slush-elastic-ease-out: var(--motion-ease-out);
 
   /* Material 3 Expressive-inspired Gravii tonal system */
-  --m3e-canvas: #f7f0e6;
-  --m3e-canvas-dim: #ece2d5;
-  --m3e-canvas-bright: #fffaf2;
-  --m3e-surface: rgba(255, 250, 242, 0.76);
-  --m3e-surface-container-low: rgba(255, 252, 246, 0.56);
-  --m3e-surface-container: rgba(247, 238, 226, 0.78);
-  --m3e-surface-container-high: rgba(237, 225, 210, 0.9);
-  --m3e-on-surface: #17140f;
-  --m3e-on-surface-variant: rgba(23, 20, 15, 0.66);
-  --m3e-outline: rgba(48, 39, 27, 0.13);
-  --m3e-outline-variant: rgba(48, 39, 27, 0.08);
-  --m3e-primary: var(--slush-blue);
-  --m3e-on-primary: #fff8e7;
-  --m3e-primary-container: var(--slush-yellow);
+  --m3e-canvas: var(--color-background-primary);
+  --m3e-canvas-dim: var(--color-background-secondary);
+  --m3e-canvas-bright: var(--color-background-tertiary);
+  --m3e-surface: var(--color-glass-background);
+  --m3e-surface-container-low: var(--green-08);
+  --m3e-surface-container: var(--green-07);
+  --m3e-surface-container-high: var(--green-06);
+  --m3e-on-surface: var(--color-text-primary);
+  --m3e-on-surface-variant: var(--color-text-secondary);
+  --m3e-outline: var(--color-border-secondary);
+  --m3e-outline-variant: var(--color-border-primary);
+  --m3e-primary: var(--color-primary);
+  --m3e-on-primary: var(--green-00);
+  --m3e-primary-container: var(--color-primary-soft);
   --m3e-on-primary-container: var(--slush-dark);
-  --m3e-secondary: #514636;
-  --m3e-secondary-container: #e6d6be;
-  --m3e-tertiary: var(--slush-green);
-  --m3e-tertiary-container: var(--slush-green-soft);
-  --m3e-error: #9b2f23;
-  --m3e-success: #2d7a55;
-  --m3e-warning: #a36512;
+  --m3e-secondary: var(--gravii-mint-200);
+  --m3e-secondary-container: var(--gravii-forest-700);
+  --m3e-tertiary: var(--color-primary);
+  --m3e-tertiary-container: var(--color-primary-soft);
+  --m3e-error: var(--green-06);
+  --m3e-success: var(--green-05);
+  --m3e-warning: var(--green-04);
   --m3e-radius-xs: 12px;
   --m3e-radius-sm: 18px;
   --m3e-radius-md: 28px;
@@ -89,28 +189,28 @@
   --m3e-shell-padding: clamp(14px, 2vw, 26px);
   --m3e-rail-width: 236px;
   --m3e-context-width: 294px;
-  --m3e-shadow-1: 0 16px 44px rgba(39, 31, 20, 0.08);
-  --m3e-shadow-2: 0 24px 84px rgba(39, 31, 20, 0.13);
-  --m3e-ease-standard: 240ms cubic-bezier(0.2, 0, 0, 1);
-  --m3e-ease-emphasized: 420ms cubic-bezier(0.2, 0, 0, 1);
+  --m3e-shadow-1: none;
+  --m3e-shadow-2: none;
+  --m3e-ease-standard: var(--motion-duration-standard) var(--motion-ease-standard);
+  --m3e-ease-emphasized: var(--motion-duration-slow) var(--motion-ease-out);
   --m3e-ease-spring: var(--slush-duration-default) var(--slush-elastic-ease-out);
 
-  --gravii-bg: #f5efe4;
-  --gravii-bg-strong: #ebe0d0;
-  --gravii-surface: rgba(255, 253, 247, 0.82);
-  --gravii-surface-strong: rgba(255, 250, 240, 0.96);
-  --gravii-surface-ink: #121419;
-  --gravii-surface-muted: rgba(18, 20, 25, 0.62);
-  --gravii-line: rgba(18, 20, 25, 0.12);
-  --gravii-line-strong: rgba(18, 20, 25, 0.18);
-  --gravii-primary: var(--slush-blue);
-  --gravii-secondary: var(--slush-green);
-  --gravii-tertiary: var(--slush-yellow);
+  --gravii-bg: var(--color-background-primary);
+  --gravii-bg-strong: var(--color-background-secondary);
+  --gravii-surface: var(--color-glass-background);
+  --gravii-surface-strong: var(--color-surface-front);
+  --gravii-surface-ink: var(--color-text-primary);
+  --gravii-surface-muted: var(--color-text-secondary);
+  --gravii-line: var(--gravii-border-soft);
+  --gravii-line-strong: var(--gravii-border-strong);
+  --gravii-primary: var(--color-primary);
+  --gravii-secondary: var(--color-primary-soft);
+  --gravii-tertiary: var(--color-text-accent);
   --gravii-radius-lg: var(--slush-radius-card);
   --gravii-radius-md: 1.35em;
   --gravii-radius-sm: 0.9em;
   --gravii-shadow-soft: var(--slush-shadow-soft);
-  --gravii-shadow-card: 0 18px 46px rgba(21, 18, 11, 0.12);
+  --gravii-shadow-card: none;
   --gravii-ease: var(--slush-duration-default) var(--slush-elastic-ease-out);
 }
 
@@ -132,19 +232,31 @@ body::-webkit-scrollbar {
 }
 
 body {
-  --font-ui: var(--font-sans), "Inter", system-ui, sans-serif;
-  --font-display: var(--font-sans), Impact, "Arial Black", sans-serif;
-  --font-serif: var(--font-sans), "Inter", system-ui, sans-serif;
-  --font-accent: var(--font-sans), Impact, "Arial Black", sans-serif;
+  --font-ui: var(--font-roboto-flex), system-ui, sans-serif;
+  --font-display: var(--font-roboto-flex), system-ui, sans-serif;
+  --font-serif: var(--font-roboto-flex), system-ui, sans-serif;
+  --font-accent: var(--font-roboto-flex), system-ui, sans-serif;
 
-  background:
-    radial-gradient(circle at 10% 8%, rgba(244, 210, 58, 0.12), transparent 24%),
-    radial-gradient(circle at 88% 10%, rgba(90, 169, 255, 0.1), transparent 26%),
-    linear-gradient(180deg, #fffdf7 0%, #f7f0e6 58%, #ede2d3 100%);
+  position: relative;
+  background: var(--raw-paper);
   color: var(--gravii-surface-ink);
   font-family: var(--font-ui);
+  font-optical-sizing: auto;
+  font-stretch: var(--font-width-ui);
+  font-variation-settings: "GRAD" var(--font-grade-ui);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+body::before {
+  display: none;
+}
+
+.liquidFilterDefs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
 }
 
 a {
@@ -160,14 +272,19 @@ select {
 }
 
 ::selection {
-  background: var(--slush-dark);
-  color: var(--slush-light);
+  background: var(--color-primary);
+  color: var(--color-text-on-primary);
+}
+
+html[data-theme-transitioning="true"] * {
+  transition-delay: 0s !important;
+  transition-duration: 0s !important;
 }
 
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(4px);
   }
 
   to {
@@ -179,7 +296,7 @@ select {
 @keyframes fadeInScale {
   from {
     opacity: 0;
-    transform: scale(0.97);
+    transform: scale(0.995);
   }
 
   to {
@@ -195,38 +312,6 @@ select {
 
   to {
     transform: rotate(360deg);
-  }
-}
-
-@keyframes subtlePulse {
-  0%,
-  100% {
-    opacity: 0.4;
-  }
-
-  50% {
-    opacity: 0.7;
-  }
-}
-
-@keyframes scanLine {
-  0% {
-    top: -2px;
-  }
-
-  100% {
-    top: 100%;
-  }
-}
-
-@keyframes thermalPulse {
-  0%,
-  100% {
-    opacity: 0.06;
-  }
-
-  50% {
-    opacity: 0.12;
   }
 }
 

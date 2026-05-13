@@ -1,10 +1,15 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import XRayContent from "./x-ray-content";
 
 vi.mock("@/lib/auth/user-api", () => ({
+  createUserXrayCheckoutSession: vi.fn(async () => ({
+    checkoutUrl: "https://checkout.stripe.com/c/test",
+    expiresAt: null,
+    sessionId: "cs_test_123",
+  })),
   popPendingXrayWallet: vi.fn(() => null),
   readUserCredits: vi.fn(async () => 9),
   readUserLookupList: vi.fn(async () => ({
@@ -56,6 +61,15 @@ vi.mock("@/lib/auth/user-api", () => ({
     creditsRemaining: 8,
     success: true,
   })),
+  UserApiError: class UserApiError extends Error {
+    status: number;
+
+    constructor(message: string, status: number) {
+      super(message);
+      this.name = "UserApiError";
+      this.status = status;
+    }
+  },
 }));
 
 describe("XRayContent", () => {
@@ -69,7 +83,7 @@ describe("XRayContent", () => {
 
     render(<XRayContent dark={false} connected={false} onConnect={onConnect} />);
 
-    await user.click(screen.getByRole("button", { name: "RESTORE SESSION TO START ANALYZING" }));
+    await user.click(screen.getByRole("button", { name: "RESTORE SESSION" }));
 
     expect(onConnect).toHaveBeenCalledTimes(1);
   });
@@ -100,5 +114,23 @@ describe("XRayContent", () => {
       screen.getByText("0x1234567890123456789012345678901234567890")
     ).toBeInTheDocument();
     expect(screen.getByText("Chain Hopper")).toBeInTheDocument();
+  });
+
+  it("opens the scoped X-Ray checkout modal from the credit panel", async () => {
+    const user = userEvent.setup();
+
+    render(<XRayContent dark={false} connected onConnect={() => {}} />);
+
+    await waitFor(() => {
+      expect(screen.getByText("9 credits remaining")).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByRole("button", { name: "BUY X-RAY CREDITS" }));
+
+    const dialog = screen.getByRole("dialog", { name: "Buy X-Ray credits" });
+
+    expect(dialog).toBeInTheDocument();
+    expect(within(dialog).getByText("10 X-Ray credits")).toBeInTheDocument();
+    expect(within(dialog).getByText(/backend webhook fulfillment/i)).toBeInTheDocument();
   });
 });

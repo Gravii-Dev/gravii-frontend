@@ -70,9 +70,10 @@ This component is intentionally large because it represents a dense analytical d
 
 Responsibilities:
 
-- preserve the future X-Ray credit purchase modal boundary
-- keep checkout copy explicitly reserved until backend pricing, fulfillment, and webhook contracts exist
-- avoid starting any payment transaction from the current frontend-only state
+- present the X-Ray-only credit purchase boundary
+- start a backend-owned Stripe Checkout Session for the selected credit bundle
+- keep pricing, Stripe metadata, idempotency, and credit delivery on the backend
+- communicate that credits are granted only after webhook fulfillment confirms payment
 
 ## Feature Flow
 
@@ -84,6 +85,8 @@ The feature flow is:
 4. Wait through the live analysis loading state with the Gravii motion mark.
 5. View the persisted result dashboard.
 6. Optionally return to search or reopen history rows.
+
+If credits are unavailable or the user chooses to buy more, the purchase modal calls `POST /api/v1/me/xray/checkout-session` and redirects to the returned Stripe Checkout URL. Return URLs include `panel=lookup` so the app can reopen the X-Ray panel after Stripe sends the user back.
 
 ## Connected vs Disconnected States
 
@@ -104,11 +107,12 @@ The user can:
 - analysis flow state
 - result dashboard rendering
 - history pagination
+- X-Ray-specific checkout entry UX
 
 ## What This Feature Does Not Own
 
 - backend wallet analysis orchestration
-- billing, checkout, or payment fulfillment rails
+- Stripe pricing, Checkout Session creation logic, webhook validation, payment fulfillment, or credit ledger mutation
 - global auth state
 - wallet-provider connection
 
@@ -116,7 +120,7 @@ The user can:
 
 The real platform is now partially connected. The remaining likely additions are:
 
-- payment and checkout UX once backend pricing, credit purchase, webhook, and entitlement contracts exist
+- backend payment fulfillment for `POST /api/v1/me/xray/checkout-session` and Stripe `checkout.session.completed`
 - richer async status handling if lookup latency changes
 - stronger failure-state handling for provider-side errors
 - more detailed backend result sections as the X-Ray schema stabilizes

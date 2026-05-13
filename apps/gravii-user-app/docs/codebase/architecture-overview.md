@@ -39,7 +39,7 @@ Examples in this repository:
 
 - `src/features/profile` owns the `GRAVII ID` surface.
 - `src/components/layout/panel-shell` owns the common expanded panel frame.
-- `src/components/ui/grain-overlay` owns one visual effect and nothing else.
+- `src/components/ui/action-button` owns one reusable action primitive and nothing else.
 
 Good responsibility boundaries answer two questions clearly:
 
@@ -67,12 +67,12 @@ Important implications:
 
 - The main route is `/`.
 - Most interactive code is client-side.
-- Anonymous users can land on `/`; wallet sign-in uses an injected EVM wallet only after the explicit `SIGN IN` action routes to `/sign-in`.
+- Anonymous users can land on `/`; wallet sign-in uses WalletConnect/Reown AppKit when configured, with a browser-wallet fallback for local environments, after the explicit `SIGN IN` action routes to `/sign-in`.
 - The browser stores the User API JWT and revalidates it through the User API.
 - Browser API reads go through the same-origin `/api/v1/*` rewrite before reaching the User API.
 - `GRAVII ID` and `X-RAY` use live backend reads.
 - `STANDING`, `DISCOVERY`, and `MY SPACE` are reserved coming-soon surfaces.
-- Some mock-era data and view-model files still exist but are no longer the active runtime path for reserved surfaces.
+- Mock-era reserved-surface data and view-model files have been removed; reserved surfaces stay empty until backend contracts are ready.
 
 At runtime, the flow is roughly:
 
@@ -118,7 +118,7 @@ The product currently exposes five surfaces:
 
 - Folder: `src/features/x-ray`
 - Product label in the UI: `X-RAY`
-- Main job: run live wallet analysis lookups, show credits, reopen history, and render persisted result details
+- Main job: run live wallet analysis lookups, show credits, reopen history, render persisted result details, and provide the X-Ray-only checkout entry point
 
 ### 5. Standing
 
@@ -138,7 +138,7 @@ It owns:
 - cross-surface panel metadata in `panel-config.ts`
 - shared type definitions in `types.ts`
 - shell state in `use-launch-shell.ts`
-- legacy mock repository and campaign data files that should be audited before the design system migration
+- shared panel shell primitives and feature-level routing contracts
 
 This folder exists because the app needs an app-level feature layer that is above the individual screens but below the route entry and layout components.
 
@@ -150,7 +150,6 @@ It contains:
 
 - `launch-panel`: the standard vertical panel wrapper for the five current panels
 - `panel-shell`: the shared expanded panel frame with the common header and footer
-- `my-space-dock`: a legacy or alternate My Space layout primitive that is not part of the current `src/app/page.tsx` runtime path
 
 These components know how the app opens and frames content, but they do not own the business logic inside each feature.
 
@@ -161,7 +160,6 @@ This folder owns reusable primitives shared across multiple surfaces.
 It contains:
 
 - `action-button`: a reusable button style with propagation control
-- `grain-overlay`: a reusable canvas noise effect for panels and docks
 - `launch-primitives`: small reusable display primitives used mainly in X-Ray and campaign views
 
 ### `src/lib`
@@ -172,25 +170,11 @@ It currently contains:
 
 - `auth/user-api.ts`: User API client helpers and payload normalization
 - `auth/shared.ts`: user sign-in route helpers
-- `simplex-noise.ts`: math helpers used by the grain effect
 - `gravii-fonts.ts`: shared font name constants
 
 ## Canvas Usage
 
-The codebase currently uses canvas in two runtime features:
-
-### `src/components/ui/grain-overlay`
-
-Purpose:
-
-- render a textured monochrome grain layer for certain panels
-- add depth without introducing a large external asset
-
-Behavior:
-
-- builds noise on an offscreen canvas
-- copies it into the visible canvas on resize
-- is used as a shared visual enhancement
+The codebase currently uses canvas in one runtime feature:
 
 ### `src/features/profile/components/infinite-canvas`
 
@@ -205,7 +189,7 @@ Behavior:
 - redraws on animation frames
 - delegates drawing math to `infinite-canvas-renderer.ts`
 
-The canvas layer is purely presentational in both cases. It does not drive business logic or data state.
+The canvas layer is purely presentational. It does not drive business logic or data state.
 
 ## Testing Shape
 
@@ -235,7 +219,7 @@ The current structure is already partially live-backed, but more responsibilitie
 
 ### Things that will likely change
 
-- remaining mock-era files will be removed or replaced by feature-local API adapters
+- future reserved-surface data will be added as feature-local API adapters
 - future campaign catalog, eligibility, opt-in, and leaderboard data will move to backend-backed reads and writes
 - auth/session hardening may move some access decisions out of purely client-side state
 - feature-level API orchestration may move out of large surface components when the live contracts expand

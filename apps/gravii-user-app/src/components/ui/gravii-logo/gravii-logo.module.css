@@ -11,17 +11,17 @@
 
 .symbol {
   width: 64px;
-  aspect-ratio: 206 / 260;
+  aspect-ratio: 206 / 273;
 }
 
 .wordmark {
   width: 176px;
-  aspect-ratio: 491 / 93;
+  aspect-ratio: 456 / 93;
 }
 
 .motion {
   width: 92px;
-  aspect-ratio: 206 / 260;
+  aspect-ratio: 206 / 273;
   isolation: isolate;
 }
 
@@ -32,21 +32,23 @@
   width: 97.087%;
   aspect-ratio: 1;
   transform: translateX(-50%);
+  transform-origin: 50% 50%;
+  animation: graviiRingBreath 3.8s cubic-bezier(0.2, 0, 0, 1) infinite;
 }
 
 .motionCurve {
   position: absolute;
   left: 0;
-  top: 64.23%;
+  top: 65.93%;
   width: 100%;
   aspect-ratio: 206 / 93;
-  transform-origin: 50% -40%;
-  animation: graviiOrbit 7.2s linear infinite;
+  transform-origin: 50% 18%;
+  animation: graviiCurveLift 3.8s cubic-bezier(0.2, 0, 0, 1) infinite;
 }
 
 .spinY {
   display: inline-block;
-  perspective: 1200px;
+  perspective: 900px;
   overflow: visible;
 }
 
@@ -54,41 +56,50 @@
   position: absolute;
   inset: 0;
   transform-style: preserve-3d;
+  pointer-events: none;
 }
 
 .spinCard {
   position: absolute;
   inset: 0;
   transform-style: preserve-3d;
-  animation: graviiSpinY 9.5s linear infinite;
+  animation: graviiSpinY 8.4s linear infinite;
+  will-change: transform;
 }
 
 .spinFace {
   position: absolute;
   inset: 0;
+  background-image: var(--gravii-logo-image);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
   transform-style: preserve-3d;
-}
-
-.spinFace {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  filter: drop-shadow(0 7px 14px rgba(21, 18, 11, 0.1));
-}
-
-.spinImage {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
 }
 
 .spinFaceFront {
-  transform: translateZ(0.6px);
+  transform: translateZ(0.9px);
 }
 
 .spinFaceBack {
-  opacity: 1;
-  transform: rotateY(180deg) translateZ(0.6px);
+  transform: rotateY(180deg) translateZ(0.9px);
+}
+
+.spinEdge {
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  width: 4px;
+  height: 90%;
+  border-radius: 999px;
+  background: var(--color-text-primary);
+  opacity: 0;
+  transform: translateX(-50%) rotateY(90deg) translateZ(1px);
+  animation: graviiSpinEdge 8.4s linear infinite;
+  backface-visibility: visible;
+  -webkit-backface-visibility: visible;
 }
 
 @keyframes graviiSpinY {
@@ -101,12 +112,73 @@
   }
 }
 
+@keyframes graviiSpinEdge {
+  0%,
+  12%,
+  38%,
+  62%,
+  88%,
+  100% {
+    opacity: 0;
+  }
+
+  23%,
+  27%,
+  73%,
+  77% {
+    opacity: 0.42;
+  }
+
+  25%,
+  75% {
+    opacity: 0.78;
+  }
+}
+
+@keyframes graviiRingBreath {
+  0%,
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+
+  44% {
+    opacity: 0.86;
+    transform: translateX(-50%) scale(0.94);
+  }
+
+  64% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.018);
+  }
+}
+
+@keyframes graviiCurveLift {
+  0%,
+  100% {
+    opacity: 1;
+    transform: translateY(0) scaleX(1);
+  }
+
+  42% {
+    opacity: 0.74;
+    transform: translateY(7%) scaleX(0.92);
+  }
+
+  66% {
+    opacity: 1;
+    transform: translateY(-1.5%) scaleX(1.015);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .motionCore,
   .motionCurve {
     animation: none;
   }
 
-  .spinCard {
+  .spinCard,
+  .spinEdge {
     animation: none;
   }
 }

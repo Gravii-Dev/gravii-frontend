@@ -63,7 +63,7 @@ export function SectionTitle({ children }: { children: ReactNode }) {
 }
 
 export function Card({ children, className }: CardProps) {
-  return <div className={joinClasses(styles.card, className)}>{children}</div>;
+  return <div className={joinClasses(styles.card, className)} data-liquid-glass="soft">{children}</div>;
 }
 
 export function MiniBar({ pct, tone = "purple" }: MiniBarProps) {

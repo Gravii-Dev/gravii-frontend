@@ -13,7 +13,6 @@ import {
   storeProfileIdentity,
 } from "@/features/profile/profile-identity-cache";
 import {
-  getProfileDefiValue,
   getProfileNetWorthLabel,
   getProfileSnapshot,
   type ProfileSnapshot,
@@ -55,21 +54,57 @@ function wait(delayMs: number) {
   });
 }
 
-function StatCard({
+function DashboardCard({
+  accent,
+  className,
   label,
   meta,
+  onClick,
   value,
 }: {
+  accent?: boolean;
+  className?: string;
   label: string;
   meta: string;
+  onClick?: () => void;
   value: string;
 }) {
+  const content = (
+    <>
+      <span className={styles.dashboardLabel}>{label}</span>
+      <strong className={styles.dashboardValue}>{value}</strong>
+      <span className={styles.dashboardMeta}>{meta}</span>
+    </>
+  );
+
+  if (onClick) {
+    return (
+      <button
+        type="button"
+        className={joinClasses(
+          styles.dashboardCard,
+          accent ? styles.dashboardCardAccent : undefined,
+          className
+        )}
+        data-liquid-glass={accent ? "panel" : "soft"}
+        onClick={onClick}
+      >
+        {content}
+      </button>
+    );
+  }
+
   return (
-    <div className={styles.metricCard}>
-      <span className={styles.metricLabel}>{label}</span>
-      <strong className={styles.metricValue}>{value}</strong>
-      <span className={styles.metricMeta}>{meta}</span>
-    </div>
+    <article
+      className={joinClasses(
+        styles.dashboardCard,
+        accent ? styles.dashboardCardAccent : undefined,
+        className
+      )}
+      data-liquid-glass={accent ? "panel" : "soft"}
+    >
+      {content}
+    </article>
   );
 }
 
@@ -83,7 +118,7 @@ function PreviewCard({
   value: string;
 }) {
   return (
-    <div className={styles.previewCard}>
+    <div className={styles.previewCard} data-liquid-glass="soft">
       <span className={styles.previewLabel}>{label}</span>
       <strong className={styles.previewValue}>{value}</strong>
       <span className={styles.previewMeta}>{meta}</span>
@@ -94,7 +129,7 @@ function PreviewCard({
 function ProfileHydratingState() {
   return (
     <div className={styles.connectedStack} aria-hidden="true">
-      <section className={styles.heroPanel}>
+      <section className={styles.heroPanel} data-liquid-glass="panel">
         <div className={styles.heroCopy}>
           <span className={styles.heroEyebrow}>PRIMARY PERSONA</span>
           <div className={`${styles.skeletonBlock} ${styles.skeletonTitle}`} />
@@ -120,7 +155,7 @@ function ProfileHydratingState() {
 
       <div className={styles.metricGrid}>
         {Array.from({ length: 6 }, (_, index) => (
-          <div key={index} className={styles.metricCard}>
+          <div key={index} className={styles.metricCard} data-liquid-glass="soft">
             <span className={styles.metricLabel}>Loading</span>
             <div className={`${styles.skeletonBlock} ${styles.skeletonMetric}`} />
             <div className={`${styles.skeletonBlock} ${styles.skeletonMetricMeta}`} />
@@ -186,7 +221,7 @@ function LockedProfileState({
 
   return (
     <div className={styles.lockedState}>
-      <section className={styles.lockedHero}>
+      <section className={styles.lockedHero} data-liquid-glass="panel">
         <GraviiLogo
           decorative
           variant={connected && identityStatus === "loading" ? "motion" : "symbol"}
@@ -230,157 +265,117 @@ function ConnectedProfileState({
   personaQuote: string;
   snapshot: ProfileSnapshot;
 }) {
+  const personaNumber = String(snapshot.personaIndex + 1).padStart(2, "0");
+  const adjacentPersonas = identity.adjacentPersonas.slice(0, 2);
+
   return (
     <div className={styles.connectedStack}>
-      <section className={styles.heroPanel}>
-        <div className={styles.heroCopy}>
-          <span className={styles.heroEyebrow}>PRIMARY PERSONA</span>
-          <h3 className={styles.heroTitle}>{personaName}</h3>
-          <p className={styles.heroQuote}>{personaQuote}</p>
+      <p className={styles.identityStatement}>Your digital identity, valid everywhere.</p>
 
-          <div className={styles.badgeRow}>
-            <span className={styles.tierBadge}>{snapshot.tier}</span>
-            <span className={styles.subtleBadge}>Active since {snapshot.activeSince}</span>
-            <span className={styles.subtleBadge}>{formatWalletLabel(identity.address)}</span>
-          </div>
+      <section className={styles.profileDashboard}>
+        <article className={styles.personaDashboardCard} data-liquid-glass="panel">
+          <div className={styles.personaDashboardCopy}>
+            <span className={styles.dashboardLabel}>YOUR PERSONA</span>
+            <h3 className={styles.personaDashboardTitle}>{personaName}</h3>
+            <p className={styles.personaDashboardQuote}>&ldquo;{personaQuote}&rdquo;</p>
 
-          <div className={styles.actionRow}>
-            <ActionButton
-              size="panel"
-              className={styles.primaryAction}
-              onClick={() => {
-                setPendingXrayWallet(identity.address);
-                onNavigate?.("lookup");
-              }}
-            >
-              Open X-Ray
-            </ActionButton>
-            <ActionButton
-              size="panel"
-              className={styles.secondaryAction}
-              onClick={() => {
-                const text = encodeURIComponent(
-                  `I'm a ${personaName} on @Gravii — ${snapshot.tier} tier with ${getProfileNetWorthLabel(identity)} on-chain.`
-                );
+            <div className={styles.personaDashboardChips}>
+              {adjacentPersonas.length > 0 ? (
+                adjacentPersonas.map((persona) => (
+                  <span key={persona} className={styles.personaChip} data-liquid-glass="soft">
+                    {persona}
+                  </span>
+                ))
+              ) : (
+                <span className={styles.personaChip} data-liquid-glass="soft">No secondary persona</span>
+              )}
+            </div>
 
-                window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank");
-              }}
-            >
-              Share on X
-            </ActionButton>
-          </div>
-        </div>
+            <div className={styles.personaDashboardFooter}>
+              <span className={styles.tierBadge} data-liquid-glass="soft">{snapshot.tier}</span>
+              <ActionButton
+                size="panel"
+                className={styles.shareAction}
+                onClick={() => {
+                  const text = encodeURIComponent(
+                    `I'm a ${personaName} on @Gravii — ${snapshot.tier} tier with ${getProfileNetWorthLabel(identity)} on-chain.`
+                  );
 
-        <div className={styles.heroSignal}>
-          <div className={styles.personaSignalCard} aria-hidden="true">
-            <span className={styles.signalLabel}>PERSONA SIGNAL</span>
-            <strong className={styles.personaSignalValue}>{snapshot.reputation}</strong>
-            <span className={styles.personaSignalMeta}>
-              {snapshot.tier} tier · {snapshot.homeChain} anchor
-            </span>
-            <div className={styles.signalBars}>
-              <span className={styles.signalBarStrong} />
-              <span className={styles.signalBarMedium} />
-              <span className={styles.signalBarSoft} />
+                  window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank");
+                }}
+              >
+                Share on X
+              </ActionButton>
             </div>
           </div>
 
-          <div className={styles.signalCard}>
-            <span className={styles.signalLabel}>NET WORTH</span>
-            <strong className={styles.signalValue}>{getProfileNetWorthLabel(identity)}</strong>
-            <span className={styles.signalMeta}>
-              {snapshot.homeChain} anchor · {snapshot.trend} over the last 30 days
-            </span>
+          <div className={styles.personaDashboardSignal} aria-hidden="true">
+            <span>{personaNumber}</span>
           </div>
-        </div>
-      </section>
+        </article>
 
-      <div className={styles.metricGrid}>
-        <StatCard
+        <DashboardCard
+          className={styles.homeChainCard}
           label="HOME CHAIN"
           meta={snapshot.homeChainMeta}
           value={snapshot.homeChain}
         />
-        <StatCard
+        <DashboardCard
+          className={styles.standoutCard}
+          label="STANDOUT"
+          meta={snapshot.standoutMeta}
+          value={snapshot.standoutRank}
+        />
+        <DashboardCard
+          className={styles.transactionsCard}
           label="TRANSACTIONS"
-          meta="Last 90 days"
+          meta={snapshot.transactionMeta}
           value={snapshot.transactionCount}
         />
-        <StatCard
-          label="DEFI TVL"
-          meta={snapshot.defiMeta}
-          value={getProfileDefiValue(identity)}
+        <DashboardCard
+          className={styles.activeSinceCard}
+          label="ACTIVE SINCE"
+          meta="on-chain"
+          value={snapshot.activeSince}
         />
-        <StatCard
+        <DashboardCard
+          className={styles.trendCard}
+          label="30D TREND"
+          meta="portfolio"
+          value={snapshot.trend}
+        />
+        <DashboardCard
+          className={styles.reputationCard}
           label="REPUTATION"
           meta={snapshot.reputationFlags}
           value={snapshot.reputation}
         />
-        <StatCard
-          label="30D MOMENTUM"
-          meta={`Volume ${snapshot.trendMeta}`}
-          value={snapshot.trend}
+        <DashboardCard
+          className={styles.nftCard}
+          label="NFTs"
+          meta="collected"
+          value={snapshot.nftsCollected}
         />
-        <StatCard
-          label="ANALYZED"
-          meta="Last identity refresh"
-          value={snapshot.analyzedAt}
+        <DashboardCard
+          accent
+          className={styles.matchedCard}
+          label="MATCHED"
+          meta="campaigns →"
+          onClick={() => onNavigate?.("myspace")}
+          value={snapshot.matchedCount}
         />
-      </div>
-
-      <div className={styles.lowerGrid}>
-        <section className={styles.secondaryPanel}>
-          <span className={styles.panelTitle}>ALSO READS AS</span>
-          <div className={styles.personaList}>
-            {identity.adjacentPersonas.length > 0 ? (
-              identity.adjacentPersonas.slice(0, 4).map((persona) => (
-                <span key={persona} className={styles.personaChip}>
-                  {persona}
-                </span>
-              ))
-            ) : (
-              <span className={styles.personaChip}>No adjacent personas yet</span>
-            )}
-          </div>
-          <p className={styles.bodyText}>
-            Gravii keeps your persona anchored to one working identity while still
-            surfacing the edge patterns that shape eligibility and next actions.
-          </p>
-        </section>
-
-        <section className={styles.routePanel}>
-          <button
-            type="button"
-            className={styles.routeCard}
-            onClick={() => {
-              setPendingXrayWallet(identity.address);
-              onNavigate?.("lookup");
-            }}
-          >
-            <span className={styles.routeLabel}>X-RAY</span>
-            <strong className={styles.routeValue}>Inspect your wallet live</strong>
-            <p className={styles.routeCopy}>
-              Reopen the same address inside Gravii&apos;s analysis workspace and
-              compare this persona against live wallet behavior.
-            </p>
-            <span className={styles.routeMeta}>Launch wallet analysis →</span>
-          </button>
-
-          <button
-            type="button"
-            className={styles.routeCard}
-            onClick={() => onNavigate?.("myspace")}
-          >
-            <span className={styles.routeLabel}>MY SPACE</span>
-            <strong className={styles.routeValue}>Personalized space is next</strong>
-            <p className={styles.routeCopy}>
-              Keep this route warm for matched campaigns, curated drops, and
-              persona-led recommendations once the surface goes live.
-            </p>
-            <span className={styles.routeMeta}>Preview reserved slot →</span>
-          </button>
-        </section>
-      </div>
+        <DashboardCard
+          accent
+          className={styles.xrayCard}
+          label="X-RAY"
+          meta="SEARCH →"
+          onClick={() => {
+            setPendingXrayWallet(identity.address);
+            onNavigate?.("lookup");
+          }}
+          value="Dig deeper into your profile"
+        />
+      </section>
     </div>
   );
 }
@@ -407,10 +402,16 @@ export default function ProfileContent({
     if (!connected) {
       clearUserIdentityBootstrapPending();
       clearProfileIdentityCache();
-      setIdentity(null);
-      setIdentityStatus("idle");
-      setErrorMessage(null);
-      setErrorAction("retryIdentity");
+      queueMicrotask(() => {
+        if (cancelled) {
+          return;
+        }
+
+        setIdentity(null);
+        setIdentityStatus("idle");
+        setErrorMessage(null);
+        setErrorAction("retryIdentity");
+      });
 
       return () => {
         cancelled = true;
@@ -565,22 +566,16 @@ export default function ProfileContent({
       <div className={styles.atmosphere} />
 
       {connectedProfile ? (
-        <div className={styles.identityBar}>
-          <div className={styles.identityBarCopy}>
-            <span className={styles.kicker}>GRAVII ID READY</span>
-            <strong className={styles.identityBarTitle}>
-              {connectedProfile.snapshot.tier} persona graph live
-            </strong>
-          </div>
-
+        <div className={styles.identityBar} data-liquid-glass="soft">
+          <span className={styles.kicker}>GRAVII ID READY</span>
           <div className={styles.identityBarMeta}>
-            <span>{formatWalletLabel(connectedProfile.identity.address)}</span>
-            <span>{connectedProfile.snapshot.analyzedAt}</span>
+            <span data-liquid-glass="soft">{formatWalletLabel(connectedProfile.identity.address)}</span>
+            <span data-liquid-glass="soft">{connectedProfile.snapshot.analyzedAt}</span>
           </div>
         </div>
       ) : isHydratingConnectedProfile ? null : (
         <div className={styles.headerBand}>
-          <div className={styles.headerCopy}>
+          <div className={styles.headerCopy} data-liquid-glass="panel">
             <span className={styles.kicker}>GRAVII ID</span>
             <h2 className={styles.title}>
               Identity that settles into every wallet signal.
@@ -591,13 +586,13 @@ export default function ProfileContent({
             </p>
           </div>
 
-          <div className={styles.brandWell}>
+          <div className={styles.brandWell} data-liquid-glass="panel">
             <GraviiLogo
               decorative
               variant={connected && identityStatus === "loading" ? "motion" : "symbol"}
               className={styles.brandSymbol}
             />
-            <GraviiLogo decorative variant="wordmark" className={styles.brandWordmark} />
+            <span className={styles.brandWordmarkText}>gravii</span>
             <p className={styles.brandMeta}>
               {connected
                 ? "Live identity session"

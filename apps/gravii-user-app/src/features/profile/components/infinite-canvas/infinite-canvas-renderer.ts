@@ -44,15 +44,8 @@ type RenderInfiniteCanvasSceneOptions = {
   gridHeight: number;
 };
 
-function hexToRgba(hex: string, alpha: number) {
-  const normalized = hex.replace("#", "");
-  const safeHex = normalized.length === 3 ? normalized.split("").map((char) => `${char}${char}`).join("") : normalized;
-  const value = Number.parseInt(safeHex, 16);
-  const r = (value >> 16) & 255;
-  const g = (value >> 8) & 255;
-  const b = value & 255;
-
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+function paletteColor(hex: string, _intensity: number) {
+  return hex;
 }
 
 function roundedRectPath(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) {
@@ -122,15 +115,15 @@ function drawWrappedText(
 
 function themeFor(dark: boolean): CanvasTheme {
   return {
-    text: dark ? "#F5F2EB" : "#1A1A1A",
-    sub: dark ? "rgba(255, 255, 255, 0.4)" : "rgba(0, 0, 0, 0.35)",
-    cardBackground: dark ? "rgba(255, 255, 255, 0.04)" : "rgba(0, 0, 0, 0.02)",
-    cardBorder: dark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.08)",
-    activeBorder: "rgba(230, 220, 250, 0.4)",
-    activeBackground: dark ? "rgba(230, 220, 250, 0.06)" : "rgba(230, 220, 250, 0.08)",
-    activeLabel: "rgba(230, 220, 250, 0.8)",
-    activeDescription: "rgba(230, 220, 250, 0.5)",
-    description: dark ? "rgba(255, 255, 255, 0.24)" : "rgba(0, 0, 0, 0.2)",
+    text: dark ? "#f8edf3" : "#2f254b",
+    sub: dark ? "#e7e1f4" : "#5f4a9c",
+    cardBackground: dark ? "#46356f" : "#e7e1f4",
+    cardBorder: dark ? "#735caf" : "#cfc2f0",
+    activeBorder: "#ad98ea",
+    activeBackground: dark ? "#735caf" : "#cfc2f0",
+    activeLabel: dark ? "#f8edf3" : "#2f254b",
+    activeDescription: dark ? "#f5d7e1" : "#5f4a9c",
+    description: dark ? "#cfc2f0" : "#5f4a9c",
   };
 }
 
@@ -155,20 +148,20 @@ function drawTile(ctx: CanvasRenderingContext2D, options: DrawTileOptions) {
   ctx.clip();
 
   const glowOne = ctx.createRadialGradient(x + width * 0.3, y + height * 0.3, 0, x + width * 0.3, y + height * 0.3, width * 0.7);
-  glowOne.addColorStop(0, hexToRgba(gradientA, isActive ? 0.3 : 0.12));
-  glowOne.addColorStop(1, "rgba(0, 0, 0, 0)");
+  glowOne.addColorStop(0, paletteColor(gradientA, isActive ? 0.3 : 0.12));
+  glowOne.addColorStop(1, dark ? "#2f254b" : "#f5d7e1");
   ctx.fillStyle = glowOne;
   ctx.fillRect(x, y, width, height);
 
   const glowTwo = ctx.createRadialGradient(x + width * 0.7, y + height * 0.7, 0, x + width * 0.7, y + height * 0.7, width * 0.7);
-  glowTwo.addColorStop(0, hexToRgba(gradientB, isActive ? 0.26 : 0.1));
-  glowTwo.addColorStop(1, "rgba(0, 0, 0, 0)");
+  glowTwo.addColorStop(0, paletteColor(gradientB, isActive ? 0.26 : 0.1));
+  glowTwo.addColorStop(1, dark ? "#2f254b" : "#f5d7e1");
   ctx.fillStyle = glowTwo;
   ctx.fillRect(x, y, width, height);
 
   const glowThree = ctx.createRadialGradient(x + width * 0.5, y + height * 0.2, 0, x + width * 0.5, y + height * 0.2, width * 0.55);
-  glowThree.addColorStop(0, hexToRgba(gradientC, isActive ? 0.22 : 0.08));
-  glowThree.addColorStop(1, "rgba(0, 0, 0, 0)");
+  glowThree.addColorStop(0, paletteColor(gradientC, isActive ? 0.22 : 0.08));
+  glowThree.addColorStop(1, dark ? "#2f254b" : "#f5d7e1");
   ctx.fillStyle = glowThree;
   ctx.fillRect(x, y, width, height);
 

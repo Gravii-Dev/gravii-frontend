@@ -35,8 +35,8 @@ The current application should be understood as a hybrid of:
 - live session validation
 - live Gravii ID reads
 - live X-Ray credits, lookup history, lookup runs, and detail reads
+- X-Ray credit checkout entry that depends on backend-owned Stripe fulfillment
 - reserved coming-soon product slots for surfaces whose backend contracts are not ready
-- some stale mock-era files that are no longer part of the active runtime path
 
 ## Runtime Structure Diagram
 
@@ -151,8 +151,7 @@ flowchart TD
 
 `src/features/launch-app/types.ts`
 
-- Defines panel IDs, panel config, shared content props, and legacy campaign/leaderboard types.
-- The legacy campaign and leaderboard types are candidates for cleanup once reserved surfaces no longer use mock-era modules.
+- Defines panel IDs, panel config, shared content props, and reserved-surface domain types.
 
 `src/components/layout/launch-panel`
 
@@ -164,12 +163,6 @@ flowchart TD
 
 - Owns the shared expanded panel chrome.
 - Provides the header, title, close action, body, and footer frame.
-
-`src/components/layout/my-space-dock`
-
-- A legacy or alternate shell component for My Space.
-- It is present in the repo, but the current route renders My Space through `LaunchPanel`.
-- This should be reviewed before a design system migration so there is only one active panel primitive family.
 
 ### Live Feature Boundaries
 
@@ -247,11 +240,6 @@ flowchart TD
 
 - Shared brand mark, wordmark, and motion mark primitive using `next/image`.
 
-`src/components/ui/grain-overlay`
-
-- Shared canvas texture effect.
-- Should be revisited during design system work as either a brand primitive or a panel-only effect.
-
 `src/components/ui/launch-primitives`
 
 - Shared presentational primitives from the previous launch UI.
@@ -269,12 +257,11 @@ flowchart TD
 
 ## Current Risks
 
-- Some documentation still describes the old mock-only prototype state.
+- Some historical documentation still describes the older prototype state and should be read as rollout context.
 - The auth boundary is mostly browser-side; there is no route-level access boundary yet.
 - Anonymous landing is intentional; individual live surfaces must keep their own session-required states until a route-level access boundary is introduced.
 - JWT persistence is localStorage-based, which should be reviewed before a broader production hardening pass.
 - `tsconfig.json` still allows implicit `any` through `noImplicitAny: false`.
-- Legacy mock-era files remain for Discovery, My Space, and Standing even though the active UI now uses coming-soon content.
 - The panel system and visual components are not yet expressed as design system primitives.
 - Tests do not yet cover sign-in, identity bootstrap retries, or important failure modes.
 
@@ -284,20 +271,18 @@ flowchart TD
 
 Do these before large UI/UX changes.
 
-- Update stale codebase docs so developers do not follow the old mock-only mental model.
+- Keep codebase docs aligned with live auth/data behavior so developers do not follow the old mock-only mental model.
 - Add test coverage for sign-in success, sign-in failure, and existing-session handoff behavior.
 - Add test coverage for Profile identity loading, bootstrap retry, 401 refresh, and failure actions.
 - Decide whether the rollout needs an explicit route access boundary beyond the current browser-side session handling.
 - Decide whether localStorage JWT persistence is acceptable for this rollout or should move behind a stronger session strategy.
 
-### P1: Clean Up Mock-Era Surface Debt
+### P1: Clean Up Reserved-Surface Debt
 
 Do this before or during the first design system extraction.
 
-- Inventory unused mock-era modules under `discovery`, `my-space`, `standing`, and `launch-app`.
-- Delete or park unused mock files only when no active imports or planned near-term QA flows depend on them.
-- Split legacy types out of `src/features/launch-app/types.ts` so active shell types are not mixed with inactive campaign and leaderboard types.
-- Decide whether `MySpaceDock` is still a future layout primitive or should be removed in favor of one unified panel system.
+- Add backend-backed adapters for `discovery`, `my-space`, and `standing` when contracts are ready.
+- Split reserved-surface types out of `src/features/launch-app/types.ts` if they grow beyond shell concerns.
 - Align README and feature READMEs with the final reserved-surface decision.
 
 ### P1: Prepare For Design System Migration

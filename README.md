@@ -73,6 +73,7 @@ bun run test:e2e
 - `packages/domain-types` now holds the first shared domain models.
 - `packages/api-clients` now holds thin shared clients for the live Gravii APIs, including auth-aware user, partner, and admin clients.
 - The public partner acquisition surface is now owned by `apps/gravii-user-landing` at `/partners`; there is no separate standalone partner landing app in the active workspace.
+- Security patches that must override vulnerable transitive dependencies are centralized in the root `package.json` `overrides` block and should be re-checked with `bun audit` after dependency changes.
 
 ## Docs
 
