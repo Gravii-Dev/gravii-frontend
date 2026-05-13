@@ -77,7 +77,7 @@
     "sanity": "^5.2.0",
     "stats-gl": "^4.1.0",
     "tailwindcss": "^4.1.18",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   },
   "trustedDependencies": [
     "@biomejs/biome",
