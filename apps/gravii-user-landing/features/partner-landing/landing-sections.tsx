@@ -1,3 +1,4 @@
+import { Link } from '@/components/ui/link'
 import { cn } from '@/lib/cn'
 import type { LandingDimension } from './landing-page'
 import {
@@ -67,7 +68,7 @@ function PricingPlanGrid({
               {feature}
             </div>
           ))}
-          <a
+          <Link
             className={cn(
               styles.planButton,
               plan.featured
@@ -77,7 +78,7 @@ function PricingPlanGrid({
             href="mailto:partners@gravii.io"
           >
             {plan.cta}
-          </a>
+          </Link>
         </article>
       ))}
     </div>
@@ -114,9 +115,9 @@ export function HeroSection() {
         <AuthHandoffLink className={styles.btnPrimary} href={dashboardHref}>
           Get Started
         </AuthHandoffLink>
-        <a className={styles.btnSecondary} href="mailto:partners@gravii.io">
+        <Link className={styles.btnSecondary} href="mailto:partners@gravii.io">
           Book a Demo
-        </a>
+        </Link>
       </div>
     </section>
   );
@@ -659,9 +660,9 @@ export function PricingSection({ dimension }: { dimension: LandingDimension }) {
           From <span className={styles.pricingBundleValue}>$5,000/mo</span> —
           Gate + Reach + Lens + KYA. 10% off module sum. Includes Lens S×2 free, CPA 20% discount.
         </div>
-        <a className={styles.pricingBundleButton} href="mailto:partners@gravii.io">
+        <Link className={styles.pricingBundleButton} href="mailto:partners@gravii.io">
           Contact Us
-        </a>
+        </Link>
       </div>
     </section>
   );
@@ -736,9 +737,9 @@ export function ClosingSection() {
           <AuthHandoffLink className={styles.btnPrimary} href={dashboardHref}>
             Get Started
           </AuthHandoffLink>
-          <a className={styles.btnSecondary} href="mailto:partners@gravii.io">
+          <Link className={styles.btnSecondary} href="mailto:partners@gravii.io">
             Book a Demo
-          </a>
+          </Link>
         </div>
       </section>
 

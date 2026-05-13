@@ -14,12 +14,12 @@ test('home launch app hands off to the user app', async ({ page }) => {
   await expect(launchAppLink).toHaveAttribute('target', '_self')
 
   await Promise.all([
-    page.waitForURL(new RegExp(`http:\\/\\/${localHostPattern.source}:3003\\/sign-in\\?next=%2F`)),
+    page.waitForURL(new RegExp(`http:\\/\\/${localHostPattern.source}:3003\\/\\?utm_source=test&ref=alpha`)),
     launchAppLink.click()
   ])
 
   await expect(
-    page.getByRole('heading', { name: 'Sign in with your wallet.' })
+    page.getByRole('heading', { name: /Wallets become\s+identity\./i })
   ).toBeVisible()
 })
 

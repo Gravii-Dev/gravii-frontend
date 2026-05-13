@@ -5,7 +5,6 @@ import type {
   LensCreatePoolRequest,
   LensDeletePoolResponse,
   LensPool,
-  LensPoolListResponse,
   LensPoolProgress,
   LensPoolSummary,
   LensPoolWalletDetail,

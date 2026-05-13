@@ -6,6 +6,7 @@ import s from './hero.module.css'
 import { HeroBackground } from './hero-background'
 
 const SPLASH_EXIT_DURATION_MS = 520
+const HERO_SUBTITLE = '"WE\'VE BURNT THE OLD PLAYBOOK"'
 
 const CTA_ORBIT_CURSORS = [
   ...Array.from({ length: 4 }, (_, index) => {
@@ -127,9 +128,7 @@ export function Hero() {
           <span className={s.line}>Live</span>
           <span className={`${s.line} ${s.lineOffset}`}>differently</span>
         </h1>
-        <p className={s.subtitle}>
-          &quot;WE&apos;VE BURNT THE OLD PLAYBOOK&quot;
-        </p>
+        <p className={s.subtitle}>{HERO_SUBTITLE}</p>
         <Link href="#waitlist" className={s.ctaButton}>
           <span className={s.ctaOrbit} aria-hidden="true">
             <span className={s.ctaPulse} />

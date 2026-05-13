@@ -55,15 +55,18 @@ flowchart TD
   XRay["X-RAY feature"]
   ComingSoon["ComingSoonContent"]
   UserApi["lib/auth/user-api"]
-  Rewrite["Next.js /api/v1 rewrite"]
+  Bff["Next.js /api/user-api BFF"]
+  SessionCookie["httpOnly user session cookie"]
   Backend["Gravii User API"]
 
   User --> Home
   Home --> AuthProvider
-  AuthProvider -->|anonymous| SignIn
+  AuthProvider -->|explicit sign-in action| SignIn
   SignIn --> Wallet
   Wallet -->|challenge + personal_sign| SignIn
   SignIn --> UserApi
+  UserApi --> Bff
+  Bff -->|stores verified JWT| SessionCookie
   AuthProvider -->|session bootstrap| UserApi
   Home --> Shell
   Home --> PanelConfig
@@ -75,8 +78,9 @@ flowchart TD
   PanelShell --> ComingSoon
   Profile --> UserApi
   XRay --> UserApi
-  UserApi --> Rewrite
-  Rewrite --> Backend
+  UserApi --> Bff
+  SessionCookie --> Bff
+  Bff --> Backend
 ```
 
 ## Responsibility Map
@@ -122,20 +126,37 @@ flowchart TD
 - Requests an auth challenge.
 - Requests a personal signature.
 - Verifies the wallet with the User API.
-- Stores the returned JWT in browser storage.
+- Lets the same-origin BFF store the verified JWT in an httpOnly cookie.
 - Preserves referral codes from either the current query string or nested `next` URL.
 
 `src/lib/auth/user-api.ts`
 
 - Owns User API request helpers.
 - Normalizes backend snake_case payloads into frontend camelCase models.
-- Owns browser storage keys for the JWT, pending X-Ray wallet handoff, and identity bootstrap flag.
+- Uses the same-origin BFF in the browser and avoids exposing JWTs to browser JavaScript.
+- Owns browser storage keys only for pending X-Ray wallet handoff and identity bootstrap flags.
 - Should stay framework-light and avoid rendering concerns.
 
-`next.config.mjs`
+`src/app/api/user-api/[...path]/route.ts`
+
+- Proxies browser calls to the configured Gravii User API.
+- Reads the httpOnly session cookie and attaches backend `Authorization` headers server-side.
+- Captures wallet verification tokens from backend responses, stores them in the httpOnly cookie, and strips them from browser-visible JSON.
+- Clears the cookie on backend `401` responses.
+
+`src/app/api/user-session/logout/route.ts`
+
+- Clears the same-origin user session cookie during sign-out.
+
+`src/lib/auth/server-user-session.ts`
+
+- Owns server-only user session cookie options.
+- Resolves the server-side Gravii User API base URL.
+
+`next.config.ts`
 
 - Configures Turbopack root for the shared frontend workspace.
-- Rewrites browser `/api/v1/*` calls to the configured User API base URL.
+- Defines app-wide security headers and preserves the legacy `/api/v1/*` development rewrite for compatibility.
 
 ### Launch Shell Boundary
 
@@ -258,12 +279,11 @@ flowchart TD
 ## Current Risks
 
 - Some historical documentation still describes the older prototype state and should be read as rollout context.
-- The auth boundary is mostly browser-side; there is no route-level access boundary yet.
+- The auth boundary now protects the JWT with an httpOnly same-origin cookie, but individual product surfaces still need explicit session-required states until route-level access rules are introduced.
 - Anonymous landing is intentional; individual live surfaces must keep their own session-required states until a route-level access boundary is introduced.
-- JWT persistence is localStorage-based, which should be reviewed before a broader production hardening pass.
 - `tsconfig.json` still allows implicit `any` through `noImplicitAny: false`.
 - The panel system and visual components are not yet expressed as design system primitives.
-- Tests do not yet cover sign-in, identity bootstrap retries, or important failure modes.
+- Tests now cover anonymous landing, explicit sign-in entry, and cross-app handoff; identity bootstrap retries and important failure modes still need broader coverage.
 
 ## Refactor Priorities
 
@@ -275,7 +295,6 @@ Do these before large UI/UX changes.
 - Add test coverage for sign-in success, sign-in failure, and existing-session handoff behavior.
 - Add test coverage for Profile identity loading, bootstrap retry, 401 refresh, and failure actions.
 - Decide whether the rollout needs an explicit route access boundary beyond the current browser-side session handling.
-- Decide whether localStorage JWT persistence is acceptable for this rollout or should move behind a stronger session strategy.
 
 ### P1: Clean Up Reserved-Surface Debt
 

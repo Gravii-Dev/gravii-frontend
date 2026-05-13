@@ -11,7 +11,6 @@ import {
   markUserIdentityBootstrapPending,
   requestUserChallenge,
   readUserSession,
-  storeUserToken,
   verifyUserWallet,
 } from '@/lib/auth/user-api'
 import { normalizeUserNextPath } from '@/lib/auth/shared'
@@ -198,7 +197,6 @@ export function UserSignInPage() {
         clearUserIdentityBootstrapPending()
       }
 
-      storeUserToken(result.token)
       handleSessionReady()
     } catch (error) {
       setShouldAuthenticateWallet(false)
@@ -257,7 +255,6 @@ export function UserSignInPage() {
         clearUserIdentityBootstrapPending()
       }
 
-      storeUserToken(result.token)
       handleSessionReady()
     } catch (error) {
       setShouldAuthenticateWallet(false)

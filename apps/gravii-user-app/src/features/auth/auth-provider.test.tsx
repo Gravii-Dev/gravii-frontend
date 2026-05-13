@@ -11,7 +11,7 @@ const navigationMock = {
 };
 
 const userApiMock = {
-  clearUserToken: vi.fn(),
+  clearUserSession: vi.fn(async () => undefined),
   readUserSession: vi.fn(async () => null),
 };
 
@@ -26,7 +26,7 @@ vi.doMock("next/navigation", () => ({
 }));
 
 vi.doMock("@/lib/auth/user-api", () => ({
-  clearUserToken: userApiMock.clearUserToken,
+  clearUserSession: userApiMock.clearUserSession,
   readUserSession: userApiMock.readUserSession,
 }));
 
@@ -63,7 +63,8 @@ describe("UserAuthProvider", () => {
     navigationMock.push.mockReset();
     navigationMock.refresh.mockReset();
     navigationMock.replace.mockReset();
-    userApiMock.clearUserToken.mockReset();
+    userApiMock.clearUserSession.mockReset();
+    userApiMock.clearUserSession.mockResolvedValue(undefined);
     userApiMock.readUserSession.mockReset();
     userApiMock.readUserSession.mockResolvedValue(null);
   });
@@ -103,7 +104,7 @@ describe("UserAuthProvider", () => {
 
     await user.click(screen.getByRole("button", { name: "Sign out" }));
 
-    expect(userApiMock.clearUserToken).toHaveBeenCalledTimes(1);
+    expect(userApiMock.clearUserSession).toHaveBeenCalledTimes(1);
     expect(navigationMock.replace).toHaveBeenCalledWith("/");
   });
 });

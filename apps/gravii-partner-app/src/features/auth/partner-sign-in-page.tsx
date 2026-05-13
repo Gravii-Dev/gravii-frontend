@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import { getPartnerFirebaseAuth, signInPartnerWithGoogle } from '@/lib/auth/firebase-client'
@@ -23,7 +23,7 @@ export function PartnerSignInPage() {
     [searchParams]
   )
 
-  const finishSignIn = () => {
+  const finishSignIn = useCallback(() => {
     const destination = nextPath || '/'
 
     if (typeof window !== 'undefined') {
@@ -33,7 +33,7 @@ export function PartnerSignInPage() {
 
     router.replace(destination)
     router.refresh()
-  }
+  }, [nextPath, router])
 
   const handleGoogle = async () => {
     setIsSigningIn(true)
@@ -98,7 +98,7 @@ export function PartnerSignInPage() {
     return () => {
       cancelled = true
     }
-  }, [nextPath, router])
+  }, [finishSignIn])
 
   useEffect(() => {
     if (!shouldPrefetchRoutes) {

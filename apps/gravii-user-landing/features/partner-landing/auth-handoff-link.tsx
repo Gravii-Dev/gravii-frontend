@@ -1,7 +1,9 @@
 'use client'
 
-import type { AnchorHTMLAttributes, ReactNode } from 'react'
+import type { ComponentProps, ReactNode } from 'react'
 import { useEffect, useState } from 'react'
+
+import { Link } from '@/components/ui/link'
 
 const passthroughKeys = new Set([
   'campaign',
@@ -37,7 +39,7 @@ function buildHandoffHref(href: string, searchParams: URLSearchParams): string {
 }
 
 interface AuthHandoffLinkProps
-  extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'children' | 'href'> {
+  extends Omit<ComponentProps<typeof Link>, 'children' | 'href'> {
   children: ReactNode
   href: string
 }
@@ -54,8 +56,8 @@ export function AuthHandoffLink({
   }, [href])
 
   return (
-    <a {...anchorProps} href={resolvedHref}>
+    <Link target="_self" {...anchorProps} href={resolvedHref}>
       {children}
-    </a>
+    </Link>
   )
 }

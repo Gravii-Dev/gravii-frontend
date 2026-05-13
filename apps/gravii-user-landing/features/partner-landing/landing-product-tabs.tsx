@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react'
 
+import { Link } from '@/components/ui/link'
 import { cn } from '@/lib/cn'
 
 import type { LandingDimension } from './landing-page'
@@ -434,18 +435,18 @@ function AgentPanel() {
                 {feature}
               </div>
             ))}
-            <a
+            <Link
               className={cn(styles.planButton, styles.planButtonDefault)}
               href="mailto:partners@gravii.io"
             >
               {plan.cta}
-            </a>
+            </Link>
           </article>
         ))}
       </div>
 
       <div className={styles.kyaPricingNote}>
-        Enterprise KYA available as part of Gate Enterprise bundle. <a href="#pricing">See Enterprise pricing →</a>
+        Enterprise KYA available as part of Gate Enterprise bundle. <Link href="#pricing">See Enterprise pricing →</Link>
       </div>
     </div>
   )

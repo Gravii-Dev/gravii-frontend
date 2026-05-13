@@ -19,6 +19,8 @@ Use this file for remaining actionable work that should survive session boundari
 - Run authenticated QA on `partner.gravii.io/lens` for CSV import, pool progress, rename/delete, wallet filters, pagination, and wallet drill-down against the live Partner API.
 - Configure Firebase provider environments and the admin workspace domain for deployed surfaces.
 - Expand Playwright auth coverage to the live partner Google flow plus refresh, failure, and role-boundary behavior.
+- Add a GitHub Actions CI workflow for `lint`, `typecheck`, `build`, tests, and E2E, then attach successful check names to `main` branch protection.
+- Add CODEOWNERS after ownership is clear so `main` branch protection can require code owner reviews.
 
 ## Later
 

@@ -50,6 +50,13 @@ The route shell lives in [page.tsx](/Users/kxwxn/Gravii/FRONTEND/apps/gravii-use
 ```text
 src/
   app/
+    api/
+      user-api/
+        [...path]/
+          route.ts
+      user-session/
+        logout/
+          route.ts
     globals.css
     fonts/
       cloth.woff
@@ -108,6 +115,7 @@ src/
       x-ray-view-model.ts
   lib/
     auth/
+      server-user-session.ts
       shared.ts
       user-api.ts
 public/
@@ -144,10 +152,10 @@ Current live-backed parts:
 
 - WalletConnect/Reown AppKit wallet selection backed by the User API challenge/signature sign-in contract
 - anonymous users can land on `/` without an automatic wallet prompt; the header `SIGN IN` action is the only entry into `/sign-in`
-- 24 hour JWT session validation against the User API
+- 24 hour User API session validation through an httpOnly same-origin session cookie
 - live `GRAVII ID` loading through `/api/v1/me/identity`, including short bootstrap polling for newly created wallets and the persona dashboard presentation for persona, chain, rank, activity, reputation, NFTs, matched campaigns, and X-Ray entry
 - live X-Ray credits, lookup history, fresh lookup runs, and detail reads with the new Gravii-branded analytical surface
-- browser-side auth and user reads now go through a same-origin Next.js `/api/v1/*` rewrite before reaching the User API so local development is not blocked by backend CORS policy
+- browser-side auth and user reads now go through the same-origin Next.js `/api/user-api/*` backend-for-frontend route; JWTs are captured server-side during wallet verification and are not exposed back to browser JavaScript
 
 Current intentionally reserved parts:
 
