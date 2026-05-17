@@ -241,7 +241,7 @@ Notes:
 - `primary_persona`
 - `status`
 
-## 6. Standing Data
+## 6. Ranking Data
 
 ### Category Fields
 
@@ -249,7 +249,7 @@ Notes:
 - `category_label`
 - `sort_order`
 
-### User Standing Fields
+### User Ranking Fields
 
 - `rank`
 - `population_size`

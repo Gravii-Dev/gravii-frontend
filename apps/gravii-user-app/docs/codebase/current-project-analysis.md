@@ -25,9 +25,9 @@ Current live-backed surfaces:
 
 Current reserved surfaces:
 
-- `STANDING`
 - `DISCOVERY`
-- `MY SPACE`
+- `RANKING`
+- hidden code-preserved `MY SPACE`
 
 The current application should be understood as a hybrid of:
 
@@ -44,8 +44,11 @@ The current application should be understood as a hybrid of:
 flowchart TD
   User["User"]
   Wallet["Injected EVM wallet"]
-  SignIn["/sign-in route"]
+  WalletModal["WalletConnect/Reown modal"]
+  SignInFallback["/sign-in fallback route"]
   AuthProvider["UserAuthProvider"]
+  SignInLauncher["UserSignInLauncher"]
+  WalletFlow["UserWalletSignInFlow"]
   Home["/ route: HomePage"]
   Shell["useLaunchShell"]
   PanelConfig["PANELS"]
@@ -61,10 +64,13 @@ flowchart TD
 
   User --> Home
   Home --> AuthProvider
-  AuthProvider -->|explicit sign-in action| SignIn
-  SignIn --> Wallet
-  Wallet -->|challenge + personal_sign| SignIn
-  SignIn --> UserApi
+  AuthProvider -->|explicit sign-in action| SignInLauncher
+  SignInLauncher --> WalletFlow
+  WalletFlow --> WalletModal
+  WalletModal --> Wallet
+  Wallet -->|challenge + personal_sign| WalletFlow
+  SignInFallback --> WalletFlow
+  WalletFlow --> UserApi
   UserApi --> Bff
   Bff -->|stores verified JWT| SessionCookie
   AuthProvider -->|session bootstrap| UserApi
@@ -103,8 +109,8 @@ flowchart TD
 
 `src/app/sign-in/page.tsx`
 
-- Provides the sign-in route wrapper.
-- Defers the actual sign-in flow to the auth feature.
+- Provides the direct-link fallback route for external handoffs.
+- Reuses the same wallet sign-in flow as the Launch App sign-in launcher.
 
 `src/app/globals.css`
 
@@ -116,17 +122,27 @@ flowchart TD
 `src/features/auth/auth-provider.tsx`
 
 - Owns client-side session bootstrap.
-- Exposes `beginSignIn`, `refreshSession`, `signOut`, and current auth state.
-- Keeps anonymous users on the launch route and enters the wallet sign-in flow only through explicit `beginSignIn` actions.
+- Exposes `beginSignIn`, `cancelSignIn`, `completeSignIn`, `refreshSession`, `signOut`, and current auth state.
+- Keeps anonymous users on the launch route and opens the wallet sign-in launcher only through explicit `beginSignIn` actions.
+
+`src/features/auth/user-sign-in-launcher.tsx`
+
+- Mounts the WalletConnect/Reown provider on demand from Launch App sign-in actions.
+- Opens the wallet selector directly without an intermediate Gravii dialog.
+- Keeps Escape cancellation available while the launcher is mounted.
 
 `src/features/auth/user-sign-in-page.tsx`
 
-- Owns the injected wallet sign-in flow.
-- Requests wallet accounts.
-- Requests an auth challenge.
-- Requests a personal signature.
-- Verifies the wallet with the User API.
+- Owns the direct-link fallback page around the shared wallet sign-in flow.
+- Restores an existing session before showing the fallback sign-in surface.
+- Preserves referral codes from either the current query string or nested `next` URL.
+
+`src/features/auth/user-wallet-sign-in-flow.tsx`
+
+- Owns the shared WalletConnect/Reown and injected-wallet sign-in flow.
+- Requests wallet accounts, an auth challenge, a personal signature, and User API verification.
 - Lets the same-origin BFF store the verified JWT in an httpOnly cookie.
+- Shows a small status overlay only during challenge, signing, verifying, or error states when launched from the main app.
 - Preserves referral codes from either the current query string or nested `next` URL.
 
 `src/lib/auth/user-api.ts`
@@ -237,17 +253,19 @@ flowchart TD
 
 `src/features/standing/standing-content.tsx`
 
-- Renders the reserved Standing surface.
-- Does not currently own live leaderboard logic.
+- Renders the visible Ranking surface.
+- Shows public ranking context while gating the current wallet's rank behind sign-in.
+- Does not currently own live ranking API reads.
 
 `src/features/discovery/discovery-content.tsx`
 
 - Renders the reserved Discovery surface.
+- Keeps the surface structure visible behind a sign-in blur gate for anonymous users.
 - Does not currently own live catalog, filtering, or eligibility logic.
 
 `src/features/my-space/my-space-content.tsx`
 
-- Renders the reserved My Space surface.
+- Preserves the hidden My Space surface implementation.
 - Does not currently own live personalized benefits or opt-in logic.
 
 ### Shared UI Boundary
@@ -300,7 +318,7 @@ Do these before large UI/UX changes.
 
 Do this before or during the first design system extraction.
 
-- Add backend-backed adapters for `discovery`, `my-space`, and `standing` when contracts are ready.
+- Add backend-backed adapters for `discovery`, hidden `my-space`, and `standing`/Ranking when contracts are ready.
 - Split reserved-surface types out of `src/features/launch-app/types.ts` if they grow beyond shell concerns.
 - Align README and feature READMEs with the final reserved-surface decision.
 

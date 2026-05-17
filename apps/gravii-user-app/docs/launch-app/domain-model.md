@@ -351,7 +351,7 @@ Wallet 1--* LeaderboardEntry
 - `XRayAnalysisResult`
 - target `Wallet`
 
-### Standing Read Model
+### Ranking Read Model
 
 - `LeaderboardCategory`
 - `LeaderboardSnapshot`

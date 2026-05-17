@@ -41,6 +41,7 @@ Purpose:
 What it owns:
 
 - navigation order, including the Home command section rendered by the logo tile
+- hidden panel IDs for code-preserved surfaces that should not be visible in the current product shell
 - panel number labels for configuration and analytics context, even though the current nav UI hides them
 - preview tab labels
 - editor copy
@@ -81,8 +82,9 @@ What it does not own:
 The current flow looks like this:
 
 1. `src/app/page.tsx` imports `PANELS` and `useLaunchShell`.
-2. The route renders the logo Home control, left navigation, and workspace board based on `PANELS`.
-3. Feature surfaces receive `SharedContentProps`.
+2. The route renders the logo Home control, left navigation, and one active workspace section based on `activePanel`.
+3. The active panel is rendered with a thin entering bar, an independent bordered frame, and section-local content.
+4. Feature surfaces receive `SharedContentProps`.
 
 This folder therefore acts as:
 

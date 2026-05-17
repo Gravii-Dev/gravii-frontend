@@ -39,8 +39,14 @@ async function renderAuthProvider() {
     return (
       <div>
         <span data-testid="auth-status">{auth.status}</span>
+        <span data-testid="sign-in-open">{String(auth.isSignInModalOpen)}</span>
+        <span data-testid="sign-in-next">{auth.signInNextPath}</span>
+        <span data-testid="sign-in-request-key">{auth.signInRequestKey}</span>
         <button onClick={auth.beginSignIn} type="button">
           Begin sign in
+        </button>
+        <button onClick={auth.cancelSignIn} type="button">
+          Cancel sign in
         </button>
         <button onClick={() => void auth.signOut()} type="button">
           Sign out
@@ -79,7 +85,7 @@ describe("UserAuthProvider", () => {
     expect(navigationMock.replace).not.toHaveBeenCalled();
   });
 
-  it("routes to sign-in only when the user explicitly begins sign-in", async () => {
+  it("opens the in-app sign-in modal only when the user explicitly begins sign-in", async () => {
     const user = userEvent.setup();
     navigationMock.pathname = "/";
     navigationMock.searchParams = new URLSearchParams("panel=lookup");
@@ -92,9 +98,25 @@ describe("UserAuthProvider", () => {
 
     await user.click(screen.getByRole("button", { name: "Begin sign in" }));
 
-    expect(navigationMock.push).toHaveBeenCalledWith(
-      "/sign-in?next=%2F%3Fpanel%3Dlookup"
-    );
+    expect(screen.getByTestId("sign-in-open")).toHaveTextContent("true");
+    expect(screen.getByTestId("sign-in-next")).toHaveTextContent("/?panel=lookup");
+    expect(screen.getByTestId("sign-in-request-key")).toHaveTextContent("1");
+    expect(navigationMock.push).not.toHaveBeenCalled();
+  });
+
+  it("closes the in-app sign-in modal when cancelled", async () => {
+    const user = userEvent.setup();
+
+    await renderAuthProvider();
+
+    await waitFor(() => {
+      expect(screen.getByTestId("auth-status")).toHaveTextContent("anonymous");
+    });
+
+    await user.click(screen.getByRole("button", { name: "Begin sign in" }));
+    await user.click(screen.getByRole("button", { name: "Cancel sign in" }));
+
+    expect(screen.getByTestId("sign-in-open")).toHaveTextContent("false");
   });
 
   it("returns to the launch app after sign-out instead of opening sign-in", async () => {

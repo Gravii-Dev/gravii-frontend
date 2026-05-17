@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 import DiscoveryContent from "./discovery-content";
 
@@ -16,7 +17,8 @@ describe("DiscoveryContent", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows the same reserved state even when disconnected", () => {
+  it("keeps the structure visible and overlays sign-in when disconnected", async () => {
+    const user = userEvent.setup();
     const onConnect = vi.fn();
 
     render(<DiscoveryContent dark connected={false} onConnect={onConnect} onNavigate={() => {}} />);
@@ -24,6 +26,10 @@ describe("DiscoveryContent", () => {
     expect(screen.getByText("Curated campaigns are being staged.")).toBeInTheDocument();
     expect(screen.getByText("Surface reserved")).toBeInTheDocument();
     expect(screen.getByText("Live route locked")).toBeInTheDocument();
-    expect(onConnect).not.toHaveBeenCalled();
+    expect(screen.getByText("Sign in to match campaigns")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "SIGN IN" }));
+
+    expect(onConnect).toHaveBeenCalledTimes(1);
   });
 });

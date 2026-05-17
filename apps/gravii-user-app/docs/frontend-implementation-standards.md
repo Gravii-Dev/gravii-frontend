@@ -120,10 +120,10 @@ Do not keep expanding [src/app/page.tsx](/Users/kxwxn/Gravii/LanunchApp-v1/src/a
 Preferred extraction order:
 
 1. `Profile` (done)
-2. `My Space` (done)
+2. `My Space` (done, currently hidden)
 3. `Discovery` (done)
 4. `X-Ray` (done)
-5. `Standing` (done)
+5. `Ranking` via `standing` folder (done)
 
 For each extraction:
 

@@ -10,7 +10,7 @@ type LaunchPanelProps = {
   panel: PanelConfig;
   isActive: boolean;
   isHovered: boolean;
-  activeProgress: number;
+  markerCount: number;
   onOpen: (id: PanelId) => void;
   onHoverChange: (id: PanelId | null) => void;
 };
@@ -31,14 +31,13 @@ function joinClasses(...classNames: Array<string | false | undefined>) {
 type PanelStyle = CSSProperties & {
   "--panel-bg": string;
   "--panel-bg-hover": string;
-  "--panel-progress": string;
 };
 
 export default function LaunchPanel({
   panel,
   isActive,
   isHovered,
-  activeProgress,
+  markerCount,
   onOpen,
   onHoverChange,
 }: LaunchPanelProps) {
@@ -46,7 +45,6 @@ export default function LaunchPanel({
   const panelStyle: PanelStyle = {
     "--panel-bg": panel.bg,
     "--panel-bg-hover": panel.bgHover,
-    "--panel-progress": String(activeProgress),
   };
 
   useEffect(() => {
@@ -86,7 +84,11 @@ export default function LaunchPanel({
       onMouseEnter={() => onHoverChange(panel.id)}
       onMouseLeave={() => onHoverChange(null)}
     >
-      <span className={styles.marker} aria-hidden="true" />
+      <span className={styles.marker} aria-hidden="true">
+        {Array.from({ length: markerCount }, (_, index) => (
+          <span className={styles.markerDot} key={`${panel.id}-marker-${index}`} />
+        ))}
+      </span>
       <span className={styles.copyStack}>
         <span className={styles.label}>{panel.tab}</span>
         <span className={styles.summary}>{panel.summary}</span>

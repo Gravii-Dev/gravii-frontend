@@ -246,7 +246,7 @@ function LockedProfileState({
       <div className={styles.previewGrid}>
         <PreviewCard label="PERSONA GRAPH" meta="Top persona + adjacent signals" value="LOCKED" />
         <PreviewCard label="NET WORTH" meta="Live USD aggregation" value="••••••" />
-        <PreviewCard label="ROUTE READY" meta="X-Ray and My Space entry points" value="STANDBY" />
+        <PreviewCard label="ROUTE READY" meta="X-Ray and Discovery entry points" value="STANDBY" />
       </div>
     </div>
   );
@@ -361,7 +361,7 @@ function ConnectedProfileState({
           className={styles.matchedCard}
           label="MATCHED"
           meta="campaigns →"
-          onClick={() => onNavigate?.("myspace")}
+          onClick={() => onNavigate?.("discovery")}
           value={snapshot.matchedCount}
         />
         <DashboardCard

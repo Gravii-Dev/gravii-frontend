@@ -2,11 +2,11 @@
   --panel-bg: #f4eadf;
   --panel-bg-hover: #fff8f0;
   --panel-rest-height: 104px;
-  --panel-active-height: clamp(192px, 30vh, 368px);
+  --panel-active-height: clamp(260px, 43vh, 491px);
   position: relative;
   display: flex;
-  align-items: flex-start;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: center;
   flex-direction: column;
   width: min(100%, 178px);
   height: var(--panel-rest-height);
@@ -18,7 +18,7 @@
   background: var(--panel-bg);
   color: var(--panel-active-text, var(--raw-ink));
   font-family: var(--font-ui);
-  text-align: left;
+  text-align: center;
   cursor: pointer;
   transform: translate3d(0, 0, 0);
   will-change: height, background-color, border-color, color;
@@ -29,26 +29,6 @@
     border-color 300ms ease-in-out,
     color 300ms ease-in-out,
     filter 300ms ease-in-out;
-}
-
-.panel[data-panel-id="profile"] {
-  --panel-active-height: clamp(260px, 43vh, 491px);
-}
-
-.panel[data-panel-id="lookup"] {
-  --panel-active-height: clamp(248px, 39vh, 368px);
-}
-
-.panel[data-panel-id="leaderboard"] {
-  --panel-active-height: clamp(208px, 31vh, 248px);
-}
-
-.panel[data-panel-id="discovery"] {
-  --panel-active-height: clamp(230px, 34vh, 318px);
-}
-
-.panel[data-panel-id="myspace"] {
-  --panel-active-height: clamp(190px, 27vh, 220px);
 }
 
 .panel:focus-visible {
@@ -103,17 +83,27 @@
 
 .marker {
   position: absolute;
-  top: calc((100% - 32px) * var(--panel-progress, 0) + 16px);
+  top: 16px;
   right: 8px;
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-  background: currentColor;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  min-width: 6px;
+  min-height: 6px;
   opacity: 0;
   transform: scale(0.35);
   transition:
     opacity 300ms ease-in-out,
     transform 300ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.markerDot {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: currentColor;
 }
 
 .active .marker {
@@ -123,23 +113,27 @@
 
 .copyStack {
   display: flex;
-  align-items: flex-start;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: center;
   flex-direction: column;
   gap: 0;
+  width: 100%;
   max-width: 100%;
+  min-height: 100%;
   padding-right: 0;
-  text-align: left;
+  text-align: center;
   transform: translate3d(0, 0, 0);
   transition: transform 500ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .label {
-  font-size: 18px;
-  font-weight: 560;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  text-transform: none;
+  font-size: clamp(20px, 1.35vw, 23px);
+  font-style: italic;
+  font-variation-settings: "wdth" 112, "GRAD" 42;
+  font-weight: 900;
+  line-height: 0.96;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
   transition: color 300ms ease-in-out;
 }
 
@@ -167,7 +161,7 @@
   }
 
   .label {
-    font-size: clamp(14px, 2.2vw, 18px);
+    font-size: clamp(16px, 2.5vw, 20px);
   }
 
   .summary {
@@ -177,7 +171,7 @@
   }
 
   .marker {
-    top: calc((100% - 30px) * var(--panel-progress, 0) + 15px);
+    top: 15px;
     right: 12px;
     transform: scale(0.3);
   }
@@ -199,7 +193,7 @@
   }
 
   .label {
-    font-size: clamp(13px, 3.8vw, 15px);
+    font-size: clamp(15px, 4.4vw, 18px);
     line-height: 0.96;
   }
 }

@@ -10,6 +10,10 @@ export default function DiscoveryContent(props: SharedContentProps) {
       eyebrow="Discovery"
       title="Curated campaigns are being staged."
       copy="Discovery is reserved for verified partner drops that can be ranked by persona, eligibility, and wallet context. The surface is ready; campaign inventory and claim actions will attach as the backend contract stabilizes."
+      lockWhenDisconnected
+      lockTitle="Sign in to match campaigns"
+      lockCopy="The campaign structure stays visible, but wallet-specific eligibility, saved opportunities, and claim context require a connected wallet."
+      lockActionLabel="SIGN IN"
       metrics={[
         { label: 'Catalog', value: 'Partner-led', meta: 'Campaign inventory will resolve from verified partner surfaces.' },
         { label: 'Match', value: 'Persona', meta: 'Gravii ID should drive eligibility, ordering, and campaign fit.' },

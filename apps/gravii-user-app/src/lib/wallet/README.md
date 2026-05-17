@@ -4,7 +4,8 @@ This folder owns wallet-provider configuration that is shared by auth and any fu
 
 Runtime note:
 
-- the `/sign-in` route layout owns the Reown AppKit provider so the launch shell does not load WalletConnect UI assets before the user chooses to sign in
+- explicit Launch App sign-in actions mount the Reown AppKit provider and open the WalletConnect/Reown wallet modal directly so the user can connect without leaving the current surface
+- the `/sign-in` route layout still owns the same provider for direct-link and external handoff fallbacks
 
 ## Current Files
 
@@ -21,7 +22,7 @@ Environment:
 - `NEXT_PUBLIC_REOWN_PROJECT_ID` is preferred
 - `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` is supported as a compatibility alias
 
-If neither value is present, the app still builds and renders, but the sign-in page warns that WalletConnect modal support needs a real Reown project ID before production use.
+If neither value is present, the app still builds and renders, but wallet sign-in falls back to an injected browser wallet and still needs a real Reown project ID before production WalletConnect support is complete.
 
 ### `accounts` dependency
 

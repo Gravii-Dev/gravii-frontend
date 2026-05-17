@@ -476,7 +476,7 @@ Response:
 }
 ```
 
-## 6. Standing
+## 6. Ranking
 
 ### GET `/api/v1/leaderboards/categories`
 

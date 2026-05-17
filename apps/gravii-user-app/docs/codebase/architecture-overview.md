@@ -13,7 +13,7 @@ Architecture describes the major responsibility boundaries in the app and how da
 In this repository, the high-level frontend architecture is:
 
 1. `src/app/page.tsx` acts as the single route entry point.
-2. `src/features/auth/auth-provider.tsx` owns client-side User API session bootstrap and explicit sign-in routing.
+2. `src/features/auth/auth-provider.tsx` owns client-side User API session bootstrap and the explicit in-app sign-in modal state.
 3. `src/features/launch-app/use-launch-shell.ts` owns shared shell state such as the active and hovered panel.
 4. `src/components/layout/*` renders the panel system around the feature content.
 5. `src/features/*` renders each product surface and computes feature-specific UI state.
@@ -58,7 +58,7 @@ The shell includes:
 - the panel opening and closing behavior in `src/components/layout/launch-panel`
 - the shared expanded frame in `src/components/layout/panel-shell`
 
-The shell does not own the full internal logic of Profile, Discovery, X-Ray, or Standing. It only places those features inside the panel system and coordinates top-level interaction.
+The shell does not own the full internal logic of Profile, Discovery, X-Ray, or Ranking. It only places those features inside the panel system and coordinates top-level interaction.
 
 ## Current Runtime Model
 
@@ -68,11 +68,12 @@ Important implications:
 
 - The main route is `/`.
 - Most interactive code is client-side.
-- Anonymous users can land on `/`; wallet sign-in uses WalletConnect/Reown AppKit when configured, with a browser-wallet fallback for local environments, after the explicit `SIGN IN` action routes to `/sign-in`.
+- Anonymous users can land on `/`; wallet sign-in opens the WalletConnect/Reown AppKit modal directly when configured, with a browser-wallet fallback for local environments and a small Gravii status overlay only during challenge, signing, verifying, or error states. The `/sign-in` route remains available for direct links and external handoffs.
 - The browser does not store the User API JWT. Wallet verification stores the token in an httpOnly same-origin cookie.
 - Browser API reads go through the same-origin `/api/user-api/*` backend-for-frontend route before reaching the User API.
 - `GRAVII ID` and `X-RAY` use live backend reads.
-- `STANDING`, `DISCOVERY`, and `MY SPACE` are reserved coming-soon surfaces.
+- `DISCOVERY` and `RANKING` are visible non-live surfaces with explicit sign-in gates where personalization is required.
+- `MY SPACE` is code-preserved but hidden from navigation and direct panel routing.
 - Mock-era reserved-surface data and view-model files have been removed; reserved surfaces stay empty until backend contracts are ready.
 
 At runtime, the flow is roughly:
@@ -105,15 +106,15 @@ The product currently exposes five surfaces:
 
 - Folder: `src/features/my-space`
 - Product label in the UI: `MY SPACE`
-- Main job: reserve the future personalized benefits surface
-- Current state: coming soon
+- Main job: preserve the future personalized benefits surface
+- Current state: hidden from navigation and direct panel routing
 
 ### 3. Discovery
 
 - Folder: `src/features/discovery`
 - Product label in the UI: `DISCOVERY`
-- Main job: reserve the future campaign discovery surface
-- Current state: coming soon
+- Main job: reserve the future campaign discovery surface while showing its structure behind a sign-in blur gate
+- Current state: visible shell, personalized campaign access gated
 
 ### 4. X-Ray
 
@@ -121,12 +122,12 @@ The product currently exposes five surfaces:
 - Product label in the UI: `X-RAY`
 - Main job: run live wallet analysis lookups, show credits, reopen history, render persisted result details, and provide the X-Ray-only checkout entry point
 
-### 5. Standing
+### 5. Ranking
 
 - Folder: `src/features/standing`
-- Product label in the UI: `STANDING`
-- Main job: reserve the future ranked standing surface
-- Current state: coming soon
+- Product label in the UI: `RANKING`
+- Main job: show public ranking context while gating the current wallet's rank behind sign-in
+- Current state: visible shell, wallet-specific rank gated
 
 ## Shared Systems
 
@@ -202,7 +203,8 @@ Covered today:
 - panel open and close behavior
 - sign-out button behavior through the mocked auth provider
 - anonymous launch route behavior and explicit sign-in routing
-- reserved Discovery and My Space coming-soon states
+- Discovery sign-in gate and hidden My Space navigation state
+- Ranking public-board and personal-rank gate behavior
 - X-Ray session-required behavior
 - X-Ray live-flow rendering through mocked User API helpers
 
@@ -210,7 +212,7 @@ The test setup mocks browser APIs such as canvas, `ResizeObserver`, and `matchMe
 
 ## What Changes As More APIs Arrive
 
-The current structure is already partially live-backed, but more responsibilities will shift as Standing, Discovery, and My Space receive backend contracts.
+The current structure is already partially live-backed, but more responsibilities will shift as Ranking, Discovery, and My Space receive backend contracts.
 
 ### Things that will likely stay the same
 

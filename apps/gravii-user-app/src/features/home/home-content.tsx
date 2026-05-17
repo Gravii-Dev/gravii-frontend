@@ -17,7 +17,7 @@ const productMap = [
     copy: "Read any wallet against the same identity graph.",
   },
   {
-    label: "Standing",
+    label: "Ranking",
     value: "Reputation",
     copy: "Prepare cohort rank, tier movement, and guarded signals.",
   },
@@ -48,7 +48,7 @@ export default function HomeContent({
         <div className={styles.heroAside}>
           <p>
             Gravii reads wallet behavior and turns it into a practical identity
-            workspace for persona, X-Ray, standing, and matched opportunities.
+            workspace for persona, X-Ray, ranking, and matched opportunities.
           </p>
           <ActionButton
             size="panel"

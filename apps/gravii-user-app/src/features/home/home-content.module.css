@@ -79,7 +79,7 @@
 
 .primaryAction {
   --button-front: var(--raw-orange);
-  --button-front-hover: var(--raw-ink);
+  --button-front-hover: var(--solid-ink-surface, var(--raw-ink));
   --button-text: var(--theme-on-accent, #fff8f0);
   --button-text-hover: var(--theme-on-accent, #fff8f0);
   align-self: flex-start;
@@ -102,13 +102,13 @@
 }
 
 .statusCardStrong {
-  background: var(--raw-ink);
-  color: var(--raw-paper);
+  background: var(--solid-ink-surface, var(--raw-ink));
+  color: var(--solid-ink-text, var(--raw-paper));
 }
 
 .statusCardStrong .cardLabel,
 .statusCardStrong p {
-  color: color-mix(in srgb, var(--raw-paper) 66%, transparent);
+  color: color-mix(in srgb, var(--solid-ink-text, var(--raw-paper)) 66%, transparent);
 }
 
 .statusCard strong,
