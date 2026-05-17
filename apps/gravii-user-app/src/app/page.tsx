@@ -204,14 +204,13 @@ export default function HomePage() {
           durationMs={THEME_TRANSITION_DURATION_MS}
         />
       ) : null}
-      {auth.isSignInModalOpen ? (
-        <UserSignInLauncher
-          key={auth.signInRequestKey}
-          nextPath={auth.signInNextPath}
-          onAuthenticated={auth.completeSignIn}
-          onCancel={auth.cancelSignIn}
-        />
-      ) : null}
+      <UserSignInLauncher
+        isOpen={auth.isSignInModalOpen}
+        nextPath={auth.signInNextPath}
+        onAuthenticated={auth.completeSignIn}
+        onCancel={auth.cancelSignIn}
+        requestKey={auth.signInRequestKey}
+      />
       <aside className={styles.sidebar} aria-label="Gravii workspace navigation">
         <button
           type="button"
