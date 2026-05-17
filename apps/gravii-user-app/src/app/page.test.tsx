@@ -18,8 +18,11 @@ type MockAuthState = {
 
 const authMock = {
   beginSignIn: vi.fn(),
+  cancelSignIn: vi.fn(),
+  completeSignIn: vi.fn(async () => null),
   refreshSession: vi.fn(),
   signOut: vi.fn(),
+  signInNextPath: "/",
   state: {
     isAuthenticated: true,
     status: "authenticated",
@@ -37,8 +40,13 @@ vi.mock("@/features/auth/auth-provider", () => {
   return {
     useUserAuth: () => ({
       beginSignIn: authMock.beginSignIn,
+      cancelSignIn: authMock.cancelSignIn,
+      completeSignIn: authMock.completeSignIn,
+      isSignInModalOpen: false,
       isAuthenticated: authMock.state.isAuthenticated,
       refreshSession: authMock.refreshSession,
+      signInNextPath: authMock.signInNextPath,
+      signInRequestKey: 0,
       signOut: authMock.signOut,
       status: authMock.state.status,
       user: authMock.state.user,
@@ -46,11 +54,19 @@ vi.mock("@/features/auth/auth-provider", () => {
   };
 });
 
+vi.mock("@/features/auth/user-sign-in-launcher", () => ({
+  UserSignInLauncher: () => null,
+}));
+
 describe("HomePage", () => {
   beforeEach(() => {
     authMock.beginSignIn.mockReset();
+    authMock.cancelSignIn.mockReset();
+    authMock.completeSignIn.mockReset();
+    authMock.completeSignIn.mockResolvedValue(null);
     authMock.refreshSession.mockReset();
     authMock.signOut.mockReset();
+    authMock.signInNextPath = "/";
     authMock.state = {
       isAuthenticated: true,
       status: "authenticated",
@@ -69,7 +85,7 @@ describe("HomePage", () => {
 
     render(<HomePage />);
 
-    const authButton = screen.getByRole("button", { name: "SIGN OUT" });
+    const authButton = screen.getAllByRole("button", { name: "SIGN OUT" })[0];
 
     await user.click(authButton);
 
@@ -98,9 +114,17 @@ describe("HomePage", () => {
     expect(screen.getByRole("button", { name: "GRAVII ID navigation" })).toBeInTheDocument();
 
     const navigation = screen.getByRole("navigation", { name: "Workspace sections" });
+    const navButtons = within(navigation).getAllByRole("button");
 
-    expect(within(navigation).getAllByRole("button")).toHaveLength(5);
+    expect(navButtons).toHaveLength(4);
+    expect(navButtons.map((button) => button.getAttribute("aria-label"))).toEqual([
+      "GRAVII ID navigation",
+      "X-RAY navigation",
+      "DISCOVERY navigation",
+      "RANKING navigation",
+    ]);
     expect(within(navigation).queryByRole("button", { name: "HOME navigation" })).not.toBeInTheDocument();
+    expect(within(navigation).queryByRole("button", { name: "MY SPACE navigation" })).not.toBeInTheDocument();
     expect(within(navigation).queryByText("01")).not.toBeInTheDocument();
   });
 
@@ -111,15 +135,52 @@ describe("HomePage", () => {
 
     await user.click(screen.getByRole("button", { name: "DISCOVERY navigation" }));
 
+    expect(screen.getByRole("button", { name: "DISCOVERY navigation" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
     expect(screen.getByRole("heading", { name: "DISCOVERY" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "HOME" })).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: "HOME" }).length).toBeGreaterThan(0);
 
-    await user.click(screen.getByRole("button", { name: "HOME" }));
+    await user.click(screen.getAllByRole("button", { name: "HOME" })[0]);
 
     expect(screen.getByRole("button", { name: "HOME navigation" })).toHaveAttribute(
       "aria-current",
       "page",
     );
-    expect(screen.queryByRole("heading", { name: "DISCOVERY" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "DISCOVERY navigation" })).not.toHaveAttribute(
+      "aria-current",
+    );
+  });
+
+  it("renders the session action in the top-right workspace area", async () => {
+    const user = userEvent.setup();
+    authMock.state = {
+      isAuthenticated: false,
+      status: "anonymous",
+      user: null,
+    };
+
+    render(<HomePage />);
+
+    expect(screen.getAllByRole("button", { name: "SIGN IN" }).length).toBeGreaterThanOrEqual(2);
+    expect(
+      within(screen.getByRole("article", { name: "HOME section" })).getAllByRole("button", {
+        name: "SIGN IN",
+      }).length,
+    ).toBeGreaterThan(0);
+
+    await user.click(screen.getByRole("button", { name: "X-RAY navigation" }));
+
+    expect(screen.getByRole("button", { name: "X-RAY navigation" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    expect(screen.getByRole("heading", { name: "X-RAY" })).toBeInTheDocument();
+    expect(
+      within(screen.getByRole("article", { name: "X-RAY section" })).getAllByRole("button", {
+        name: "SIGN IN",
+      }).length,
+    ).toBeGreaterThan(0);
   });
 });

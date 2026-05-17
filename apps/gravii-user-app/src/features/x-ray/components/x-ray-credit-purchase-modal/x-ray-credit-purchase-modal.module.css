@@ -90,17 +90,17 @@
 
 .secondary {
   --button-front: #f4eadf;
-  --button-front-hover: var(--raw-ink);
-  --button-text: var(--raw-ink);
-  --button-text-hover: var(--raw-paper);
+  --button-front-hover: var(--solid-ink-surface, var(--raw-ink));
+  --button-text: var(--solid-ink-surface, var(--raw-ink));
+  --button-text-hover: var(--solid-ink-text, var(--raw-paper));
   --button-border-color: transparent;
 }
 
 .primary {
   --button-front: var(--raw-orange);
-  --button-front-hover: var(--raw-ink);
-  --button-text: var(--raw-paper);
-  --button-text-hover: var(--raw-paper);
+  --button-front-hover: var(--solid-ink-surface, var(--raw-ink));
+  --button-text: var(--theme-on-accent, var(--raw-paper));
+  --button-text-hover: var(--solid-ink-text, var(--raw-paper));
   --button-border-color: transparent;
 }
 

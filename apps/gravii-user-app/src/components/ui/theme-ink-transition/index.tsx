@@ -20,7 +20,7 @@ type ShaderUniforms = {
 
 const THEME_COLORS = {
   light: [253 / 255, 250 / 255, 243 / 255],
-  dark: [31 / 255, 31 / 255, 31 / 255],
+  dark: [5 / 255, 5 / 255, 5 / 255],
 } satisfies Record<ThemeName, readonly [number, number, number]>;
 
 const FALLBACK_WIDTH = 360;

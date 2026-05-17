@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties, type ReactElement } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactElement,
+} from "react";
 
 import LaunchPanel from "@/components/layout/launch-panel";
 import PanelShell from "@/components/layout/panel-shell";
@@ -8,9 +14,10 @@ import ActionButton from "@/components/ui/action-button";
 import GraviiLogo from "@/components/ui/gravii-logo";
 import ThemeInkTransition from "@/components/ui/theme-ink-transition";
 import { useUserAuth } from "@/features/auth/auth-provider";
+import { UserSignInLauncher } from "@/features/auth/user-sign-in-launcher";
 import DiscoveryContent from "@/features/discovery/discovery-content";
 import HomeContent from "@/features/home/home-content";
-import { PANELS } from "@/features/launch-app/panel-config";
+import { VISIBLE_PANELS } from "@/features/launch-app/panel-config";
 import type { PanelId, SharedContentProps } from "@/features/launch-app/types";
 import { useLaunchShell } from "@/features/launch-app/use-launch-shell";
 import MySpaceContent from "@/features/my-space/my-space-content";
@@ -33,12 +40,14 @@ const CONTENT_MAP = {
   myspace: MySpaceContent,
 } satisfies Record<PanelId, (props: SharedContentProps) => ReactElement | null>;
 
-const NAV_PANELS = PANELS.filter((panel) => panel.id !== "home");
+const NAV_PANELS = VISIBLE_PANELS.filter((panel) => panel.id !== "home");
+const SECTION_COUNT = NAV_PANELS.length;
 const THEME_TRANSITION_DURATION_MS = 860;
 const THEME_TRANSITION_CLEANUP_DELAY_MS = THEME_TRANSITION_DURATION_MS + 40;
 
-type WorkspaceBoardStyle = CSSProperties & {
-  "--workspace-accent": string;
+type WorkspaceSectionStyle = CSSProperties & {
+  "--section-accent": string;
+  "--section-on-accent": string;
 };
 
 type LaunchTheme = "light" | "dark";
@@ -50,7 +59,13 @@ type ThemeTransition = {
 };
 
 function findPanel(panelId: PanelId) {
-  return PANELS.find((panel) => panel.id === panelId) ?? PANELS[0];
+  return VISIBLE_PANELS.find((panel) => panel.id === panelId) ?? VISIBLE_PANELS[0];
+}
+
+function getSectionDotCount(panelId: PanelId) {
+  const panelIndex = NAV_PANELS.findIndex((panel) => panel.id === panelId);
+
+  return panelIndex >= 0 ? panelIndex + 1 : 0;
 }
 
 export default function HomePage() {
@@ -59,21 +74,21 @@ export default function HomePage() {
   const [theme, setTheme] = useState<LaunchTheme>("light");
   const [themeTransition, setThemeTransition] = useState<ThemeTransition | null>(null);
   const themeTransitionTimeoutRef = useRef<number | null>(null);
-  const [panelScrollState, setPanelScrollState] = useState<{
-    panelId: PanelId;
-    progress: number;
-  }>({
-    panelId: "home",
-    progress: 0,
-  });
   const isConnected = auth.isAuthenticated;
   const activePanel = findPanel(shell.activePanel);
   const Content = CONTENT_MAP[activePanel.id];
-  const usesDarkContent = activePanel.dark || Boolean(activePanel.hoverDark);
   const isDarkTheme = theme === "dark";
-  const workspaceBoardStyle: WorkspaceBoardStyle = {
-    "--workspace-accent": activePanel.id === "home" ? "var(--raw-line)" : activePanel.bg,
+  const usesDarkContent = isDarkTheme || activePanel.dark || Boolean(activePanel.hoverDark);
+  const authActionLabel = isConnected ? "SIGN OUT" : "SIGN IN";
+  const authButtonClassName = `${styles.workspaceAuthButton} ${
+    isConnected ? styles.workspaceAuthButtonConnected : styles.workspaceAuthButtonDisconnected
+  }`;
+  const sectionAccent = activePanel.id === "home" ? "var(--solid-ink-surface)" : activePanel.bg;
+  const sectionStyle: WorkspaceSectionStyle = {
+    "--section-accent": sectionAccent,
+    "--section-on-accent": activePanel.id === "home" || activePanel.dark ? "var(--theme-on-accent)" : "var(--raw-ink)",
   };
+  const activeSectionDotCount = getSectionDotCount(activePanel.id);
 
   useEffect(() => {
     if (isConnected) {
@@ -85,6 +100,10 @@ export default function HomePage() {
   }, [isConnected]);
 
   useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+  }, [theme]);
+
+  useEffect(() => {
     return () => {
       if (themeTransitionTimeoutRef.current !== null) {
         window.clearTimeout(themeTransitionTimeoutRef.current);
@@ -94,11 +113,8 @@ export default function HomePage() {
     };
   }, []);
 
-  function handlePanelScrollProgress(progress: number) {
-    setPanelScrollState({
-      panelId: shell.activePanel,
-      progress,
-    });
+  function handleNavigate(panelId: PanelId) {
+    shell.openPanel(panelId);
   }
 
   function handleThemeToggle() {
@@ -138,6 +154,28 @@ export default function HomePage() {
     }, THEME_TRANSITION_CLEANUP_DELAY_MS);
   }
 
+  function handleAuthAction() {
+    if (isConnected) {
+      void auth.signOut();
+      return;
+    }
+
+    auth.beginSignIn();
+  }
+
+  function renderAuthAction() {
+    return (
+      <ActionButton
+        size="compact"
+        className={authButtonClassName}
+        pressed={isConnected}
+        onClick={handleAuthAction}
+      >
+        {authActionLabel}
+      </ActionButton>
+    );
+  }
+
   if (auth.status === "loading") {
     return (
       <div className={styles.loadingState}>
@@ -166,6 +204,14 @@ export default function HomePage() {
           durationMs={THEME_TRANSITION_DURATION_MS}
         />
       ) : null}
+      {auth.isSignInModalOpen ? (
+        <UserSignInLauncher
+          key={auth.signInRequestKey}
+          nextPath={auth.signInNextPath}
+          onAuthenticated={auth.completeSignIn}
+          onCancel={auth.cancelSignIn}
+        />
+      ) : null}
       <aside className={styles.sidebar} aria-label="Gravii workspace navigation">
         <button
           type="button"
@@ -173,7 +219,7 @@ export default function HomePage() {
           aria-current={shell.activePanel === "home" ? "page" : undefined}
           aria-label="HOME navigation"
           data-panel-id="home"
-          onClick={() => shell.openPanel("home")}
+          onClick={() => handleNavigate("home")}
         >
           <GraviiLogo decorative variant="symbol" className={styles.headerSymbol} />
           <span className={styles.headerWordmarkText}>gravii</span>
@@ -181,14 +227,14 @@ export default function HomePage() {
         </button>
 
         <nav className={styles.navList} aria-label="Workspace sections">
-          {NAV_PANELS.map((panel) => (
+          {NAV_PANELS.map((panel, index) => (
             <LaunchPanel
               key={panel.id}
               panel={panel}
               isActive={shell.activePanel === panel.id}
               isHovered={shell.hoveredPanel === panel.id && shell.activePanel !== panel.id}
-              activeProgress={panelScrollState.panelId === panel.id ? panelScrollState.progress : 0}
-              onOpen={shell.openPanel}
+              markerCount={index + 1}
+              onOpen={handleNavigate}
               onHoverChange={shell.setHoveredPanel}
             />
           ))}
@@ -215,9 +261,9 @@ export default function HomePage() {
             size="compact"
             className={isConnected ? styles.sessionButtonConnected : styles.sessionButtonDisconnected}
             pressed={isConnected}
-            onClick={isConnected ? () => void auth.signOut() : auth.beginSignIn}
+            onClick={handleAuthAction}
           >
-            {isConnected ? "SIGN OUT" : "SIGN IN"}
+            {authActionLabel}
           </ActionButton>
         </div>
       </aside>
@@ -226,33 +272,60 @@ export default function HomePage() {
         <section
           className={styles.workspaceBoard}
           data-section={activePanel.id}
-          style={workspaceBoardStyle}
         >
-          {activePanel.id === "home" ? (
-            <div className={styles.homeShell}>
-              <Content
-                dark={usesDarkContent}
-                connected={isConnected}
-                onConnect={auth.beginSignIn}
-                onNavigate={shell.openPanel}
-              />
+          <article
+            key={activePanel.id}
+            className={styles.activeSection}
+            data-active="true"
+            data-section-id={activePanel.id}
+            aria-label={`${activePanel.tab} section`}
+            style={sectionStyle}
+          >
+            <div className={styles.sectionTopBar}>
+              <div className={styles.sectionTopCopy}>
+                <span>{activePanel.tab}</span>
+              </div>
+              {activeSectionDotCount > 0 ? (
+                <div
+                  className={styles.sectionTopMeta}
+                  aria-label={`${activePanel.tab} section ${activeSectionDotCount} of ${SECTION_COUNT}`}
+                >
+                  {Array.from({ length: activeSectionDotCount }, (_, index) => (
+                    <span className={styles.sectionTopDot} key={`${activePanel.id}-section-dot-${index}`} />
+                  ))}
+                </div>
+              ) : null}
+              <div className={styles.sectionTopActions}>{renderAuthAction()}</div>
             </div>
-          ) : (
-            <PanelShell
-              title={activePanel.tab}
-              dark={usesDarkContent}
-              actionLabel="HOME"
-              onClose={() => shell.openPanel("home")}
-              onScrollProgress={handlePanelScrollProgress}
-            >
-              <Content
-                dark={usesDarkContent}
-                connected={isConnected}
-                onConnect={auth.beginSignIn}
-                onNavigate={shell.openPanel}
-              />
-            </PanelShell>
-          )}
+
+            <div className={styles.sectionFrame}>
+              {activePanel.id === "home" ? (
+                <div className={styles.homeShell}>
+                  <Content
+                    dark={usesDarkContent}
+                    connected={isConnected}
+                    onConnect={auth.beginSignIn}
+                    onNavigate={handleNavigate}
+                  />
+                </div>
+              ) : (
+                <PanelShell
+                  title={activePanel.tab}
+                  dark={usesDarkContent}
+                  className={styles.sectionPanelShell}
+                  actionLabel="HOME"
+                  onClose={() => handleNavigate("home")}
+                >
+                  <Content
+                    dark={usesDarkContent}
+                    connected={isConnected}
+                    onConnect={auth.beginSignIn}
+                    onNavigate={handleNavigate}
+                  />
+                </PanelShell>
+              )}
+            </div>
+          </article>
         </section>
       </main>
     </div>

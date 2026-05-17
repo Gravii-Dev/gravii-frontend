@@ -16,7 +16,7 @@ It does that by combining:
 - secondary personas
 - tier and reputation status
 - summary metrics
-- cross-links into other surfaces such as `My Space` and `X-Ray`
+- cross-links into other surfaces such as `Discovery` and `X-Ray`
 - a branded identity presentation layer that prioritizes persona status over decorative marks
 
 ## Main Files
@@ -30,7 +30,7 @@ Responsibilities:
 - render the connected state
 - render the disconnected, locked state
 - render the profile hero, metrics, and navigation cards
-- expose navigation into `myspace` and `lookup`
+- expose navigation into `discovery` and `lookup`
 - keep the identity loading, retry, and locked states visually aligned with the brand system
 
 Important note:
@@ -95,7 +95,7 @@ Current inputs:
 Current outputs:
 
 - the `GRAVII ID` panel content
-- navigation calls into `myspace` and `lookup`
+- navigation calls into `discovery` and `lookup`
 - a share action for social posting
 
 ## What This Feature Owns

@@ -10,8 +10,8 @@ Steps:
 
 1. User lands in Launch App.
 2. App shows the launch surface in anonymous mode with an explicit `SIGN IN` action.
-3. User chooses `SIGN IN` and enters the `/sign-in` wallet flow.
-4. User connects a supported wallet.
+3. User chooses `SIGN IN` and the WalletConnect/Reown wallet modal opens directly without leaving the current surface.
+4. User connects a supported wallet through WalletConnect/Reown AppKit or the browser-wallet fallback.
 5. App resolves wallet identity and session.
 6. App requests profile summary for the connected wallet.
 7. App renders the Profile surface.
@@ -127,7 +127,7 @@ Success outcome:
 
 - user can revisit earlier analyses without resubmitting
 
-## Flow 6: Standing Review
+## Flow 6: Ranking Review
 
 Goal:
 
@@ -135,15 +135,15 @@ Goal:
 
 Steps:
 
-1. User opens `Standing`.
+1. User opens `Ranking`.
 2. App loads default leaderboard category.
-3. App loads user standing and top entries for the selected category.
+3. App shows public ranking entries for the selected category.
 4. User switches leaderboard category.
-5. App refreshes category-specific standing and table data.
+5. App prompts sign-in before showing the current wallet's personal rank.
 
 Success outcome:
 
-- user understands current rank, percentile, and strongest category
+- user understands the public ranking board and signs in when they want wallet-specific rank
 
 Failure states:
 
@@ -162,7 +162,7 @@ Steps:
 1. User finds a locked campaign in My Space or Discovery.
 2. User opens qualification detail.
 3. App shows missing persona, tier, or activity requirement.
-4. User navigates to Profile or Standing from the CTA.
+4. User navigates to Profile or Ranking from the CTA.
 5. User understands what behavior or status needs improvement.
 
 Success outcome:
@@ -184,12 +184,10 @@ Every major surface needs these shared states:
 
 The current prototype implies these deep-link directions:
 
-- Profile -> My Space
+- Profile -> Discovery
 - Profile -> X-Ray
-- My Space -> Discovery
-- My Space -> Profile
 - Discovery qualification panel -> Profile
-- Discovery qualification panel -> Standing
+- Discovery qualification panel -> Ranking
 
 The production app should preserve those shortcuts.
 

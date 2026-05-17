@@ -1,4 +1,4 @@
-import type { PanelConfig } from "@/features/launch-app/types";
+import type { PanelConfig, PanelId } from "@/features/launch-app/types";
 
 export const PANELS: PanelConfig[] = [
   {
@@ -36,19 +36,8 @@ export const PANELS: PanelConfig[] = [
     xray: true,
   },
   {
-    id: "leaderboard",
-    num: "03",
-    tab: "STANDING",
-    sub: "COMING SOON",
-    editorCopy: "Rankings, soon.",
-    summary: "Reserved reputation and cohort rank surface.",
-    dark: true,
-    bg: "#0e0e0e",
-    bgHover: "#0e0e0e",
-  },
-  {
     id: "discovery",
-    num: "04",
+    num: "03",
     tab: "DISCOVERY",
     sub: "COMING SOON",
     editorCopy: "Campaigns, soon.",
@@ -56,6 +45,17 @@ export const PANELS: PanelConfig[] = [
     dark: true,
     bg: "#2835f8",
     bgHover: "#2835f8",
+  },
+  {
+    id: "leaderboard",
+    num: "04",
+    tab: "RANKING",
+    sub: "PUBLIC RANKS",
+    editorCopy: "Wallet ranking.",
+    summary: "Public rank board with wallet-specific standing gated by sign-in.",
+    dark: true,
+    bg: "#0fa968",
+    bgHover: "#0fa968",
   },
   {
     id: "myspace",
@@ -69,3 +69,10 @@ export const PANELS: PanelConfig[] = [
     bgHover: "#ff003d",
   },
 ];
+
+// Hidden, not deleted: My Space is intentionally kept in code for the later
+// personalized-feed rollout, but it is removed from the current navigation and
+// direct panel routing until the product direction is ready again.
+export const HIDDEN_PANEL_IDS = new Set<PanelId>(["myspace"]);
+
+export const VISIBLE_PANELS = PANELS.filter((panel) => !HIDDEN_PANEL_IDS.has(panel.id));

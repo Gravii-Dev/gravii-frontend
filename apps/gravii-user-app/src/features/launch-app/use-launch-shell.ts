@@ -1,17 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
+import { VISIBLE_PANELS } from "@/features/launch-app/panel-config";
 import type { PanelId } from "@/features/launch-app/types";
 
-const panelIds = new Set<PanelId>([
-  "home",
-  "profile",
-  "discovery",
-  "leaderboard",
-  "lookup",
-  "myspace",
-]);
+const panelIds = new Set<PanelId>(VISIBLE_PANELS.map((panel) => panel.id));
 
 function isPanelId(value: string | null): value is PanelId {
   return value !== null && panelIds.has(value as PanelId);
@@ -30,15 +24,24 @@ export function useLaunchShell() {
   const [activePanel, setActivePanel] = useState<PanelId>(readInitialPanel);
   const [hoveredPanel, setHoveredPanel] = useState<PanelId | null>(null);
 
+  const openPanel = useCallback((panelId: PanelId) => {
+    if (!panelIds.has(panelId)) {
+      setActivePanel("home");
+      return;
+    }
+
+    setActivePanel(panelId);
+  }, []);
+
   const shell = useMemo(
     () => ({
       activePanel,
       hoveredPanel,
-      openPanel: setActivePanel,
+      openPanel,
       closePanel: () => setActivePanel("home"),
       setHoveredPanel,
     }),
-    [activePanel, hoveredPanel],
+    [activePanel, hoveredPanel, openPanel],
   );
 
   return shell;

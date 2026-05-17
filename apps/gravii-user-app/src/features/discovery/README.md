@@ -21,6 +21,7 @@ This is the main surface component.
 Responsibilities:
 
 - render the reserved/coming-soon content
+- keep the Discovery structure visible behind a sign-in blur gate for anonymous users
 - render discovery-specific readiness metrics and launch-stage visibility
 - provide quick routes back to live Gravii ID and X-Ray surfaces
 - keep the panel wording aligned with the current rollout priority

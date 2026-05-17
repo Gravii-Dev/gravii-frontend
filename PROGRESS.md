@@ -2,6 +2,28 @@
 
 Append only. Use newest entries first. Record what changed, how it was checked, and the next handoff point. Do not use this file as a backlog or a plan.
 
+## 2026-05-14
+
+- Added the first Codex Desktop harness layer for Gravii frontend work:
+  - added root `check` and `verify` scripts so Codex has stable completion gates
+  - added `check:user-landing` for focused landing-page work
+  - documented active Codex context sources, inactive Claude/Gemini/Cursor context policy, verification gates, task routines, and handoff rules in `docs/codex-harness.md`
+  - updated root and app-local `AGENTS.md` files to point Codex at the new harness conventions
+- Related non-monorepo Gravii repos were also given matching local gates:
+  - `gravii-testportal`: `typecheck`, `check`, and `verify`
+  - `gravii-api`: `check` and `verify`
+- Verification:
+  - `cd /Users/kxwxn/Gravii/FRONTEND && bun run check`
+  - `cd /Users/kxwxn/Gravii/FRONTEND && bun run check:user-landing`
+  - `cd /Users/kxwxn/Gravii/gravii-api && npm run verify`
+  - `cd /Users/kxwxn/Gravii/gravii-testportal && npm run verify`
+- Notes:
+  - `gravii-testportal` still has two existing `@next/next/no-img-element` warnings.
+  - `gravii-testportal` build emits a Next.js workspace-root inference warning because multiple lockfiles exist above the repo.
+  - `gravii-api` dependency install surfaced `npm audit` results with 17 vulnerabilities; no audit fix was attempted in this harness pass.
+- Next handoff:
+  - Use the new `check` script by default before finishing workspace code changes, and reserve `verify` for build/config/deployment-risk changes.
+
 ## 2026-05-12
 
 - Cleared the current frontend dependency vulnerability set:

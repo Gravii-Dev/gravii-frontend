@@ -15,17 +15,19 @@ import {
   readUserSession,
   type UserAuthUser,
 } from '@/lib/auth/user-api'
-import {
-  buildUserSignInHref,
-  normalizeUserNextPath,
-} from '@/lib/auth/shared'
+import { normalizeUserNextPath, userDefaultRedirectPath } from '@/lib/auth/shared'
 
 type UserAuthStatus = 'loading' | 'authenticated' | 'anonymous'
 
 interface UserAuthContextValue {
   beginSignIn: () => void
+  cancelSignIn: () => void
+  completeSignIn: () => Promise<UserAuthUser | null>
+  isSignInModalOpen: boolean
   isAuthenticated: boolean
   refreshSession: () => Promise<UserAuthUser | null>
+  signInNextPath: string
+  signInRequestKey: number
   signOut: () => Promise<void>
   status: UserAuthStatus
   user: UserAuthUser | null
@@ -43,6 +45,9 @@ export function UserAuthProvider({
   const searchParams = useSearchParams()
   const [user, setUser] = useState<UserAuthUser | null>(null)
   const [status, setStatus] = useState<UserAuthStatus>('loading')
+  const [isSignInModalOpen, setIsSignInModalOpen] = useState(false)
+  const [signInNextPath, setSignInNextPath] = useState(userDefaultRedirectPath)
+  const [signInRequestKey, setSignInRequestKey] = useState(0)
 
   const nextPath = useMemo(() => {
     const currentSearch = searchParams.toString()
@@ -54,8 +59,10 @@ export function UserAuthProvider({
   }, [pathname, searchParams])
 
   const beginSignIn = useCallback(() => {
-    router.push(buildUserSignInHref(nextPath))
-  }, [nextPath, router])
+    setSignInNextPath(nextPath)
+    setSignInRequestKey((currentKey) => currentKey + 1)
+    setIsSignInModalOpen(true)
+  }, [nextPath])
 
   const bootstrapSession = useCallback(async () => {
     const nextUser = await readUserSession()
@@ -85,6 +92,17 @@ export function UserAuthProvider({
     return null
   }, [])
 
+  const cancelSignIn = useCallback(() => {
+    setIsSignInModalOpen(false)
+  }, [])
+
+  const completeSignIn = useCallback(async () => {
+    const nextUser = await refreshSession()
+    setIsSignInModalOpen(false)
+
+    return nextUser
+  }, [refreshSession])
+
   const signOut = useCallback(async () => {
     await clearUserSession()
     setUser(null)
@@ -105,13 +123,29 @@ export function UserAuthProvider({
   const value = useMemo<UserAuthContextValue>(
     () => ({
       beginSignIn,
+      cancelSignIn,
+      completeSignIn,
+      isSignInModalOpen,
       isAuthenticated: status === 'authenticated' && user !== null,
       refreshSession,
+      signInNextPath,
+      signInRequestKey,
       signOut,
       status,
       user,
     }),
-    [beginSignIn, refreshSession, signOut, status, user]
+    [
+      beginSignIn,
+      cancelSignIn,
+      completeSignIn,
+      isSignInModalOpen,
+      refreshSession,
+      signInNextPath,
+      signInRequestKey,
+      signOut,
+      status,
+      user,
+    ]
   )
 
   return (

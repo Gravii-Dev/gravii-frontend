@@ -54,13 +54,13 @@ Responsibilities:
 
 ### `my-space`
 
-Owns the personalized benefit feed surface.
+Owns the preserved personalized benefit feed surface.
 
 Responsibilities:
 
-- rendering the reserved personalized feed state
+- keeping the reserved personalized feed implementation available for the later rollout
 - linking back into `GRAVII ID` and `X-Ray`
-- staying empty of campaign data until the backend contract is ready
+- staying hidden from current navigation and direct panel routing until the product scope reactivates it
 
 ### `discovery`
 
@@ -70,6 +70,7 @@ Responsibilities:
 
 - rendering the reserved partner campaign state
 - explaining the future eligibility and claim path
+- showing the campaign structure behind a sign-in blur gate for anonymous users
 - staying empty of catalog data until the backend contract is ready
 
 ### `x-ray`
@@ -87,13 +88,13 @@ Responsibilities:
 
 ### `standing`
 
-Owns the leaderboard surface.
+Owns the `RANKING` surface.
 
 Responsibilities:
 
-- rendering the reserved rank state
-- explaining the future reputation and cohort model
-- staying empty of leaderboard data until the backend contract is ready
+- rendering the public ranking board shell
+- keeping the personal wallet rank card gated behind sign-in
+- explaining the reputation and cohort model without pretending backend-specific personal rank data is live
 
 ## Why This Is Better Than a Flat `components/panels` Folder
 

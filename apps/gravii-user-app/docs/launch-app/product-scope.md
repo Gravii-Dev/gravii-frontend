@@ -116,16 +116,16 @@ Must show:
 - result dashboard
 - recent analysis history
 
-### 5. Standing
+### 5. Ranking
 
 Purpose:
 
-- show the user's ranking and peer context
+- show public wallet ranking context and the signed user's own rank when available
 
 Must show:
 
 - multiple leaderboard categories
-- user rank
+- signed user rank
 - total population context
 - percentile
 - weekly movement
@@ -166,12 +166,13 @@ Current prototype:
 - live wallet-backed authentication for supported user flows
 - live Gravii ID and X-Ray reads through the User API
 - X-Ray credit checkout entry UX that expects a backend-owned Stripe Checkout Session
-- reserved `Standing`, `Discovery`, and `My Space` surfaces until backend contracts are ready
+- visible non-live `Discovery` and `Ranking` surfaces until backend contracts are ready
+- code-preserved hidden `My Space` surface until the personalized feed returns to scope
 - no frontend-side payment fulfillment or credit granting; payment fulfillment remains a backend/webhook responsibility
 
 MVP target:
 
-- the same five surfaces backed by real APIs and durable data
+- the visible surfaces backed by real APIs and durable data, plus the reactivated My Space surface when its product scope is ready
 
 ## Functional Requirements
 

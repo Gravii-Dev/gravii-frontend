@@ -8,7 +8,7 @@ The goal is not just to restyle screens. The goal is to create a stable product 
 
 - live Gravii ID
 - live X-Ray analysis
-- future Standing
+- future Ranking
 - future Discovery
 - future My Space
 - shared Gravii frontend conventions across user-facing surfaces
@@ -17,7 +17,7 @@ The goal is not just to restyle screens. The goal is to create a stable product 
 
 The current redesign direction uses a Raw Materials-inspired workspace shell: the logo tile acts as Home, the left rail owns the product sections, and the right board owns the active workspace.
 
-The earlier `Identity Command Center` option is not the active direction for this app. Instead, the design system should improve the existing five ordered surfaces with Slush-inspired foundations from the local reference file at `/Users/kxwxn/Downloads/index.html`.
+The earlier `Identity Command Center` option is not the active direction for this app. Instead, the design system should improve the currently visible ordered surfaces with Slush-inspired foundations from the local reference file at `/Users/kxwxn/Downloads/index.html`.
 
 - high-contrast ink and paper foundations
 - restrained accent tokens: orange for primary action, blue/violet/black for navigation surfaces, and paper for content surfaces
@@ -26,7 +26,7 @@ The earlier `Identity Command Center` option is not the active direction for thi
 - solid pill buttons with tonal hover motion
 - square or rounded card forms with bold color fills
 - smoother hover, focus, and active panel motion using elastic easing
-- polished reserved states for `STANDING`, `DISCOVERY`, and `MY SPACE`
+- polished reserved or gated states for `RANKING`, `DISCOVERY`, and hidden code-preserved `MY SPACE`
 - no mixed glass, caustic, reflection, or backdrop-blur material inside content surfaces
 
 ## Implemented Foundation Slice
@@ -35,7 +35,7 @@ The current implementation slice applies the Raw Materials-inspired direction wi
 
 - `src/app/globals.css` owns the solid paper/ink color, radius, border, shadow, and motion primitives, while legacy token names remain mapped for existing feature modules.
 - font role tokens are resolved on `body` so the Next.js local font variables are available before `--font-ui`, `--font-display`, and `--font-accent` are consumed.
-- `src/app/page.module.css` keeps the logo Home control plus five ordered navigation sections and adds a mobile horizontal scroll treatment for the rail.
+- `src/app/page.module.css` keeps the logo Home control plus the visible navigation sections and adds a mobile horizontal scroll treatment for the rail.
 - `src/components/layout/launch-panel` and `src/components/layout/panel-shell` carry the shared solid navigation shell, oversized active titles, and workspace affordances.
 - `src/components/ui/action-button` carries the shared solid pill action pattern.
 - `src/features/profile`, `src/features/x-ray`, and reserved surfaces inherit the same solid paper/ink material contract through global tokens and runtime material neutralization.
@@ -110,7 +110,7 @@ Recommended slice order:
 4. Gravii ID surface
 5. X-Ray surface
 6. reserved surfaces
-7. future Discovery, My Space, and Standing production surfaces
+7. future Discovery, My Space, and Ranking production surfaces
 
 ## Proposed Design Token Model
 
@@ -345,7 +345,7 @@ Exit criteria:
 Deliverables:
 
 - redesign `LaunchPanel` and `PanelShell` against tokens
-- keep all five surfaces on the unified `LaunchPanel` shell
+- keep all visible surfaces on the unified `LaunchPanel` shell
 - add keyboard and focus behavior checks
 - verify responsive behavior
 
@@ -360,7 +360,7 @@ Deliverables:
 
 - redesign `GRAVII ID` using identity and metric primitives
 - redesign `X-RAY` using analytical dashboard primitives
-- keep Standing, Discovery, and My Space as polished reserved states until backend contracts exist
+- keep Ranking and Discovery as polished visible gated states, while My Space stays hidden until its backend contract and product scope return
 
 Exit criteria:
 
@@ -371,7 +371,7 @@ Exit criteria:
 
 Deliverables:
 
-- apply the same primitives to future Standing, Discovery, and My Space backend-backed surfaces
+- apply the same primitives to future Ranking, Discovery, and My Space backend-backed surfaces
 - avoid resurrecting stale mock-era UI unless it is intentionally redesigned
 
 Exit criteria:

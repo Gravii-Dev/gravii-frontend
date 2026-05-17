@@ -59,9 +59,16 @@ Run workspace tasks:
 bun run build
 bun run lint
 bun run typecheck
+bun run check
+bun run verify
 bun run typecheck:user-landing
+bun run check:user-landing
 bun run test:e2e
 ```
+
+Use `bun run check` as the default completion gate for code changes. Use
+`bun run verify` when build behavior, routing, workspace config, or deployment
+risk is involved.
 
 ## Notes
 
@@ -78,6 +85,7 @@ bun run test:e2e
 ## Docs
 
 - `AGENTS.md`: workspace-level operating rules plus cross-session handoff conventions
+- `docs/codex-harness.md`: Codex Desktop operating harness, verification gates, and task routines
 - `PLAN.md`: active multi-step execution plan when a workstream is in progress
 - `PROGRESS.md`: append-only work log and handoff history
 - `TODO.md`: durable backlog for cross-session work
@@ -96,3 +104,4 @@ bun run test:e2e
 - `docs/frontend-auth-rollout-status.md`: current frontend auth rollout status, QA flow, and next frontend work
 - `docs/backend-auth-handoff.md`: backend-facing auth API contract for user, partner, and admin surfaces
 - `docs/frontend-data-api-map.md`: frontend-to-backend API ownership map for landing, user, partner, and admin surfaces
+- `apps/gravii-backoffice/README.md`: internal admin and operations app scope, structure, and verification notes

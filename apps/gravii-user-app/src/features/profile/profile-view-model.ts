@@ -118,7 +118,7 @@ export function getProfileSnapshot(identity: GraviiIdentity): ProfileSnapshot {
       activeChains.length > 0
         ? activeChains.join(' · ')
         : 'Primary footprint',
-    matchedLabel: 'MY SPACE →',
+    matchedLabel: 'DISCOVERY →',
     matchedCount: formatOptionalCount(identity.matchedCampaignsCount),
     nftsCollected: formatOptionalCount(identity.nftsCollectedCount),
     personaIndex: findPersonaIndex(identity.topPersona),

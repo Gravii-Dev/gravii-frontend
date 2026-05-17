@@ -1,284 +1,257 @@
 .root {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  color: var(--standing-text);
+  --ranking-text: var(--color-text-primary);
+  --ranking-sub: var(--color-text-secondary);
+  --ranking-muted: var(--color-text-muted);
+  --ranking-card: var(--color-surface-front);
+  --ranking-card-strong: var(--color-surface-hover);
+  --ranking-accent: #0fa968;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: clamp(0.8rem, 1.4vw, 1.1rem);
+  min-height: 100%;
+  color: var(--ranking-text);
 }
 
-.rootDark {
-  --standing-text: var(--color-text-primary);
-  --standing-sub: var(--color-text-secondary);
-  --standing-card-border: var(--color-border-primary);
-  --standing-card-background: var(--color-surface-front);
-}
-
+.rootDark,
 .rootLight {
-  --standing-text: var(--color-text-primary);
-  --standing-sub: var(--color-text-secondary);
-  --standing-card-border: var(--color-border-primary);
-  --standing-card-background: var(--color-surface-front);
+  color: var(--ranking-text);
 }
 
-.lead {
-  font-family: var(--font-serif);
-  font-size: 34px;
-  font-weight: 700;
-  line-height: 1.4;
-  margin: 0 0 18px;
-}
-
-.copy {
-  font-family: var(--font-ui);
-  color: var(--standing-sub);
-  font-size: 17px;
-  line-height: 1.7;
-  margin: 0 0 32px;
-}
-
-.heroCard {
+.hero,
+.board,
+.personalArea,
+.personalPreview,
+.signInCard {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background:
-    linear-gradient(145deg, var(--liquid-glass-fill), var(--liquid-glass-fill-soft)),
-    var(--standing-card-background);
-  backdrop-filter: var(--liquid-glass-blur);
-  -webkit-backdrop-filter: var(--liquid-glass-blur);
-  box-shadow:
-    inset 0 1px 0 var(--liquid-glass-rim),
-    inset 0 -1px 0 var(--liquid-glass-chroma-b);
-  margin-bottom: 32px;
   border: 0;
-  border-radius: 14px;
-  padding: 28px 32px;
+  border-radius: var(--slush-radius-card);
+  background: var(--ranking-card);
 }
 
-.heroCard::before,
-.tableHeader::before,
-.row::before,
-.myRow::before {
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.85fr);
+  gap: clamp(1rem, 2vw, 1.6rem);
+  align-items: end;
+  padding: clamp(1.2rem, 2.7vw, 2.2rem);
+}
+
+.hero::before,
+.board::before,
+.personalPreview::before,
+.signInCard::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
   border-radius: inherit;
-  pointer-events: none;
   background:
-    radial-gradient(ellipse at 18% 0%, var(--liquid-glass-rim) 0%, transparent 34%),
-    linear-gradient(118deg, transparent 0 34%, var(--liquid-glass-caustic) 50%, transparent 68%);
+    radial-gradient(ellipse at 18% 0%, var(--liquid-glass-rim-strong) 0%, transparent 32%),
+    linear-gradient(118deg, transparent 0 34%, var(--liquid-glass-caustic) 48%, transparent 66%);
   filter: url("#gravii-liquid-glass");
-  opacity: 0.48;
+  opacity: 0.34;
 }
 
-.heroStats {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 18px;
+.eyebrow {
+  display: inline-flex;
+  color: var(--ranking-muted);
+  font-size: var(--type-eyebrow-size);
+  font-weight: var(--type-eyebrow-weight);
+  letter-spacing: var(--type-eyebrow-tracking);
+  text-transform: uppercase;
 }
 
-.heroLabel {
-  font-family: var(--font-ui);
-  color: var(--standing-sub);
-  display: block;
-  margin-bottom: 10px;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 2px;
+.hero h2 {
+  max-width: 15ch;
+  margin: 0.75rem 0 0;
+  font-size: clamp(2.4rem, 6vw, 5.8rem);
+  font-variation-settings: "wdth" 104, "GRAD" 18;
+  font-weight: var(--type-display-weight);
+  letter-spacing: -0.024em;
+  line-height: 0.96;
+  text-transform: uppercase;
 }
 
-.heroValue {
-  font-family: var(--font-accent);
-  display: block;
-  font-size: 28px;
+.hero p,
+.personalPreview p,
+.signInCard p {
+  margin: 0;
+  color: var(--ranking-sub);
+  font-size: var(--type-body);
+  line-height: var(--type-line-body);
 }
 
-.heroValueAccent {
-  color: var(--color-text-accent);
-}
-
-.heroValuePositive {
-  color: var(--color-success);
-}
-
-.heroSub {
-  display: block;
-  margin-top: 4px;
-  font-family: var(--font-ui);
-  font-size: 12px;
-  color: var(--standing-sub);
-}
-
-.lockedHero {
-  text-align: center;
-}
-
-.lockedTitle {
-  font-family: var(--font-ui);
-  color: var(--standing-sub);
-  margin: 0 0 14px;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 3px;
-}
-
-.lockedCopy {
-  font-family: var(--font-ui);
-  margin: 0 0 18px;
-  color: var(--color-text-secondary);
-}
-
-.connectButton {
-  font-family: var(--font-ui);
-  border: 0;
-  background: var(--color-primary);
-  color: var(--color-text-primary);
-  border-radius: 999px;
-  padding: 12px 18px;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  cursor: pointer;
-}
-
-.categoryRow {
+.board {
   display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 28px;
-}
-
-.categoryChip {
-  font-family: var(--font-ui);
-  color: var(--standing-sub);
-  border: none;
-  border-radius: 999px;
-  background:
-    linear-gradient(145deg, var(--liquid-glass-fill-soft), transparent),
-    var(--color-surface-front);
-  backdrop-filter: blur(14px) saturate(1.08);
-  -webkit-backdrop-filter: blur(14px) saturate(1.08);
-  padding: 9px 18px;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  cursor: pointer;
-}
-
-.categoryChipActive {
-  background: var(--color-primary);
-  color: var(--color-text-primary);
-}
-
-.tableWrap {
-  display: flex;
+  min-height: 0;
   flex-direction: column;
+  padding: clamp(0.8rem, 1.7vw, 1.2rem);
 }
 
-.tableHeader,
-.row,
-.myRow {
-  display: grid;
-  grid-template-columns: 80px 100px 1fr 1fr 90px;
-  gap: 8px;
-  align-items: center;
-}
-
-.tableHeader {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  background:
-    linear-gradient(145deg, var(--liquid-glass-fill), var(--liquid-glass-fill-soft)),
-    var(--standing-card-background);
-  backdrop-filter: blur(18px) saturate(1.12);
-  -webkit-backdrop-filter: blur(18px) saturate(1.12);
-  padding: 14px 24px;
-  margin-bottom: 8px;
-  border-radius: 8px;
-  font-family: var(--font-ui);
-  color: var(--standing-sub);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 2px;
-}
-
-.myRow,
+.boardHeader,
 .row {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  padding: 18px 24px;
-  border-radius: 12px;
-  border: 0;
-  background:
-    linear-gradient(145deg, var(--liquid-glass-fill-soft), transparent),
-    var(--standing-card-background);
-  backdrop-filter: blur(18px) saturate(1.12);
-  -webkit-backdrop-filter: blur(18px) saturate(1.12);
-  box-shadow:
-    inset 0 1px 0 var(--liquid-glass-rim),
-    inset 0 -1px 0 var(--liquid-glass-chroma-b);
+  display: grid;
+  grid-template-columns: 0.65fr 1fr 1.35fr 0.75fr 0.65fr;
+  align-items: center;
+  gap: clamp(0.5rem, 1.2vw, 1rem);
 }
 
-.myRow {
-  background:
-    linear-gradient(145deg, var(--liquid-glass-fill-strong), var(--liquid-glass-fill-soft)),
-    var(--color-card-hover);
-  margin-bottom: 4px;
-}
-
-.separator {
-  text-align: center;
-  padding: 8px 0;
-  margin-bottom: 4px;
-  color: var(--color-text-muted);
-  letter-spacing: 4px;
+.boardHeader {
+  min-height: 34px;
+  padding: 0 0.55rem;
+  color: var(--ranking-muted);
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .rows {
   display: flex;
+  min-height: 0;
   flex-direction: column;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
-.rankCell {
-  font-family: var(--font-accent);
+.row {
+  min-height: clamp(3.2rem, 7vh, 4.6rem);
+  padding: 0.8rem;
+  border-radius: var(--gravii-radius-md);
+  background: var(--ranking-card-strong);
+  color: var(--ranking-sub);
+  font-size: var(--type-body);
 }
 
-.nameCell {
-  font-family: var(--font-ui);
-  color: var(--standing-text);
+.row strong {
+  color: var(--ranking-text);
+  font-size: clamp(1.25rem, 2.3vw, 2rem);
+  letter-spacing: -0.012em;
 }
 
-.subCell {
-  font-family: var(--font-ui);
-  color: var(--standing-sub);
+.row span:nth-child(4),
+.row span:nth-child(5) {
+  color: var(--ranking-text);
+  font-weight: 850;
 }
 
-.tierBlack {
-  color: var(--color-text-primary);
+.personalArea {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.8rem;
+  align-items: stretch;
+  background: transparent;
 }
 
-.tierPlatinum {
-  color: var(--color-text-secondary);
+.personalPreview {
+  padding: clamp(1rem, 2vw, 1.4rem);
+  transition:
+    filter 420ms var(--motion-ease-standard),
+    opacity 420ms var(--motion-ease-standard);
 }
 
-.tierGold {
-  color: var(--color-warning);
+.personalPreviewLocked {
+  filter: blur(5px);
+  opacity: 0.5;
 }
 
-.tierClassic {
-  color: var(--color-text-accent);
+.personalPreview strong {
+  display: block;
+  margin-top: 0.55rem;
+  font-size: clamp(1.8rem, 3.8vw, 3.2rem);
+  line-height: 0.98;
+  letter-spacing: -0.018em;
+  text-transform: uppercase;
 }
 
-.changeUp {
-  color: var(--color-success);
+.personalPreview p {
+  max-width: 46rem;
+  margin-top: 0.65rem;
 }
 
-.changeDown {
-  color: var(--color-error);
+.personalStats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
 }
 
-.changeNeutral {
-  color: var(--color-text-muted);
+.personalStats span {
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  border-radius: 999px;
+  background: var(--ranking-card-strong);
+  color: var(--ranking-sub);
+  padding: 0 0.76rem;
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.signInGate {
+  display: grid;
+  min-width: min(23rem, 34vw);
+}
+
+.signInCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(1rem, 2vw, 1.4rem);
+  text-align: left;
+}
+
+.signInCard h3 {
+  margin: 0.55rem 0 0;
+  font-size: clamp(1.4rem, 3vw, 2.5rem);
+  line-height: 1;
+  letter-spacing: -0.018em;
+  text-transform: uppercase;
+}
+
+.signInCard p {
+  margin-top: 0.7rem;
+}
+
+.signInButton,
+.profileButton {
+  --button-front: var(--ranking-accent);
+  --button-front-hover: var(--color-primary-hover);
+  --button-text: var(--color-text-on-primary);
+  --button-border-color: transparent;
+  margin-top: 1rem;
+}
+
+.profileButton {
+  align-self: stretch;
+}
+
+@media (max-width: 860px) {
+  .hero,
+  .personalArea {
+    grid-template-columns: 1fr;
+  }
+
+  .signInGate {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .boardHeader {
+    display: none;
+  }
+
+  .row {
+    grid-template-columns: 0.7fr 1fr;
+  }
+
+  .row span:nth-child(3),
+  .row span:nth-child(4),
+  .row span:nth-child(5) {
+    display: none;
+  }
 }

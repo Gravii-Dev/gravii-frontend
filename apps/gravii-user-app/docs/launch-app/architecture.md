@@ -13,7 +13,8 @@ Current repository:
 - live wallet sign-in against the User API now exists
 - shared API client scaffolding now exists
 - live Gravii ID and X-Ray backend reads now exist
-- `Standing`, `Discovery`, and `My Space` remain reserved as coming-soon surfaces
+- `Discovery` and `Ranking` remain visible non-live surfaces with sign-in gates for personalized data
+- `My Space` remains code-preserved but hidden from navigation and direct panel routing
 
 Current shared platform context from knowledgebase:
 
@@ -202,13 +203,14 @@ Submit analysis request
   -> render result
 ```
 
-### Standing
+### Ranking
 
 ```text
 Request leaderboard categories
   -> request category snapshot
-  -> request current user standing
-  -> render table and summary
+  -> render public table
+  -> request current wallet rank after sign-in
+  -> render personal rank summary
 ```
 
 ## Storage Model

@@ -1,11 +1,27 @@
 .root {
   position: relative;
+  min-height: 100%;
+  padding: clamp(4px, 1.2vw, 14px);
+}
+
+.contentLayer {
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
   align-items: stretch;
   gap: 16px;
   min-height: 100%;
-  padding: clamp(4px, 1.2vw, 14px);
+  transition:
+    filter 420ms var(--motion-ease-standard),
+    opacity 420ms var(--motion-ease-standard),
+    transform 420ms var(--motion-ease-standard);
+}
+
+.contentLayerLocked {
+  filter: blur(7px);
+  opacity: 0.56;
+  pointer-events: none;
+  transform: scale(0.992);
+  user-select: none;
 }
 
 .rootLight {
@@ -356,8 +372,82 @@
   --button-border-color: transparent;
 }
 
+.lockOverlay {
+  position: absolute;
+  z-index: 5;
+  inset: clamp(4px, 1.2vw, 14px);
+  display: grid;
+  place-items: center;
+  border-radius: var(--slush-radius-card);
+  background:
+    radial-gradient(circle at 50% 48%, rgba(255, 255, 255, 0.18), transparent 42%),
+    rgba(9, 7, 5, 0.08);
+}
+
+.lockCard {
+  position: relative;
+  isolation: isolate;
+  width: min(28rem, 92%);
+  padding: clamp(1.2rem, 2.6vw, 2rem);
+  overflow: hidden;
+  border-radius: var(--slush-radius-card);
+  background: var(--soon-card);
+  color: var(--soon-text);
+  box-shadow:
+    0 22px 70px rgba(9, 7, 5, 0.24),
+    inset 0 1px 0 var(--liquid-glass-rim);
+  text-align: center;
+}
+
+.lockCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background:
+    radial-gradient(ellipse at 18% 0%, var(--liquid-glass-rim-strong) 0%, transparent 32%),
+    linear-gradient(118deg, transparent 0 34%, var(--liquid-glass-caustic) 48%, transparent 66%);
+  filter: url("#gravii-liquid-glass");
+  opacity: 0.42;
+}
+
+.lockEyebrow {
+  display: inline-flex;
+  color: var(--soon-muted);
+  font-size: var(--type-eyebrow-size);
+  font-weight: var(--type-eyebrow-weight);
+  letter-spacing: var(--type-eyebrow-tracking);
+  text-transform: uppercase;
+}
+
+.lockCard h3 {
+  margin: 0.8rem 0 0;
+  font-size: clamp(1.75rem, 4.8vw, 3.25rem);
+  font-weight: var(--type-display-weight);
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.lockCard p {
+  margin: 1rem auto 0;
+  max-width: 22rem;
+  color: var(--soon-muted);
+  font-size: var(--type-body);
+  line-height: var(--type-line-body);
+}
+
+.lockAction {
+  --button-front: var(--soon-accent);
+  --button-front-hover: var(--color-primary-hover);
+  --button-text: var(--color-text-on-primary);
+  --button-border-color: transparent;
+  margin-top: 1.25rem;
+}
+
 @media (max-width: 640px) {
-  .root {
+  .contentLayer {
     grid-template-columns: 1fr;
   }
 

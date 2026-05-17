@@ -199,7 +199,7 @@ The current prototype implies these leaderboard categories:
 
 ### 5.3 Population Context
 
-- Standing should always include the total ranked population or a clear subset label.
+- Ranking should always include the total ranked population or a clear subset label.
 - Percentile should be derived from the current rank and population size.
 
 ### 5.4 Display Name

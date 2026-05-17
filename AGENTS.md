@@ -28,13 +28,21 @@ If a task moves into an app folder that already contains its own `AGENTS.md`, fo
 ## Workspace Rules
 
 - Package manager: `Bun`
-- Workspace orchestration: use the root `bun run dev`, `build`, `lint`, and `typecheck` scripts powered by `turbo`
+- Workspace orchestration: use the root `bun run dev`, `build`, `lint`, `typecheck`, `check`, and `verify` scripts powered by `turbo`
 - React and Next.js changes must remain TypeScript-only
 - Prefer app-local changes first; introduce or expand `packages/*` only when at least two apps benefit and the shared surface is intentional
 - Keep `packages/` focused on shared config, domain types, API clients, and other stable cross-app modules
 - Treat framework upgrades, package-manager migration, and large styling migrations as separate workstreams
 - Preserve the persona-based app naming under `apps/`
 - Committed repository docs should stay in English; private Korean notes can live under `.local-docs/` and must remain gitignored
+
+## Verification Harness
+
+- Use `bun run check` as the default completion gate for workspace code changes.
+- Use `bun run verify` when the change affects build behavior, routing, app boundaries, package config, or deployment risk.
+- Use focused scripts such as `bun run check:user-landing` for narrow app-local work.
+- Run `bun run test:e2e` for route, auth, handoff, or user-flow changes that need browser-level confidence.
+- For UI changes, inspect the relevant local surface in a browser and capture screenshots when layout, animation, or responsive behavior is part of the task.
 
 ## Documentation Maintenance
 
@@ -62,6 +70,7 @@ Rules:
 ## Local References
 
 - workspace overview: [`README.md`](README.md)
+- Codex harness: [`docs/codex-harness.md`](docs/codex-harness.md)
 - app naming: [`apps/README.md`](apps/README.md)
 - shared package scope: [`packages/README.md`](packages/README.md)
 - example app-local override: [`apps/gravii-user-app/AGENTS.md`](apps/gravii-user-app/AGENTS.md)

@@ -1,6 +1,6 @@
 # Gravii Launch App
 
-Launch App is Gravii's end-user product. It lets a connected wallet holder view a Gravii profile, discover campaigns, review personalized benefits, inspect leaderboard standing, and run wallet analysis on any address.
+Launch App is Gravii's end-user product. It lets a connected wallet holder view a Gravii profile, discover campaigns, inspect ranking context, and run wallet analysis on any address.
 
 This repository now runs as a live-backend-connected frontend for the current Launch App rollout. Wallet sign-in, Gravii ID, and X-Ray use the production User API, while the remaining surfaces stay explicitly marked as coming soon until their backend surfaces are ready.
 
@@ -35,13 +35,14 @@ Within the shared frontend workspace, Turbopack is configured to resolve from th
 
 ## Current App Surfaces
 
-The current product shell is a single-page experience with five ordered surfaces:
+The current product shell is a single-page experience with four visible ordered surfaces:
 
 1. `GRAVII ID`
 2. `X-RAY`
-3. `STANDING`
-4. `DISCOVERY`
-5. `MY SPACE`
+3. `DISCOVERY`
+4. `RANKING`
+
+`MY SPACE` is intentionally preserved in code but hidden from navigation and direct panel routing until the personalized feed returns to the active product scope.
 
 The route shell lives in [page.tsx](/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.tsx), and each surface renders from its own feature module plus shared layout primitives under `src/components/layout`.
 
@@ -108,7 +109,6 @@ src/
     standing/
       standing-content.module.css
       standing-content.tsx
-      standing-data.ts
     x-ray/
       x-ray-content.module.css
       x-ray-content.tsx
@@ -151,7 +151,7 @@ docs/
 Current live-backed parts:
 
 - WalletConnect/Reown AppKit wallet selection backed by the User API challenge/signature sign-in contract
-- anonymous users can land on `/` without an automatic wallet prompt; the header `SIGN IN` action is the only entry into `/sign-in`
+- anonymous users can land on `/` without an automatic wallet prompt; explicit `SIGN IN` actions open the WalletConnect/Reown wallet modal directly, while `/sign-in` remains available as a direct-link fallback
 - 24 hour User API session validation through an httpOnly same-origin session cookie
 - live `GRAVII ID` loading through `/api/v1/me/identity`, including short bootstrap polling for newly created wallets and the persona dashboard presentation for persona, chain, rank, activity, reputation, NFTs, matched campaigns, and X-Ray entry
 - live X-Ray credits, lookup history, fresh lookup runs, and detail reads with the new Gravii-branded analytical surface
@@ -159,13 +159,13 @@ Current live-backed parts:
 
 Current intentionally reserved parts:
 
-- `STANDING`
 - `DISCOVERY`
-- `MY SPACE`
+- `RANKING`
+- hidden code-preserved `MY SPACE`
 
-These three surfaces now render explicit coming-soon states instead of the older mock product flows.
+Discovery now keeps its structure visible behind a sign-in gate for anonymous users. Ranking shows the public board while gating wallet-specific rank behind sign-in. My Space remains code-preserved but hidden.
 
-The main route shell lives in [page.tsx](/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.tsx), while all five product surfaces render through feature modules under `src/features`.
+The main route shell lives in [page.tsx](/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.tsx), while visible and preserved product surfaces render through feature modules under `src/features`.
 
 ## Source Grounding
 

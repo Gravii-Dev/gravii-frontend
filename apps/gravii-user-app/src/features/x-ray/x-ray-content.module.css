@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
+  min-width: 0;
   min-height: 100%;
   color: var(--xray-text);
   --xray-text: var(--color-text-primary);
@@ -241,9 +242,9 @@
   --button-pad-y: 0.82em;
   --button-pad-x: 1.25em;
   --button-front: var(--raw-orange);
-  --button-front-hover: var(--raw-paper);
-  --button-text: var(--raw-paper);
-  --button-text-hover: var(--raw-ink);
+  --button-front-hover: var(--solid-ink-surface, var(--raw-paper));
+  --button-text: var(--theme-on-accent, var(--raw-paper));
+  --button-text-hover: var(--solid-ink-text, var(--raw-ink));
   --button-border-color: transparent;
 }
 
@@ -346,7 +347,7 @@
 }
 
 .noticeBanner {
-  color: var(--raw-ink);
+  color: var(--color-text-primary);
 }
 
 .restorePanel {
