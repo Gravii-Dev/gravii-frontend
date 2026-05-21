@@ -1,12 +1,17 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
+import {
+  type CSSProperties,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { Link } from '@/components/ui/link'
 import s from './hero.module.css'
 import { HeroBackground } from './hero-background'
 
 const SPLASH_EXIT_DURATION_MS = 520
-const HERO_SUBTITLE = '"WE\'VE BURNT THE OLD PLAYBOOK"'
 
 const CTA_ORBIT_CURSORS = [
   ...Array.from({ length: 4 }, (_, index) => {
@@ -50,7 +55,9 @@ function MousePointerIcon() {
 }
 
 export function Hero() {
-  const [splashPhase, setSplashPhase] = useState<'visible' | 'leaving' | 'hidden'>('visible')
+  const [splashPhase, setSplashPhase] = useState<
+    'visible' | 'leaving' | 'hidden'
+  >('visible')
   const splashPhaseRef = useRef<'visible' | 'leaving' | 'hidden'>('visible')
   const hasSettledRef = useRef(false)
   const exitTimerRef = useRef<number>(0)
@@ -128,8 +135,14 @@ export function Hero() {
           <span className={s.line}>Live</span>
           <span className={`${s.line} ${s.lineOffset}`}>differently</span>
         </h1>
-        <p className={s.subtitle}>{HERO_SUBTITLE}</p>
-        <Link href="#waitlist" className={s.ctaButton}>
+        <p
+          className={s.subtitle}
+          data-glitch={'"WE\'VE BURNT THE OLD PLAYBOOK"'}
+          suppressHydrationWarning
+        >
+          &quot;WE&apos;VE BURNT THE OLD PLAYBOOK&quot;
+        </p>
+        <Link href="#vision" className={s.ctaButton}>
           <span className={s.ctaOrbit} aria-hidden="true">
             <span className={s.ctaPulse} />
             <span className={s.ctaCursorOrbit}>

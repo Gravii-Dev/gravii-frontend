@@ -6,7 +6,7 @@
   align-items: center;
   overflow: hidden;
   border-bottom: 0;
-  background: var(--gravii-canvas-dim);
+  background: var(--gravii-paper);
 }
 
 .srOnly {
@@ -36,7 +36,10 @@
 .text {
   margin: 0;
   font-family: var(--gravii-font-display);
-  font-size: min(clamp(2.82rem, 13.68vw, 13.92rem), calc((100vw - 1.6rem) / 6.9));
+  font-size: min(
+    clamp(2.82rem, 13.68vw, 13.92rem),
+    calc((100vw - 1.6rem) / 6.9)
+  );
   font-weight: 500;
   letter-spacing: 0.015em;
   line-height: 1.02;
@@ -119,14 +122,13 @@
 .alertNoise {
   position: absolute;
   inset: 0;
-  background:
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgb(255 255 255 / 3%) 2px,
-      rgb(255 255 255 / 3%) 4px
-    );
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgb(255 255 255 / 3%) 2px,
+    rgb(255 255 255 / 3%) 4px
+  );
   opacity: 0.9;
   mix-blend-mode: screen;
   animation: static-noise 2s linear infinite;
@@ -255,7 +257,10 @@
   }
 
   .text {
-    font-size: min(clamp(2.58rem, 12.24vw, 11.28rem), calc((100vw - 1.6rem) / 6.9));
+    font-size: min(
+      clamp(2.58rem, 12.24vw, 11.28rem),
+      calc((100vw - 1.6rem) / 6.9)
+    );
   }
 
   .alertCard {
@@ -278,7 +283,10 @@
 
   .text {
     max-width: none;
-    font-size: min(clamp(2.34rem, 11.4vw, 3.84rem), calc((100vw - 1.2rem) / 6.65));
+    font-size: min(
+      clamp(2.34rem, 11.4vw, 3.84rem),
+      calc((100vw - 1.2rem) / 6.65)
+    );
     line-height: 0.98;
     white-space: nowrap;
   }

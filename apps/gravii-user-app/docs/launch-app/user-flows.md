@@ -10,11 +10,13 @@ Steps:
 
 1. User lands in Launch App.
 2. App shows the launch surface in anonymous mode with an explicit `SIGN IN` action.
-3. User chooses `SIGN IN` and the WalletConnect/Reown wallet modal opens directly without leaving the current surface.
-4. User connects a supported wallet through WalletConnect/Reown AppKit or the browser-wallet fallback.
-5. App resolves wallet identity and session.
-6. App requests profile summary for the connected wallet.
-7. App renders the Profile surface.
+3. User chooses `SIGN IN`.
+4. If no wallet is connected, the WalletConnect/Reown wallet modal opens directly without leaving the current surface.
+5. If a wallet is already connected after a prior app sign-out, the app reuses that wallet connection and moves directly to the signed challenge.
+6. User connects a supported wallet through WalletConnect/Reown AppKit or the browser-wallet fallback when needed.
+7. App resolves wallet identity and session.
+8. App requests profile summary for the connected wallet.
+9. App renders the Profile surface.
 
 Success outcome:
 

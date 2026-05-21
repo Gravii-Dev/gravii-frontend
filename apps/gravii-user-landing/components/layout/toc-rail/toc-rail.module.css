@@ -1,0 +1,101 @@
+.rail {
+  position: fixed;
+  right: clamp(20px, 2.5vw, 40px);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  z-index: 6;
+  pointer-events: auto;
+}
+
+.track {
+  position: absolute;
+  left: 9px;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: var(--gravii-ink-soft);
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+.dot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: transparent;
+  border: 0;
+  padding: 4px 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mark {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 1.5px solid var(--gravii-ink-soft);
+  background: var(--gravii-paper);
+  transition:
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.dot:hover .mark {
+  border-color: var(--gravii-ink);
+  transform: scale(1.15);
+}
+
+.dot[data-active="true"] .mark {
+  background: var(--gravii-ink);
+  border-color: var(--gravii-ink);
+  transform: scale(1.35);
+  box-shadow: 0 0 0 4px rgb(9 9 7 / 6%);
+}
+
+.label {
+  font-family: var(--gravii-font-mono);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gravii-ink);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.index {
+  font-family: var(--gravii-font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--gravii-ink-soft);
+  opacity: 0.6;
+  transition:
+    color 220ms ease,
+    opacity 220ms ease;
+}
+
+.dot:hover .index,
+.dot[data-active="true"] .index {
+  color: var(--gravii-ink);
+  opacity: 1;
+}
+
+@media (width <= 900px) {
+  .rail {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mark,
+  .label {
+    transition: none;
+  }
+}

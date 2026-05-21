@@ -9,19 +9,27 @@ import {
 } from './user-wallet-sign-in-flow'
 
 type UserSignInLauncherProps = {
+  isOpen: boolean
   nextPath: string
   onAuthenticated: () => Promise<unknown> | unknown
   onCancel: () => void
+  requestKey: number
 }
 
 export function UserSignInLauncher({
+  isOpen,
   nextPath,
   onAuthenticated,
   onCancel,
+  requestKey,
 }: UserSignInLauncherProps) {
   const referralCode = useMemo(() => readReferralCodeFromPath(nextPath), [nextPath])
 
   useEffect(() => {
+    if (!isOpen) {
+      return undefined
+    }
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         onCancel()
@@ -33,18 +41,21 @@ export function UserSignInLauncher({
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [onCancel])
+  }, [isOpen, onCancel])
 
   return (
     <WalletAppKitProvider>
-      <UserWalletSignInFlow
-        autoStart
-        nextPath={nextPath}
-        onAuthenticated={onAuthenticated}
-        onCancel={onCancel}
-        referralCode={referralCode}
-        variant="launcher"
-      />
+      {isOpen ? (
+        <UserWalletSignInFlow
+          key={requestKey}
+          autoStart
+          nextPath={nextPath}
+          onAuthenticated={onAuthenticated}
+          onCancel={onCancel}
+          referralCode={referralCode}
+          variant="launcher"
+        />
+      ) : null}
     </WalletAppKitProvider>
   )
 }

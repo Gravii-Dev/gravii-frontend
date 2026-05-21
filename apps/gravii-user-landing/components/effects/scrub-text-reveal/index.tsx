@@ -1,7 +1,7 @@
 'use client'
 
 import clsx from 'clsx'
-import { createElement, useEffect, useRef, type HTMLAttributes } from 'react'
+import { createElement, type HTMLAttributes, useEffect, useRef } from 'react'
 import s from './scrub-text-reveal.module.css'
 
 type ScrubTextRevealProps = {
@@ -34,48 +34,51 @@ export function ScrubTextReveal({
     const seen: Record<string, number> = {}
     let motionIndex = 0
 
-    return text.split(/(\n|\s+)/).filter(Boolean).map((part) => {
-      if (part === '\n') {
-        const next = (seen.break ?? 0) + 1
-        seen.break = next
+    return text
+      .split(/(\n|\s+)/)
+      .filter(Boolean)
+      .map((part) => {
+        if (part === '\n') {
+          const next = (seen.break ?? 0) + 1
+          seen.break = next
 
-        return {
-          type: 'break' as const,
-          key: `break-${next}`,
+          return {
+            type: 'break' as const,
+            key: `break-${next}`,
+          }
         }
-      }
 
-      if (/^\s+$/.test(part)) {
-        const next = (seen.space ?? 0) + 1
-        seen.space = next
+        if (/^\s+$/.test(part)) {
+          const next = (seen.space ?? 0) + 1
+          seen.space = next
 
-        return {
-          type: 'space' as const,
-          key: `space-${next}`,
-          value: part,
+          return {
+            type: 'space' as const,
+            key: `space-${next}`,
+            value: part,
+          }
         }
-      }
 
-      const chars = Array.from(part).map((char) => {
-        const next = (seen[char] ?? 0) + 1
-        seen[char] = next
+        const chars = Array.from(part).map((char) => {
+          const next = (seen[char] ?? 0) + 1
+          seen[char] = next
+
+          return {
+            char,
+            key: `${char}-${next}`,
+            motionIndex: motionIndex++,
+          }
+        })
+
+        const next = (seen.word ?? 0) + 1
+        seen.word = next
 
         return {
-          char,
-          key: `${char}-${next}`,
-          motionIndex: motionIndex++,
+          type: 'word' as const,
+          key: `word-${next}`,
+          chars,
         }
       })
-
-      const next = (seen.word ?? 0) + 1
-      seen.word = next
-
-      return {
-        type: 'word' as const,
-        key: `word-${next}`,
-        chars,
-      }
-    })
   })()
 
   useEffect(() => {

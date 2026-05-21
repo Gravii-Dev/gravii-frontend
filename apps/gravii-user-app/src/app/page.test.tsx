@@ -55,7 +55,8 @@ vi.mock("@/features/auth/auth-provider", () => {
 });
 
 vi.mock("@/features/auth/user-sign-in-launcher", () => ({
-  UserSignInLauncher: () => null,
+  UserSignInLauncher: ({ isOpen }: { isOpen: boolean }) =>
+    isOpen ? <div data-testid="sign-in-launcher" /> : null,
 }));
 
 describe("HomePage", () => {

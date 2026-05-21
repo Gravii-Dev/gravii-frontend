@@ -1,4 +1,6 @@
-:global(:root) {
+/* biome-ignore-all lint/complexity/noImportantStyles: route-local mockup typography overrides intentionally isolate the partner landing visual system */
+
+.page {
   --font-outfit: var(--font-landing-outfit);
   --font-sora: var(--font-landing-sora);
   --font-space-mono: var(--font-landing-space-mono);
@@ -22,10 +24,7 @@
   --red: #b94a41;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.page {
-  font-family: var(--gravii-font-ui);
+  font-family: var(--gravii-font-ui) !important;
   background:
     radial-gradient(circle at 12% 4%, rgb(244 210 58 / 14%), transparent 26rem),
     radial-gradient(circle at 86% 6%, rgb(90 169 255 / 13%), transparent 24rem),
@@ -331,18 +330,7 @@
   opacity: 1;
 }
 
-.mobileOverlayCloseSurface {
-  position: absolute;
-  inset: 0;
-  padding: 0;
-  cursor: pointer;
-  background: transparent;
-  border: 0;
-}
-
 .mobileLink {
-  position: relative;
-  z-index: 1;
   font-family: var(--font-outfit), sans-serif;
   font-size: 24px;
   font-weight: 600;
@@ -2288,7 +2276,7 @@
 
 .navLogo,
 .footerBrand {
-  font-family: var(--font-archivo-black), sans-serif;
+  font-family: var(--font-archivo-black), sans-serif !important;
 }
 
 .heroTitle,
@@ -2297,7 +2285,7 @@
 .pricingProductTitle,
 .ctaTitle,
 .firstMoverTitle {
-  font-family: var(--font-sora), sans-serif;
+  font-family: var(--font-sora), sans-serif !important;
 }
 
 .engineBadgeTitle,
@@ -2314,7 +2302,7 @@
 .userEyebrow,
 .kyaStepLabel,
 .kyaCode {
-  font-family: var(--font-space-mono), monospace;
+  font-family: var(--font-space-mono), monospace !important;
 }
 
 @media (max-width: 900px) {
@@ -2395,7 +2383,7 @@
 /* Final shared-system pass. Kept at the end so it wins over the legacy
    partner landing styles above. */
 .page {
-  font-family: var(--gravii-font-ui);
+  font-family: var(--gravii-font-ui) !important;
   color: var(--gravii-ink);
   background:
     radial-gradient(circle at 12% 4%, rgb(244 210 58 / 14%), transparent 26rem),
@@ -2416,7 +2404,7 @@
 
 .navLogo,
 .footerBrand {
-  font-family: var(--gravii-font-display);
+  font-family: var(--gravii-font-display) !important;
   color: var(--gravii-ink);
   letter-spacing: -0.04em;
 }
@@ -2451,7 +2439,7 @@
 .integrationLabel,
 .pricingLabel,
 .pricingMiniLabel {
-  font-family: var(--gravii-font-mono);
+  font-family: var(--gravii-font-mono) !important;
   color: var(--gravii-ink-soft);
 }
 
@@ -2461,7 +2449,7 @@
 .pricingProductTitle,
 .ctaTitle,
 .firstMoverTitle {
-  font-family: var(--gravii-font-heading);
+  font-family: var(--gravii-font-heading) !important;
   color: var(--gravii-ink);
   text-shadow: none;
 }
@@ -2490,7 +2478,7 @@
 .userEyebrow,
 .kyaStepLabel,
 .kyaCode {
-  font-family: var(--gravii-font-mono);
+  font-family: var(--gravii-font-mono) !important;
 }
 
 .card,
@@ -2628,7 +2616,7 @@
   justify-content: center;
   min-height: 2.85rem;
   overflow: hidden;
-  font-family: var(--gravii-font-mono);
+  font-family: var(--gravii-font-mono) !important;
   font-weight: 800;
   line-height: 1.2;
   text-align: center;

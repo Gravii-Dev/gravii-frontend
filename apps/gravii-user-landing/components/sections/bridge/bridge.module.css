@@ -1,0 +1,123 @@
+/* biome-ignore-all lint/complexity/noImportantStyles: reduced-motion overrides JS-set inline styles */
+
+.stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: clamp(48px, 12vh, 140px) clamp(24px, 6vw, 96px);
+  max-width: 100rem;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.beat1,
+.beat2,
+.beat3 {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 clamp(24px, 6vw, 96px);
+  text-align: center;
+  pointer-events: none;
+  transform-origin: center;
+  transition:
+    opacity 320ms ease,
+    transform 480ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+/* Beat 1 stacks DisplayMoment + tail vertically (3-line layout) */
+.beat1 {
+  flex-direction: column;
+  gap: clamp(8px, 1.2vh, 18px);
+}
+
+.beat2 {
+  z-index: 2;
+}
+
+.beat3 {
+  z-index: 1;
+}
+
+.beat1Display {
+  color: var(--gravii-ink-muted);
+  max-width: 70rem;
+  margin-inline: auto;
+}
+
+/* "Over and over." — emphatic tail, slightly larger + bold.
+ * Compound selector (.beat1 .beat1Tail = 0,2,0) needed to beat the global
+ * `body [class] { font-family: inherit; font-weight: inherit }` reset
+ * (specificity 0,1,1) which would otherwise override single-class rules. */
+.beat1 .beat1Tail {
+  margin: 0;
+  font-family: var(--gravii-font-heading);
+  font-size: clamp(58px, 7.4vw, 100px);  /* ~15% larger than heading-lg max (86 → 100) */
+  font-weight: 700;
+  letter-spacing: var(--ed-tracking-heading);
+  line-height: 1;
+  color: var(--gravii-ink);
+  text-align: center;
+  transition: opacity 320ms ease;
+  will-change: opacity;
+}
+
+.hairline {
+  position: absolute;
+  left: clamp(48px, 12vw, 192px);
+  right: clamp(48px, 12vw, 192px);
+  /* Underline position — below Beat 2 baseline (heading-lg ~86px tall, centered at 50%).
+   * 50% + 50px puts hairline just below the text bottom edge. */
+  top: calc(50% + clamp(45px, 6vh, 65px));
+  height: 1.5px;
+  background: var(--gravii-ink);
+  transform: scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+  z-index: 3;
+  will-change: transform;
+  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (--mobile) {
+  .hairline {
+    left: clamp(24px, 6vw, 96px);
+    right: clamp(24px, 6vw, 96px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(36px, 6vh, 64px);
+    padding-block: clamp(80px, 12vh, 140px);
+  }
+  .beat1,
+  .beat2,
+  .beat3 {
+    position: static;
+    inset: auto;
+    bottom: auto;
+    right: auto;
+    opacity: 1 !important;
+    transform: none !important;
+    padding: 0;
+  }
+  .beat1Tail {
+    opacity: 1 !important;
+  }
+  .hairline {
+    position: static;
+    left: auto;
+    right: auto;
+    top: auto;
+    transform: scaleX(1) !important;
+    width: 100%;
+    margin-block: clamp(16px, 3vh, 32px);
+  }
+}

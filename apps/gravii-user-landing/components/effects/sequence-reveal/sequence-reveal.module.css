@@ -1,0 +1,22 @@
+.root {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  opacity: 0;
+  transform: translate3d(0, 24%, 0);
+  will-change: opacity, transform;
+  transition:
+    opacity 240ms linear,
+    transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    will-change: auto;
+  }
+}

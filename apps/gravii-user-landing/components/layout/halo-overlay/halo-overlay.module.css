@@ -1,0 +1,31 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 12% 12%, rgb(244 210 58 / 16%), transparent 28%),
+    radial-gradient(circle at 86% 18%, rgb(90 169 255 / 14%), transparent 30%),
+    radial-gradient(circle at 70% 92%, rgb(85 219 156 / 10%), transparent 30%);
+  pointer-events: none;
+  z-index: 5;
+  will-change: transform;
+  animation: haloDrift 60s ease-in-out infinite;
+}
+
+@keyframes haloDrift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  33% {
+    transform: translate3d(1.5vw, 0.8vh, 0) scale(1.015);
+  }
+  66% {
+    transform: translate3d(-1.2vw, -0.6vh, 0) scale(1.025);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay {
+    animation: none;
+  }
+}

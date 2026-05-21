@@ -1,0 +1,52 @@
+.deck {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(24px, 3vh, 48px);
+}
+
+.stack {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  aspect-ratio: 5 / 8;
+}
+
+.slot {
+  position: absolute;
+  inset: 0;
+  transform-origin: center center;
+  transition:
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 700ms ease;
+  will-change: transform, opacity;
+}
+
+.dots {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgb(9 9 7 / 18%);
+  transition:
+    background 320ms ease,
+    transform 320ms ease;
+}
+
+.dot[data-active="true"] {
+  background: var(--gravii-ink);
+  transform: scale(1.25);
+}
+
+@media (--mobile) {
+  .stack {
+    max-width: 320px;
+  }
+}
