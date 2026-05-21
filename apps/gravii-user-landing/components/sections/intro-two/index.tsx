@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 import s from './intro-two.module.css'
 
-const INTRO_TWO_COPY = 'OVER AND OVER'
+const INTRO_TWO_COPY = 'OVER AND\nOVER'
 const TYPE_STEP_MS = 88
 const DELETE_STEP_MS = 52
 const HOLD_FULL_MS = 860
@@ -13,14 +13,17 @@ const INTRO_TWO_CHARS = (() => {
   let motionIndex = 0
 
   return Array.from(INTRO_TWO_COPY).map((char) => {
-    const token = char === ' ' ? 'space' : char
+    let token: string
+    if (char === ' ') token = 'space'
+    else if (char === '\n') token = 'break'
+    else token = char
     const next = (seen[token] ?? 0) + 1
     seen[token] = next
 
     return {
       char,
       key: `${token}-${next}`,
-      motionIndex: char === ' ' ? -1 : motionIndex++,
+      motionIndex: char === ' ' || char === '\n' ? -1 : motionIndex++,
     }
   })
 })()
@@ -170,12 +173,18 @@ export function IntroTwo() {
       <h2 className={s.srOnly}>Intro two</h2>
       <div className={s.stage} aria-hidden="true">
         <p ref={textLineRef} className={s.text}>
-          {INTRO_TWO_CHARS.map((item) =>
-            item.char === ' ' ? (
-              <span key={item.key} className={s.space}>
-                {'\u00A0'}
-              </span>
-            ) : (
+          {INTRO_TWO_CHARS.map((item) => {
+            if (item.char === '\n') {
+              return <br key={item.key} />
+            }
+            if (item.char === ' ') {
+              return (
+                <span key={item.key} className={s.space}>
+                  {'\u00A0'}
+                </span>
+              )
+            }
+            return (
               <span
                 key={item.key}
                 className={s.char}
@@ -187,7 +196,7 @@ export function IntroTwo() {
                 {item.char}
               </span>
             )
-          )}
+          })}
           <span ref={tailRef} className={s.tail}>
             <span className={s.blinkDot}>.</span>
           </span>

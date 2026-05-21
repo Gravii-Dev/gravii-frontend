@@ -1,0 +1,245 @@
+.stamp {
+  --magnet-x: 0px;
+  --magnet-y: 0px;
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 0;
+  background: transparent;
+  font-family: var(--gravii-font-heading);
+  cursor: pointer;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+  transform: translate3d(var(--magnet-x), var(--magnet-y), 0) rotate(-3deg);
+  transform-origin: center center;
+  transition:
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, width;
+}
+
+.stamp:hover[data-state="collapsed"] {
+  transform: translate3d(var(--magnet-x), calc(var(--magnet-y) - 2px), 0)
+    rotate(-1deg);
+}
+
+.stamp[data-state="expanded"],
+.stamp[data-state="submitting"] {
+  transform: translate3d(0, 0, 0) rotate(0deg);
+}
+
+.stamp[data-state="success"] {
+  transform: translate3d(0, 0, 0) rotate(2deg);
+}
+
+/* Caption above stamp — "APPROVED FOR ENTRY · 2026" passport vibe */
+.caption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  padding-left: 4px;
+  font-family: var(--gravii-font-mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ed-accent-passport);
+  white-space: nowrap;
+}
+
+.captionDot {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  background: var(--ed-accent-passport);
+  border-radius: 999px;
+}
+
+/* The stamp box itself — sharp rectangle, heavy ink outline */
+.box {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 260px;
+  height: 64px;
+  padding: 0;
+  border: 2.5px solid var(--ed-accent-passport);
+  background: var(--gravii-paper);
+  color: var(--gravii-ink);
+  font-family: var(--gravii-font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  overflow: hidden;
+  transition:
+    width 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 220ms ease,
+    color 220ms ease,
+    box-shadow 320ms ease;
+  box-shadow: 4px 4px 0 0 var(--ed-accent-passport);
+}
+
+.stamp:hover[data-state="collapsed"] .box {
+  background: var(--ed-accent-passport);
+  color: var(--gravii-paper);
+  box-shadow: 6px 6px 0 0 var(--gravii-ink);
+}
+
+.stamp[data-state="expanded"] .box,
+.stamp[data-state="submitting"] .box {
+  width: min(440px, calc(100vw - 32px));
+  background: var(--gravii-paper);
+  color: var(--gravii-ink);
+  cursor: default;
+}
+
+.stamp[data-state="success"] .box {
+  background: var(--ed-accent-passport);
+  color: var(--gravii-paper);
+}
+
+/* Label inside box — "JOIN WAITLIST" */
+.label {
+  position: absolute;
+  inset: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 120ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.stamp[data-state="expanded"] .label,
+.stamp[data-state="submitting"] .label {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.stamp[data-state="collapsed"] {
+  cursor: pointer;
+}
+
+.successLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+/* Form (email + submit) — fills box on expand */
+.form {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 6px 0 18px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease 120ms;
+}
+
+.stamp[data-state="expanded"] .form,
+.stamp[data-state="submitting"] .form {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  font-family: var(--gravii-font-heading);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  color: var(--gravii-ink);
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--gravii-ink-soft);
+}
+
+.submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-left: 4px;
+  border: 0;
+  background: var(--ed-accent-passport);
+  color: var(--gravii-paper);
+  font-family: var(--gravii-font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 220ms ease;
+}
+
+.submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.honeypot {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  border: 0;
+  white-space: nowrap;
+}
+
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 999px;
+  animation: spin 720ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stamp,
+  .box,
+  .form,
+  .label {
+    transition:
+      background-color 220ms ease,
+      color 220ms ease;
+  }
+  .stamp:hover[data-state="collapsed"] {
+    transform: rotate(-3deg);
+  }
+  .spinner {
+    animation: none;
+  }
+}

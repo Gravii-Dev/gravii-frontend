@@ -660,7 +660,10 @@ export function PricingSection({ dimension }: { dimension: LandingDimension }) {
           From <span className={styles.pricingBundleValue}>$5,000/mo</span> —
           Gate + Reach + Lens + KYA. 10% off module sum. Includes Lens S×2 free, CPA 20% discount.
         </div>
-        <Link className={styles.pricingBundleButton} href="mailto:partners@gravii.io">
+        <Link
+          className={styles.pricingBundleButton}
+          href="mailto:partners@gravii.io"
+        >
           Contact Us
         </Link>
       </div>

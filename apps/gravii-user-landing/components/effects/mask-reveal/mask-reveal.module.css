@@ -10,7 +10,8 @@
   opacity: 0;
   transform: translate3d(0, 16%, 0);
   transition:
-    transform var(--mask-reveal-duration, 1.08s) cubic-bezier(0.22, 1, 0.36, 1) var(--mask-reveal-delay, 0s),
+    transform var(--mask-reveal-duration, 1.08s) cubic-bezier(0.22, 1, 0.36, 1)
+    var(--mask-reveal-delay, 0s),
     opacity 220ms ease var(--mask-reveal-delay, 0s);
   will-change: transform;
 }

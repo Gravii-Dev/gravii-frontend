@@ -34,9 +34,8 @@ function WaitlistFormInstance({ onReset }: { onReset: () => void }) {
     WaitlistActionState | null,
     FormData
   >(joinWaitlistAction, null)
-  const [cachedSubmission, setCachedSubmission] = useState<WaitlistSubmission | null>(
-    null
-  )
+  const [cachedSubmission, setCachedSubmission] =
+    useState<WaitlistSubmission | null>(null)
   const [email, setEmail] = useState('')
   const [hasTouched, setHasTouched] = useState(false)
   const [referralCode, setReferralCode] = useState('')
@@ -184,7 +183,9 @@ function WaitlistFormInstance({ onReset }: { onReset: () => void }) {
           <p className={s.returningCopy}>
             Share your referral code to bring more people into the Gravii queue.
           </p>
-          <div className={s.referralCodeBox}>{successSubmission.referralCode}</div>
+          <div className={s.referralCodeBox}>
+            {successSubmission.referralCode}
+          </div>
           <div className={s.returningActions}>
             <button
               className={s.secondaryButton}
@@ -233,7 +234,10 @@ function WaitlistFormInstance({ onReset }: { onReset: () => void }) {
           name="email"
           value={email}
           placeholder="Enter your email..."
-          className={clsx(s.input, (clientError || serverError) && s.inputInvalid)}
+          className={clsx(
+            s.input,
+            (clientError || serverError) && s.inputInvalid
+          )}
           aria-describedby="waitlist-status"
           aria-invalid={clientError || serverError ? true : undefined}
           autoComplete="email"
@@ -268,7 +272,9 @@ function WaitlistFormInstance({ onReset }: { onReset: () => void }) {
         id="waitlist-status"
         className={clsx(s.status, statusClassName)}
         role={clientError || serverError || isError ? 'alert' : 'status'}
-        aria-live={clientError || serverError || isError ? 'assertive' : 'polite'}
+        aria-live={
+          clientError || serverError || isError ? 'assertive' : 'polite'
+        }
       >
         {statusMessage}
       </p>

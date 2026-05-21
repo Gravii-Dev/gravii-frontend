@@ -1,7 +1,7 @@
 import s from './footer.module.css'
 
 const FOOTER_LINKS = ['X', 'Docs', 'Partner with us'] as const
-const CURRENT_YEAR = new Date().getFullYear()
+const CURRENT_YEAR = 2026
 
 export function Footer() {
   return (

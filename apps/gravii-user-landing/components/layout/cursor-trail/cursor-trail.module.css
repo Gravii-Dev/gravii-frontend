@@ -1,0 +1,20 @@
+.canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+  mix-blend-mode: multiply;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .canvas {
+    display: none;
+  }
+}
+
+@media (hover: none) {
+  /* Touch devices — no cursor trail */
+  .canvas {
+    display: none;
+  }
+}
