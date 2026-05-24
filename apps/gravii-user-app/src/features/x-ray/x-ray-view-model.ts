@@ -4,7 +4,8 @@ import type {
 } from '@/lib/auth/user-api'
 
 export const XRAY_SEARCH_STATS = [
-  { label: 'COVERAGE', value: '50+ CHAINS' },
+  { label: 'COST', value: '1 CREDIT' },
+  { label: 'DEPTH', value: 'MULTI-CHAIN' },
   { label: 'ACCESS', value: 'OWN WALLET FREE' },
   { label: 'SPEED', value: '10–30 SEC' },
 ] as const

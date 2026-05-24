@@ -368,10 +368,16 @@ export default function XRayContent({ dark, connected, onConnect }: SharedConten
               !walletInput.trim() ? styles.analyzeButtonEmpty : ""
             }`}
             onClick={() => void handleAnalyze()}
-            title={walletInput.trim() ? "Run X-Ray analysis" : "Enter a wallet address before analysis"}
+            title={
+              !connected
+                ? "Sign in before running X-Ray analysis"
+                : walletInput.trim()
+                  ? "Run X-Ray analysis"
+                  : "Enter a wallet address before analysis"
+            }
             aria-disabled={!walletInput.trim()}
           >
-            ANALYZE
+            {connected ? "ANALYZE" : "SIGN IN TO SEARCH"}
           </ActionButton>
         </div>
 

@@ -61,7 +61,7 @@ Responsibilities:
 Responsibilities:
 
 - render the full result dashboard for one analyzed wallet
-- organize the result into identity, metrics, reputation, chain, and activity sections
+- organize the result into identity, metrics, reputation, chain, portfolio/risk signal, and activity sections
 - keep the result styling local so the analytical surface can evolve without reshaping shared primitives
 
 This component is intentionally large because it represents a dense analytical dashboard rather than a small card or widget.
@@ -124,5 +124,6 @@ The real platform is now partially connected. The remaining likely additions are
 - richer async status handling if lookup latency changes
 - stronger failure-state handling for provider-side errors
 - more detailed backend result sections as the X-Ray schema stabilizes
+- richer backend fields for asset mix, funding sources, transfer patterns, gas spend, and rewards once those are available
 
 The current folder boundary should remain valid because the entire lookup/history/detail flow is still one coherent product surface.

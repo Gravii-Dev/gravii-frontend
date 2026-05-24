@@ -5,26 +5,32 @@ import userEvent from "@testing-library/user-event";
 import StandingContent from "./standing-content";
 
 describe("StandingContent", () => {
-  it("shows public rankings while gating the personal wallet rank", async () => {
+  it("shows category rankings while gating the personal wallet rank", async () => {
     const user = userEvent.setup();
     const onConnect = vi.fn();
 
     render(<StandingContent dark connected={false} onConnect={onConnect} onNavigate={() => {}} />);
 
-    expect(screen.getByText("Wallet ranks stay visible. Personal rank needs sign-in.")).toBeInTheDocument();
-    expect(screen.getByText("#001")).toBeInTheDocument();
-    expect(screen.getByText("Want to know your rank?")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "See where every wallet stands." })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Wealth" })).toBeInTheDocument();
+    expect(screen.getByText("Rank hidden")).toBeInTheDocument();
+    expect(screen.getByText("Benji")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "SIGN IN" }));
 
     expect(onConnect).toHaveBeenCalledTimes(1);
   });
 
-  it("routes connected users back to Gravii ID from the personal rank area", async () => {
+  it("switches boards and routes connected users back to Gravii ID", async () => {
     const user = userEvent.setup();
     const onNavigate = vi.fn();
 
     render(<StandingContent dark connected onConnect={() => {}} onNavigate={onNavigate} />);
+
+    await user.click(screen.getByRole("button", { name: "Trade" }));
+
+    expect(screen.getAllByText("Trading volume, timing, and execution behavior.").length).toBeGreaterThan(0);
+    expect(screen.getByText("#12,340")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "REVIEW GRAVII ID" }));
 

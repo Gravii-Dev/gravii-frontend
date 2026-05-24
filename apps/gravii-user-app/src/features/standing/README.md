@@ -17,11 +17,12 @@ The first layer is visible to everyone. The second layer requires sign-in becaus
 
 Responsibilities:
 
-- render the public ranking board shell
+- render the category-based public ranking board
+- expose `Overall`, `Wealth`, `Activity`, `Trade`, and `Streak` board switches
 - keep the personal wallet rank area visible as a product promise
 - gate the personal wallet rank behind the sign-in action for anonymous users
 - route connected users back to `GRAVII ID` for identity review
 
 ## Production Direction
 
-When real ranking APIs arrive, this folder should attach category reads, public ranking snapshots, and current-wallet standing reads without changing the shell-level `leaderboard` panel ID.
+When real ranking APIs arrive, this folder should replace the local ranking rows and personal-rank preview with category reads, public ranking snapshots, and current-wallet standing reads without changing the shell-level `leaderboard` panel ID.

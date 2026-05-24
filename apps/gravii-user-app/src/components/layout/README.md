@@ -47,6 +47,7 @@ Important details:
 - inactive cards remain visible so the user can jump between product surfaces without losing orientation
 - selecting a card replaces the active workspace surface with that section
 - the active section owns its own thin "entering section" bar and bordered frame, so section boundaries stay visually explicit without stacking all sections at once
+- expanded feature frames grow with their content and use page-level scrolling, avoiding hidden inner scroll regions that can clip content on zoomed or narrow viewports
 - on small screens, the navigation rail becomes a horizontal scroll surface above the workspace board
 
 What it does not own:
