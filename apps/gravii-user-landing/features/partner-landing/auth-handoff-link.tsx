@@ -2,7 +2,6 @@
 
 import type { ComponentProps, ReactNode } from 'react'
 import { useEffect, useState } from 'react'
-
 import { Link } from '@/components/ui/link'
 
 const passthroughKeys = new Set([
@@ -52,11 +51,13 @@ export function AuthHandoffLink({
   const [resolvedHref, setResolvedHref] = useState(href)
 
   useEffect(() => {
-    setResolvedHref(buildHandoffHref(href, new URLSearchParams(window.location.search)))
+    setResolvedHref(
+      buildHandoffHref(href, new URLSearchParams(window.location.search))
+    )
   }, [href])
 
   return (
-    <Link target="_self" {...anchorProps} href={resolvedHref}>
+    <Link {...anchorProps} href={resolvedHref}>
       {children}
     </Link>
   )

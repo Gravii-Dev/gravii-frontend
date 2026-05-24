@@ -1,0 +1,43 @@
+.page {
+  min-height: 100svh;
+  background: var(--gravii-paper);
+  color: var(--gravii-ink);
+  padding: clamp(6rem, 14vh, 10rem) clamp(1.5rem, 6vw, 6rem);
+}
+
+.inner {
+  width: min(100%, 48rem);
+  margin: 0 auto;
+}
+
+.eyebrow {
+  margin: 0 0 1.25rem;
+  font-family: var(--gravii-font-mono);
+  font-size: var(--ed-text-eyebrow, 0.875rem);
+  letter-spacing: var(--ed-tracking-eyebrow, 0.16em);
+  text-transform: uppercase;
+  color: var(--gravii-ink-soft);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--gravii-font-heading);
+  font-size: var(--ed-text-heading-lg, clamp(3rem, 6vw, 5rem));
+  letter-spacing: var(--ed-tracking-heading, -0.02em);
+  line-height: var(--ed-leading-heading, 1.08);
+}
+
+.copy {
+  margin: 2rem 0 0;
+  font-family: var(--gravii-font-heading);
+  font-size: var(--ed-text-body, 1.125rem);
+  letter-spacing: var(--ed-tracking-body, -0.01em);
+  line-height: var(--ed-leading-body, 1.5);
+  color: var(--gravii-ink-muted);
+}
+
+.link {
+  color: var(--gravii-ink);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}

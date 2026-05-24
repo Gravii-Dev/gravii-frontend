@@ -1,0 +1,159 @@
+'use client'
+
+import clsx from 'clsx'
+import {
+  type CSSProperties,
+  type ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
+import s from './chapter-panel.module.css'
+
+type ChapterPanelProps = {
+  /** Either render-prop fn taking progress (0..1) or static children */
+  children: ReactNode | ((progress: number) => ReactNode)
+  /** total scroll distance for the pinned region in viewports (default 2 = 200vh outer) */
+  distance?: number
+  /** Pull section up to overlap with previous chapter's post-pin scroll-out.
+   * `true` = -50vh (default, leaves 50vh tail for closing content).
+   * Number = exact vh amount to pull up.
+   * Use for all pinned chapters except the first. */
+  overlap?: boolean | number
+  /** disable pinning — render children directly. Used as fallback for reduced motion or mobile */
+  disablePin?: boolean
+  className?: string
+  innerClassName?: string
+  /** background color/wash for the pinned panel */
+  background?: string
+  /** id for navigation anchors */
+  id?: string
+}
+
+function clamp01(value: number) {
+  return Math.max(0, Math.min(1, value))
+}
+
+export function ChapterPanel({
+  children,
+  distance = 2,
+  overlap = false,
+  disablePin = false,
+  className,
+  innerClassName,
+  background,
+  id,
+}: ChapterPanelProps) {
+  const rootRef = useRef<HTMLElement | null>(null)
+  const [progress, setProgress] = useState(0)
+  const [exitProgress, setExitProgress] = useState(0)
+  const [pinDisabled, setPinDisabled] = useState(disablePin)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const reduced = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches
+    if (reduced) {
+      setPinDisabled(true)
+    }
+  }, [])
+
+  // Native scroll listener — single source of truth. Lenis runs in `root` mode
+  // (LenisMount), so its programmatic `window.scrollTo` fires native scroll
+  // events that this listener catches. Avoids the `useLenis(sync)` pattern
+  // which puts the callback in useEffect deps → unstable identity from
+  // useEffectEvent causes synchronous re-subscribe + immediate callback fire
+  // every render → infinite setState loop (React 19 + Turbopack).
+  useEffect(() => {
+    if (pinDisabled) {
+      setProgress(1)
+      return
+    }
+    const sync = () => {
+      const root = rootRef.current
+      if (!root) return
+      const bounds = root.getBoundingClientRect()
+      const viewportHeight = window.innerHeight
+      const totalScroll = bounds.height - viewportHeight
+      if (totalScroll <= 0) {
+        setProgress((prev) => (prev === 0 ? prev : 0))
+        setExitProgress((prev) => (prev === 0 ? prev : 0))
+        return
+      }
+      const scrolled = -bounds.top
+      const next = clamp01(scrolled / totalScroll)
+      setProgress((prev) => (prev === next ? prev : next))
+      // Post-pin scroll-out: fade content fast (40vh window) so closing
+      // content disappears before next chapter's overlap kicks in — clean
+      // handoff.
+      const exit = clamp01(((scrolled - totalScroll) * 2.5) / viewportHeight)
+      setExitProgress((prev) => (prev === exit ? prev : exit))
+    }
+
+    sync()
+    let frameId = 0
+    const schedule = () => {
+      if (frameId !== 0) return
+      frameId = window.requestAnimationFrame(() => {
+        frameId = 0
+        sync()
+      })
+    }
+    window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('resize', schedule)
+    return () => {
+      window.cancelAnimationFrame(frameId)
+      window.removeEventListener('scroll', schedule)
+      window.removeEventListener('resize', schedule)
+    }
+  }, [pinDisabled])
+
+  const rendered =
+    typeof children === 'function'
+      ? (children as (p: number) => ReactNode)(progress)
+      : children
+
+  let overlapVh = 0
+  if (overlap === true) {
+    overlapVh = 50
+  } else if (typeof overlap === 'number') {
+    overlapVh = overlap
+  }
+  const style: CSSProperties = {
+    ['--chapter-distance' as string]: `${distance * 100}vh`,
+    ...(background ? { background } : {}),
+    ...(overlapVh > 0 ? { marginTop: `-${overlapVh}vh` } : {}),
+  }
+
+  if (pinDisabled) {
+    return (
+      <section
+        id={id}
+        ref={rootRef as React.RefObject<HTMLElement>}
+        className={clsx(s.section, s.unpinned, className)}
+        style={style}
+      >
+        <div className={clsx(s.unpinnedInner, innerClassName)}>{rendered}</div>
+      </section>
+    )
+  }
+
+  return (
+    <section
+      id={id}
+      ref={rootRef as React.RefObject<HTMLElement>}
+      className={clsx(s.section, className)}
+      style={style}
+    >
+      <div className={s.sticky}>
+        <div
+          className={clsx(s.inner, innerClassName)}
+          style={{ opacity: 1 - exitProgress }}
+        >
+          {rendered}
+        </div>
+      </div>
+    </section>
+  )
+}

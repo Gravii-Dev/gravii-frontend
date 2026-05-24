@@ -446,7 +446,8 @@ function AgentPanel() {
       </div>
 
       <div className={styles.kyaPricingNote}>
-        Enterprise KYA available as part of Gate Enterprise bundle. <Link href="#pricing">See Enterprise pricing →</Link>
+        Enterprise KYA available as part of Gate Enterprise bundle.{' '}
+        <Link href="#pricing">See Enterprise pricing →</Link>
       </div>
     </div>
   )

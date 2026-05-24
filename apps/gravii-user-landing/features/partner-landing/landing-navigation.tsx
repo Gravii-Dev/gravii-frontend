@@ -135,12 +135,6 @@ export function SiteNav({ isScrolled }: { isScrolled: boolean }) {
       <div
         className={cn(styles.mobileOverlay, mobileMenuOpen && styles.mobileOverlayOpen)}
       >
-        <button
-          aria-label="Close navigation menu"
-          className={styles.mobileOverlayCloseSurface}
-          onClick={() => setMobileMenuOpen(false)}
-          type="button"
-        />
         {navItems.map((item) => renderMobileNavItem(item, () => setMobileMenuOpen(false)))}
         <AuthHandoffLink
           className={cn(styles.mobileLink, styles.mobileLinkGetStarted)}

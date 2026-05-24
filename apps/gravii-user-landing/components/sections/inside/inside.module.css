@@ -1,0 +1,210 @@
+/* biome-ignore-all lint/complexity/noImportantStyles: reduced-motion overrides JS-set inline styles */
+
+.stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.eyebrowSlot {
+  position: absolute;
+  top: clamp(48px, 8vh, 88px);
+  left: clamp(24px, 6vw, 96px);
+  z-index: 5;
+}
+
+.intro {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 clamp(24px, 6vw, 96px);
+  text-align: center;
+  pointer-events: none;
+  transition:
+    opacity 320ms ease,
+    transform 320ms ease;
+  will-change: opacity, transform;
+  z-index: 2;
+}
+
+.rail {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  z-index: 1;
+  transition: opacity 280ms ease;
+  will-change: opacity;
+}
+
+.track {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  align-items: center;
+  will-change: transform;
+}
+
+.panel {
+  flex: 0 0 100vw;
+  box-sizing: border-box;
+  padding: clamp(48px, 12vh, 140px) clamp(48px, 12vw, 200px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: clamp(12px, 2vh, 24px);
+  transform-origin: center;
+  will-change: opacity, transform;
+  transition:
+    opacity 360ms ease,
+    transform 480ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.panelIndex {
+  font-family: var(--gravii-font-mono);
+  font-size: var(--ed-text-eyebrow);
+  letter-spacing: var(--ed-tracking-mono);
+  text-transform: uppercase;
+  color: var(--gravii-ink-soft);
+}
+
+.panelEyebrow {
+  font-family: var(--gravii-font-mono);
+  font-size: var(--ed-text-caption);
+  letter-spacing: var(--ed-tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--gravii-ink);
+}
+
+.panelTitle {
+  margin: 0;
+  font-family: var(--gravii-font-heading);
+  font-size: var(--ed-text-display);
+  letter-spacing: var(--ed-tracking-display);
+  line-height: var(--ed-leading-display);
+  font-weight: 600;
+  color: var(--gravii-ink);
+  max-width: 16em;
+}
+
+.panelBody {
+  margin: 0;
+  font-family: var(--gravii-font-ui);
+  font-size: var(--ed-text-body);
+  letter-spacing: var(--ed-tracking-body);
+  line-height: var(--ed-leading-body);
+  color: var(--gravii-ink);
+  max-width: 32em;
+}
+
+.dots {
+  position: absolute;
+  bottom: clamp(48px, 8vh, 88px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 14px;
+  z-index: 4;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid;
+  transition: background 320ms ease;
+}
+
+.outro {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  pointer-events: none;
+  padding: 0 clamp(24px, 6vw, 96px);
+  transform-origin: center;
+  z-index: 4;
+  will-change: opacity, transform;
+  transition:
+    opacity 320ms ease,
+    transform 480ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.outroText {
+  margin: 0;
+  font-family: var(--gravii-font-heading);
+  font-size: var(--ed-text-heading-lg);
+  letter-spacing: var(--ed-tracking-heading);
+  line-height: var(--ed-leading-heading);
+  font-weight: 600;
+  color: var(--gravii-ink);
+  max-width: 24em;
+  text-wrap: balance;
+}
+
+@media (--mobile) {
+  .panel {
+    padding: clamp(32px, 8vh, 80px) clamp(20px, 6vw, 48px);
+  }
+  .panelTitle {
+    font-size: var(--ed-text-heading-lg);
+    letter-spacing: var(--ed-tracking-heading);
+  }
+  .dots {
+    gap: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage {
+    overflow: visible;
+  }
+  .eyebrowSlot,
+  .intro,
+  .rail,
+  .dots,
+  .outro {
+    position: static;
+    inset: auto;
+    bottom: auto;
+    transform: none !important;
+    padding: 0;
+  }
+  .intro {
+    padding-block: clamp(40px, 8vh, 80px);
+    opacity: 1 !important;
+  }
+  .rail {
+    overflow: visible;
+    opacity: 1 !important;
+  }
+  .track {
+    flex-direction: column;
+    transform: none !important;
+  }
+  .panel {
+    flex: 1 1 auto;
+    width: 100%;
+    opacity: 1 !important;
+    transform: none !important;
+    padding: clamp(32px, 6vh, 64px) clamp(20px, 6vw, 48px);
+    border-top: 1px solid var(--ed-line);
+  }
+  .dots {
+    display: none;
+  }
+  .outro {
+    position: relative;
+    inset: auto;
+    margin-top: clamp(32px, 6vh, 56px);
+    padding: 0;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

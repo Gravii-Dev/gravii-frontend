@@ -1,0 +1,280 @@
+/* biome-ignore-all lint/complexity/noImportantStyles: reduced-motion overrides JS-set inline styles */
+
+.stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: clamp(48px, 12vh, 140px) clamp(24px, 6vw, 96px);
+  max-width: 100rem;
+  margin: 0 auto;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.eyebrowSlot {
+  position: absolute;
+  top: clamp(48px, 8vh, 88px);
+  left: clamp(24px, 6vw, 96px);
+  z-index: 5;
+}
+
+.leadIn {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 clamp(24px, 6vw, 96px);
+  pointer-events: none;
+  text-align: center;
+  transition:
+    opacity 320ms ease,
+    transform 480ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+  z-index: 2;
+}
+
+.steps {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 clamp(24px, 6vw, 96px);
+  pointer-events: none;
+  transition:
+    opacity 320ms ease,
+    transform 480ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+  z-index: 2;
+}
+
+.stepList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(24px, 4vw, 64px);
+  width: 100%;
+  max-width: 80rem;
+}
+
+.stepItem {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2vh, 28px);
+  border-top: 1px solid var(--ed-line);
+  padding-top: clamp(16px, 2vh, 28px);
+  transition: opacity 320ms ease;
+}
+
+.stepItem[data-active="true"] {
+  border-top-color: var(--ed-line-strong);
+}
+
+.stepLabel {
+  font-family: var(--gravii-font-mono);
+  font-size: var(--ed-text-eyebrow);
+  letter-spacing: var(--ed-tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--gravii-ink-soft);
+}
+
+.stepText {
+  margin: 0;
+  font-family: var(--gravii-font-heading);
+  font-size: var(--ed-text-heading);
+  letter-spacing: var(--ed-tracking-heading);
+  line-height: var(--ed-leading-heading);
+  font-weight: 500;
+  color: var(--gravii-ink);
+}
+
+.finale {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 clamp(16px, 4vw, 64px);
+  text-align: center;
+  pointer-events: none;
+  gap: clamp(16px, 3vh, 36px);
+  transition:
+    opacity 320ms ease,
+    transform 480ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+  z-index: 3;
+}
+
+.finaleSub {
+  margin: 0;
+  font-family: var(--gravii-font-mono);
+  font-size: var(--ed-text-caption);
+  letter-spacing: var(--ed-tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--gravii-ink-soft);
+}
+
+.stageSlot {
+  position: relative;
+  width: 100%;
+  min-height: calc(var(--ed-text-heading-lg) * 2.4);
+}
+
+.ctaSlot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: clamp(24px, 4vh, 48px);
+  transition:
+    opacity 320ms ease,
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.finaleStage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 320ms ease;
+  will-change: opacity;
+}
+
+/* Bookend flash — Stage 2 ("Connect once. Live differently.") is the Hero H1 callback.
+ * When it crosses into view, a subtle violet halo radiates briefly, signaling
+ * "you saw this at the start." Type-morph echo, sophisticated. */
+.finaleStage[data-bookend="true"]::after {
+  content: "";
+  position: absolute;
+  inset: -8% -4%;
+  border-radius: 999px;
+  pointer-events: none;
+  background: radial-gradient(
+    closest-side,
+    rgb(107 93 255 / 14%),
+    transparent 70%
+  );
+  animation: bookendFlash 1600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes bookendFlash {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  35% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.12);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .finaleStage[data-bookend="true"]::after {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+.finaleCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: clamp(20px, 3vh, 40px);
+  padding: 16px 32px;
+  border: 1.5px solid var(--gravii-ink);
+  border-radius: 999px;
+  background: transparent;
+  font-family: var(--gravii-font-heading);
+  font-size: clamp(14px, 1.1vw, 17px);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--gravii-ink);
+  pointer-events: auto;
+  cursor: pointer;
+  transition:
+    background 220ms ease,
+    color 220ms ease,
+    transform 220ms ease,
+    opacity 320ms ease;
+  will-change: opacity, transform;
+}
+
+.finaleCta:hover {
+  background: var(--gravii-ink);
+  color: var(--gravii-paper);
+  transform: translate3d(0, -2px, 0);
+}
+
+.wash {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(60% 60% at 50% 60%, rgb(214 91 156 / 8%), transparent 70%),
+    radial-gradient(40% 40% at 70% 30%, rgb(255 135 9 / 5%), transparent 70%);
+  pointer-events: none;
+  transition: opacity 480ms ease;
+  z-index: 0;
+}
+
+@media (--mobile) {
+  .stepList {
+    grid-template-columns: 1fr;
+  }
+  .stepText {
+    font-size: var(--ed-text-pull);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage {
+    overflow: visible;
+  }
+  .eyebrowSlot,
+  .steps,
+  .finale {
+    position: static;
+    inset: auto;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  .stepList {
+    grid-template-columns: 1fr;
+  }
+  .stepItem {
+    opacity: 1 !important;
+    border-top-color: var(--ed-line-strong);
+  }
+  .finale {
+    padding-block: clamp(48px, 8vh, 80px);
+  }
+  .finaleCta {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .stageSlot {
+    min-height: auto;
+  }
+  .finaleStage {
+    position: static;
+    inset: auto;
+    opacity: 1 !important;
+  }
+  .finaleStage:not(:last-child) {
+    display: none;
+  }
+  .wash {
+    display: none;
+  }
+}

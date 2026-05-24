@@ -1,5 +1,10 @@
 import type { ReactNode } from 'react'
+import { BackToTop } from '@/components/layout/back-to-top'
+import { CursorTrail } from '@/components/layout/cursor-trail'
 import { Footer } from '@/components/layout/footer'
+import { HaloOverlay } from '@/components/layout/halo-overlay'
+import { LenisMount } from '@/components/layout/site-shell/lenis-mount'
+import { TocRail } from '@/components/layout/toc-rail'
 import s from '@/components/layout/wrapper/wrapper.module.css'
 
 type SiteShellProps = {
@@ -12,10 +17,15 @@ export function SiteShell({ children, className }: SiteShellProps) {
 
   return (
     <>
+      <HaloOverlay />
+      <CursorTrail />
+      <TocRail />
       <main id="main-content" className={mainClassName}>
         {children}
       </main>
+      <BackToTop />
       <Footer />
+      <LenisMount />
     </>
   )
 }

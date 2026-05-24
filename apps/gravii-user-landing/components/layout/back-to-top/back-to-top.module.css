@@ -1,0 +1,65 @@
+.button {
+  position: fixed;
+  right: clamp(20px, 4vw, 48px);
+  bottom: clamp(20px, 4vh, 40px);
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px 12px 16px;
+  border: 1.5px solid var(--gravii-ink);
+  border-radius: 999px;
+  background: var(--gravii-paper);
+  color: var(--gravii-ink);
+  font-family: var(--gravii-font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(0, 12px, 0);
+  transition:
+    opacity 320ms ease,
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 220ms ease,
+    color 220ms ease,
+    box-shadow 320ms ease;
+  box-shadow: 0 4px 16px rgb(9 9 7 / 6%);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.button[data-visible="true"] {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0);
+}
+
+.button:hover {
+  background: var(--gravii-ink);
+  color: var(--gravii-paper);
+  box-shadow: 0 8px 24px rgb(9 9 7 / 12%);
+}
+
+.arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  font-size: 13px;
+  line-height: 1;
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.button:hover .arrow {
+  transform: translate3d(0, -2px, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .arrow {
+    transition: none;
+  }
+}

@@ -3,7 +3,7 @@
 import { useAppKit, useAppKitState } from '@reown/appkit/react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Address } from 'viem'
-import { useConnection, useDisconnect, useSignMessage } from 'wagmi'
+import { useConnection, useSignMessage } from 'wagmi'
 
 import {
   clearUserIdentityBootstrapPending,
@@ -127,7 +127,6 @@ export function UserWalletSignInFlow({
   variant,
 }: UserWalletSignInFlowProps) {
   const connection = useConnection()
-  const { disconnectAsync } = useDisconnect()
   const { open } = useAppKit()
   const appKitState = useAppKitState()
   const { signMessageAsync } = useSignMessage()
@@ -251,11 +250,13 @@ export function UserWalletSignInFlow({
       return
     }
 
-    try {
-      if (connection.isConnected && connection.address) {
-        await disconnectAsync()
-      }
+    if (connection.isConnected && connection.address) {
+      setShouldAuthenticateWallet(false)
+      await authenticateWallet(connection.address)
+      return
+    }
 
+    try {
       setShouldAuthenticateWallet(true)
       setPendingStage('selecting')
       await open({ view: 'Connect' })
@@ -269,9 +270,9 @@ export function UserWalletSignInFlow({
     }
   }, [
     authenticateInjectedWallet,
+    authenticateWallet,
     connection.address,
     connection.isConnected,
-    disconnectAsync,
     open,
   ])
 

@@ -29,10 +29,10 @@
   display: grid;
   grid-template-columns: 226px minmax(0, 1fr);
   gap: 20px;
-  height: 100vh;
-  min-height: 720px;
+  height: auto;
+  min-height: max(620px, 100dvh);
   padding: 20px;
-  overflow: hidden;
+  overflow: auto;
   background: var(--app-root-background);
   color: var(--raw-ink);
   transition:
@@ -341,6 +341,7 @@
 .workspace {
   position: relative;
   z-index: 1;
+  display: flex;
   min-width: 0;
   min-height: 0;
 }
@@ -348,9 +349,10 @@
 .workspaceBoard {
   position: relative;
   display: flex;
-  height: 100%;
-  min-height: 0;
-  overflow: hidden;
+  flex: 1;
+  height: auto;
+  min-height: calc(100dvh - 40px);
+  overflow: visible;
   border: 0;
   border-radius: 0;
   background: var(--workspace-board-background);
@@ -376,7 +378,7 @@
   display: flex;
   flex: 1;
   width: 100%;
-  min-height: 100%;
+  min-height: 0;
   flex-direction: column;
   gap: 12px;
   padding: clamp(14px, 1.35vw, 20px);
@@ -465,11 +467,11 @@
 .sectionFrame {
   position: relative;
   display: flex;
-  flex: 1 1 0;
+  flex: 1 0 auto;
   min-width: 0;
   width: 100%;
-  min-height: 0;
-  overflow: hidden;
+  min-height: max(360px, calc(100dvh - 128px));
+  overflow: visible;
   border: 6px solid var(--section-accent);
   border-radius: 16px;
   background: var(--workspace-board-background);
@@ -495,12 +497,18 @@
 }
 
 .sectionPanelShell {
-  flex: 1 0 auto;
+  flex: none;
   min-width: 0;
   width: 100%;
   min-height: auto;
   overflow: visible;
   padding: 0;
+}
+
+.sectionFrame .sectionPanelShell {
+  flex: none;
+  min-height: auto;
+  overflow: visible;
 }
 
 .workspaceAuthButton {
@@ -542,7 +550,7 @@
     height: auto;
     min-height: 100vh;
     flex-direction: column;
-    overflow: hidden;
+    overflow: auto;
   }
 
   .sidebar {
@@ -583,7 +591,29 @@
   }
 
   .workspace {
-    min-height: 680px;
+    min-height: 0;
+  }
+
+  .workspaceBoard {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .activeSection {
+    min-height: 0;
+  }
+
+  .sectionFrame {
+    flex: none;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .sectionPanelShell {
+    flex: none;
+    min-height: 0;
+    overflow: visible;
   }
 
 }
@@ -610,6 +640,7 @@
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 8px;
     align-items: stretch;
+    padding: 6px 8px 6px 14px;
   }
 
   .sectionTopMeta {
@@ -620,14 +651,64 @@
     justify-content: flex-end;
   }
 
+  .sectionTopActions .workspaceAuthButton {
+    --button-font-size: 0.54rem;
+    --button-pad-x: 0.95em;
+  }
+
   .sectionFrame {
+    flex: none;
     min-height: 0;
+    overflow: visible;
     border-width: 4px;
     border-radius: 14px;
     padding: 14px;
   }
 
   .homeShell {
+    flex: none;
     padding: 0;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 360px) {
+  .root {
+    padding: 8px;
+  }
+
+  .sectionTopBar {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 5px 6px 5px 12px;
+    border-radius: 18px;
+  }
+
+  .sectionTopCopy span {
+    font-size: 18px;
+  }
+
+  .sectionTopActions .workspaceAuthButton {
+    --button-font-size: 0.5rem;
+    --button-pad-x: 0.78em;
+    width: auto;
+  }
+
+  .sectionTopActions {
+    justify-content: flex-start;
+  }
+
+  .footerLabel {
+    display: none;
+  }
+
+  .themeToggleGroup {
+    width: min(150px, 48vw);
+  }
+
+  .sessionButtonDisconnected,
+  .sessionButtonConnected {
+    --button-font-size: 0.56rem;
+    --button-pad-x: 1em;
   }
 }

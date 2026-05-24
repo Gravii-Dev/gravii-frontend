@@ -1,16 +1,15 @@
 # Discovery Feature Guide
 
-This folder now owns the reserved `Discovery` surface in the current Launch App rollout.
-
-For the current phase, Discovery is intentionally parked behind a coming-soon state while Gravii ID and X-Ray ship live first.
+This folder owns the `Discovery` campaign surface in the current Launch App rollout.
 
 ## Feature Purpose
 
 This feature currently exists to:
 
-- preserve the product slot and panel chrome for Discovery
-- communicate that the exploratory campaign surface is planned
-- avoid leaving stale mock catalog behavior in production-facing QA
+- render partner and campaign discovery from a local product dataset until the backend catalog is connected
+- keep category, status, and search filtering visible in the shell
+- show campaign detail expansion, qualification guidance, and eligibility verification affordances
+- keep the personalized campaign layer gated behind wallet sign-in for anonymous users
 
 ## Main Files
 
@@ -20,25 +19,25 @@ This is the main surface component.
 
 Responsibilities:
 
-- render the reserved/coming-soon content
-- keep the Discovery structure visible behind a sign-in blur gate for anonymous users
-- render discovery-specific readiness metrics and launch-stage visibility
-- provide quick routes back to live Gravii ID and X-Ray surfaces
-- keep the panel wording aligned with the current rollout priority
+- render the campaign discovery hero, filter bar, partner grid, and partner detail route
+- expose campaign CTAs such as `OPT IN`, `HOW TO QUALIFY`, `VERIFY MY ELIGIBILITY`, `NOTIFY ME WHEN LIVE`, and invite-only access states
+- keep the campaign structure visible behind a sign-in blur gate for anonymous users
+- route qualification guidance back to `GRAVII ID` and `RANKING`
 - preserve the shared panel contract used by the shell
 
 ## What This Feature Owns
 
-- the Discovery panel's reserved-state copy
-- the panel-specific coming-soon framing
+- Discovery panel information architecture
+- local partner and campaign preview data
+- campaign filtering, detail expansion, qualification guide state, and locked anonymous state
 
 ## What This Feature Does Not Own
 
-- live campaign browsing
-- qualification logic
-- partner filtering
 - panel layout shell
+- backend catalog reads
+- real campaign claim writes
+- production eligibility verification
 
 ## Production Direction
 
-When the Discovery backend surface is ready, this folder can expand again into a richer feature boundary with server-backed catalog reads and eligibility actions. For now, the production-safe direction is to keep it explicitly reserved.
+When the Discovery backend surface is ready, replace the local partner dataset with server-backed catalog reads and wire eligibility verification and claim actions to authenticated endpoints. The visible shell should remain stable.

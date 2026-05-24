@@ -129,6 +129,35 @@ export default function XRayResultView({ detail, onBack }: XRayResultViewProps) 
         </Section>
       </div>
 
+      <Section title="PORTFOLIO & RISK SIGNALS">
+        <div className={styles.signalGrid}>
+          <div className={styles.signalCard} data-liquid-glass="soft">
+            <span className={styles.metricLabel}>PORTFOLIO OVERVIEW</span>
+            <strong>{detail.totalValue}</strong>
+            <span>Across {detail.activeChains} active chains</span>
+          </div>
+          <div className={styles.signalCard} data-liquid-glass="soft">
+            <span className={styles.metricLabel}>DEFI ENGAGEMENT</span>
+            <strong>{detail.defiTvl}</strong>
+            <span>{detail.defiProtocolCount} protocols detected</span>
+          </div>
+          <div className={styles.signalCard} data-liquid-glass="soft">
+            <span className={styles.metricLabel}>RISK ASSESSMENT</span>
+            <strong>{detail.reputation}</strong>
+            <span>
+              {detail.reputationFlags.length > 0
+                ? `${detail.reputationFlags.length} active flags`
+                : "No active flags"}
+            </span>
+          </div>
+          <div className={styles.signalCard} data-liquid-glass="soft">
+            <span className={styles.metricLabel}>TRANSFER & GAS</span>
+            <strong>{detail.transactions90d}</strong>
+            <span>Transactions available in the current result schema</span>
+          </div>
+        </div>
+      </Section>
+
       <Section title="RECENT ACTIVITY">
         <div className={styles.activityList}>
           {detail.recentActivity.length > 0 ? (

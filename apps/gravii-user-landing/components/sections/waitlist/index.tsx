@@ -1,28 +1,42 @@
-import { MaskReveal } from '@/components/effects/mask-reveal'
-import { WaitlistForm } from './form'
+import { Link } from '@/components/ui/link'
 import s from './waitlist.module.css'
 
 export function Waitlist() {
   return (
-    <section
-      id="waitlist"
-      className={s.section}
-    >
+    <footer id="waitlist" className={s.section}>
       <div className={s.inner}>
-        <div className={s.titleReveal}>
-          <h2 className={s.title}>
-            We search.
-            <br />
-            Your lifestyle.
-            <br />
-            Live different.
-          </h2>
+        <div className={s.left}>
+          <span className={s.brand}>GRAVII</span>
+          <span className={s.signature}>A Reputation Passport.</span>
         </div>
-
-        <MaskReveal className={s.formReveal} delay={0.08} completeAtPageEnd>
-          <WaitlistForm />
-        </MaskReveal>
+        <div className={s.right}>
+          <div className={s.row}>
+            <Link className={s.link} href="https://x.com/gravii_io">
+              X
+            </Link>
+            <span aria-hidden="true" className={s.dot}>
+              ·
+            </span>
+            <Link className={s.link} href="https://discord.gg/gravii">
+              Discord
+            </Link>
+          </div>
+          <div className={s.row}>
+            <span className={s.muted}>© 2026 Gravii</span>
+          </div>
+          <div className={s.row}>
+            <Link className={s.link} href="/privacy">
+              Privacy
+            </Link>
+            <span aria-hidden="true" className={s.dot}>
+              ·
+            </span>
+            <Link className={s.link} href="/terms">
+              Terms
+            </Link>
+          </div>
+        </div>
       </div>
-    </section>
+    </footer>
   )
 }

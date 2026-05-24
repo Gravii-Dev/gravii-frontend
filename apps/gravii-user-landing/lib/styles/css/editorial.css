@@ -1,0 +1,154 @@
+/* EDITORIAL CSS — Typography scale + accent palette for chapter sections */
+/* GSAP design system을 라이트 베이스에 맞게 톤다운하여 차용 */
+
+/* Landing base — warm cream, aligned with Gravii App (app.gravii.io) */
+:root {
+  --gravii-paper: #fdfaf3;
+  --gravii-canvas: #f6efdf;
+  --gravii-canvas-dim: #ede3c8;
+  --gravii-canvas-bright: #fffcf7;
+  --gravii-surface: rgb(253 250 243 / 82%);
+  --gravii-surface-strong: rgb(255 252 247 / 96%);
+  --gravii-surface-low: rgb(253 250 243 / 58%);
+
+  /* Universal halo wash — Hero's 3-radial signature, applied across all sections */
+  --gravii-halo-wash:
+    radial-gradient(circle at 12% 12%, rgb(244 210 58 / 16%), transparent 28%),
+    radial-gradient(circle at 86% 18%, rgb(90 169 255 / 14%), transparent 30%),
+    radial-gradient(circle at 70% 92%, rgb(85 219 156 / 10%), transparent 30%);
+}
+
+:root {
+  /* Editorial type scale — clamp()으로 viewport 적응 */
+  --ed-text-eyebrow: clamp(13px, 0.95vw, 15px);
+  --ed-text-caption: clamp(15px, 1.15vw, 18px);
+  --ed-text-body: clamp(18px, 1.4vw, 22px);
+  --ed-text-pull: clamp(24px, 2.5vw, 34px);
+  --ed-text-heading: clamp(34px, 4.4vw, 58px);
+  --ed-text-heading-lg: clamp(50px, 6.6vw, 86px);
+  --ed-text-display: clamp(76px, 10vw, 136px);
+
+  --ed-leading-tight: 0.96;
+  --ed-leading-display: 0.92;
+  --ed-leading-heading: 1.08;
+  --ed-leading-pull: 1.16;
+  --ed-leading-body: 1.5;
+
+  --ed-tracking-display: -0.034em;
+  --ed-tracking-heading: -0.022em;
+  --ed-tracking-pull: -0.018em;
+  --ed-tracking-body: -0.01em;
+  --ed-tracking-eyebrow: 0.16em;
+  --ed-tracking-mono: 0.04em;
+
+  /* Editorial accent palette — chapter rotation. GSAP 시스템에서 라이트 베이스에서도 살아있는 4색 선별 */
+  --ed-accent-recognition: #ff8709; /* Fiery Orange */
+  --ed-accent-passport: #6b5dff; /* Digital Violet — 라이트 콘트라스트 위해 GSAP 원본보다 진하게 */
+  --ed-accent-inside: #00bae2; /* Aqua Glow */
+  --ed-accent-vision: #d65b9c; /* Neon Pink — 라이트 콘트라스트 위해 GSAP 원본 #fec5fb보다 진하게 */
+
+  /* Soft washes for backgrounds */
+  --ed-wash-recognition: rgb(255 135 9 / 6%);
+  --ed-wash-passport: rgb(107 93 255 / 5%);
+  --ed-wash-inside: rgb(0 186 226 / 5%);
+  --ed-wash-vision: rgb(214 91 156 / 5%);
+
+  /* Editorial hairlines */
+  --ed-line: rgb(9 9 7 / 14%);
+  --ed-line-strong: rgb(9 9 7 / 28%);
+
+  /* Chapter rhythm */
+  --ed-chapter-vpad: clamp(96px, 14vh, 200px);
+  --ed-chapter-vpad-tight: clamp(48px, 8vh, 120px);
+  --ed-content-max: 64rem;
+  --ed-content-max-narrow: 44rem;
+}
+
+/* Editorial helper classes — 모든 챕터 섹션에서 공용 */
+
+.ed-eyebrow {
+  display: inline-block;
+  font-family: var(--gravii-font-mono);
+  font-size: var(--ed-text-eyebrow);
+  font-weight: 400;
+  letter-spacing: var(--ed-tracking-eyebrow);
+  line-height: 1;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.ed-display {
+  font-family: var(--gravii-font-heading);
+  font-size: var(--ed-text-display);
+  font-weight: 600;
+  letter-spacing: var(--ed-tracking-display);
+  line-height: var(--ed-leading-display);
+  margin: 0;
+  color: var(--gravii-ink);
+}
+
+.ed-heading-lg {
+  font-family: var(--gravii-font-heading);
+  font-size: var(--ed-text-heading-lg);
+  font-weight: 600;
+  letter-spacing: var(--ed-tracking-heading);
+  line-height: var(--ed-leading-heading);
+  margin: 0;
+  color: var(--gravii-ink);
+}
+
+.ed-heading {
+  font-family: var(--gravii-font-heading);
+  font-size: var(--ed-text-heading);
+  font-weight: 600;
+  letter-spacing: var(--ed-tracking-heading);
+  line-height: var(--ed-leading-heading);
+  margin: 0;
+  color: var(--gravii-ink);
+}
+
+.ed-pull {
+  font-family: var(--gravii-font-heading);
+  font-size: var(--ed-text-pull);
+  font-weight: 500;
+  letter-spacing: var(--ed-tracking-pull);
+  line-height: var(--ed-leading-pull);
+  margin: 0;
+  color: var(--gravii-ink);
+}
+
+.ed-body {
+  font-family: var(--gravii-font-ui);
+  font-size: var(--ed-text-body);
+  font-weight: 400;
+  letter-spacing: var(--ed-tracking-body);
+  line-height: var(--ed-leading-body);
+  margin: 0;
+  color: var(--gravii-ink-muted);
+}
+
+.ed-caption {
+  font-family: var(--gravii-font-mono);
+  font-size: var(--ed-text-caption);
+  font-weight: 400;
+  letter-spacing: var(--ed-tracking-mono);
+  line-height: 1.4;
+  margin: 0;
+  color: var(--gravii-ink-soft);
+}
+
+.ed-divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--ed-line);
+  border: 0;
+  margin: 0;
+}
+
+/* Inline brand mark — applied to every "Gravii" / "Gravii ID" mention in body copy */
+.gravii-id-mark {
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  color: var(--ed-accent-passport);
+}

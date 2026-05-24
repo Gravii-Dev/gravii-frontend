@@ -64,9 +64,9 @@ export function IntroOne() {
     charRefs.current.forEach((node) => {
       setRevealState(node, 0, 16)
     })
-      cardNodes.forEach((node) => {
-        setRevealState(node, 0, 0)
-      })
+    cardNodes.forEach((node) => {
+      setRevealState(node, 0, 0)
+    })
 
     const syncFromViewport = () => {
       if (
@@ -116,7 +116,8 @@ export function IntroOne() {
 
       const cardsBounds = cardsWrapRef.current.getBoundingClientRect()
       const cardsProgress = clamp01(
-        (viewportHeight * 0.9 - cardsBounds.top) / Math.max(1, viewportHeight * 0.48)
+        (viewportHeight * 0.9 - cardsBounds.top) /
+          Math.max(1, viewportHeight * 0.48)
       )
 
       cardNodes.forEach((node, index) => {
@@ -153,11 +154,7 @@ export function IntroOne() {
   }, [])
 
   return (
-    <section
-      id="about"
-      ref={sectionRef}
-      className={s.section}
-    >
+    <section id="about" ref={sectionRef} className={s.section}>
       <div className={s.stage}>
         <h2 ref={titleRef} className={s.title}>
           {INTRO_ONE_CHARS.map((item) =>
