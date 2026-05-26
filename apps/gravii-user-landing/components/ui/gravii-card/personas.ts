@@ -44,13 +44,11 @@ export const TIER_COLORS: Record<PersonaTier, string> = {
   OBSIDIAN: '#1a1418',
 }
 
-const PLACEHOLDER_ILLUSTRATION = '/personas/new-voyager.jpg'
-
 export const DEMO_PERSONAS: readonly Persona[] = [
   {
     id: 'diamond-hands',
     name: 'DIAMOND HANDS',
-    illustration: PLACEHOLDER_ILLUSTRATION,
+    illustration: '/personas/diamond-hands.svg',
     tier: 'PLATINUM',
     handle: '@vivienne.gv',
     chain: 'Base',
@@ -60,7 +58,7 @@ export const DEMO_PERSONAS: readonly Persona[] = [
   {
     id: 'active-trader',
     name: 'ACTIVE TRADER',
-    illustration: PLACEHOLDER_ILLUSTRATION,
+    illustration: '/personas/active-trader.svg',
     tier: 'GOLD',
     handle: '@kaito.gv',
     chain: 'Base',
@@ -70,7 +68,7 @@ export const DEMO_PERSONAS: readonly Persona[] = [
   {
     id: 'new-voyager',
     name: 'NEW VOYAGER',
-    illustration: PLACEHOLDER_ILLUSTRATION,
+    illustration: '/personas/new-voyager.svg',
     tier: 'BASE',
     handle: '@minji.gv',
     chain: 'Base',

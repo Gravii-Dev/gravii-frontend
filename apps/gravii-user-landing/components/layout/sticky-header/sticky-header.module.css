@@ -9,6 +9,8 @@
   justify-content: space-between;
   gap: 1rem;
   padding: clamp(1rem, 2vw, 1.6rem) clamp(1rem, 2.4vw, 2rem) 0;
+  padding-right: max(clamp(1rem, 2.4vw, 2rem), env(safe-area-inset-right));
+  padding-left: max(clamp(1rem, 2.4vw, 2rem), env(safe-area-inset-left));
   font-family: var(--gravii-font-ui);
   background: transparent;
   transform: translateY(0);
@@ -36,6 +38,9 @@
 }
 
 .logoLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
   cursor: pointer;
   font-size: 1.125rem;
   font-family: var(--gravii-font-heading);
@@ -395,8 +400,8 @@
 @media (width <= 640px) {
   .root {
     padding-top: 1rem;
-    padding-right: 1rem;
-    padding-left: 1rem;
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-left: max(1rem, env(safe-area-inset-left));
   }
 
   .leftGroup {
@@ -412,7 +417,7 @@
   }
 
   .pillBody {
-    min-height: 2.4rem;
+    min-height: 2.75rem;
     padding: 0.55rem 0.95rem;
   }
 
@@ -423,6 +428,45 @@
 
   .pillText {
     font-size: 0.75rem;
+  }
+
+  .pillPulse,
+  .cursorOrbit {
+    display: none;
+  }
+}
+
+@media (height <= 520px) and (orientation: landscape) and (width <= 960px) {
+  .root {
+    padding-top: 0.75rem;
+    gap: 0.75rem;
+  }
+
+  .leftGroup {
+    gap: 0.75rem;
+  }
+
+  .nav {
+    gap: 0.4rem;
+  }
+
+  .logoLink {
+    min-height: 2.5rem;
+    font-size: 0.95rem;
+  }
+
+  .pillBody {
+    min-height: 2.5rem;
+    padding: 0.5rem 0.85rem;
+  }
+
+  .navLink .pillBody,
+  .actionLink .pillBody {
+    padding-inline: 0.85rem;
+  }
+
+  .pillText {
+    font-size: 0.72rem;
   }
 
   .pillPulse,

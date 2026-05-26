@@ -102,6 +102,13 @@
   color: var(--gravii-paper);
 }
 
+.stamp:focus-within .box {
+  box-shadow:
+    4px 4px 0 0 var(--ed-accent-passport),
+    0 0 0 3px var(--gravii-paper),
+    0 0 0 5px var(--ed-accent-passport);
+}
+
 /* Label inside box — "JOIN WAITLIST" */
 .label {
   position: absolute;
@@ -173,6 +180,10 @@
   outline: none;
 }
 
+.input:focus-visible {
+  outline: none;
+}
+
 .input::placeholder {
   color: var(--gravii-ink-soft);
 }
@@ -191,7 +202,14 @@
   font-size: 1.1rem;
   font-weight: 700;
   cursor: pointer;
-  transition: opacity 220ms ease;
+  transition:
+    opacity 220ms ease,
+    transform 180ms ease;
+}
+
+.submit:hover:not(:disabled),
+.submit:focus-visible {
+  transform: translate3d(0, -1px, 0);
 }
 
 .submit:disabled {

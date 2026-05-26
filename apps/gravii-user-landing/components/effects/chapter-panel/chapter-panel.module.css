@@ -2,6 +2,7 @@
   position: relative;
   width: 100%;
   height: var(--chapter-distance, 200vh);
+  scroll-margin-top: clamp(72px, 12vh, 120px);
 }
 
 .sticky {
@@ -26,4 +27,18 @@
   position: relative;
   width: 100%;
   padding-block: var(--ed-chapter-vpad-tight, 64px);
+}
+
+@media (--mobile) {
+  .section {
+    --chapter-overlap-scale: 0.45;
+
+    height: var(--chapter-distance-mobile, var(--chapter-distance, 200vh));
+  }
+}
+
+@media (height <= 520px) and (orientation: landscape) and (width <= 960px) {
+  .section {
+    --chapter-overlap-scale: 0;
+  }
 }

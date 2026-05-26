@@ -12,6 +12,7 @@
   max-width: 100rem;
   margin: 0 auto;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .eyebrowSlot {
@@ -199,37 +200,112 @@
 
 @media (--mobile) {
   .stage {
-    justify-content: flex-start;
-    padding-top: clamp(80px, 18vh, 140px);
+    justify-content: center;
+    padding: clamp(76px, 11vh, 116px) clamp(20px, 6vw, 32px)
+      clamp(44px, 7vh, 72px);
   }
 
   .parallels {
-    position: relative;
-    inset: auto;
-    padding: 0;
-    margin: clamp(28px, 6vh, 56px) 0;
+    position: absolute;
+    inset: 0;
+    justify-content: center;
+    padding: clamp(76px, 11vh, 116px) clamp(20px, 6vw, 32px)
+      clamp(44px, 7vh, 72px);
+    margin: 0;
   }
 
   .parallelsGrid {
     grid-template-columns: 1fr;     /* stack columns vertically */
-    gap: clamp(28px, 4vh, 48px);
+    gap: clamp(18px, 2.8vh, 28px);
+    max-width: min(100%, 32rem);
+  }
+
+  .column {
+    min-width: 0;
+    gap: clamp(8px, 1.4vh, 12px);
+  }
+
+  .rowList {
+    gap: clamp(7px, 1.1vh, 10px);
+  }
+
+  .row,
+  .rowEtc {
+    gap: 8px;
+  }
+
+  .rowText {
+    min-width: 0;
+    font-size: clamp(15px, 4.3vw, 18px);
+    line-height: 1.18;
+  }
+
+  .rowIndex,
+  .columnHeader {
+    font-size: clamp(10px, 2.8vw, 12px);
   }
 
   .divider {
-    width: 100%;
-    height: 1px;
-    transform-origin: left center;
-    /* Note: on mobile divider runs horizontally between columns —
-       scaleX would be more natural, but we keep scaleY for simplicity;
-       a horizontal 1px line at scaleY(1) is fully drawn */
+    display: none;
   }
 
   .closer {
-    position: relative;
-    inset: auto;
-    padding: 0;
-    margin-top: clamp(40px, 8vh, 80px);
-    text-align: left;
+    position: absolute;
+    inset: 0;
+    padding: clamp(76px, 11vh, 116px) clamp(20px, 6vw, 32px)
+      clamp(44px, 7vh, 72px);
+    margin: 0;
+    text-align: center;
+  }
+
+  .closerText {
+    font-size: clamp(38px, 11vw, 48px);
+    line-height: 1.08;
+  }
+}
+
+@media (height <= 520px) and (orientation: landscape) and (width <= 960px) {
+  .stage {
+    padding: clamp(44px, 13vh, 60px) clamp(28px, 7vw, 64px)
+      clamp(22px, 6vh, 36px);
+  }
+
+  .parallels {
+    padding: clamp(44px, 13vh, 60px) clamp(28px, 7vw, 64px)
+      clamp(22px, 6vh, 36px);
+  }
+
+  .parallelsGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(18px, 4vw, 36px);
+    max-width: 54rem;
+  }
+
+  .divider {
+    display: none;
+  }
+
+  .rowList {
+    gap: clamp(4px, 1.2vh, 7px);
+  }
+
+  .rowText {
+    font-size: clamp(12px, 2.2vw, 16px);
+    line-height: 1.16;
+  }
+
+  .rowIndex,
+  .columnHeader {
+    font-size: clamp(9px, 1.8vw, 11px);
+  }
+
+  .closer {
+    padding: clamp(44px, 13vh, 60px) clamp(28px, 7vw, 64px)
+      clamp(22px, 6vh, 36px);
+  }
+
+  .closerText {
+    font-size: clamp(30px, 6vw, 44px);
   }
 }
 

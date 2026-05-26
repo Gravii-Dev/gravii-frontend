@@ -29,6 +29,31 @@
   line-height: var(--ed-leading-display);
 }
 
+@media (--mobile) {
+  .sizeHeadingLg {
+    font-size: clamp(40px, 11vw, 56px);
+    line-height: 1.08;
+  }
+
+  .sizeDisplay {
+    font-size: clamp(54px, 16vw, 76px);
+    letter-spacing: -0.024em;
+  }
+}
+
+@media (height <= 520px) and (orientation: landscape) and (width <= 960px) {
+  .sizeHeadingLg {
+    font-size: clamp(28px, 4.6vw, 36px);
+    line-height: 1.04;
+    max-width: min(100%, 12em);
+  }
+
+  .sizeDisplay {
+    font-size: clamp(42px, 8vw, 64px);
+    line-height: 0.94;
+  }
+}
+
 .alignCenter {
   text-align: center;
 }
@@ -77,8 +102,7 @@
 }
 
 .space {
-  display: inline-block;
-  width: 0.32em;
+  display: inline;
 }
 
 @media (prefers-reduced-motion: reduce) {

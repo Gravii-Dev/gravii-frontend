@@ -682,3 +682,70 @@
     display: none;
   }
 }
+
+@media (height <= 520px) and (orientation: landscape) and (width <= 960px) {
+  .section {
+    align-items: center;
+    justify-content: center;
+    padding: clamp(4.4rem, 16vh, 5rem) clamp(1rem, 5vw, 2rem)
+      clamp(0.9rem, 3vh, 1.25rem);
+  }
+
+  .overlay {
+    align-items: flex-start;
+    gap: clamp(0.35rem, 1.8vh, 0.65rem);
+    width: min(100%, 46rem);
+  }
+
+  .label {
+    display: block;
+    width: 100%;
+    font-size: clamp(2.35rem, 8.4vw, 4.5rem);
+    line-height: 0.9;
+    letter-spacing: 0.055em;
+    text-align: left;
+    white-space: normal;
+  }
+
+  .line {
+    display: inline;
+  }
+
+  .label .line:nth-child(1)::after,
+  .label .line:nth-child(3)::after {
+    content: "\00a0";
+  }
+
+  .lineOffset {
+    padding-left: 0;
+  }
+
+  .label .line:nth-child(2)::after {
+    content: "";
+    display: block;
+  }
+
+  .subtitle {
+    align-self: flex-start;
+    width: auto;
+    max-width: 28rem;
+    margin-top: 0.1rem;
+    font-size: clamp(0.72rem, 2.5vw, 1rem);
+    line-height: 1.15;
+    text-align: left;
+  }
+
+  .ctaButton {
+    align-self: flex-start;
+    margin-top: 0.1rem;
+  }
+
+  .ctaButtonBody {
+    min-height: 2.65rem;
+    padding: 0.62rem 1.25rem;
+  }
+
+  .ctaOrbit {
+    display: none;
+  }
+}

@@ -43,7 +43,7 @@ export function GraviiCard({
           alt=""
           className={s.illustrationImg}
           draggable={false}
-          loading="lazy"
+          loading="eager"
           onLoad={(e) => {
             // Confirm REAL image (not 404 HTML response) by checking pixels
             if (e.currentTarget.naturalWidth > 0) {

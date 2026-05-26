@@ -109,9 +109,10 @@ export function ChapterPanel({
     }
   }, [pinDisabled])
 
+  const renderProgress = pinDisabled ? 1 : Math.max(progress, 0.1)
   const rendered =
     typeof children === 'function'
-      ? (children as (p: number) => ReactNode)(progress)
+      ? (children as (p: number) => ReactNode)(renderProgress)
       : children
 
   let overlapVh = 0
@@ -122,8 +123,15 @@ export function ChapterPanel({
   }
   const style: CSSProperties = {
     ['--chapter-distance' as string]: `${distance * 100}vh`,
+    ['--chapter-distance-mobile' as string]: `${
+      Math.max(2.2, distance * 0.72) * 100
+    }vh`,
     ...(background ? { background } : {}),
-    ...(overlapVh > 0 ? { marginTop: `-${overlapVh}vh` } : {}),
+    ...(overlapVh > 0
+      ? {
+          marginTop: `calc(var(--chapter-overlap-scale, 1) * -${overlapVh}vh)`,
+        }
+      : {}),
   }
 
   if (pinDisabled) {

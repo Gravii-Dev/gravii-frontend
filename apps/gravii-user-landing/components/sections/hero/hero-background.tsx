@@ -6,7 +6,7 @@ import s from './hero.module.css'
 
 const HERO_BOOT_DELAY_MS = 240
 const DESKTOP_BREAKPOINT_PX = 1024
-const SHOW_RENDER_STATUS = process.env.NODE_ENV === 'development'
+const SHOW_RENDER_STATUS = process.env.NEXT_PUBLIC_GRAVII_DEBUG_HERO === '1'
 
 const LazyHeroBackgroundWebGL = dynamic(
   () =>

@@ -33,30 +33,30 @@ export function Passport() {
         // with larger scale pop + persistent violet color + extended hold.
         // Phase A timing compressed for distance 4.0 — leaves more room for deck.
         const analogiesIn = Math.min(1, Math.max(0, progress / 0.14))
-        const analogiesOut = Math.min(1, Math.max(0, (progress - 0.42) / 0.08))
+        const analogiesOut = Math.min(1, Math.max(0, (progress - 0.38) / 0.09))
         const analogiesOpacity = analogiesIn * (1 - analogiesOut)
 
         // Last row spotlight — delayed reveal, violet via .featured class.
         const lastRowIn = Math.min(1, Math.max(0, (progress - 0.22) / 0.1))
 
-        // Phase B — Display "Gravii ID." + subline (0.50–0.58)
-        const displayIn = Math.min(1, Math.max(0, (progress - 0.5) / 0.08))
+        // Phase B — Display "Gravii ID." + subline (0.44–0.52)
+        const displayIn = Math.min(1, Math.max(0, (progress - 0.44) / 0.08))
         const displayCharProgress = Math.min(
           1,
-          Math.max(0, (progress - 0.5) / 0.08)
+          Math.max(0, (progress - 0.44) / 0.08)
         )
 
-        // Phase C — Body text (0.58–0.66) — left column completes BEFORE cards
-        const bodyIn = Math.min(1, Math.max(0, (progress - 0.58) / 0.08))
+        // Phase C — Body text (0.52–0.60) — left column completes BEFORE cards
+        const bodyIn = Math.min(1, Math.max(0, (progress - 0.52) / 0.08))
 
-        // Phase D — Card deck appears after body solo hold (0.70–0.74).
-        const deckIn = Math.min(1, Math.max(0, (progress - 0.7) / 0.04))
+        // Phase D — Card deck appears after body solo hold (0.66–0.70).
+        const deckIn = Math.min(1, Math.max(0, (progress - 0.66) / 0.04))
 
         // Card shuffle: STEPPED with DEDICATED hold zones — Card 0 also gets
         // visible hold AFTER deck settles (deckInput starts at 0.74, not 0.70).
-        // distance 4.0 → totalScroll 2700, deck range 0.74-1.00 (26% = 702px).
+        // distance 4.0 → deck range 0.70-1.00.
         // Hold 30% × 3 + snap 5% × 2 = 100%. Each hold ~211px (~3.5s @ Lenis 0.06).
-        const deckInput = Math.min(0.999, Math.max(0, (progress - 0.74) / 0.26))
+        const deckInput = Math.min(0.999, Math.max(0, (progress - 0.7) / 0.3))
         let deckProgress: number
         if (deckInput < 0.3) {
           // Card 0 (Diamond) hold — output stays in bucket 0 (< 0.333)

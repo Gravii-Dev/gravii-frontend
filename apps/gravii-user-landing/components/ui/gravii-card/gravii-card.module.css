@@ -83,9 +83,7 @@
 }
 
 /* ─── Illustration ─────────────────────────────────────────────────────── */
-/* Frame acts as a visible placeholder slot when no image loaded. The <img>
-   element sits on top with absolute positioning — when it loads, it covers
-   the placeholder. When src is missing/broken, the placeholder remains. */
+/* Frame provides a stable square media slot for local persona illustrations. */
 
 .illustrationFrame {
   position: relative;
@@ -111,7 +109,7 @@
   color: var(--gravii-ink-soft);
 }
 
-/* Centered placeholder icon — image/picture glyph */
+/* Placeholder glyph stays hidden for shipped local assets. */
 .illustrationFrame::before {
   content: "";
   position: absolute;
@@ -128,7 +126,7 @@
   -webkit-mask-size: contain;
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
-  opacity: 0.6;
+  opacity: 0;
   pointer-events: none;
 }
 
@@ -142,8 +140,7 @@
   user-select: none;
   -webkit-user-drag: none;
   background: transparent;
-  /* Hidden until image is confirmed loaded (real pixels, not 404 HTML) */
-  opacity: 0;
+  opacity: 1;
   transition: opacity 200ms ease;
 }
 
@@ -298,5 +295,56 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
+  }
+}
+
+@media (height <= 520px) and (orientation: landscape) and (width <= 960px) {
+  .card {
+    padding: 10px;
+  }
+
+  .header {
+    padding-bottom: 6px;
+  }
+
+  .brand,
+  .headerIssue,
+  .personaLabel,
+  .metaSince {
+    font-size: 9px;
+  }
+
+  .illustrationFrame {
+    margin-block: 6px;
+  }
+
+  .identity {
+    gap: 5px;
+    padding-block: 6px;
+  }
+
+  .handle {
+    font-size: clamp(17px, 3vw, 21px);
+    line-height: 0.96;
+  }
+
+  .tierName {
+    font-size: clamp(12px, 2.2vw, 15px);
+  }
+
+  .tierBar {
+    width: clamp(52px, 8vw, 70px);
+    height: 5px;
+  }
+
+  .footer {
+    gap: 5px;
+    padding-top: 6px;
+  }
+
+  .chainPill {
+    height: 18px;
+    padding-inline: 7px;
+    font-size: 9px;
   }
 }
