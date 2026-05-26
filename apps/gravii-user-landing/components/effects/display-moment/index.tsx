@@ -231,7 +231,7 @@ export function DisplayMoment({
         if (token.type === 'space') {
           return (
             <span key={token.key} className={s.space}>
-              {' '}
+              {' '}
             </span>
           )
         }

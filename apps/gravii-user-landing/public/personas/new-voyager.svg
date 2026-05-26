@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" role="img" aria-label="New Voyager persona">
+  <rect width="800" height="800" rx="64" fill="#fff8ea"/>
+  <circle cx="604" cy="174" r="164" fill="#e7f4ff"/>
+  <circle cx="188" cy="626" r="182" fill="#ecf8e9"/>
+  <path d="M400 134c92 88 138 172 138 252 0 112-62 204-138 280-76-76-138-168-138-280 0-80 46-164 138-252Z" fill="#fffdf7" stroke="#161511" stroke-width="18" stroke-linejoin="round"/>
+  <circle cx="400" cy="334" r="76" fill="#abff84" stroke="#161511" stroke-width="16"/>
+  <path d="M278 552c-58 12-104 42-126 82 66 30 150 48 248 48s182-18 248-48c-22-40-68-70-126-82" fill="none" stroke="#00bae2" stroke-width="24" stroke-linecap="round"/>
+  <path d="M330 196h140M332 474h136" stroke="#ff8709" stroke-width="20" stroke-linecap="round"/>
+</svg>

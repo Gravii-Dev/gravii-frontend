@@ -187,12 +187,15 @@ export function CtaPill() {
             name="email"
             type="email"
             autoComplete="email"
+            inputMode="email"
+            spellCheck={false}
+            aria-label="Email address"
             required
             className={s.input}
             placeholder={
               formState && formState.status >= 400 && statusMessage
                 ? statusMessage
-                : 'Enter your email'
+                : 'Enter your email…'
             }
             value={email}
             onChange={(event) => setEmail(event.target.value)}
@@ -211,11 +214,7 @@ export function CtaPill() {
           <button
             type="submit"
             className={s.submit}
-            disabled={
-              isPending ||
-              isSuccess ||
-              !isValidWaitlistEmail(normalizeWaitlistEmail(email))
-            }
+            disabled={isPending || isSuccess}
             aria-label="Submit"
             tabIndex={showForm ? 0 : -1}
           >

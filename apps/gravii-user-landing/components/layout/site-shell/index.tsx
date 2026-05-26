@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react'
 import { BackToTop } from '@/components/layout/back-to-top'
 import { CursorTrail } from '@/components/layout/cursor-trail'
-import { Footer } from '@/components/layout/footer'
 import { HaloOverlay } from '@/components/layout/halo-overlay'
 import { LenisMount } from '@/components/layout/site-shell/lenis-mount'
 import { TocRail } from '@/components/layout/toc-rail'
@@ -24,7 +23,6 @@ export function SiteShell({ children, className }: SiteShellProps) {
         {children}
       </main>
       <BackToTop />
-      <Footer />
       <LenisMount />
     </>
   )
