@@ -2,7 +2,7 @@
 
 Launch App is Gravii's end-user product. It lets a connected wallet holder view a Gravii profile, discover campaigns, inspect ranking context, and run wallet analysis on any address.
 
-This repository now runs as a live-backend-connected frontend for the current Launch App rollout. Wallet sign-in, Gravii ID, and X-Ray use the production User API, while the remaining surfaces stay explicitly marked as coming soon until their backend surfaces are ready.
+This repository now runs as a live-backend-connected frontend for the current Launch App rollout. Wallet sign-in, Gravii ID, and X-Ray use the production User API, while Discovery, Ranking, and hidden My Space stay as explicit live-data placeholders until their backend surfaces are ready.
 
 ## Tech Stack
 
@@ -84,20 +84,24 @@ src/
       launch-primitives/
         index.tsx
         launch-primitives.module.css
+      theme-ink-transition/
+        index.tsx
+        theme-ink-transition.module.css
   features/
     launch-app/
       panel-config.ts
       types.ts
     discovery/
+      components/
+        discovery-filters/
+          discovery-filters.module.css
+          index.tsx
       discovery-content.module.css
       discovery-content.tsx
     my-space/
-      components/
-        campaign-card/
-          campaign-card.module.css
-          index.tsx
       my-space-content.module.css
       my-space-content.tsx
+      use-my-space-state.ts
     profile/
       components/
         infinite-canvas/
@@ -157,13 +161,13 @@ Current live-backed parts:
 - live X-Ray credits, lookup history, fresh lookup runs, and detail reads with the new Gravii-branded analytical surface
 - browser-side auth and user reads now go through the same-origin Next.js `/api/user-api/*` backend-for-frontend route; JWTs are captured server-side during wallet verification and are not exposed back to browser JavaScript
 
-Current intentionally reserved parts:
+Current live-data placeholder parts:
 
 - `DISCOVERY`
 - `RANKING`
 - hidden code-preserved `MY SPACE`
 
-Discovery now keeps its structure visible behind a sign-in gate for anonymous users. Ranking shows the public board while gating wallet-specific rank behind sign-in. My Space remains code-preserved but hidden.
+Discovery, Ranking, and My Space no longer render local campaign, wallet, leaderboard, or benefit rows. They keep stable routes, panel framing, and sign-in affordances, but their user-facing data slots remain empty until live catalog, leaderboard, and personalized-feed APIs are connected.
 
 The main route shell lives in [page.tsx](/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-app/src/app/page.tsx), while visible and preserved product surfaces render through feature modules under `src/features`.
 

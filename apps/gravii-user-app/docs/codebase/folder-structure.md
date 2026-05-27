@@ -163,9 +163,7 @@ But in this app, it would introduce tradeoffs:
 
 Examples:
 
-- `use-my-space-state.ts`
 - `profile-view-model.ts`
-- `discovery-partner-detail`
 - `x-ray-result-view`
 
 ### Move code into `src/components/ui` when:
@@ -177,8 +175,8 @@ Examples:
 Examples in the current repo:
 
 - `ActionButton`
-- `SharedTagChip`
-- `MiniBar`
+- `GraviiLogo`
+- `ThemeInkTransition`
 
 ### Move code into `src/components/layout` when:
 

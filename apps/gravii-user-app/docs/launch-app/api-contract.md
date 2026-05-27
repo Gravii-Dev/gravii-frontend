@@ -88,7 +88,7 @@ Response:
   "session_token": "jwt-or-session-token",
   "user": {
     "id": "usr_123",
-    "display_name": "Messi",
+    "display_name": "Connected Wallet",
     "primary_wallet": "0x1234..."
   }
 }
@@ -176,14 +176,14 @@ Response:
     "eligible": [
       {
         "campaign_id": "cmp_1",
-        "partner_name": "Partner Alpha",
-        "name": "Yield Booster",
-        "campaign_type": "Yield Boost",
+        "partner_name": "Live Partner",
+        "name": "Live Campaign",
+        "campaign_type": "Reward",
         "category": "Wealth & Finance",
         "status": "eligible",
         "supported_chains": ["ethereum", "base"],
         "period_label": "Jan 30 - Mar 1, 2026",
-        "description": "Prestige rewards for verified value.",
+        "description": "Reward description from the live campaign catalog.",
         "tags": [
           { "type": "verified", "label": "Smart Saver" },
           { "type": "tier", "label": "Platinum+" }
@@ -248,19 +248,19 @@ Response:
     {
       "partner": {
         "id": "par_1",
-        "name": "Partner Alpha",
+        "name": "Live Partner",
         "status": "eligible"
       },
       "campaigns": [
         {
           "id": "cmp_1",
-          "name": "Yield Booster",
-          "campaign_type": "Yield Boost",
+          "name": "Live Campaign",
+          "campaign_type": "Reward",
           "category": "Wealth & Finance",
           "status": "eligible",
           "supported_chains": ["ethereum", "base"],
           "period_label": "Jan 30 - Mar 1, 2026",
-          "description": "Prestige rewards for verified value.",
+          "description": "Reward description from the live campaign catalog.",
           "tags": [
             { "type": "verified", "label": "Smart Saver" }
           ]
@@ -287,13 +287,13 @@ Response:
   "campaign": {
     "id": "cmp_1",
     "partner_id": "par_1",
-    "name": "Yield Booster",
-    "campaign_type": "Yield Boost",
+    "name": "Live Campaign",
+    "campaign_type": "Reward",
     "category": "Wealth & Finance",
     "status": "eligible",
     "supported_chains": ["ethereum", "base"],
     "period_label": "Jan 30 - Mar 1, 2026",
-    "description": "Prestige rewards for verified value."
+    "description": "Reward description from the live campaign catalog."
   },
   "requirements": {
     "required_personas": ["Smart Saver", "Profit Hunter"],
@@ -374,21 +374,28 @@ Fulfillment rule:
 
 - the frontend must only redirect to `checkout_url`
 - the backend must grant credits from a verified Stripe webhook, not from a browser success return
-- `checkout.session.completed` should be handled idempotently so duplicate webhooks cannot double-grant credits
+- `checkout.session.completed` must be handled idempotently so duplicate webhooks cannot double-grant credits
+- `/api/v1/me/xray/lookup` returns `402` when the current user is out of credits, and the frontend opens the X-Ray credit purchase modal for that state
 
-### POST `/api/v1/xray/analyses`
+Stripe Dashboard operation:
+
+- create a one-time Stripe Price for the 10-credit bundle at or above Stripe's minimum charge amount
+- configure the webhook endpoint for `checkout.session.completed`:
+  `https://gravii-user-api-1077809741476.europe-west6.run.app/api/v1/webhooks/stripe`
+- send the backend team the resulting `price_...` ID and `whsec_...` signing secret through a secure channel
+- do not add Stripe secret keys, price IDs, or webhook signing secrets to the frontend
+
+### POST `/api/v1/me/xray/lookup`
 
 Purpose:
 
-- create a wallet analysis request
+- run an authenticated wallet lookup and debit one X-Ray credit when the lookup is accepted
 
 Request:
 
 ```json
 {
-  "target_wallet_address": "0x7a3b...9f2c",
-  "chain_family": "evm",
-  "payment_method": "credits"
+  "address": "0x7a3b...9f2c"
 }
 ```
 
@@ -396,83 +403,72 @@ Response:
 
 ```json
 {
-  "analysis_id": "xra_123",
-  "status": "pending",
-  "price_amount": 0.1,
-  "price_currency": "USDC",
-  "requested_at": "2026-03-11T09:15:00Z"
+  "address": "0x7a3b...9f2c",
+  "success": true,
+  "credit_used": true,
+  "credits_remaining": 9
 }
 ```
 
-### GET `/api/v1/xray/analyses/:analysisId`
+Error behavior:
+
+- return `402` when the user has no X-Ray credits
+- return `400` for unsupported or invalid wallet addresses
+
+### GET `/api/v1/me/xray/:address`
 
 Purpose:
 
-- fetch request status and result when available
+- fetch the latest persisted X-Ray detail for one analyzed wallet
 
 Response:
 
 ```json
 {
-  "analysis_id": "xra_123",
-  "status": "complete",
-  "target_wallet_address": "0x7a3b...9f2c",
-  "requested_at": "2026-03-11T09:15:00Z",
-  "completed_at": "2026-03-11T09:15:04Z",
-  "result": {
-    "primary_persona": "Strategic Holder",
-    "secondary_personas": ["Profit Hunter", "Chain Hopper"],
-    "tier": "Platinum",
-    "reputation_status": "trusted",
-    "risk_status": "low",
-    "sybil_status": "clean",
-    "flags": [],
-    "metrics": {
-      "portfolio_value_usd": 142300,
-      "transaction_count": 1247,
-      "monthly_volume_usd": 12010,
-      "active_chain_count": 4,
-      "defi_tvl_usd": 68200,
-      "nft_count": 12
+  "xray": {
+    "address": "0x7a3b...9f2c",
+    "personas": {
+      "top_persona": "Strategic Holder",
+      "adjacent_personas": ["Profit Hunter", "Chain Hopper"]
     },
-    "portfolio_breakdown": {},
-    "chain_breakdown": [],
-    "funding_breakdown": {},
-    "defi_breakdown": {},
-    "transfer_breakdown": {},
-    "gas_breakdown": {},
-    "recent_activity": []
+    "identity": {
+      "tier": "Platinum",
+      "first_active": "2023-10-01",
+      "reputation": "trusted",
+      "reputation_flags": []
+    },
+    "portfolio": {
+      "total_value_usd": 142300,
+      "by_chain": []
+    },
+    "activity_90d": {
+      "total_transactions": 1247,
+      "chains_active": 4,
+      "recent_transactions": []
+    }
   }
 }
 ```
 
-### GET `/api/v1/me/xray/analyses`
+### GET `/api/v1/me/xray/lookup-list`
 
 Purpose:
 
-- fetch recent X-Ray analysis history for the connected user
-
-Query params:
-
-- `page`
-- `page_size`
+- fetch recent X-Ray lookup history for the connected user
 
 Response:
 
 ```json
 {
-  "items": [
+  "count": 1,
+  "lookups": [
     {
-      "analysis_id": "xra_123",
-      "requested_at": "2026-03-11T09:15:00Z",
-      "target_wallet_address": "0x7a3b...9f2c",
-      "status": "complete",
-      "primary_persona": "Strategic Holder"
+      "address": "0x7a3b...9f2c",
+      "analyzed_at": "2026-03-11T09:15:00Z",
+      "tier": "Platinum",
+      "top_persona": "Strategic Holder"
     }
-  ],
-  "page": 1,
-  "page_size": 10,
-  "total": 1
+  ]
 }
 ```
 
@@ -516,7 +512,7 @@ Response:
   },
   "me": {
     "wallet_address": "0x1234...",
-    "display_name": "Messi",
+    "display_name": "Connected Wallet",
     "rank": 56247,
     "percentile": 21,
     "weekly_change": 342,
@@ -526,7 +522,7 @@ Response:
   "entries": [
     {
       "rank": 1,
-      "display_name": "Benji",
+      "display_name": "Wallet 1",
       "wallet_preview": "xxx...sfxx",
       "tier": "Black",
       "weekly_change": 1

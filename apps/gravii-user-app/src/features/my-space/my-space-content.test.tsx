@@ -4,16 +4,12 @@ import { render, screen } from "@testing-library/react";
 import MySpaceContent from "./my-space-content";
 
 describe("MySpaceContent", () => {
-  it("renders the reserved dashboard state when connected", () => {
+  it("renders the reserved feed state when connected", () => {
     render(<MySpaceContent dark connected onConnect={() => {}} onNavigate={() => {}} />);
 
     expect(screen.getByText("My Space")).toBeInTheDocument();
     expect(screen.getByText("Your private feed is being composed.")).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        "My Space will become the personal room for matched benefits, saved claims, and concierge-style curation. The shell is ready now, while persistence and benefit matching move behind the scenes."
-      )
-    ).toBeInTheDocument();
+    expect(screen.getByText("Reserved for matched campaigns, claims, and benefit history.")).toBeInTheDocument();
   });
 
   it("keeps the reserved state when disconnected", () => {

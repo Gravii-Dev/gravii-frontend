@@ -264,7 +264,7 @@ export default function XRayContent({ dark, connected, onConnect }: SharedConten
     } catch (error) {
       if (error instanceof UserApiError && error.status === 404) {
         setCheckoutError(
-          "The X-Ray checkout endpoint is not live on the backend yet."
+          "X-Ray checkout is not available for this account or credit bundle yet."
         );
       } else {
         setCheckoutError(

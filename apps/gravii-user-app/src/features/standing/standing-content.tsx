@@ -52,74 +52,11 @@ const CATEGORIES: RankingCategory[] = [
 ];
 
 const RANKING_ROWS: Record<RankingCategory["id"], RankingRow[]> = {
-  activity: [
-    { chain: "Ethereum", change: "+3", name: "Benji", persona: "Diamond Hands", rank: "1", tier: "Black", up: true },
-    { chain: "BSC", change: "+1", name: "CZ", persona: "Active Trader", rank: "2", tier: "Platinum", up: true },
-    { chain: "Ethereum", change: "-2", name: "Diddy", persona: "Power User", rank: "3", tier: "Black", up: false },
-    { chain: "Arbitrum", change: "+4", name: "Cobie", persona: "Swing Trader", rank: "4", tier: "Gold", up: true },
-    { chain: "Ethereum", change: "-1", name: "Vitalik", persona: "Smart Saver", rank: "5", tier: "Platinum", up: false },
-    { chain: "Base", change: "+2", name: "DCFgod", persona: "Profit Hunter", rank: "6", tier: "Gold", up: true },
-    { chain: "Ethereum", change: "0", name: "Hsaka", persona: "Active Trader", rank: "7", tier: "Gold", up: null },
-    { chain: "Ethereum", change: "-1", name: "Satoshi", persona: "Strategic Holder", rank: "8", tier: "Platinum", up: false },
-    { chain: "Ethereum", change: "+1", name: "Punk6529", persona: "NFT Collector", rank: "9", tier: "Gold", up: true },
-    { chain: "Solana", change: "-3", name: "Ansem", persona: "Rising Star", rank: "10", tier: "Classic", up: false },
-  ],
-  overall: [
-    { chain: "Ethereum", change: "+1", name: "Benji", persona: "Diamond Hands", rank: "1", tier: "Black", up: true },
-    { chain: "Ethereum", change: "-1", name: "Diddy", persona: "Power User", rank: "2", tier: "Black", up: false },
-    { chain: "Ethereum", change: "+3", name: "Satoshi", persona: "Strategic Holder", rank: "3", tier: "Platinum", up: true },
-    { chain: "Ethereum", change: "+2", name: "Vitalik", persona: "Smart Saver", rank: "4", tier: "Platinum", up: true },
-    { chain: "BSC", change: "-2", name: "CZ", persona: "Active Trader", rank: "5", tier: "Platinum", up: false },
-    { chain: "Ethereum", change: "+5", name: "Punk6529", persona: "NFT Collector", rank: "6", tier: "Gold", up: true },
-    { chain: "Arbitrum", change: "0", name: "Cobie", persona: "Swing Trader", rank: "7", tier: "Gold", up: null },
-    { chain: "Ethereum", change: "+1", name: "Hsaka", persona: "Active Trader", rank: "8", tier: "Gold", up: true },
-    { chain: "Base", change: "-3", name: "DCFgod", persona: "Profit Hunter", rank: "9", tier: "Gold", up: false },
-    { chain: "Solana", change: "+4", name: "Ansem", persona: "Rising Star", rank: "10", tier: "Classic", up: true },
-  ],
-  streak: [
-    { chain: "Ethereum", change: "+1", name: "Diddy", persona: "Power User", rank: "1", tier: "Black", up: true },
-    { chain: "Ethereum", change: "+2", name: "Benji", persona: "Diamond Hands", rank: "2", tier: "Black", up: true },
-    { chain: "BSC", change: "-1", name: "CZ", persona: "Active Trader", rank: "3", tier: "Platinum", up: false },
-    { chain: "Arbitrum", change: "+3", name: "Cobie", persona: "Swing Trader", rank: "4", tier: "Gold", up: true },
-    { chain: "Ethereum", change: "+1", name: "Hsaka", persona: "Active Trader", rank: "5", tier: "Gold", up: true },
-    { chain: "Ethereum", change: "-2", name: "Satoshi", persona: "Strategic Holder", rank: "6", tier: "Platinum", up: false },
-    { chain: "Ethereum", change: "0", name: "Vitalik", persona: "Smart Saver", rank: "7", tier: "Platinum", up: null },
-    { chain: "Ethereum", change: "+1", name: "Punk6529", persona: "NFT Collector", rank: "8", tier: "Gold", up: true },
-    { chain: "Base", change: "-1", name: "DCFgod", persona: "Profit Hunter", rank: "9", tier: "Gold", up: false },
-    { chain: "Solana", change: "+5", name: "GCR", persona: "Chain Hopper", rank: "10", tier: "Classic", up: true },
-  ],
-  trade: [
-    { chain: "Ethereum", change: "+2", name: "Vitalik", persona: "Smart Saver", rank: "1", tier: "Platinum", up: true },
-    { chain: "Ethereum", change: "0", name: "Benji", persona: "Diamond Hands", rank: "2", tier: "Black", up: null },
-    { chain: "Ethereum", change: "+4", name: "Punk6529", persona: "NFT Collector", rank: "3", tier: "Gold", up: true },
-    { chain: "Ethereum", change: "-1", name: "Diddy", persona: "Power User", rank: "4", tier: "Black", up: false },
-    { chain: "BSC", change: "+1", name: "CZ", persona: "Active Trader", rank: "5", tier: "Platinum", up: true },
-    { chain: "Ethereum", change: "+3", name: "Satoshi", persona: "Strategic Holder", rank: "6", tier: "Platinum", up: true },
-    { chain: "Arbitrum", change: "-2", name: "Cobie", persona: "Swing Trader", rank: "7", tier: "Gold", up: false },
-    { chain: "Ethereum", change: "+1", name: "Hsaka", persona: "Active Trader", rank: "8", tier: "Gold", up: true },
-    { chain: "Base", change: "0", name: "DCFgod", persona: "Profit Hunter", rank: "9", tier: "Gold", up: null },
-    { chain: "Solana", change: "+2", name: "Ansem", persona: "Rising Star", rank: "10", tier: "Classic", up: true },
-  ],
-  wealth: [
-    { chain: "Ethereum", change: "+2", name: "Diddy", persona: "Wealth Guard", rank: "1", tier: "Black", up: true },
-    { chain: "Ethereum", change: "-1", name: "Benji", persona: "Diamond Hands", rank: "2", tier: "Black", up: false },
-    { chain: "Ethereum", change: "0", name: "Vitalik", persona: "Smart Saver", rank: "3", tier: "Platinum", up: null },
-    { chain: "BSC", change: "+1", name: "CZ", persona: "Major Investor", rank: "4", tier: "Platinum", up: true },
-    { chain: "Ethereum", change: "+3", name: "Hsaka", persona: "Active Trader", rank: "5", tier: "Gold", up: true },
-    { chain: "Ethereum", change: "-2", name: "Punk6529", persona: "NFT Collector", rank: "6", tier: "Gold", up: false },
-    { chain: "Arbitrum", change: "+1", name: "Cobie", persona: "Swing Trader", rank: "7", tier: "Gold", up: true },
-    { chain: "Ethereum", change: "-4", name: "Satoshi", persona: "Strategic Holder", rank: "8", tier: "Platinum", up: false },
-    { chain: "Solana", change: "+2", name: "Ansem", persona: "Rising Star", rank: "9", tier: "Classic", up: true },
-    { chain: "Ethereum", change: "+1", name: "GCR", persona: "Profit Hunter", rank: "10", tier: "Classic", up: true },
-  ],
-};
-
-const MY_RANKS: Record<RankingCategory["id"], string> = {
-  activity: "63,104",
-  overall: "56,247",
-  streak: "27,553",
-  trade: "12,340",
-  wealth: "41,892",
+  activity: [],
+  overall: [],
+  streak: [],
+  trade: [],
+  wealth: [],
 };
 
 function tierClassName(tier: RankingRow["tier"]) {
@@ -181,17 +118,17 @@ export default function StandingContent({
           <div className={styles.youGrid}>
             <div>
               <span className={styles.eyebrow}>You</span>
-              <strong>Messi</strong>
+              <strong>Connected wallet</strong>
             </div>
             <div>
               <span className={styles.eyebrow}>Your rank</span>
-              <strong>#{MY_RANKS[activeCategoryId]}</strong>
-              <span>of 279,941 users</span>
+              <strong>Pending API</strong>
+              <span>Wallet-specific rank is not loaded yet.</span>
             </div>
             <div>
               <span className={styles.eyebrow}>Weekly</span>
-              <strong className={styles.moveUp}>+342</strong>
-              <span>positions gained</span>
+              <strong>—</strong>
+              <span>No movement data yet.</span>
             </div>
             <div>
               <span className={styles.eyebrow}>Strongest</span>
@@ -250,18 +187,25 @@ export default function StandingContent({
         {connected ? (
           <>
             <article className={`${styles.row} ${styles.youRow}`}>
-              <strong>{MY_RANKS[activeCategoryId]}</strong>
-              <span className={tierClassName("Gold")}>Gold</span>
-              <span>Messi (You)</span>
-              <span>Diamond Hands</span>
-              <span>Ethereum</span>
-              <span className={styles.moveUp}>+342</span>
+              <strong>—</strong>
+              <span>—</span>
+              <span>Your wallet</span>
+              <span>Pending API</span>
+              <span>—</span>
+              <span>—</span>
             </article>
             <div className={styles.rankGap}>· · ·</div>
           </>
         ) : null}
 
         <div className={styles.rows}>
+          {rows.length === 0 ? (
+            <div className={styles.emptyRows}>
+              <strong>Public leaderboard data is not connected yet.</strong>
+              <span>Rows will render here from the live Ranking API.</span>
+            </div>
+          ) : null}
+
           {rows.map((row) => (
             <article className={styles.row} key={`${activeCategoryId}-${row.rank}-${row.name}`}>
               <strong>{row.rank}</strong>

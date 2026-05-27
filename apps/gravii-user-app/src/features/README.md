@@ -58,7 +58,8 @@ Owns the preserved personalized benefit feed surface.
 
 Responsibilities:
 
-- keeping the reserved personalized feed implementation available for the later rollout
+- keeping the reserved personalized feed route available for the later rollout
+- rendering no local benefit or campaign rows until a live personalized-feed API exists
 - linking back into `GRAVII ID` and `X-Ray`
 - staying hidden from current navigation and direct panel routing until the product scope reactivates it
 
@@ -68,9 +69,8 @@ Owns the broader campaign exploration surface.
 
 Responsibilities:
 
-- rendering the reserved partner campaign state
-- explaining the future eligibility and claim path
-- showing the campaign structure behind a sign-in blur gate for anonymous users
+- rendering the empty live-data placeholder for the future partner campaign catalog
+- explaining the future catalog, eligibility, and claim path
 - staying empty of catalog data until the backend contract is ready
 
 ### `x-ray`
@@ -92,9 +92,9 @@ Owns the `RANKING` surface.
 
 Responsibilities:
 
-- rendering the public ranking board shell
-- keeping the personal wallet rank card gated behind sign-in
-- explaining the reputation and cohort model without pretending backend-specific personal rank data is live
+- rendering the empty live-data placeholder for the future public ranking board
+- keeping the wallet-specific rank layer gated behind sign-in
+- explaining that public boards, current-wallet rank, seasons, and rewards must come from backend reads
 
 ## Why This Is Better Than a Flat `components/panels` Folder
 

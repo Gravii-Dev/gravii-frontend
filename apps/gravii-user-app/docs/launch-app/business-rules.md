@@ -133,16 +133,16 @@ Campaign evaluation may depend on:
 - A connected user may request analysis for any supported wallet address.
 - The target wallet does not need to belong to the requesting user.
 
-### 4.2 Pricing
-
-The current prototype shows `0.1 USDC` per analysis.
+### 4.2 Credits and Pricing
 
 MVP rule assumption:
 
-- X-Ray requires either a direct payment or a credit balance before analysis begins
-- Direct payment should be mediated by a backend-created Stripe Checkout Session.
+- X-Ray requires a positive credit balance before analysis begins.
+- Credit purchases are mediated by a backend-created Stripe Checkout Session.
+- The frontend sends only the credit bundle ID and return URLs; Stripe prices and secrets stay backend-owned.
 - Credit balances must be granted from verified webhook fulfillment, not from the frontend return URL.
 - Checkout fulfillment must be idempotent to prevent duplicate credit grants from retried webhooks.
+- The lookup endpoint should return `402` when the user is out of credits.
 
 ### 4.3 Analysis Lifecycle
 

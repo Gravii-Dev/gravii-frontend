@@ -9,8 +9,9 @@ This folder owns the code-preserved `My Space` surface.
 The feature currently exists to:
 
 - preserve the `05 MY SPACE` implementation and panel metadata for a later rollout
-- communicate that personalized benefits are still planned
-- avoid shipping stale grouped-campaign mocks during the live auth/data rollout
+- render no local benefit or campaign rows while the personalized backend feed is unavailable
+- keep the route boundary ready for the later rollout
+- avoid exposing the surface in the active navigation until the backend personalized feed contract is ready
 
 ## Main Files
 
@@ -20,23 +21,23 @@ This is the main surface component.
 
 Responsibilities:
 
-- render the reserved-state copy and chrome when the hidden surface is reactivated
-- render my-space-specific readiness metrics and phased launch steps
-- provide quick routes back to live Gravii ID and X-Ray surfaces
+- render the reserved state for the future personalized feed
+- explain the required feed endpoint, benefit matching read model, and saved-space persistence
+- provide quick routes back to live Gravii ID and Discovery surfaces
 - preserve the panel contract used by the shell
 
 ## What This Feature Owns
 
-- the My Space panel's reserved-state messaging
-- the panel-specific coming-soon framing
+- the hidden My Space panel boundary
+- empty-state copy for the unavailable personalized feed
+- backend-readiness milestones for feed, matching, and persistence
 
 ## What This Feature Does Not Own
 
 - the global panel shell
-- personalized feed grouping
 - real opt-in persistence
 - eligibility computation
 
 ## Production Direction
 
-When the My Space backend surface is ready, this folder can expand again into the personalized-feed feature boundary. For the current rollout, keeping it explicitly reserved is the safer production posture.
+When the My Space backend surface is ready, add personalized server reads and connect saved-benefit or opt-in persistence. The current folder boundary can remain stable.

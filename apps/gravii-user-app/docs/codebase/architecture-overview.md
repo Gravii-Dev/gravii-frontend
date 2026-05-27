@@ -57,6 +57,7 @@ The shell includes:
 - the active or hovered panel state in `src/features/launch-app/use-launch-shell.ts`
 - the panel opening and closing behavior in `src/components/layout/launch-panel`
 - the shared expanded frame in `src/components/layout/panel-shell`
+- the fixed navigation/scroll split where the sidebar remains visible and the active workspace frame handles long feature content independently
 
 The shell does not own the full internal logic of Profile, Discovery, X-Ray, or Ranking. It only places those features inside the panel system and coordinates top-level interaction.
 
@@ -72,9 +73,9 @@ Important implications:
 - The browser does not store the User API JWT. Wallet verification stores the token in an httpOnly same-origin cookie.
 - Browser API reads go through the same-origin `/api/user-api/*` backend-for-frontend route before reaching the User API.
 - `GRAVII ID` and `X-RAY` use live backend reads.
-- `DISCOVERY` and `RANKING` are visible non-live surfaces with explicit sign-in gates where personalization is required.
-- `MY SPACE` is code-preserved but hidden from navigation and direct panel routing.
-- Mock-era reserved-surface data and view-model files have been removed; reserved surfaces stay empty until backend contracts are ready.
+- `DISCOVERY` and `RANKING` are visible non-live surfaces that render no local catalog, campaign, wallet, leaderboard, or season rows.
+- `MY SPACE` is code-preserved and hidden from navigation/direct panel routing, but it no longer renders local benefit-feed rows.
+- Mock-era rows have been removed from the user-facing reserved surfaces; those surfaces now show explicit live-data placeholders.
 
 At runtime, the flow is roughly:
 
@@ -106,15 +107,15 @@ The product currently exposes five surfaces:
 
 - Folder: `src/features/my-space`
 - Product label in the UI: `MY SPACE`
-- Main job: preserve the future personalized benefits surface
-- Current state: hidden from navigation and direct panel routing
+- Main job: preserve the future personalized benefits route without local benefit rows
+- Current state: hidden from navigation and direct panel routing, implementation retained for later rollout
 
 ### 3. Discovery
 
 - Folder: `src/features/discovery`
 - Product label in the UI: `DISCOVERY`
-- Main job: reserve the future campaign discovery surface while showing its structure behind a sign-in blur gate
-- Current state: visible shell, personalized campaign access gated
+- Main job: show the future campaign catalog placeholder while avoiding local campaign rows
+- Current state: visible shell, waiting for live catalog, eligibility, and claim APIs
 
 ### 4. X-Ray
 
@@ -126,8 +127,8 @@ The product currently exposes five surfaces:
 
 - Folder: `src/features/standing`
 - Product label in the UI: `RANKING`
-- Main job: show public ranking context while gating the current wallet's rank behind sign-in
-- Current state: visible shell, wallet-specific rank gated
+- Main job: show the future ranking placeholder while avoiding local wallet names, ranks, seasons, and reward rows
+- Current state: visible shell, waiting for live leaderboard and current-wallet rank APIs
 
 ## Shared Systems
 
@@ -162,7 +163,9 @@ This folder owns reusable primitives shared across multiple surfaces.
 It contains:
 
 - `action-button`: a reusable button style with propagation control
-- `launch-primitives`: small reusable display primitives used mainly in X-Ray and campaign views
+- `gravii-logo`: shared logo rendering for symbol, wordmark, and motion variants
+- `launch-primitives`: small reusable display primitives used mainly in X-Ray and campaign-style views
+- `theme-ink-transition`: the shared WebGL light/dark theme transition layer
 
 ### `src/lib`
 
@@ -203,8 +206,8 @@ Covered today:
 - panel open and close behavior
 - sign-out button behavior through the mocked auth provider
 - anonymous launch route behavior and explicit sign-in routing
-- Discovery sign-in gate and hidden My Space navigation state
-- Ranking public-board and personal-rank gate behavior
+- Discovery live-data placeholder and hidden My Space navigation state
+- Ranking live-data placeholder and personal-rank gate behavior
 - X-Ray session-required behavior
 - X-Ray live-flow rendering through mocked User API helpers
 
