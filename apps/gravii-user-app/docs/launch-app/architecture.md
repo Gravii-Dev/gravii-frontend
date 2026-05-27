@@ -264,7 +264,7 @@ Need:
 - live JWT session bootstrap
 - live Gravii ID endpoint
 - live X-Ray credits/history/detail
-- frontend checkout redirect boundary for X-Ray credits, with backend webhook fulfillment still required
+- frontend checkout redirect boundary for X-Ray credits, with backend webhook fulfillment live after Stripe Dashboard price and webhook secret configuration
 - keep the remaining surfaces reserved instead of shipping stale mocks
 
 ### Phase 2: Replace Reserved Surfaces

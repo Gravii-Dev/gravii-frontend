@@ -47,8 +47,9 @@ Important details:
 - inactive cards remain visible so the user can jump between product surfaces without losing orientation
 - selecting a card replaces the active workspace surface with that section
 - the active section owns its own thin "entering section" bar and bordered frame, so section boundaries stay visually explicit without stacking all sections at once
-- expanded feature frames grow with their content and use page-level scrolling, avoiding hidden inner scroll regions that can clip content on zoomed or narrow viewports
-- on small screens, the navigation rail becomes a horizontal scroll surface above the workspace board
+- the app shell keeps navigation and feature content in separate scroll contexts: the sidebar stays fully visible, while the active workspace frame owns long-content scrolling
+- the active border frame is the full feature viewport; spacing lives inside the scroll surface so the visible content area does not shrink away from the border
+- on small screens, the navigation rail becomes a compact responsive grid above the workspace board instead of relying on nav scrolling
 
 What it does not own:
 

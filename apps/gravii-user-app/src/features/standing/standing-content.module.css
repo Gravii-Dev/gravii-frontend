@@ -229,6 +229,22 @@
   gap: 0.5rem;
 }
 
+.emptyRows {
+  display: grid;
+  min-height: clamp(8rem, 18vh, 13rem);
+  place-items: center;
+  gap: 0.35rem;
+  border-radius: var(--gravii-radius-lg);
+  background: var(--ranking-card-strong);
+  color: var(--ranking-sub);
+  text-align: center;
+}
+
+.emptyRows strong {
+  color: var(--ranking-text);
+  font-size: clamp(1rem, 1.6vw, 1.35rem);
+}
+
 .row {
   min-height: clamp(3rem, 6.2vh, 4.4rem);
   padding: 0.78rem;

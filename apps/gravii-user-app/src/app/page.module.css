@@ -1,4 +1,11 @@
 .root {
+  --app-shell-padding: 20px;
+  --app-shell-gap: 20px;
+  --brand-tile-height: clamp(76px, 11dvh, 104px);
+  --nav-panel-gap: 10px;
+  --nav-panel-rest-height: clamp(58px, 8.4dvh, 86px);
+  --nav-panel-active-height: clamp(128px, 22dvh, 220px);
+  --sidebar-footer-padding: clamp(12px, 1.8dvh, 16px);
   --raw-ink: #090705;
   --raw-paper: #fdfaf3;
   --raw-paper-strong: #ffffff;
@@ -28,11 +35,11 @@
   isolation: isolate;
   display: grid;
   grid-template-columns: 226px minmax(0, 1fr);
-  gap: 20px;
-  height: auto;
-  min-height: max(620px, 100dvh);
-  padding: 20px;
-  overflow: auto;
+  gap: var(--app-shell-gap);
+  height: 100dvh;
+  min-height: 0;
+  padding: var(--app-shell-padding);
+  overflow: hidden;
   background: var(--app-root-background);
   color: var(--raw-ink);
   transition:
@@ -132,9 +139,11 @@
   z-index: 1;
   display: flex;
   align-items: center;
+  height: calc(100dvh - (var(--app-shell-padding) * 2));
   min-height: 0;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--nav-panel-gap);
+  overflow: hidden;
 }
 
 .brandTile {
@@ -143,7 +152,8 @@
   align-items: center;
   justify-content: center;
   width: 178px;
-  min-height: 104px;
+  height: var(--brand-tile-height);
+  min-height: var(--brand-tile-height);
   padding: 16px;
   border: 1px solid transparent;
   border-radius: 16px;
@@ -194,8 +204,8 @@
   width: 100%;
   flex: 1;
   flex-direction: column;
-  gap: 12px;
-  overflow-y: auto;
+  gap: var(--nav-panel-gap);
+  overflow: hidden;
   scrollbar-width: none;
 }
 
@@ -214,9 +224,9 @@
 .sidebarFooter {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: clamp(8px, 1.25dvh, 12px);
   width: 178px;
-  padding: 16px;
+  padding: var(--sidebar-footer-padding);
   border: 0;
   border-radius: 16px;
   background: var(--sidebar-footer-bg);
@@ -343,16 +353,18 @@
   z-index: 1;
   display: flex;
   min-width: 0;
+  height: calc(100dvh - (var(--app-shell-padding) * 2));
   min-height: 0;
+  overflow: hidden;
 }
 
 .workspaceBoard {
   position: relative;
   display: flex;
   flex: 1;
-  height: auto;
-  min-height: calc(100dvh - 40px);
-  overflow: visible;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
   border: 0;
   border-radius: 0;
   background: var(--workspace-board-background);
@@ -378,9 +390,11 @@
   display: flex;
   flex: 1;
   width: 100%;
+  height: 100%;
   min-height: 0;
   flex-direction: column;
   gap: 12px;
+  overflow: hidden;
   padding: clamp(14px, 1.35vw, 20px);
 }
 
@@ -465,17 +479,18 @@
 }
 
 .sectionFrame {
+  --section-content-padding: clamp(18px, 2.2vw, 32px);
   position: relative;
   display: flex;
-  flex: 1 0 auto;
+  flex: 1 1 auto;
   min-width: 0;
   width: 100%;
-  min-height: max(360px, calc(100dvh - 128px));
-  overflow: visible;
+  min-height: 0;
+  overflow: hidden;
   border: 6px solid var(--section-accent);
   border-radius: 16px;
   background: var(--workspace-board-background);
-  padding: clamp(20px, 2.4vw, 34px);
+  padding: 0;
 }
 
 .sectionFrame > * {
@@ -485,11 +500,11 @@
 
 .homeShell {
   position: relative;
-  flex: 1;
+  flex: 1 1 auto;
   min-height: 0;
-  overflow: visible;
+  overflow: auto;
   scrollbar-width: none;
-  padding: 0;
+  padding: var(--section-content-padding);
 }
 
 .homeShell::-webkit-scrollbar {
@@ -497,18 +512,19 @@
 }
 
 .sectionPanelShell {
-  flex: none;
+  flex: 1 1 auto;
   min-width: 0;
   width: 100%;
-  min-height: auto;
-  overflow: visible;
-  padding: 0;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--section-content-padding);
 }
 
 .sectionFrame .sectionPanelShell {
-  flex: none;
-  min-height: auto;
-  overflow: visible;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--section-content-padding);
 }
 
 .workspaceAuthButton {
@@ -533,9 +549,13 @@
 
 @media (max-width: 960px) {
   .root {
+    --app-shell-padding: 14px;
+    --app-shell-gap: 14px;
+    --brand-tile-height: clamp(64px, 9.5dvh, 88px);
+    --nav-panel-rest-height: clamp(54px, 7.8dvh, 78px);
+    --nav-panel-active-height: clamp(112px, 18dvh, 170px);
+    --sidebar-footer-padding: 12px;
     grid-template-columns: 202px minmax(0, 1fr);
-    gap: 14px;
-    padding: 14px;
   }
 
   .brandTile,
@@ -546,26 +566,41 @@
 
 @media (max-width: 860px) {
   .root {
+    --app-shell-padding: 12px;
+    --app-shell-gap: 10px;
+    --brand-tile-height: 56px;
+    --nav-panel-gap: 8px;
+    --nav-panel-rest-height: 62px;
+    --nav-panel-active-height: 84px;
     display: flex;
-    height: auto;
-    min-height: 100vh;
+    height: 100dvh;
+    min-height: 0;
     flex-direction: column;
-    overflow: auto;
+    overflow: hidden;
   }
 
   .sidebar {
     flex: none;
     align-items: stretch;
+    height: auto;
+    overflow: visible;
   }
 
   .brandTile {
     width: 100%;
-    min-height: 78px;
+    height: var(--brand-tile-height);
+    min-height: var(--brand-tile-height);
+    padding: 10px;
+  }
+
+  .headerSymbol {
+    width: 68px;
+    max-height: 44px;
   }
 
   .navList {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     overflow: visible;
     padding-bottom: 0;
   }
@@ -591,36 +626,44 @@
   }
 
   .workspace {
+    flex: 1 1 auto;
+    height: auto;
     min-height: 0;
   }
 
   .workspaceBoard {
-    height: auto;
+    height: 100%;
     min-height: 0;
-    overflow: visible;
+    overflow: hidden;
   }
 
   .activeSection {
+    height: 100%;
     min-height: 0;
   }
 
   .sectionFrame {
-    flex: none;
+    --section-content-padding: 14px;
+    flex: 1 1 auto;
     min-height: 0;
-    overflow: visible;
+    overflow: hidden;
   }
 
   .sectionPanelShell {
-    flex: none;
+    flex: 1 1 auto;
     min-height: 0;
-    overflow: visible;
+    overflow: auto;
   }
 
 }
 
 @media (max-width: 520px) {
   .root {
-    padding: 10px;
+    --app-shell-padding: 10px;
+    --brand-tile-height: 50px;
+    --nav-panel-rest-height: 54px;
+    --nav-panel-active-height: 70px;
+    --nav-panel-gap: 7px;
   }
 
   .navList {
@@ -657,24 +700,27 @@
   }
 
   .sectionFrame {
-    flex: none;
+    flex: 1 1 auto;
     min-height: 0;
-    overflow: visible;
+    overflow: hidden;
     border-width: 4px;
     border-radius: 14px;
-    padding: 14px;
+    padding: 0;
   }
 
   .homeShell {
-    flex: none;
-    padding: 0;
-    overflow: visible;
+    flex: 1 1 auto;
+    padding: var(--section-content-padding);
+    overflow: auto;
   }
 }
 
 @media (max-width: 360px) {
   .root {
-    padding: 8px;
+    --app-shell-padding: 8px;
+    --brand-tile-height: 46px;
+    --nav-panel-rest-height: 50px;
+    --nav-panel-active-height: 64px;
   }
 
   .sectionTopBar {

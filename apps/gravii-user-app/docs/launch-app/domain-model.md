@@ -231,8 +231,8 @@ Fields:
 - `requested_by_wallet_id`
 - `target_wallet_id`
 - `status`
-- `price_amount`
-- `price_currency`
+- `credit_used`
+- `credits_remaining_after_request`
 - `requested_at`
 - `completed_at`
 - `error_code`

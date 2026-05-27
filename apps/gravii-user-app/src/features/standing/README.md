@@ -11,18 +11,19 @@ The Ranking surface answers two different questions:
 
 The first layer is visible to everyone. The second layer requires sign-in because it depends on a wallet-specific session.
 
+The current implementation intentionally renders no local leaderboard rows, names, ranks, seasons, or reward values. Ranking data should appear only after live leaderboard endpoints are connected.
+
 ## Main Files
 
 ### `standing-content.tsx`
 
 Responsibilities:
 
-- render the category-based public ranking board
-- expose `Overall`, `Wealth`, `Activity`, `Trade`, and `Streak` board switches
-- keep the personal wallet rank area visible as a product promise
-- gate the personal wallet rank behind the sign-in action for anonymous users
+- render the live-data placeholder for Ranking
+- describe the required public board, current-wallet rank, season, and reward endpoints
+- gate the future personal wallet rank behind the sign-in action for anonymous users
 - route connected users back to `GRAVII ID` for identity review
 
 ## Production Direction
 
-When real ranking APIs arrive, this folder should replace the local ranking rows and personal-rank preview with category reads, public ranking snapshots, and current-wallet standing reads without changing the shell-level `leaderboard` panel ID.
+When real ranking APIs arrive, this folder should add category reads, public ranking snapshots, and current-wallet standing reads without changing the shell-level `leaderboard` panel ID.

@@ -148,9 +148,9 @@ Notes:
 - `target_wallet_address`
 - `chain_family`
 - `requested_by_wallet`
-- `price_amount`
-- `price_currency`
-- `payment_state`
+- `credit_balance_before_request`
+- `credit_used`
+- `credit_balance_after_request`
 - `analysis_status`
 
 ### Result Summary Fields

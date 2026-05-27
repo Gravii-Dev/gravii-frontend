@@ -6,10 +6,10 @@ This folder owns the `Discovery` campaign surface in the current Launch App roll
 
 This feature currently exists to:
 
-- render partner and campaign discovery from a local product dataset until the backend catalog is connected
-- keep category, status, and search filtering visible in the shell
-- show campaign detail expansion, qualification guidance, and eligibility verification affordances
-- keep the personalized campaign layer gated behind wallet sign-in for anonymous users
+- keep the `DISCOVERY` route and panel contract stable
+- render no local partner or campaign rows while the backend catalog is unavailable
+- explain the backend work needed for catalog, eligibility, and claim actions
+- route users back to currently live surfaces instead of presenting local campaign rows
 
 ## Main Files
 
@@ -19,17 +19,16 @@ This is the main surface component.
 
 Responsibilities:
 
-- render the campaign discovery hero, filter bar, partner grid, and partner detail route
-- expose campaign CTAs such as `OPT IN`, `HOW TO QUALIFY`, `VERIFY MY ELIGIBILITY`, `NOTIFY ME WHEN LIVE`, and invite-only access states
-- keep the campaign structure visible behind a sign-in blur gate for anonymous users
-- route qualification guidance back to `GRAVII ID` and `RANKING`
+- render the live-data placeholder for Discovery
+- describe the required catalog API, eligibility read model, and claim persistence
+- route users back to `GRAVII ID` and `X-RAY`
 - preserve the shared panel contract used by the shell
 
 ## What This Feature Owns
 
 - Discovery panel information architecture
-- local partner and campaign preview data
-- campaign filtering, detail expansion, qualification guide state, and locked anonymous state
+- empty-state copy for the unavailable live catalog
+- backend-readiness milestones for catalog, eligibility, and claim persistence
 
 ## What This Feature Does Not Own
 
@@ -40,4 +39,4 @@ Responsibilities:
 
 ## Production Direction
 
-When the Discovery backend surface is ready, replace the local partner dataset with server-backed catalog reads and wire eligibility verification and claim actions to authenticated endpoints. The visible shell should remain stable.
+When the Discovery backend surface is ready, add server-backed catalog reads and wire eligibility verification plus claim actions to authenticated endpoints. The visible shell should remain stable, but rows must come from the backend rather than local fixtures.

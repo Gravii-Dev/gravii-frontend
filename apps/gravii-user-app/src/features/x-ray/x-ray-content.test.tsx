@@ -2,6 +2,8 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
+import { runUserXrayLookup, UserApiError } from "@/lib/auth/user-api";
+
 import XRayContent from "./x-ray-content";
 
 vi.mock("@/lib/auth/user-api", () => ({
@@ -114,6 +116,36 @@ describe("XRayContent", () => {
       screen.getByText("0x1234567890123456789012345678901234567890")
     ).toBeInTheDocument();
     expect(screen.getByText("Chain Hopper")).toBeInTheDocument();
+  });
+
+  it("opens checkout when the backend returns out-of-credit status", async () => {
+    const user = userEvent.setup();
+
+    vi.mocked(runUserXrayLookup).mockRejectedValueOnce(
+      new UserApiError("Out of credits", 402)
+    );
+
+    render(<XRayContent dark={false} connected onConnect={() => {}} />);
+
+    await waitFor(() => {
+      expect(screen.getByText("9 credits remaining")).toBeInTheDocument();
+    });
+
+    await user.type(
+      screen.getByLabelText("Wallet address"),
+      "0x1234567890123456789012345678901234567890"
+    );
+
+    await act(async () => {
+      await user.click(screen.getByRole("button", { name: "ANALYZE" }));
+    });
+
+    expect(
+      screen.getByText("Add X-Ray credits to continue this analysis.")
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("dialog", { name: "Buy X-Ray credits" })
+    ).toBeInTheDocument();
   });
 
   it("opens the scoped X-Ray checkout modal from the credit panel", async () => {

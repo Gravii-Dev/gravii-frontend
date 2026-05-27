@@ -279,11 +279,6 @@ flowchart TD
 
 - Shared brand mark, wordmark, and motion mark primitive using `next/image`.
 
-`src/components/ui/launch-primitives`
-
-- Shared presentational primitives from the previous launch UI.
-- Should be audited before the design system migration to decide what graduates into stable primitives.
-
 ## Current Strengths
 
 - The app is already TypeScript and TSX-only.
