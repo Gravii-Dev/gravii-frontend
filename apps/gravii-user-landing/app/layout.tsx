@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import type { PropsWithChildren } from 'react'
 import { ReactTempus } from 'tempus/react'
 import { Link } from '@/components/ui/link'
+import { SITE_BASE_URL } from '@/lib/config/site'
 import { OptionalFeatures } from '@/lib/features'
 import { themes } from '@/lib/styles/colors'
 import { fontsVariable } from '@/lib/styles/fonts'
@@ -15,15 +16,10 @@ const APP_DEFAULT_TITLE = 'Gravii'
 const APP_TITLE_TEMPLATE = '%s | Gravii'
 const APP_DESCRIPTION =
   'Connect once. Live differently. Gravii turns your onchain activity into one identity, one signal, and one door.'
-const APP_BASE_URL =
-  process.env.NEXT_PUBLIC_BASE_URL ??
-  (process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : 'http://localhost:3000')
 const ENABLE_OPTIONAL_RUNTIME = process.env.NODE_ENV === 'development'
 
 export const metadata: Metadata = {
-  metadataBase: new URL(APP_BASE_URL),
+  metadataBase: new URL(SITE_BASE_URL),
   applicationName: APP_NAME,
   title: {
     default: APP_DEFAULT_TITLE,
@@ -55,7 +51,7 @@ export const metadata: Metadata = {
       template: APP_TITLE_TEMPLATE,
     },
     description: APP_DESCRIPTION,
-    url: APP_BASE_URL,
+    url: SITE_BASE_URL,
     locale: 'en_US',
   },
   twitter: {
@@ -73,7 +69,7 @@ export const metadata: Metadata = {
   authors: [
     {
       name: 'Gravii',
-      url: APP_BASE_URL,
+      url: SITE_BASE_URL,
     },
   ],
   other: {

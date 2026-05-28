@@ -1,11 +1,6 @@
 import type { Metadata } from 'next'
 import { LandingPage } from '@/features/partner-landing/landing-page'
-
-const APP_BASE_URL =
-  process.env.NEXT_PUBLIC_BASE_URL ??
-  (process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : 'http://localhost:3000')
+import { SITE_BASE_URL } from '@/lib/config/site'
 
 export const metadata: Metadata = {
   title: 'Partners',
@@ -15,7 +10,7 @@ export const metadata: Metadata = {
     canonical: '/partners',
   },
   openGraph: {
-    url: `${APP_BASE_URL}/partners`,
+    url: `${SITE_BASE_URL}/partners`,
     title: 'Partners | Gravii',
     description:
       'Deterministic on-chain intelligence for partners building growth, verification, and user analytics with Gravii.',
