@@ -3,6 +3,9 @@
   width: 100%;
   border-top: 1px solid var(--ed-line);
   background: var(--gravii-paper);
+  display: flex;
+  align-items: center;
+  min-height: 100svh;
   padding: clamp(40px, 6vh, 64px) clamp(24px, 6vw, 96px);
 }
 
@@ -11,6 +14,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: clamp(24px, 4vw, 64px);
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -19,6 +23,12 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+}
+
+.middle {
+  display: flex;
+  flex: 1 1 auto;
+  justify-content: center;
 }
 
 .brand {
@@ -84,6 +94,12 @@
     align-items: flex-start;
     gap: 1.25rem;
   }
+
+  .middle {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
   .right {
     align-items: flex-start;
   }

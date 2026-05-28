@@ -71,7 +71,15 @@ export function TocRail() {
   const handleClick = (id: string) => {
     const el = document.getElementById(id)
     if (!el) return
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+
+    const reducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches
+
+    el.scrollIntoView({
+      behavior: reducedMotion ? 'auto' : 'smooth',
+      block: 'start',
+    })
   }
 
   return (

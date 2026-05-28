@@ -1,32 +1,12 @@
 'use client'
 
-import type { CSSProperties, MouseEvent as ReactMouseEvent } from 'react'
+import type { MouseEvent as ReactMouseEvent } from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from '@/components/ui/link'
 import s from './sticky-header.module.css'
 
-const ORBIT_CURSORS = [
-  ...Array.from({ length: 4 }, (_, index) => {
-    const angle = (360 / 4) * index
-    return {
-      id: `outer-${angle}`,
-      angle,
-      radius: 82,
-      delay: index * 22,
-      rotation: angle + 22,
-    }
-  }),
-  ...Array.from({ length: 5 }, (_, index) => {
-    const angle = (360 / 5) * index + 18
-    return {
-      id: `inner-${angle}`,
-      angle,
-      radius: 108,
-      delay: 54 + index * 20,
-      rotation: angle + 22,
-    }
-  }),
-] as const
+const SCROLL_HIDE_THRESHOLD = 120
+const SCROLL_DELTA_THRESHOLD = 6
 
 const passthroughKeys = new Set([
   'campaign',
@@ -73,24 +53,6 @@ const userAppUrl = resolveDestinationUrl({
       : 'https://app.gravii.io',
 })
 
-function MousePointerIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className={s.cursorGlyph}>
-      <path
-        d="M4.5 3.5L10.4 17.8L12.7 12.7L17.8 10.4L4.5 3.5Z"
-        fill="currentColor"
-      />
-      <path
-        d="M12.1 12.1L19 19"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-    </svg>
-  )
-}
-
 type HeaderPillProps = {
   href: string
   label: string
@@ -119,29 +81,7 @@ function HeaderPill({
       {...(rel ? { rel } : {})}
       {...(onClick ? { onClick } : {})}
     >
-      <span className={s.pillOrbit} aria-hidden="true">
-        <span className={s.pillPulse} />
-        <span className={s.cursorOrbit}>
-          {ORBIT_CURSORS.map((cursor) => (
-            <span
-              key={cursor.id}
-              className={s.cursorItem}
-              style={
-                {
-                  '--cursor-angle': `${cursor.angle}deg`,
-                  '--cursor-radius': `${cursor.radius}px`,
-                  '--cursor-delay': `${cursor.delay}ms`,
-                  '--cursor-rotation': `${cursor.rotation}deg`,
-                } as CSSProperties
-              }
-            >
-              <MousePointerIcon />
-            </span>
-          ))}
-        </span>
-      </span>
       <span className={s.pillBody}>
-        <span className={s.pillSurface} aria-hidden="true" />
         <span className={s.pillText}>{label}</span>
       </span>
     </Link>
@@ -152,6 +92,7 @@ export function StickyHeader() {
   const [isVisible, setIsVisible] = useState(true)
   const [launchAppHref, setLaunchAppHref] = useState(userAppUrl)
   const lastScrollYRef = useRef(0)
+  const isVisibleRef = useRef(true)
   const resolvedLaunchAppHref = useMemo(() => launchAppHref, [launchAppHref])
 
   useEffect(() => {
@@ -172,11 +113,18 @@ export function StickyHeader() {
 
     const syncHeader = () => {
       const currentScrollY = window.scrollY
+      const delta = currentScrollY - lastScrollYRef.current
 
-      if (currentScrollY > lastScrollYRef.current && currentScrollY > 100) {
-        setIsVisible(false)
-      } else {
-        setIsVisible(true)
+      if (Math.abs(delta) < SCROLL_DELTA_THRESHOLD) {
+        return
+      }
+
+      const nextVisible =
+        currentScrollY <= SCROLL_HIDE_THRESHOLD || delta < 0
+
+      if (isVisibleRef.current !== nextVisible) {
+        isVisibleRef.current = nextVisible
+        setIsVisible(nextVisible)
       }
 
       lastScrollYRef.current = currentScrollY
@@ -213,8 +161,8 @@ export function StickyHeader() {
             className={`${s.pillLink} ${s.navLink}`}
           />
           <HeaderPill
-            href="#team"
-            label="DOCS"
+            href="#waitlist"
+            label="WAITLIST"
             className={`${s.pillLink} ${s.navLink}`}
           />
           <HeaderPill

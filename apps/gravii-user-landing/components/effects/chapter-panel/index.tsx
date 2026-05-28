@@ -18,7 +18,7 @@ type ChapterPanelProps = {
   /** Pull section up to overlap with previous chapter's post-pin scroll-out.
    * `true` = -50vh (default, leaves 50vh tail for closing content).
    * Number = exact vh amount to pull up.
-   * Use for all pinned chapters except the first. */
+   * Use only for intentional cross-fades where both chapters may be visible. */
   overlap?: boolean | number
   /** disable pinning — render children directly. Used as fallback for reduced motion or mobile */
   disablePin?: boolean
@@ -84,9 +84,8 @@ export function ChapterPanel({
       const scrolled = -bounds.top
       const next = clamp01(scrolled / totalScroll)
       setProgress((prev) => (prev === next ? prev : next))
-      // Post-pin scroll-out: fade content fast (40vh window) so closing
-      // content disappears before next chapter's overlap kicks in — clean
-      // handoff.
+      // Post-pin scroll-out: fade content fast over a 40vh window so the
+      // closing chapter has a clean handoff before the next section arrives.
       const exit = clamp01(((scrolled - totalScroll) * 2.5) / viewportHeight)
       setExitProgress((prev) => (prev === exit ? prev : exit))
     }
@@ -109,7 +108,7 @@ export function ChapterPanel({
     }
   }, [pinDisabled])
 
-  const renderProgress = pinDisabled ? 1 : Math.max(progress, 0.1)
+  const renderProgress = pinDisabled ? 1 : progress
   const rendered =
     typeof children === 'function'
       ? (children as (p: number) => ReactNode)(renderProgress)

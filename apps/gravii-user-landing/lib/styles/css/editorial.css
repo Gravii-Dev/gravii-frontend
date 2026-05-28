@@ -16,6 +16,21 @@
     radial-gradient(circle at 12% 12%, rgb(244 210 58 / 16%), transparent 28%),
     radial-gradient(circle at 86% 18%, rgb(90 169 255 / 14%), transparent 30%),
     radial-gradient(circle at 70% 92%, rgb(85 219 156 / 10%), transparent 30%);
+
+  /* User-app aligned action controls: flat, solid, and non-dimensional. */
+  --gravii-action-bg: #ff5a2a;
+  --gravii-action-bg-hover: #090705;
+  --gravii-action-bg-active: #b94123;
+  --gravii-action-text: #fff8f0;
+  --gravii-action-secondary-bg: #fff8f0;
+  --gravii-action-secondary-bg-hover: #ead8ca;
+  --gravii-action-secondary-text: #090705;
+  --gravii-action-border: rgb(9 7 5 / 18%);
+  --gravii-action-border-strong: rgb(9 7 5 / 72%);
+  --gravii-action-focus: #ff5a2a;
+  --gravii-action-radius: 999px;
+  --gravii-action-duration: 260ms;
+  --gravii-action-ease: cubic-bezier(0.2, 0, 0, 1);
 }
 
 :root {

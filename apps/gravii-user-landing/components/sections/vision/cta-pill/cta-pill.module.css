@@ -1,6 +1,4 @@
 .stamp {
-  --magnet-x: 0px;
-  --magnet-y: 0px;
   position: relative;
   display: inline-flex;
   flex-direction: column;
@@ -11,26 +9,21 @@
   cursor: pointer;
   pointer-events: auto;
   -webkit-tap-highlight-color: transparent;
-  transform: translate3d(var(--magnet-x), var(--magnet-y), 0) rotate(-3deg);
   transform-origin: center center;
-  transition:
-    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
-    width 320ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform, width;
+  transition: opacity 180ms ease;
 }
 
 .stamp:hover[data-state="collapsed"] {
-  transform: translate3d(var(--magnet-x), calc(var(--magnet-y) - 2px), 0)
-    rotate(-1deg);
+  opacity: 0.94;
 }
 
 .stamp[data-state="expanded"],
 .stamp[data-state="submitting"] {
-  transform: translate3d(0, 0, 0) rotate(0deg);
+  opacity: 1;
 }
 
 .stamp[data-state="success"] {
-  transform: translate3d(0, 0, 0) rotate(2deg);
+  opacity: 1;
 }
 
 /* Caption above stamp — "APPROVED FOR ENTRY · 2026" passport vibe */
@@ -57,7 +50,6 @@
   border-radius: 999px;
 }
 
-/* The stamp box itself — sharp rectangle, heavy ink outline */
 .box {
   position: relative;
   display: inline-flex;
@@ -66,47 +58,46 @@
   width: 260px;
   height: 64px;
   padding: 0;
-  border: 2.5px solid var(--ed-accent-passport);
-  background: var(--gravii-paper);
-  color: var(--gravii-ink);
-  font-family: var(--gravii-font-heading);
+  border: 0;
+  border-radius: var(--gravii-action-radius);
+  background: var(--gravii-action-bg);
+  color: var(--gravii-action-text);
+  font-family: var(--gravii-font-ui);
   font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
+  font-weight: 900;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   overflow: hidden;
   transition:
     width 320ms cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 220ms ease,
-    color 220ms ease,
-    box-shadow 320ms ease;
-  box-shadow: 4px 4px 0 0 var(--ed-accent-passport);
+    background-color var(--gravii-action-duration) var(--gravii-action-ease),
+    color 180ms ease,
+    border-color 180ms ease;
+  box-shadow: none;
 }
 
 .stamp:hover[data-state="collapsed"] .box {
-  background: var(--ed-accent-passport);
-  color: var(--gravii-paper);
-  box-shadow: 6px 6px 0 0 var(--gravii-ink);
+  background: var(--gravii-action-bg-hover);
+  color: var(--gravii-action-text);
 }
 
 .stamp[data-state="expanded"] .box,
 .stamp[data-state="submitting"] .box {
   width: min(440px, calc(100vw - 32px));
-  background: var(--gravii-paper);
+  border: 1px solid var(--gravii-action-border);
+  background: var(--gravii-action-secondary-bg);
   color: var(--gravii-ink);
   cursor: default;
 }
 
 .stamp[data-state="success"] .box {
-  background: var(--ed-accent-passport);
-  color: var(--gravii-paper);
+  background: var(--gravii-action-bg);
+  color: var(--gravii-action-text);
 }
 
 .stamp:focus-within .box {
-  box-shadow:
-    4px 4px 0 0 var(--ed-accent-passport),
-    0 0 0 3px var(--gravii-paper),
-    0 0 0 5px var(--ed-accent-passport);
+  outline: 3px solid var(--gravii-action-focus);
+  outline-offset: 4px;
 }
 
 /* Label inside box — "JOIN WAITLIST" */
@@ -181,11 +172,15 @@
 }
 
 .input:focus-visible {
-  outline: none;
+  outline: 0;
 }
 
 .input::placeholder {
   color: var(--gravii-ink-soft);
+}
+
+.input[aria-invalid="true"]::placeholder {
+  color: var(--gravii-action-bg-active);
 }
 
 .submit {
@@ -196,20 +191,21 @@
   height: 44px;
   margin-left: 4px;
   border: 0;
-  background: var(--ed-accent-passport);
-  color: var(--gravii-paper);
-  font-family: var(--gravii-font-heading);
+  border-radius: var(--gravii-action-radius);
+  background: var(--gravii-action-bg);
+  color: var(--gravii-action-text);
+  font-family: var(--gravii-font-ui);
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 900;
   cursor: pointer;
   transition:
     opacity 220ms ease,
-    transform 180ms ease;
+    background-color var(--gravii-action-duration) var(--gravii-action-ease);
 }
 
 .submit:hover:not(:disabled),
 .submit:focus-visible {
-  transform: translate3d(0, -1px, 0);
+  background: var(--gravii-action-bg-hover);
 }
 
 .submit:disabled {
@@ -239,6 +235,23 @@
   animation: spin 720ms linear infinite;
 }
 
+.status,
+.statusError {
+  max-width: min(440px, calc(100vw - 32px));
+  margin: 8px 0 0;
+  font-family: var(--gravii-font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--gravii-ink-soft);
+}
+
+.statusError {
+  color: var(--gravii-action-bg-active);
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -250,12 +263,10 @@
   .box,
   .form,
   .label {
-    transition:
-      background-color 220ms ease,
-      color 220ms ease;
+    transition: none;
   }
   .stamp:hover[data-state="collapsed"] {
-    transform: rotate(-3deg);
+    opacity: 1;
   }
   .spinner {
     animation: none;
