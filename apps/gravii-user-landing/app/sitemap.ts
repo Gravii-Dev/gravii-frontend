@@ -1,21 +1,17 @@
 import type { MetadataRoute } from 'next'
 
-const APP_BASE_URL =
-  process.env.NEXT_PUBLIC_BASE_URL ??
-  (process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : 'http://localhost:3000')
+import { SITE_BASE_URL } from '@/lib/config/site'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     {
-      url: APP_BASE_URL,
+      url: SITE_BASE_URL,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 1,
     },
     {
-      url: `${APP_BASE_URL}/partners`,
+      url: `${SITE_BASE_URL}/partners`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.8,

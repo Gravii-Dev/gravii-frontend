@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { SITE_BASE_URL } from '@/lib/config/site'
 
 /**
  * Metadata Generation Utilities
@@ -25,12 +26,6 @@ interface GenerateMetadataOptions {
   modifiedTime?: string
   authors?: string[]
 }
-
-const APP_BASE_URL =
-  process.env.NEXT_PUBLIC_BASE_URL ??
-  (process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : 'http://localhost:3000')
 
 /**
  * Generate complete metadata object for pages
@@ -67,14 +62,14 @@ export function generatePageMetadata(
     authors,
   } = options
 
-  const fullUrl = url ? `${APP_BASE_URL}${url}` : APP_BASE_URL
+  const fullUrl = url ? `${SITE_BASE_URL}${url}` : SITE_BASE_URL
   const imageUrl = image?.url || '/opengraph-image.jpg'
   const imageWidth = image?.width || 1200
   const imageHeight = image?.height || 630
   const imageAlt = image?.alt || title || siteName
 
   const metadata: Metadata = {
-    metadataBase: new URL(APP_BASE_URL),
+    metadataBase: new URL(SITE_BASE_URL),
     title,
     description,
     keywords,
