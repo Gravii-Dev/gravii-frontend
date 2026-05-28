@@ -1,122 +1,48 @@
 # Architecture Guide
 
-Key architectural decisions and patterns for teams working with this codebase.
+Architecture notes for the Gravii public landing app.
 
 ## Core Decisions
 
-### React Compiler (No Manual Memoization)
-
-React Compiler is enabled. **Do not** use `useMemo`, `useCallback`, or `React.memo`:
-
-```tsx
-// ❌ Don't
-const memoizedValue = useMemo(() => compute(a, b), [a, b])
-
-// ✅ Do
-const value = compute(a, b)
-```
-
-**Exception**: Use `useRef` for object instantiation to prevent infinite loops.
-
-### CSS Modules + Tailwind
-
-Both are used intentionally:
-- **Tailwind** (80%) — spacing, colors, typography
-- **CSS Modules** — complex animations, custom layouts, CSS specificity
-
-Import CSS modules as `s`:
-
-```tsx
-import s from './component.module.css'
-```
-
-### Custom Image/Link Components
-
-Always use these, never native HTML:
-
-```tsx
-import { Image } from '@/components/ui/image'
-import { Link } from '@/components/ui/link'
-```
-
-**Why?**
-- Image: Optimization, aspect ratios, WebGL integration
-- Link: External detection, prefetching, consistent behavior
-
-### Lenis for Scrolling
-
-Configured in `app/layout.tsx`. ScrollTrigger uses Lenis automatically.
-
-### Optional Features Pattern
-
-Root layout conditionally loads features:
-
-```tsx
-import { OptionalFeatures } from '@/lib/features'
-<OptionalFeatures /> // Only loads WebGL, dev tools when needed
-```
-
-## Cache Components (Next.js 16)
-
-Server Components use advanced caching. Key rules:
-
-| Data Type | Cache Strategy |
-|-----------|----------------|
-| Public content | ISR with `revalidate` |
-| User-specific | `cache: 'no-store'` |
-| Real-time | `cache: 'no-store'` |
-
-**Gotchas:**
-- Never cache user data (carts, accounts, private content)
-- Wrap cached components in Suspense boundaries
-- Test with hard refresh AND navigation (different cache layers)
-- Use `revalidateTag()` or `revalidatePath()` for invalidation
-
-## WebGL Architecture
-
-Uses lazy GlobalCanvas with visibility-based pausing:
-
-```
-Root Layout → LazyGlobalCanvas (mounts on first WebGL page)
-    └─ WebGLTunnel (portals 3D content)
-        └─ Your 3D scene
-```
-
-Context survives navigation. See [lib/webgl/README.md](lib/webgl/README.md).
+- Next.js App Router and React Server Components are used for routes and metadata.
+- React and Next.js code is TypeScript-only.
+- CSS Modules are the primary component styling system.
+- GSAP drives scroll-tied landing motion through app-local primitives.
+- Lenis is mounted by the landing shell for smooth scroll.
+- The hero background uses the app-local raw WebGPU renderer with a React Three Fiber WebGL fallback.
+- Waitlist submission goes through the server action in `app/(site)/actions.ts`.
 
 ## File Organization
 
-```
+```text
+app/
+  (site)/          Public routes and server actions
 components/
-├── ui/        → Primitives (reusable)
-├── layout/    → Site chrome (customize)
-└── effects/   → Animations
-
+  effects/         Scroll/display motion primitives
+  layout/          Site shell, header, footer, overlays
+  sections/        Public landing sections
+  ui/              Small reusable UI primitives
+features/
+  partner-landing/ Partner acquisition page
 lib/
-├── hooks/     → React hooks + Zustand
-├── styles/    → CSS & Tailwind config
-├── utils/     → Pure utilities
-├── integrations/ → Third-party (optional)
-├── webgl/     → 3D graphics (optional)
-└── dev/       → Debug tools (optional)
+  config/          Site URL configuration
+  dev/             Development-only tools
+  hooks/           Shared hooks/state
+  styles/          Tokens and global CSS
+  utils/           Waitlist, fetch, rate limit, math, strings
+  webgpu/          Raw WebGPU renderer internals
 ```
 
-## Deployment Checklist
+## Runtime Boundaries
 
-- [ ] Environment variables configured
-- [ ] Build passes (`bun build`)
-- [ ] Webhooks configured (Sanity, Shopify)
-- [ ] Cache invalidation tested
-- [ ] Performance score > 90
+- Production runtime should not mount development overlays.
+- Mock UI behavior must not replace waitlist/API/referral behavior.
+- The `/partners` route keeps its handoff to `partner.gravii.io`.
+- Metadata routes must remain server-rendered by Next.js.
 
-## Extending
+## Completion Gates
 
-**New component**: `bun run generate` or add to `components/ui/`
-
-**New integration**: Add to `lib/integrations/`, update `integration-bundles.ts`
-
-**Modify styles**: Edit config in `lib/styles/`, run `bun setup:styles`
-
----
-
-*Built with [Satūs](https://github.com/darkroomengineering/satus) by [darkroom.engineering](https://darkroom.engineering)*
+- `bun run typecheck`
+- `bun run lint`
+- `bun run build`
+- Browser route smoke for `/`, `/partners`, `/robots.txt`, `/sitemap.xml`, and `/manifest.webmanifest`

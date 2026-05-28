@@ -123,7 +123,7 @@ export function ChapterPanel({
   const style: CSSProperties = {
     ['--chapter-distance' as string]: `${distance * 100}vh`,
     ['--chapter-distance-mobile' as string]: `${
-      Math.max(2.2, distance * 0.72) * 100
+      Math.max(3.4, distance) * 100
     }vh`,
     ...(background ? { background } : {}),
     ...(overlapVh > 0

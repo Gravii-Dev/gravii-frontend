@@ -26,11 +26,12 @@ export function Recognition() {
   return (
     <ChapterPanel
       id="recognition"
-      distance={3.4}
+      distance={4.8}
       background="var(--gravii-paper)"
     >
       {(progress) => {
-        // Distance 3.4 — extended scroll allows substantial hold for each phase.
+        // Distance 4.8 — gives the dense parallels and closer enough reading
+        // time after they finish rendering, especially on phones.
         // Headline phase: char-reveal 0-0.25, hold 0-0.40, fade-out 0.40-0.48
         const scaleProgress = Math.min(1, Math.max(0, progress / 0.4))
         const introScale = 1 + scaleProgress * 0.4
@@ -38,35 +39,34 @@ export function Recognition() {
           progress < 0.4 ? 1 : Math.max(0, 1 - (progress - 0.4) / 0.08)
         const headlineCharProgress = Math.min(1, Math.max(0, progress / 0.25))
 
-        // Parallels container: in 0.62-0.65, hold 0.82-0.86, OUT 0.86-0.90 (clean exit).
-        // Divider draws 0.625-0.68 (top→bottom). Column headers fade in 0.62-0.65.
+        // Parallels container: reveal earlier, then hold after all rows complete.
+        // This avoids the previous pattern where the list finished and exited
+        // within ~50px on mobile.
         const parallelsWrapperIn = Math.min(
           1,
-          Math.max(0, (progress - 0.62) / 0.03)
+          Math.max(0, (progress - 0.52) / 0.04)
         )
         const parallelsWrapperOut = Math.min(
           1,
-          Math.max(0, (progress - 0.86) / 0.04)
+          Math.max(0, (progress - 0.84) / 0.04)
         )
         const parallelsOpacity =
-          progress < 0.62 ? 0 : parallelsWrapperIn * (1 - parallelsWrapperOut)
+          progress < 0.52 ? 0 : parallelsWrapperIn * (1 - parallelsWrapperOut)
 
         // Vertical divider scaleY 0→1 (top-to-bottom draw)
         const dividerProgress = Math.min(
           1,
-          Math.max(0, (progress - 0.625) / 0.055)
+          Math.max(0, (progress - 0.53) / 0.06)
         )
 
-        // Row pairs reveal sequentially i*0.03 stagger, 0.65 → 0.80
-        // Trailing "…" pair: 0.80-0.82
-        // Hold 0.82-0.86 (4% ≈ 122px scroll, ~2s read time)
+        // Row pairs reveal sequentially and finish by 0.75, leaving a real
+        // post-render hold before the closer takes over.
 
-        // Closer: reveal 0.90-0.94 (AFTER parallels fully exited at 0.90),
-        // HOLD 0.94-0.97, self-zoom-out 0.97-1.00
-        const closerIn = Math.min(1, Math.max(0, (progress - 0.9) / 0.04))
-        const closerExit = Math.min(1, Math.max(0, (progress - 0.97) / 0.03))
-        const closerOpacity = closerIn * (1 - closerExit)
-        const closerScale = 0.94 + closerIn * 0.06 + closerExit * 0.12
+        // Closer: reveal 0.88-0.93, then hold to chapter end. ChapterPanel's
+        // post-pin fade handles the handoff to the next section.
+        const closerIn = Math.min(1, Math.max(0, (progress - 0.88) / 0.05))
+        const closerOpacity = closerIn
+        const closerScale = 0.94 + closerIn * 0.06
 
         return (
           <div className={s.stage}>
@@ -91,9 +91,9 @@ export function Recognition() {
               className={s.parallels}
               style={{
                 opacity: parallelsOpacity,
-                transform: `translate3d(0, ${progress < 0.62 ? 30 : 0}px, 0)`,
+                transform: `translate3d(0, ${progress < 0.52 ? 30 : 0}px, 0)`,
               }}
-              aria-hidden={progress < 0.62 ? true : undefined}
+              aria-hidden={progress < 0.52 ? true : undefined}
             >
               <div className={s.parallelsGrid}>
                 <div className={s.column}>
@@ -102,11 +102,11 @@ export function Recognition() {
                   </span>
                   <ul className={s.rowList}>
                     {DIGITAL.map((line, i) => {
-                      // Row i reveals at 0.65 + i*0.03 over 0.03 window
-                      const start = 0.65 + i * 0.03
+                      // Row i reveals at 0.55 + i*0.035 over 0.04 window.
+                      const start = 0.55 + i * 0.035
                       const reveal = Math.min(
                         1,
-                        Math.max(0, (progress - start) / 0.03)
+                        Math.max(0, (progress - start) / 0.04)
                       )
                       // Polaroid develop: blur + saturate
                       const blurAmount = (1 - reveal) * 8
@@ -139,7 +139,7 @@ export function Recognition() {
                       style={{
                         opacity: Math.min(
                           1,
-                          Math.max(0, (progress - 0.8) / 0.02)
+                          Math.max(0, (progress - 0.73) / 0.03)
                         ),
                       }}
                     >
@@ -163,10 +163,10 @@ export function Recognition() {
                   </span>
                   <ul className={s.rowList}>
                     {PHYSICAL.map((line, i) => {
-                      const start = 0.65 + i * 0.03
+                      const start = 0.55 + i * 0.035
                       const reveal = Math.min(
                         1,
-                        Math.max(0, (progress - start) / 0.03)
+                        Math.max(0, (progress - start) / 0.04)
                       )
                       const blurAmount = (1 - reveal) * 8
                       const saturate = 0.2 + reveal * 0.8
@@ -198,7 +198,7 @@ export function Recognition() {
                       style={{
                         opacity: Math.min(
                           1,
-                          Math.max(0, (progress - 0.8) / 0.02)
+                          Math.max(0, (progress - 0.73) / 0.03)
                         ),
                       }}
                     >

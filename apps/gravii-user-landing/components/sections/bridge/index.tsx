@@ -12,7 +12,7 @@ export function Bridge() {
   return (
     <ChapterPanel
       id="bridge"
-      distance={3.2}
+      distance={3.4}
       background="var(--gravii-paper)"
     >
       {(progress) => {
@@ -41,9 +41,9 @@ export function Bridge() {
         // Phase C — Beat 3 reveal earlier, longer hold (in 0.66-0.80, hold 0.80-1.0)
         const beat3In = Math.min(1, Math.max(0, (progress - 0.66) / 0.14))
 
-        // Gravitational pull — last 8% of progress, Beat 3 pulled toward focal point
+        // Gravitational pull — final 6% of progress, after a longer Beat 3 read.
         // Visual rhyme with "Gravii ≡ Gravity" brand identity
-        const gravPull = Math.min(1, Math.max(0, (progress - 0.92) / 0.08))
+        const gravPull = Math.min(1, Math.max(0, (progress - 0.94) / 0.06))
 
         // External char-reveal — pinned chapters can't rely on DisplayMoment's
         // bounds-based auto progress (element stays fixed in viewport).

@@ -7,13 +7,6 @@
   overflow: hidden;
 }
 
-.eyebrowSlot {
-  position: absolute;
-  top: clamp(48px, 8vh, 88px);
-  left: clamp(24px, 6vw, 96px);
-  z-index: 5;
-}
-
 .intro {
   position: absolute;
   inset: 0;
@@ -165,7 +158,6 @@
   .stage {
     overflow: visible;
   }
-  .eyebrowSlot,
   .intro,
   .rail,
   .dots,

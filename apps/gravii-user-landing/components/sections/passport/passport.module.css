@@ -174,49 +174,6 @@
   will-change: opacity, transform;
 }
 
-.shareSlot {
-  display: flex;
-  justify-content: center;
-  transition:
-    opacity 320ms ease,
-    transform 480ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: opacity, transform;
-}
-
-.shareButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 28px;
-  border: 1.5px solid var(--gravii-ink);
-  border-radius: 999px;
-  background: transparent;
-  font-family: var(--gravii-font-heading);
-  font-size: clamp(13px, 1vw, 16px);
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  text-decoration: none;
-  color: var(--gravii-ink);
-  cursor: pointer;
-  transition:
-    background 220ms ease,
-    color 220ms ease,
-    transform 220ms ease;
-}
-
-.shareButton:hover {
-  background: var(--gravii-ink);
-  color: var(--gravii-paper);
-  transform: translate3d(0, -2px, 0);
-}
-
-.shareArrow {
-  display: inline-flex;
-  font-size: 1.05em;
-  line-height: 1;
-}
-
 @media (--mobile) {
   .stage {
     padding: clamp(76px, 10vh, 108px) clamp(22px, 6vw, 32px)
@@ -371,8 +328,7 @@
   }
   .displaySlot,
   .bodySlot,
-  .deckSlot,
-  .shareSlot {
+  .deckSlot {
     opacity: 1 !important;
     transform: none !important;
   }

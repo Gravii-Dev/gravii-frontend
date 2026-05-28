@@ -94,18 +94,12 @@ const nextConfig: NextConfig = {
       ],
     },
     optimizePackageImports: [
-      '@react-three/drei',
       '@react-three/fiber',
       'gsap',
       'three',
-      'postprocessing',
       '@base-ui/react',
       'lenis',
       'zustand',
-      '@sanity/client',
-      '@sanity/image-url',
-      '@sanity/asset-utils',
-      '@portabletext/react',
     ],
   },
   devIndicators: false,
@@ -119,10 +113,6 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'cdn.shopify.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'cdn.sanity.io',
       },
     ],
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
