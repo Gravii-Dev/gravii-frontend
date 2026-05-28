@@ -28,41 +28,41 @@ export function Inside() {
   return (
     <ChapterPanel
       id="inside"
-      distance={4.4}
+      distance={5.4}
       background="var(--gravii-paper)"
     >
       {(progress) => {
-        // Intro 1 "Step inside." — declarative, sets stage
-        // char-reveal 0-0.05, hold 0.05-0.10, fade-out 0.10-0.13
-        const intro1In = Math.min(1, Math.max(0, progress / 0.05))
-        const intro1Out = Math.min(1, Math.max(0, (progress - 0.1) / 0.03))
+        // Intro beats get real post-render holds before transitioning.
+        const intro1In = Math.min(1, Math.max(0, progress / 0.06))
+        const intro1Out = Math.min(1, Math.max(0, (progress - 0.14) / 0.04))
         const intro1Opacity = intro1In * (1 - intro1Out)
-        const intro1CharProgress = Math.min(1, Math.max(0, progress / 0.05))
+        const intro1CharProgress = Math.min(1, Math.max(0, progress / 0.06))
 
-        // Intro 2 "Gravii recognizes where you've walked." — char-reveal 0.16-0.23, hold 0.23-0.27, fade-out 0.27-0.30
-        const intro2In = Math.min(1, Math.max(0, (progress - 0.16) / 0.07))
-        const intro2Out = Math.min(1, Math.max(0, (progress - 0.27) / 0.03))
+        // Intro 2 "Gravii recognizes where you've walked."
+        const intro2In = Math.min(1, Math.max(0, (progress - 0.22) / 0.08))
+        const intro2Out = Math.min(1, Math.max(0, (progress - 0.39) / 0.04))
         const intro2Opacity = intro2In * (1 - intro2Out)
         const intro2CharProgress = Math.min(
           1,
-          Math.max(0, (progress - 0.16) / 0.07)
+          Math.max(0, (progress - 0.22) / 0.08)
         )
 
-        // Intro 3 "And lets the right things find you." — char-reveal 0.33-0.40, hold 0.40-0.44, fade-out 0.44-0.47
-        const intro3In = Math.min(1, Math.max(0, (progress - 0.33) / 0.07))
-        const intro3Out = Math.min(1, Math.max(0, (progress - 0.44) / 0.03))
+        // Intro 3 "And lets the right things find you."
+        const intro3In = Math.min(1, Math.max(0, (progress - 0.47) / 0.08))
+        const intro3Out = Math.min(1, Math.max(0, (progress - 0.64) / 0.04))
         const intro3Opacity = intro3In * (1 - intro3Out)
         const intro3CharProgress = Math.min(
           1,
-          Math.max(0, (progress - 0.33) / 0.07)
+          Math.max(0, (progress - 0.47) / 0.08)
         )
 
-        // Rail starts after intro 3 fully out (0.50+), range 0.50-0.84 (34%)
-        const horizProgress = Math.min(1, Math.max(0, (progress - 0.5) / 0.34))
-        // Rail fades in 0.48-0.52, fades OUT 0.80-0.84
+        // Rail starts after intro 3 fully out, then holds the final panel before
+        // the outro crossfade.
+        const horizProgress = Math.min(1, Math.max(0, (progress - 0.68) / 0.2))
+        // Rail fades in 0.68-0.72, fades OUT 0.90-0.94
         const railOpacity =
-          Math.min(1, Math.max(0, (progress - 0.48) / 0.04)) *
-          (1 - Math.min(1, Math.max(0, (progress - 0.8) / 0.04)))
+          Math.min(1, Math.max(0, (progress - 0.68) / 0.04)) *
+          (1 - Math.min(1, Math.max(0, (progress - 0.9) / 0.04)))
         // Stepped rail — hold 24% × 3 + snap 14% × 2 = 100%.
         // Snap zones widened (5% → 14%) + easeInOutQuad applied for smooth slides.
         const easeInOutQuad = (t: number) =>
@@ -79,8 +79,8 @@ export function Inside() {
         } else {
           railProgress = 2
         }
-        // Outro finale — fade in 0.86-0.94, hold 0.94-1.0
-        const outroIn = Math.min(1, Math.max(0, (progress - 0.86) / 0.08))
+        // Outro finale — fade in 0.89-0.94, then hold to chapter end.
+        const outroIn = Math.min(1, Math.max(0, (progress - 0.89) / 0.05))
 
         // Intro 1 iris-open: circle clip-path expands from center
         const intro1Iris = Math.min(100, Math.max(0, intro1In * 100))
@@ -149,7 +149,7 @@ export function Inside() {
 
             <div
               className={s.rail}
-              aria-hidden={progress < 0.48 ? true : undefined}
+              aria-hidden={progress < 0.68 ? true : undefined}
               style={{ opacity: railOpacity }}
             >
               <div

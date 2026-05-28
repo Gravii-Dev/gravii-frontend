@@ -26,65 +26,65 @@ export function Vision() {
   return (
     <ChapterPanel
       id="vision"
-      distance={3.6}
+      distance={5.6}
       background="var(--gravii-paper)"
     >
       {(progress) => {
         // Lead-in "This is the floor, not the ceiling." — chapter intro
-        // char-reveal 0-0.06, hold 0.06-0.12, fade-out 0.12-0.18
+        // char-reveal 0-0.06, hold 0.06-0.14, fade-out 0.14-0.20
         const leadInOpacity =
           Math.min(1, Math.max(0, progress / 0.06)) *
-          (1 - Math.min(1, Math.max(0, (progress - 0.12) / 0.06)))
+          (1 - Math.min(1, Math.max(0, (progress - 0.14) / 0.06)))
         const leadInCharProgress = Math.min(1, Math.max(0, progress / 0.06))
 
-        // Steps occupy progress 0.20–0.55 (stepping through Now/Next/After)
-        // Steps fade-in 0.20-0.24, active stepping 0.24-0.55, fade-out 0.55-0.60
+        // Steps occupy progress 0.20–0.46, then breathe before fading out.
         const stepsIn = Math.min(1, Math.max(0, (progress - 0.2) / 0.04))
-        const stepsOut = Math.min(1, Math.max(0, (progress - 0.55) / 0.05))
+        const stepsOut = Math.min(1, Math.max(0, (progress - 0.5) / 0.06))
         const stepsOpacity = stepsIn * (1 - stepsOut)
 
-        // Active step index — cycle through 3 steps over 0.24-0.55 (31%)
+        // Active step index — cycle through 3 steps over 0.26-0.46.
         const stepCycleProgress = Math.min(
           1,
-          Math.max(0, (progress - 0.24) / 0.31)
+          Math.max(0, (progress - 0.26) / 0.2)
         )
         const activeStep = Math.min(
           STEPS.length - 1,
           Math.floor(stepCycleProgress * STEPS.length)
         )
 
-        // Finale slot fade-in 0.58–0.62 (wraps the 3 stages; mostly held at 1)
-        const finaleIn = Math.min(1, Math.max(0, (progress - 0.58) / 0.04))
+        // Finale slot fade-in 0.48–0.52, leaving enough room for the final CTA
+        // to be readable before the footer arrives.
+        const finaleIn = Math.min(1, Math.max(0, (progress - 0.48) / 0.04))
 
-        // Stage 1 "From wallet to way of life." — char-reveal 0.60-0.66, hold 0.66-0.72, peel 0.72-0.78
+        // Stage 1 "From wallet to way of life." — reveal, hold, peel.
         const stage1CharProgress = Math.min(
           1,
-          Math.max(0, (progress - 0.6) / 0.06)
+          Math.max(0, (progress - 0.5) / 0.06)
         )
         const stage1PeelProgress = Math.min(
           1,
-          Math.max(0, (progress - 0.72) / 0.06)
+          Math.max(0, (progress - 0.62) / 0.06)
         )
-        const stage1Visible = progress < 0.78 ? 1 : 0
+        const stage1Visible = progress < 0.68 ? 1 : 0
 
-        // Stage 2 "Connect once. Live differently." — char-reveal 0.78-0.84, hold 0.84-0.88, fade-out 0.88-0.90
+        // Stage 2 "Connect once. Live differently." — reveal earlier, hold longer.
         const stage2CharProgress = Math.min(
           1,
-          Math.max(0, (progress - 0.78) / 0.06)
+          Math.max(0, (progress - 0.66) / 0.06)
         )
-        const stage2In = Math.min(1, Math.max(0, (progress - 0.78) / 0.06))
-        const stage2Out = Math.min(1, Math.max(0, (progress - 0.88) / 0.02))
+        const stage2In = Math.min(1, Math.max(0, (progress - 0.66) / 0.06))
+        const stage2Out = Math.min(1, Math.max(0, (progress - 0.78) / 0.04))
         const stage2Opacity = stage2In * (1 - stage2Out)
 
-        // Stage 3 "we've burnt the old playbook." — char-reveal 0.90-0.94, hold to end
+        // Stage 3 "we've burnt the old playbook." — reveal before CTA appears.
         const stage3CharProgress = Math.min(
           1,
-          Math.max(0, (progress - 0.9) / 0.04)
+          Math.max(0, (progress - 0.79) / 0.05)
         )
-        const stage3Opacity = Math.min(1, Math.max(0, (progress - 0.9) / 0.04))
+        const stage3Opacity = Math.min(1, Math.max(0, (progress - 0.79) / 0.05))
 
-        // CTA pill fade-in 0.96-1.00, below stage 3
-        const ctaIn = Math.min(1, Math.max(0, (progress - 0.96) / 0.04))
+        // CTA pill fade-in 0.90-0.94, then hold before the footer.
+        const ctaIn = Math.min(1, Math.max(0, (progress - 0.9) / 0.04))
 
         return (
           <div className={s.stage}>

@@ -11,13 +11,6 @@
   overflow: hidden;
 }
 
-.eyebrowSlot {
-  position: absolute;
-  top: clamp(48px, 8vh, 88px);
-  left: clamp(24px, 6vw, 96px);
-  z-index: 5;
-}
-
 .leadIn {
   position: absolute;
   inset: 0;
@@ -185,38 +178,6 @@
   }
 }
 
-.finaleCta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: clamp(20px, 3vh, 40px);
-  padding: 16px 32px;
-  border: 1.5px solid var(--gravii-ink);
-  border-radius: 999px;
-  background: transparent;
-  font-family: var(--gravii-font-heading);
-  font-size: clamp(14px, 1.1vw, 17px);
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  text-decoration: none;
-  color: var(--gravii-ink);
-  pointer-events: auto;
-  cursor: pointer;
-  transition:
-    background 220ms ease,
-    color 220ms ease,
-    transform 220ms ease,
-    opacity 320ms ease;
-  will-change: opacity, transform;
-}
-
-.finaleCta:hover {
-  background: var(--gravii-ink);
-  color: var(--gravii-paper);
-  transform: translate3d(0, -2px, 0);
-}
-
 .wash {
   position: absolute;
   inset: 0;
@@ -241,7 +202,6 @@
   .stage {
     overflow: visible;
   }
-  .eyebrowSlot,
   .steps,
   .finale {
     position: static;
@@ -258,10 +218,6 @@
   }
   .finale {
     padding-block: clamp(48px, 8vh, 80px);
-  }
-  .finaleCta {
-    opacity: 1 !important;
-    transform: none !important;
   }
   .stageSlot {
     min-height: auto;

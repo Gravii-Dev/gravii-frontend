@@ -4,7 +4,7 @@ import type { PropsWithChildren } from 'react'
 import { ReactTempus } from 'tempus/react'
 import { Link } from '@/components/ui/link'
 import { SITE_BASE_URL } from '@/lib/config/site'
-import { OptionalFeatures } from '@/lib/features'
+import { DevTools } from '@/lib/features'
 import { themes } from '@/lib/styles/colors'
 import { fontsVariable } from '@/lib/styles/fonts'
 import '@gravii/brand-tokens/css'
@@ -97,7 +97,7 @@ export default async function Layout({ children }: PropsWithChildren) {
           Skip to main content
         </Link>
         {children}
-        {ENABLE_OPTIONAL_RUNTIME ? <OptionalFeatures /> : null}
+        {ENABLE_OPTIONAL_RUNTIME ? <DevTools /> : null}
         {ENABLE_OPTIONAL_RUNTIME ? <ReactTempus patch={true} /> : null}
       </body>
     </html>

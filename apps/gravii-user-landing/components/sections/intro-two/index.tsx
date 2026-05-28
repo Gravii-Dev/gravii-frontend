@@ -201,22 +201,6 @@ export function IntroTwo() {
             <span className={s.blinkDot}>.</span>
           </span>
         </p>
-        {/* <div ref={alertCardRef} className={s.alertCard}>
-          <div className={s.alertNoise} />
-          <div className={s.alertHeader}>
-            <span className={s.alertTitle}>No profile found</span>
-            <span className={s.alertClose}>×</span>
-          </div>
-          <div className={s.alertWarning}>
-            <span className={s.alertWarningCopy}>
-              {'⚠ 1,847 transactions across 7 chains. Zero recognition. Zero perks. Zero status.'}
-            </span>
-          </div>
-          <div className={s.alertWallet}>
-            <span className={s.alertLabel}>Wallet</span>
-            <span className={s.alertValue}>0x71C...9A21 — unlinked</span>
-          </div>
-        </div> */}
       </div>
     </section>
   )

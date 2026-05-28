@@ -1,49 +1,54 @@
 # Component Inventory
 
-Generated: 2026-03-08
+Generated: 2026-05-28
 
 ## Active Integrations
 
-- None configured
+- Landing API waitlist submission
+- Partner handoff to `partner.gravii.io`
 
 ## UI Components
 
-- `accordion`
-- `alert-dialog`
-- `checkbox`
-- `dropdown`
-- `fold`
-- `form`
+- `gravii-card`
 - `image`
 - `link`
-- `marquee`
-- `menu`
-- `not-configured`
-- `real-viewport`
-- `sanity-image`
-- `scroll-restoration`
-- `scrollbar`
-- `select`
-- `switch`
-- `tabs`
-- `toast`
-- `tooltip`
 
 ## Layout Components
 
+- `back-to-top`
+- `cursor-trail`
 - `footer`
-- `header`
+- `halo-overlay`
 - `lenis`
+- `site-shell`
+- `sticky-header`
 - `theme`
+- `toc-rail`
 - `wrapper`
 
 ## Effect Components
 
-- `animated-gradient`
-- `progress-text`
-- `split-text`
+- `chapter-panel`
+- `display-moment`
 
-## Pages
+## Landing Sections
 
-- `//`
-- `/studio/[[...tool]]`
+- `hero`
+- `intro-one`
+- `intro-two`
+- `recognition`
+- `bridge`
+- `passport`
+- `inside`
+- `vision`
+- `waitlist`
+
+## Routes
+
+- `/`
+- `/partners`
+- `/privacy`
+- `/terms`
+- `/robots.txt`
+- `/sitemap.xml`
+- `/manifest.webmanifest`

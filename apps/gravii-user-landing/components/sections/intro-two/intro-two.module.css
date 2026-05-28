@@ -1,7 +1,7 @@
 .section {
   position: relative;
   display: flex;
-  min-height: 60svh;
+  min-height: 100svh;
   width: 100%;
   align-items: center;
   overflow: hidden;
@@ -24,7 +24,7 @@
 .stage {
   position: relative;
   width: 100%;
-  min-height: 60svh;
+  min-height: 100svh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -84,123 +84,6 @@
   animation: blink-dot 0.8s steps(1, end) infinite;
 }
 
-.alertCard {
-  position: absolute;
-  right: clamp(2rem, 5vw, 4.5rem);
-  bottom: clamp(0.9rem, 3.8vh, 2rem);
-  display: flex;
-  flex-direction: column;
-  gap: 0.9rem;
-  width: min(24rem, 34vw);
-  min-width: 18rem;
-  aspect-ratio: 1 / 1;
-  padding: 1.3rem 1.45rem 1.35rem;
-  overflow: hidden;
-  border: var(--gravii-border);
-  border-radius: var(--gravii-radius-card);
-  background:
-    radial-gradient(circle at 16% 10%, rgb(255 255 255 / 8%), transparent 30%),
-    linear-gradient(180deg, rgb(18 18 17 / 94%) 0%, rgb(6 6 5 / 94%) 100%);
-  box-shadow:
-    0 30px 72px rgb(0 0 0 / 30%),
-    0 1px 0 rgb(255 255 255 / 4%);
-  opacity: 0;
-  transform: translate3d(10%, -146%, 0) rotate(22deg) scale(0.88, 1.16);
-  will-change: transform, opacity;
-  pointer-events: none;
-  transform-origin: 100% 100%;
-  transition:
-    opacity 260ms linear,
-    transform 560ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.alertCardVisible {
-  opacity: 1;
-  transform: translate3d(0, 0, 0) rotate(10deg) scale(1, 1);
-}
-
-.alertNoise {
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgb(255 255 255 / 3%) 2px,
-    rgb(255 255 255 / 3%) 4px
-  );
-  opacity: 0.9;
-  mix-blend-mode: screen;
-  animation: static-noise 2s linear infinite;
-}
-
-.alertHeader,
-.alertWarning,
-.alertWallet {
-  position: relative;
-  z-index: 1;
-}
-
-.alertHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.alertTitle {
-  font-family: var(--gravii-font-ui);
-  font-size: 1.08rem;
-  font-weight: 700;
-  color: rgb(236 224 203 / 96%);
-}
-
-.alertClose {
-  font-size: 1.05rem;
-  color: rgb(255 255 255 / 32%);
-}
-
-.alertWarning {
-  border: 1px solid rgb(244 210 58 / 36%);
-  border-radius: var(--gravii-radius-xs);
-  background: rgb(211 47 47 / 12%);
-  padding: 0.9rem 1rem;
-}
-
-.alertWarningCopy {
-  font-family: var(--gravii-font-ui);
-  font-size: 0.9rem;
-  font-weight: 700;
-  line-height: 1.55;
-  color: rgb(239 83 80);
-}
-
-.alertWallet {
-  margin-top: auto;
-  border: 1px solid rgb(255 253 247 / 18%);
-  border-radius: var(--gravii-radius-xs);
-  background: rgb(255 253 247 / 7%);
-  padding: 0.9rem 1rem;
-}
-
-.alertLabel,
-.alertValue {
-  display: block;
-  font-family: var(--gravii-font-ui);
-  font-weight: 700;
-}
-
-.alertLabel {
-  margin-bottom: 0.18rem;
-  font-size: 0.86rem;
-  color: rgb(255 255 255 / 40%);
-}
-
-.alertValue {
-  font-size: 0.94rem;
-  line-height: 1.45;
-  color: rgb(255 255 255 / 64%);
-}
-
 @keyframes blink-dot {
   0%,
   44% {
@@ -209,15 +92,6 @@
   45%,
   100% {
     opacity: 0.2;
-  }
-}
-
-@keyframes static-noise {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(4px);
   }
 }
 
@@ -230,25 +104,12 @@
   .char {
     transform: none;
   }
-
-  .alertNoise {
-    animation: none;
-  }
-}
-
-@media (width <= 900px) {
-  .alertCard {
-    width: min(23rem, calc(100% - 2rem));
-    min-width: 0;
-    right: 1rem;
-    bottom: 1rem;
-  }
 }
 
 @media (width <= 1512px), (height <= 980px) {
   .section,
   .stage {
-    min-height: 64svh;
+    min-height: 100svh;
   }
 
   .stage {
@@ -263,12 +124,6 @@
     );
   }
 
-  .alertCard {
-    right: clamp(1rem, 3.4vw, 2.6rem);
-    bottom: clamp(0.6rem, 2.4vh, 1.2rem);
-    width: min(21.5rem, 31vw);
-    min-width: 17rem;
-  }
 }
 
 @media (width <= 640px) {
@@ -291,18 +146,4 @@
     white-space: nowrap;
   }
 
-  .alertCard {
-    position: relative;
-    left: auto;
-    right: auto;
-    bottom: auto;
-    width: min(18.5rem, calc(100% - 2rem));
-    margin-inline: auto;
-    padding: 1rem 1rem 1.05rem;
-    transform: rotate(5deg) scale(1);
-  }
-
-  .alertCardVisible {
-    transform: rotate(5deg) scale(1);
-  }
 }
