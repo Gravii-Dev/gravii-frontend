@@ -115,10 +115,11 @@ export function DisplayMoment({
       setRevealState(node, 0, 22)
     })
 
-    const syncFromViewport = () => {
-      // Skip scroll-based calc when external progress is controlling
-      if (typeof externalProgressRef.current === 'number') return
+    if (typeof externalProgressRef.current === 'number') {
+      return
+    }
 
+    const syncFromViewport = () => {
       const bounds = root.getBoundingClientRect()
       const viewportHeight = window.innerHeight
 

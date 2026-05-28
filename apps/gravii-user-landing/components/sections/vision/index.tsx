@@ -27,7 +27,6 @@ export function Vision() {
     <ChapterPanel
       id="vision"
       distance={3.6}
-      overlap
       background="var(--gravii-paper)"
     >
       {(progress) => {

@@ -5,7 +5,7 @@ import 'lenis/dist/lenis.css'
 import type { LenisRef, LenisProps as ReactLenisProps } from 'lenis/react'
 import { ReactLenis } from 'lenis/react'
 import dynamic from 'next/dynamic'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTempus } from 'tempus/react'
 import { useStore } from '@/lib/hooks/store'
 
@@ -28,9 +28,24 @@ export function Lenis({
   syncScrollTrigger = false,
 }: LenisProps) {
   const lenisRef = useRef<LenisRef>(null)
+  const [reducedMotion, setReducedMotion] = useState(false)
   const isNavOpened = useStore(
     (state: { isNavOpened: boolean }) => state.isNavOpened
   )
+
+  useEffect(() => {
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const syncReducedMotion = () => {
+      setReducedMotion(media.matches)
+    }
+
+    syncReducedMotion()
+    media.addEventListener('change', syncReducedMotion)
+
+    return () => {
+      media.removeEventListener('change', syncReducedMotion)
+    }
+  }, [])
 
   useTempus((time: number) => {
     if (lenisRef.current?.lenis) {
@@ -45,6 +60,10 @@ export function Lenis({
       isOverflowHidden
     )
   }, [isNavOpened])
+
+  if (reducedMotion) {
+    return null
+  }
 
   return (
     <ReactLenis

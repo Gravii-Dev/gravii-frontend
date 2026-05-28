@@ -4,7 +4,7 @@ import {
   useActionState,
   type FormEvent,
   useEffect,
-  useRef,
+  useId,
   useState,
 } from 'react'
 import {
@@ -19,14 +19,11 @@ import s from './cta-pill.module.css'
 
 type State = 'collapsed' | 'expanded' | 'submitting' | 'success'
 
-const MAGNETIC_RADIUS = 180
-const MAGNETIC_STRENGTH = 0.12
 const WAITLIST_CACHE_KEY = 'gravii_waitlist'
 
 /**
- * Passport-stamp CTA — sharp rectangle, slight rotation, heavy ink.
- * Anti-AI-slop: no rounded pill, no arrow icon. Brand metaphor: real stamp aesthetic.
- * On click: rectangle uncurves to 0deg + expands to email form inline.
+ * Passport-stamp CTA using the flat Gravii action control treatment.
+ * On click: expands inline to the existing waitlist form flow.
  */
 export function CtaPill() {
   const [formState, formAction, isPending] = useActionState<
@@ -35,16 +32,10 @@ export function CtaPill() {
   >(joinWaitlistAction, null)
   const [state, setState] = useState<State>('collapsed')
   const [email, setEmail] = useState('')
+  const [clientError, setClientError] = useState('')
   const [referralCode, setReferralCode] = useState('')
-  const inputRef = useRef<HTMLInputElement | null>(null)
-  const stampRef = useRef<HTMLDivElement | null>(null)
+  const statusId = useId()
   const visualState: State = isPending ? 'submitting' : state
-
-  useEffect(() => {
-    if (state === 'expanded') {
-      inputRef.current?.focus()
-    }
-  }, [state])
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -87,73 +78,33 @@ export function CtaPill() {
     }
   }, [formState])
 
-  // Magnetic cursor proximity — only when collapsed
-  useEffect(() => {
-    if (state !== 'collapsed') {
-      if (stampRef.current) {
-        stampRef.current.style.removeProperty('--magnet-x')
-        stampRef.current.style.removeProperty('--magnet-y')
-      }
-      return undefined
-    }
-    if (
-      typeof window === 'undefined' ||
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-      window.matchMedia('(hover: none)').matches
-    ) {
-      return undefined
-    }
-    const handleMove = (event: MouseEvent) => {
-      const stamp = stampRef.current
-      if (!stamp) return
-      const rect = stamp.getBoundingClientRect()
-      const cx = rect.left + rect.width / 2
-      const cy = rect.top + rect.height / 2
-      const dx = event.clientX - cx
-      const dy = event.clientY - cy
-      const dist = Math.hypot(dx, dy)
-      if (dist > MAGNETIC_RADIUS) {
-        stamp.style.removeProperty('--magnet-x')
-        stamp.style.removeProperty('--magnet-y')
-        return
-      }
-      const falloff = 1 - dist / MAGNETIC_RADIUS
-      stamp.style.setProperty(
-        '--magnet-x',
-        `${dx * MAGNETIC_STRENGTH * falloff}px`
-      )
-      stamp.style.setProperty(
-        '--magnet-y',
-        `${dy * MAGNETIC_STRENGTH * falloff}px`
-      )
-    }
-    window.addEventListener('mousemove', handleMove, { passive: true })
-    return () => {
-      window.removeEventListener('mousemove', handleMove)
-    }
-  }, [state])
-
   const handleTriggerClick = () => {
-    if (state === 'collapsed') setState('expanded')
+    if (state === 'collapsed') {
+      setClientError('')
+      setState('expanded')
+    }
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     const normalized = normalizeWaitlistEmail(email)
     if (!isValidWaitlistEmail(normalized)) {
       event.preventDefault()
+      setClientError('Enter a valid email address.')
       return
     }
 
+    setClientError('')
     setEmail(normalized)
   }
 
   const isCollapsed = state === 'collapsed'
   const isSuccess = state === 'success'
   const showForm = state === 'expanded' || isPending
-  const statusMessage = formState?.message
+  const statusMessage = clientError || formState?.message
+  const isError = Boolean(clientError) || (formState?.status ?? 0) >= 400
 
   return (
-    <div ref={stampRef} className={s.stamp} data-state={visualState}>
+    <div className={s.stamp} data-state={visualState}>
       <span className={s.caption} aria-hidden="true">
         Approved for entry
         <span className={s.captionDot} aria-hidden="true" />
@@ -180,10 +131,10 @@ export function CtaPill() {
           action={formAction}
           className={s.form}
           aria-hidden={!showForm}
+          noValidate
           onSubmit={handleSubmit}
         >
           <input
-            ref={inputRef}
             name="email"
             type="email"
             autoComplete="email"
@@ -198,7 +149,12 @@ export function CtaPill() {
                 : 'Enter your email…'
             }
             value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            onChange={(event) => {
+              setEmail(event.target.value)
+              if (clientError) setClientError('')
+            }}
+            aria-invalid={isError ? true : undefined}
+            aria-describedby={statusMessage ? statusId : undefined}
             disabled={isPending || isSuccess}
             tabIndex={showForm ? 0 : -1}
           />
@@ -226,6 +182,16 @@ export function CtaPill() {
           </button>
         </form>
       </div>
+      {statusMessage ? (
+        <p
+          id={statusId}
+          className={isError ? s.statusError : s.status}
+          role={isError ? 'alert' : 'status'}
+          aria-live={isError ? 'assertive' : 'polite'}
+        >
+          {statusMessage}
+        </p>
+      ) : null}
     </div>
   )
 }

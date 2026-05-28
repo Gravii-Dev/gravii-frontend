@@ -60,6 +60,9 @@ export function IntroOne() {
 
     let frameId = 0
     let lastVisibleCount = -1
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches
 
     charRefs.current.forEach((node) => {
       setRevealState(node, 0, 16)
@@ -67,6 +70,16 @@ export function IntroOne() {
     cardNodes.forEach((node) => {
       setRevealState(node, 0, 0)
     })
+
+    if (prefersReducedMotion) {
+      charRefs.current.forEach((node) => {
+        setRevealState(node, 1, 0)
+      })
+      cardNodes.forEach((node) => {
+        setRevealState(node, 1, 0)
+      })
+      return
+    }
 
     const syncFromViewport = () => {
       if (

@@ -29,7 +29,6 @@ export function Inside() {
     <ChapterPanel
       id="inside"
       distance={4.4}
-      overlap
       background="var(--gravii-paper)"
     >
       {(progress) => {

@@ -21,7 +21,6 @@ export function Passport() {
     <ChapterPanel
       id="passport"
       distance={4.0}
-      overlap
       background="var(--gravii-paper)"
     >
       {(progress) => {

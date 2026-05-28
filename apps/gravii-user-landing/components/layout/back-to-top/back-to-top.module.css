@@ -7,10 +7,10 @@
   align-items: center;
   gap: 8px;
   padding: 12px 18px 12px 16px;
-  border: 1.5px solid var(--gravii-ink);
-  border-radius: 999px;
-  background: var(--gravii-paper);
-  color: var(--gravii-ink);
+  border: 0;
+  border-radius: var(--gravii-action-radius);
+  background: var(--gravii-action-bg);
+  color: var(--gravii-action-text);
   font-family: var(--gravii-font-mono);
   font-size: 11px;
   font-weight: 600;
@@ -24,9 +24,8 @@
     opacity 320ms ease,
     transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
     background-color 220ms ease,
-    color 220ms ease,
-    box-shadow 320ms ease;
-  box-shadow: 0 4px 16px rgb(9 9 7 / 6%);
+    color 220ms ease;
+  box-shadow: none;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -37,9 +36,13 @@
 }
 
 .button:hover {
-  background: var(--gravii-ink);
-  color: var(--gravii-paper);
-  box-shadow: 0 8px 24px rgb(9 9 7 / 12%);
+  background: var(--gravii-action-bg-hover);
+  color: var(--gravii-action-text);
+}
+
+.button:focus-visible {
+  outline: 3px solid var(--gravii-action-focus);
+  outline-offset: 4px;
 }
 
 .arrow {

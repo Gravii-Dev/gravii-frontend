@@ -13,7 +13,6 @@ export function Bridge() {
     <ChapterPanel
       id="bridge"
       distance={3.2}
-      overlap
       background="var(--gravii-paper)"
     >
       {(progress) => {
