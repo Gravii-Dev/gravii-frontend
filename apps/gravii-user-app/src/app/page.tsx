@@ -91,12 +91,18 @@ export default function HomePage() {
     isConnected ? styles.workspaceAuthButtonConnected : styles.workspaceAuthButtonDisconnected
   }`;
   const sectionAccent = activePanel.id === "home" ? "var(--solid-ink-surface)" : activePanel.bg;
+  const authAccent = activePanel.id === "home" && isDarkTheme ? "var(--solid-ink-surface)" : activePanel.bg;
+  const authOnAccent =
+    activePanel.dark || (activePanel.id === "home" && isDarkTheme)
+      ? "var(--theme-on-accent)"
+      : "var(--raw-ink)";
+  const shouldInvertBrandLogo = activePanel.dark || (activePanel.id === "home" && isDarkTheme);
   const sectionStyle: WorkspaceSectionStyle = {
     "--section-accent": sectionAccent,
     "--section-on-accent": activePanel.id === "home" || activePanel.dark ? "var(--theme-on-accent)" : "var(--raw-ink)",
-    "--auth-accent": activePanel.bg,
-    "--auth-on-accent": activePanel.dark ? "var(--theme-on-accent)" : "var(--raw-ink)",
-    "--brand-logo-filter": activePanel.dark ? "invert(1)" : "none",
+    "--auth-accent": authAccent,
+    "--auth-on-accent": authOnAccent,
+    "--brand-logo-filter": shouldInvertBrandLogo ? "invert(1)" : "none",
   };
   const activeSectionDotCount = getSectionDotCount(activePanel.id);
 
