@@ -34,5 +34,6 @@ Purpose:
 
 - `wagmi-tempo-shim.ts` keeps the unused `@wagmi/core/tempo` entry out of the app bundle because the current Wagmi and Viem Tempo wallet export shapes do not line up.
 - `wagmi-connectors-shim.ts` disables optional Safe/Base Account connector discovery from Reown's helper path so the app does not bundle unused optional wallet SDKs.
+- `viem-tempo-shim.ts` and `viem-tempo-zones-shim.ts` satisfy optional Tempo named exports pulled through Reown/Wagmi internals while failing closed if any Tempo-only feature is actually invoked.
 
 These shims are wired in `next.config.ts` for both Webpack dev builds and Turbopack production builds. Remove them only when Gravii intentionally supports Tempo, Safe app, or Base Account connector flows and the matching wallet SDK packages are installed.
