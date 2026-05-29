@@ -71,6 +71,14 @@ const nextConfig: NextConfig = {
         process.cwd(),
         "src/lib/wallet/wagmi-connectors-shim.ts"
       ),
+      "viem/tempo": path.resolve(
+        process.cwd(),
+        "src/lib/wallet/viem-tempo-shim.ts"
+      ),
+      "viem/tempo/zones": path.resolve(
+        process.cwd(),
+        "src/lib/wallet/viem-tempo-zones-shim.ts"
+      ),
     };
 
     return config;
@@ -87,6 +95,8 @@ const nextConfig: NextConfig = {
     resolveAlias: {
       "@wagmi/core/tempo": "./src/lib/wallet/wagmi-tempo-shim.ts",
       "@wagmi/connectors": "./src/lib/wallet/wagmi-connectors-shim.ts",
+      "viem/tempo": "./src/lib/wallet/viem-tempo-shim.ts",
+      "viem/tempo/zones": "./src/lib/wallet/viem-tempo-zones-shim.ts",
     },
     root: workspaceRoot,
   },

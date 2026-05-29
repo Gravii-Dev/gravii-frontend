@@ -617,6 +617,7 @@
   position: relative;
   z-index: 1;
   display: flex;
+  justify-content: center;
   min-width: 0;
   height: calc(100dvh - (var(--app-shell-padding) * 2));
   min-height: 0;
@@ -626,7 +627,9 @@
 .workspaceBoard {
   position: relative;
   display: flex;
-  flex: 1;
+  flex: 1 1 min(100%, 2160px);
+  width: 100%;
+  max-width: 2160px;
   height: 100%;
   min-height: 0;
   overflow: hidden;
