@@ -8,7 +8,7 @@ import type { SharedContentProps } from "@/features/launch-app/types";
 import styles from "./standing-content.module.css";
 
 type RankingCategory = {
-  id: "overall" | "wealth" | "activity" | "trade" | "streak";
+  id: "g-rep" | "activity" | "trade" | "streak" | "nft";
   label: string;
   description: string;
 };
@@ -19,47 +19,51 @@ type RankingRow = {
   name: string;
   persona: string;
   rank: string;
-  tier: "Black" | "Platinum" | "Gold" | "Classic";
+  tier: "Obsidian" | "Black" | "Platinum" | "Gold" | "Classic" | "Base";
   up: boolean | null;
 };
 
 const CATEGORIES: RankingCategory[] = [
   {
-    description: "Composite score across activity, trading, holdings, and consistency.",
-    id: "overall",
-    label: "Overall",
+    description: "Your Gravii reputation, based on holdings, activity, trading, and consistency.",
+    id: "g-rep",
+    label: "G-REP",
   },
   {
-    description: "Capital depth, stable reserves, and portfolio quality.",
-    id: "wealth",
-    label: "Wealth",
-  },
-  {
-    description: "Recent transaction density and cross-chain participation.",
+    description: "How active you are across transaction frequency, volume, and cross-chain participation.",
     id: "activity",
-    label: "Activity",
+    label: "ACTIVITY",
   },
   {
-    description: "Trading volume, timing, and execution behavior.",
+    description: "How well you trade across volume, timing, and execution behavior.",
     id: "trade",
-    label: "Trade",
+    label: "TRADE",
   },
   {
-    description: "Consistency of verified on-chain participation.",
+    description: "How consistent you are across consecutive days of verified on-chain participation.",
     id: "streak",
-    label: "Streak",
+    label: "STREAK",
+  },
+  {
+    description: "Your presence in the NFT ecosystem across collection and trading behavior.",
+    id: "nft",
+    label: "NFT",
   },
 ];
 
 const RANKING_ROWS: Record<RankingCategory["id"], RankingRow[]> = {
   activity: [],
-  overall: [],
+  "g-rep": [],
+  nft: [],
   streak: [],
   trade: [],
-  wealth: [],
 };
 
 function tierClassName(tier: RankingRow["tier"]) {
+  if (tier === "Obsidian") {
+    return styles.tierObsidian;
+  }
+
   if (tier === "Black") {
     return styles.tierBlack;
   }
@@ -70,6 +74,10 @@ function tierClassName(tier: RankingRow["tier"]) {
 
   if (tier === "Gold") {
     return styles.tierGold;
+  }
+
+  if (tier === "Base") {
+    return styles.tierBase;
   }
 
   return styles.tierClassic;
@@ -93,7 +101,7 @@ export default function StandingContent({
   onConnect,
   onNavigate,
 }: SharedContentProps) {
-  const [activeCategoryId, setActiveCategoryId] = useState<RankingCategory["id"]>("overall");
+  const [activeCategoryId, setActiveCategoryId] = useState<RankingCategory["id"]>("g-rep");
   const activeCategory = useMemo(
     () => CATEGORIES.find((category) => category.id === activeCategoryId) ?? CATEGORIES[0],
     [activeCategoryId]
@@ -102,10 +110,21 @@ export default function StandingContent({
 
   return (
     <div className={`${styles.root} ${dark ? styles.rootDark : styles.rootLight}`}>
+      <section className={styles.seasonBar} aria-label="Ranking season status">
+        <div className={styles.seasonMeta}>
+          <span className={styles.eyebrow}>Season</span>
+          <strong>Pending API</strong>
+        </div>
+        <span className={styles.seasonCountdown}>Season timing will load from Ranking API</span>
+        <div className={styles.seasonProgress} aria-hidden="true">
+          <span />
+        </div>
+      </section>
+
       <section className={styles.hero} aria-label="Ranking overview">
         <div>
-          <span className={styles.eyebrow}>Public ranking</span>
-          <h2>See where every wallet stands.</h2>
+          <span className={styles.eyebrow}>Standing</span>
+          <h2>See where you stand.</h2>
         </div>
         <p>
           Rankings update daily from on-chain behavior. Public boards stay visible;
@@ -121,30 +140,31 @@ export default function StandingContent({
               <strong>Connected wallet</strong>
             </div>
             <div>
-              <span className={styles.eyebrow}>Your rank</span>
+              <span className={styles.eyebrow}>Season rank</span>
               <strong>Pending API</strong>
-              <span>Wallet-specific rank is not loaded yet.</span>
+              <span>of total ranked wallets</span>
             </div>
             <div>
-              <span className={styles.eyebrow}>Weekly</span>
+              <span className={styles.eyebrow}>Season best</span>
               <strong>—</strong>
-              <span>No movement data yet.</span>
+              <span>Best category will load here.</span>
             </div>
             <div>
-              <span className={styles.eyebrow}>Strongest</span>
-              <strong>{activeCategory.label}</strong>
-              <span>{activeCategory.description}</span>
+              <span className={styles.eyebrow}>Season change</span>
+              <strong>—</strong>
+              <span>Movement since season start.</span>
             </div>
           </div>
         ) : (
           <div className={styles.lockedYou}>
             <div>
               <span className={styles.eyebrow}>My wallet rank</span>
-              <strong>Rank hidden</strong>
+              <strong>Get your Gravii ID</strong>
               <p>
-                Browse the public board now. Sign in to calculate your own wallet
-                rank, tier, and movement against this category.
+                See where you stand among peers. Sign in to calculate your own
+                wallet rank, tier, and movement against this category.
               </p>
+              <span className={styles.complimentaryNote}>Complimentary — no strings.</span>
             </div>
             <ActionButton size="panel" className={styles.signInButton} onClick={onConnect}>
               SIGN IN
@@ -165,6 +185,8 @@ export default function StandingContent({
           </button>
         ))}
       </section>
+
+      <p className={styles.categoryDescription}>{activeCategory.description}</p>
 
       <section className={styles.board} aria-label={`${activeCategory.label} ranking board`}>
         <div className={styles.boardIntro}>
@@ -187,10 +209,10 @@ export default function StandingContent({
         {connected ? (
           <>
             <article className={`${styles.row} ${styles.youRow}`}>
-              <strong>—</strong>
-              <span>—</span>
+              <strong>Pending</strong>
+              <span className={tierClassName("Base")}>Base</span>
               <span>Your wallet</span>
-              <span>Pending API</span>
+              <span>Persona pending</span>
               <span>—</span>
               <span>—</span>
             </article>
@@ -220,13 +242,26 @@ export default function StandingContent({
       </section>
 
       {connected ? (
-        <ActionButton
-          size="panel"
-          className={styles.profileButton}
-          onClick={() => onNavigate?.("profile")}
-        >
-          REVIEW GRAVII ID
-        </ActionButton>
+        <>
+          <section className={styles.lastSeason} aria-label="Last season ranking summary">
+            <span className={styles.eyebrow}>Last season</span>
+            <div className={styles.lastSeasonGrid}>
+              {CATEGORIES.map((category) => (
+                <div key={`last-season-${category.id}`}>
+                  <span>{category.label}</span>
+                  <strong>Pending API</strong>
+                </div>
+              ))}
+            </div>
+          </section>
+          <ActionButton
+            size="panel"
+            className={styles.profileButton}
+            onClick={() => onNavigate?.("profile")}
+          >
+            REVIEW GRAVII ID
+          </ActionButton>
+        </>
       ) : null}
     </div>
   );

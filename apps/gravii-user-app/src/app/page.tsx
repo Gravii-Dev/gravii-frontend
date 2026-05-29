@@ -5,6 +5,7 @@ import {
   useRef,
   useState,
   type CSSProperties,
+  type MouseEvent,
   type ReactElement,
 } from "react";
 
@@ -20,7 +21,6 @@ import HomeContent from "@/features/home/home-content";
 import { VISIBLE_PANELS } from "@/features/launch-app/panel-config";
 import type { PanelId, SharedContentProps } from "@/features/launch-app/types";
 import { useLaunchShell } from "@/features/launch-app/use-launch-shell";
-import MySpaceContent from "@/features/my-space/my-space-content";
 import ProfileContent from "@/features/profile/profile-content";
 import {
   clearProfileIdentityCache,
@@ -37,17 +37,21 @@ const CONTENT_MAP = {
   discovery: DiscoveryContent,
   lookup: XRayContent,
   leaderboard: StandingContent,
-  myspace: MySpaceContent,
+  myspace: HomeContent,
 } satisfies Record<PanelId, (props: SharedContentProps) => ReactElement | null>;
 
 const NAV_PANELS = VISIBLE_PANELS.filter((panel) => panel.id !== "home");
 const SECTION_COUNT = NAV_PANELS.length;
+const SIDEBAR_NAV_ID = "gravii-workspace-navigation";
 const THEME_TRANSITION_DURATION_MS = 860;
 const THEME_TRANSITION_CLEANUP_DELAY_MS = THEME_TRANSITION_DURATION_MS + 40;
 
 type WorkspaceSectionStyle = CSSProperties & {
   "--section-accent": string;
   "--section-on-accent": string;
+  "--auth-accent": string;
+  "--auth-on-accent": string;
+  "--brand-logo-filter": string;
 };
 
 type LaunchTheme = "light" | "dark";
@@ -73,6 +77,8 @@ export default function HomePage() {
   const shell = useLaunchShell();
   const [theme, setTheme] = useState<LaunchTheme>("light");
   const [themeTransition, setThemeTransition] = useState<ThemeTransition | null>(null);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const themeTransitionTimeoutRef = useRef<number | null>(null);
   const isConnected = auth.isAuthenticated;
   const activePanel = findPanel(shell.activePanel);
@@ -80,6 +86,7 @@ export default function HomePage() {
   const isDarkTheme = theme === "dark";
   const usesDarkContent = isDarkTheme || activePanel.dark || Boolean(activePanel.hoverDark);
   const authActionLabel = isConnected ? "SIGN OUT" : "SIGN IN";
+  const sidebarAuthActionLabel = isSidebarCollapsed ? (isConnected ? "OUT" : "IN") : authActionLabel;
   const authButtonClassName = `${styles.workspaceAuthButton} ${
     isConnected ? styles.workspaceAuthButtonConnected : styles.workspaceAuthButtonDisconnected
   }`;
@@ -87,6 +94,9 @@ export default function HomePage() {
   const sectionStyle: WorkspaceSectionStyle = {
     "--section-accent": sectionAccent,
     "--section-on-accent": activePanel.id === "home" || activePanel.dark ? "var(--theme-on-accent)" : "var(--raw-ink)",
+    "--auth-accent": activePanel.bg,
+    "--auth-on-accent": activePanel.dark ? "var(--theme-on-accent)" : "var(--raw-ink)",
+    "--brand-logo-filter": activePanel.dark ? "invert(1)" : "none",
   };
   const activeSectionDotCount = getSectionDotCount(activePanel.id);
 
@@ -113,8 +123,39 @@ export default function HomePage() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!isMobileNavOpen) {
+      return;
+    }
+
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setIsMobileNavOpen(false);
+      }
+    }
+
+    window.addEventListener("keydown", handleEscape);
+
+    return () => {
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, [isMobileNavOpen]);
+
   function handleNavigate(panelId: PanelId) {
     shell.openPanel(panelId);
+    setIsMobileNavOpen(false);
+  }
+
+  function handleDesktopNavBlankClick(event: MouseEvent<HTMLElement>) {
+    if (event.currentTarget !== event.target) {
+      return;
+    }
+
+    if (window.matchMedia("(max-width: 860px)").matches) {
+      return;
+    }
+
+    setIsSidebarCollapsed((current) => !current);
   }
 
   function handleThemeToggle() {
@@ -195,6 +236,9 @@ export default function HomePage() {
       className={styles.root}
       data-theme={theme}
       data-theme-transitioning={themeTransition ? "true" : undefined}
+      data-nav-collapsed={isSidebarCollapsed ? "true" : undefined}
+      data-mobile-nav-open={isMobileNavOpen ? "true" : undefined}
+      style={sectionStyle}
     >
       {themeTransition ? (
         <ThemeInkTransition
@@ -211,7 +255,57 @@ export default function HomePage() {
         onCancel={auth.cancelSignIn}
         requestKey={auth.signInRequestKey}
       />
-      <aside className={styles.sidebar} aria-label="Gravii workspace navigation">
+      <header className={styles.mobileHeader}>
+        <button
+          type="button"
+          className={styles.mobileMenuButton}
+          aria-label={isMobileNavOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-controls={SIDEBAR_NAV_ID}
+          aria-expanded={isMobileNavOpen}
+          onClick={() => setIsMobileNavOpen((current) => !current)}
+        >
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+        </button>
+        <button
+          type="button"
+          className={styles.mobileBrandButton}
+          aria-label="HOME navigation"
+          onClick={() => handleNavigate("home")}
+        >
+          <GraviiLogo decorative variant="symbol" className={styles.mobileHeaderLogo} />
+          <span>{activePanel.tab}</span>
+        </button>
+        <div className={styles.mobileHeaderAuth}>{renderAuthAction()}</div>
+      </header>
+      <button
+        type="button"
+        className={styles.mobileNavScrim}
+        aria-label="Close navigation menu"
+        aria-hidden={!isMobileNavOpen}
+        tabIndex={isMobileNavOpen ? 0 : -1}
+        onClick={() => setIsMobileNavOpen(false)}
+      />
+      <aside
+        id={SIDEBAR_NAV_ID}
+        className={`${styles.sidebar} ${isMobileNavOpen ? styles.sidebarOpen : ""}`}
+        aria-label="Gravii workspace navigation"
+        data-collapse-state={isSidebarCollapsed ? "collapsed" : "expanded"}
+        title={isSidebarCollapsed ? "Click empty rail to expand navigation" : "Click empty rail to collapse navigation"}
+        onClick={handleDesktopNavBlankClick}
+      >
+        <div className={styles.sidebarMobileHead}>
+          <span>WORKSPACE</span>
+          <button
+            type="button"
+            className={styles.sidebarMobileClose}
+            aria-label="Close navigation menu"
+            onClick={() => setIsMobileNavOpen(false)}
+          >
+            X
+          </button>
+        </div>
         <button
           type="button"
           className={styles.brandTile}
@@ -220,16 +314,23 @@ export default function HomePage() {
           data-panel-id="home"
           onClick={() => handleNavigate("home")}
         >
-          <GraviiLogo decorative variant="symbol" className={styles.headerSymbol} />
+          <span className={styles.headerSymbolMotion} key={`brand-motion-${activePanel.id}`}>
+            <GraviiLogo decorative variant="symbol" className={styles.headerSymbol} />
+          </span>
           <span className={styles.headerWordmarkText}>gravii</span>
           <span className={styles.brandMarker} aria-hidden="true" />
         </button>
 
-        <nav className={styles.navList} aria-label="Workspace sections">
+        <nav
+          className={styles.navList}
+          aria-label="Workspace sections"
+          onClick={handleDesktopNavBlankClick}
+        >
           {NAV_PANELS.map((panel, index) => (
             <LaunchPanel
               key={panel.id}
               panel={panel}
+              isCompact={isSidebarCollapsed}
               isActive={shell.activePanel === panel.id}
               isHovered={shell.hoveredPanel === panel.id && shell.activePanel !== panel.id}
               markerCount={index + 1}
@@ -260,9 +361,10 @@ export default function HomePage() {
             size="compact"
             className={isConnected ? styles.sessionButtonConnected : styles.sessionButtonDisconnected}
             pressed={isConnected}
+            aria-label={authActionLabel}
             onClick={handleAuthAction}
           >
-            {authActionLabel}
+            {sidebarAuthActionLabel}
           </ActionButton>
         </div>
       </aside>

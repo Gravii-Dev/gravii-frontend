@@ -187,9 +187,9 @@ interface UserXrayCheckoutSessionWire {
 const DEFAULT_USER_API_BASE_URL =
   'https://gravii-user-api-1077809741476.europe-west6.run.app'
 const DEFAULT_BROWSER_USER_API_BASE_URL = '/api/user-api'
+const legacyGraviiUserTokenKey = 'gravii_user_token'
 
 export const graviiUserPendingXrayWalletKey = 'gravii_pending_xray_wallet'
-export const graviiUserTokenKey = 'gravii_user_token'
 export const graviiUserIdentityBootstrapKey = 'gravii_identity_bootstrap_pending'
 
 function getUserApiBaseUrl() {
@@ -298,34 +298,16 @@ async function parseError(response: Response): Promise<string> {
   return `Request failed with status ${response.status}.`
 }
 
-export function getStoredUserToken(): string | null {
-  if (typeof window === 'undefined') {
-    return null
-  }
-
-  return null
-}
-
-export function storeUserToken(token: string) {
+function clearLegacyUserToken() {
   if (typeof window === 'undefined') {
     return
   }
 
-  if (token.length > 0) {
-    window.localStorage.removeItem(graviiUserTokenKey)
-  }
-}
-
-export function clearUserToken() {
-  if (typeof window === 'undefined') {
-    return
-  }
-
-  window.localStorage.removeItem(graviiUserTokenKey)
+  window.localStorage.removeItem(legacyGraviiUserTokenKey)
 }
 
 export async function clearUserSession() {
-  clearUserToken()
+  clearLegacyUserToken()
 
   if (typeof window === 'undefined') {
     return
@@ -385,28 +367,42 @@ export function popPendingXrayWallet(): string | null {
 async function userApiFetch<TResponse>(
   path: string,
   options?: RequestInit & {
-    authenticated?: boolean
+    timeoutMs?: number
   }
 ): Promise<TResponse> {
-  const authenticated = options?.authenticated ?? true
   const headers = new Headers(options?.headers)
+  const timeoutMs = options?.timeoutMs
+  const controller = timeoutMs ? new AbortController() : null
+  let timeoutId: ReturnType<typeof setTimeout> | null = null
+  const requestSignal = controller?.signal ?? options?.signal
+
+  if (controller && options?.signal) {
+    if (options.signal.aborted) {
+      controller.abort()
+    } else {
+      options.signal.addEventListener('abort', () => controller.abort(), {
+        once: true,
+      })
+    }
+  }
+
+  if (controller && timeoutMs) {
+    timeoutId = setTimeout(() => controller.abort(), timeoutMs)
+  }
 
   if (!headers.has('content-type') && options?.body) {
     headers.set('content-type', 'application/json')
-  }
-
-  if (authenticated && typeof window === 'undefined') {
-    const token = getStoredUserToken()
-
-    if (token) {
-      headers.set('authorization', `Bearer ${token}`)
-    }
   }
 
   const response = await fetch(`${getUserApiBaseUrl()}${path}`, {
     ...options,
     headers,
     cache: 'no-store',
+    signal: requestSignal,
+  }).finally(() => {
+    if (timeoutId !== null) {
+      clearTimeout(timeoutId)
+    }
   })
 
   if (response.status === 401) {
@@ -426,7 +422,6 @@ export async function requestUserChallenge(
   const payload = await userApiFetch<UserAuthChallengeWire>(
     `/api/v1/auth/challenge?address=${encodeURIComponent(address)}`,
     {
-      authenticated: false,
       method: 'GET',
     }
   )
@@ -447,7 +442,6 @@ export async function verifyUserWallet(input: {
   const payload = await userApiFetch<UserAuthVerifyResultWire>(
     '/api/v1/auth/verify',
     {
-      authenticated: false,
       method: 'POST',
       body: JSON.stringify({
         address: input.address,
@@ -468,6 +462,7 @@ export async function readUserSession(): Promise<UserAuthUser | null> {
   try {
     const payload = await userApiFetch<UserSessionWire>('/api/v1/auth/session', {
       method: 'GET',
+      timeoutMs: 5000,
     })
 
     return normalizeUserAuthUser(payload.user)

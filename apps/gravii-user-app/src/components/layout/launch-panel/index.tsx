@@ -8,6 +8,7 @@ import styles from "./launch-panel.module.css";
 
 type LaunchPanelProps = {
   panel: PanelConfig;
+  isCompact?: boolean;
   isActive: boolean;
   isHovered: boolean;
   markerCount: number;
@@ -35,6 +36,7 @@ type PanelStyle = CSSProperties & {
 
 export default function LaunchPanel({
   panel,
+  isCompact = false,
   isActive,
   isHovered,
   markerCount,
@@ -58,6 +60,8 @@ export default function LaunchPanel({
       style={panelStyle}
       aria-current={isActive ? "page" : undefined}
       aria-label={`${panel.tab} navigation`}
+      title={isCompact ? panel.tab : undefined}
+      data-compact={isCompact ? "true" : undefined}
       data-panel-id={panel.id}
       onClick={() => onOpen(panel.id)}
       onKeyDown={(event) => handleToggleKey(event, () => onOpen(panel.id))}

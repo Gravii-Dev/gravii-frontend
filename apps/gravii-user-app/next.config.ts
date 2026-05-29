@@ -55,6 +55,26 @@ function readUserApiBaseUrl() {
 const nextConfig: NextConfig = {
   devIndicators: false,
   poweredByHeader: false,
+  webpack(config) {
+    config.resolve = config.resolve ?? {};
+    config.resolve.alias = {
+      ...(config.resolve.alias ?? {}),
+      // Wagmi 3 exposes Tempo helpers through the connectors barrel, but Gravii
+      // only enables EVM networks here. The current viem Tempo wallet export
+      // shape does not match @wagmi/core, so keep that optional entry out of the
+      // app bundle until Tempo is intentionally supported.
+      "@wagmi/core/tempo": path.resolve(
+        process.cwd(),
+        "src/lib/wallet/wagmi-tempo-shim.ts"
+      ),
+      "@wagmi/connectors": path.resolve(
+        process.cwd(),
+        "src/lib/wallet/wagmi-connectors-shim.ts"
+      ),
+    };
+
+    return config;
+  },
   async headers() {
     return [
       {
@@ -64,6 +84,10 @@ const nextConfig: NextConfig = {
     ];
   },
   turbopack: {
+    resolveAlias: {
+      "@wagmi/core/tempo": "./src/lib/wallet/wagmi-tempo-shim.ts",
+      "@wagmi/connectors": "./src/lib/wallet/wagmi-connectors-shim.ts",
+    },
     root: workspaceRoot,
   },
   async rewrites() {

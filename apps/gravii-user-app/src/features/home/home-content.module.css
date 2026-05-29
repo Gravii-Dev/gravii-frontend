@@ -1,4 +1,5 @@
 .root {
+  --home-accent-text: color-mix(in srgb, var(--raw-orange) 64%, var(--raw-ink));
   display: flex;
   flex-direction: column;
   gap: clamp(18px, 2vw, 28px);
@@ -57,7 +58,7 @@
 
 .title span {
   display: block;
-  color: var(--raw-orange);
+  color: var(--home-accent-text);
 }
 
 .heroAside {
@@ -78,10 +79,12 @@
 }
 
 .primaryAction {
-  --button-front: var(--raw-orange);
-  --button-front-hover: var(--solid-ink-surface, var(--raw-ink));
-  --button-text: var(--theme-on-accent, #fff8f0);
-  --button-text-hover: var(--theme-on-accent, #fff8f0);
+  --button-front: var(--auth-accent, var(--color-primary));
+  --button-front-hover: var(--auth-accent-hover, var(--color-primary-hover));
+  --button-text: var(--auth-on-accent, var(--theme-on-accent, #fff8f0));
+  --button-text-hover: var(--auth-on-accent, var(--theme-on-accent, #fff8f0));
+  --button-border-size: 1px;
+  --button-border-color: var(--raw-line-soft);
   align-self: flex-start;
   --button-min-height: 38px;
 }
@@ -155,7 +158,7 @@
 
 .mapCard strong {
   margin-top: 34px;
-  color: var(--raw-orange);
+  color: var(--home-accent-text);
   font-size: clamp(1.8rem, 2.2vw, 2.45rem);
   overflow-wrap: anywhere;
 }
@@ -178,7 +181,7 @@
 
 @media (max-width: 520px) {
   .hero {
-    padding: 30px;
+    padding: 22px;
   }
 
   .heroBrandStack {
@@ -186,10 +189,10 @@
   }
 
   .title {
-    max-width: 300px;
-    font-size: clamp(54px, 17vw, 74px);
+    max-width: 100%;
+    font-size: clamp(46px, 14.2vw, 60px);
     letter-spacing: -0.006em;
-    line-height: 0.86;
+    line-height: 0.9;
   }
 
   .heroAside p {

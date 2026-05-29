@@ -54,13 +54,16 @@
     background var(--motion-duration-standard) var(--motion-ease-standard),
     color var(--motion-duration-fast) var(--motion-ease-standard),
     opacity var(--motion-duration-fast) var(--motion-ease-standard),
+    transform var(--motion-duration-standard) var(--motion-ease-standard),
     box-shadow var(--motion-duration-fast) var(--motion-ease-standard);
 }
 
 .front {
   z-index: 2;
   opacity: 1;
-  box-shadow: none;
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--button-text, #ffffff) 14%, transparent),
+    0 10px 28px color-mix(in srgb, var(--button-front, #000000) 18%, transparent);
   visibility: visible;
 }
 
@@ -107,6 +110,10 @@
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .button:is(:hover, :focus-visible) .frontBackground {
     background: var(--button-front-hover, var(--button-front, var(--color-button)));
+  }
+
+  .button:is(:hover, :focus-visible) .front {
+    transform: translateY(-1px);
   }
 
   .button:is(:hover, :focus-visible) .frontText {

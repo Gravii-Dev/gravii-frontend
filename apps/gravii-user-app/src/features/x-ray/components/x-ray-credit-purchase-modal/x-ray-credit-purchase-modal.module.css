@@ -97,10 +97,10 @@
 }
 
 .primary {
-  --button-front: var(--raw-orange);
-  --button-front-hover: var(--solid-ink-surface, var(--raw-ink));
+  --button-front: var(--color-primary);
+  --button-front-hover: var(--color-primary-hover);
   --button-text: var(--theme-on-accent, var(--raw-paper));
-  --button-text-hover: var(--solid-ink-text, var(--raw-paper));
+  --button-text-hover: var(--theme-on-accent, var(--raw-paper));
   --button-border-color: transparent;
 }
 

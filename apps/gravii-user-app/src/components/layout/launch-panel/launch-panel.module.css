@@ -13,8 +13,8 @@
   min-height: var(--panel-rest-height);
   padding: 16px;
   overflow: hidden;
-  border: 1px solid transparent;
-  border-radius: 16px;
+  border: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+  border-radius: 18px;
   background: var(--panel-bg);
   color: var(--panel-active-text, var(--raw-ink));
   font-family: var(--font-ui);
@@ -23,12 +23,16 @@
   transform: translate3d(0, 0, 0);
   will-change: height, background-color, border-color, color;
   transition:
+    width 520ms cubic-bezier(0.16, 1, 0.3, 1),
     height 500ms cubic-bezier(0.22, 0.61, 0.36, 1),
     min-height 500ms cubic-bezier(0.22, 0.61, 0.36, 1),
     background-color 300ms ease-in-out,
     border-color 300ms ease-in-out,
     color 300ms ease-in-out,
-    filter 300ms ease-in-out;
+    filter 300ms ease-in-out,
+    transform 300ms var(--motion-ease-standard),
+    box-shadow 300ms var(--motion-ease-standard);
+  box-shadow: var(--app-shadow-card, none);
 }
 
 .panel:focus-visible {
@@ -42,23 +46,23 @@
 
 .panel:hover,
 .hovered {
-  background: transparent;
+  background: color-mix(in srgb, var(--app-surface, transparent) 74%, transparent);
   color: var(--raw-ink);
-  border-color: currentColor;
-  transform: translate3d(0, 0, 0);
+  border-color: var(--app-line-strong, currentColor);
+  transform: translate3d(0, -1px, 0);
 }
 
 .active {
   height: var(--panel-active-height);
   min-height: var(--panel-active-height);
   background: var(--panel-bg);
-  border-color: transparent;
+  border-color: color-mix(in srgb, currentColor 12%, transparent);
   color: var(--panel-active-text, var(--raw-ink));
 }
 
 .active:hover {
   background: var(--panel-bg);
-  border-color: transparent;
+  border-color: color-mix(in srgb, currentColor 12%, transparent);
   color: var(--panel-active-text, var(--raw-ink));
 }
 
@@ -145,12 +149,50 @@
   display: none;
 }
 
+.panel[data-compact="true"] {
+  width: var(--nav-panel-width, 64px);
+  padding: 10px;
+  border-radius: 22px;
+}
+
+.panel[data-compact="true"] .marker {
+  position: static;
+  top: auto;
+  right: auto;
+  justify-content: center;
+  opacity: 0.78;
+  transform: scale(1);
+}
+
+.panel[data-compact="true"] .markerDot {
+  width: 5px;
+  height: 5px;
+  background: color-mix(in srgb, currentColor 90%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.panel[data-compact="true"].active .marker {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.panel[data-compact="true"] .copyStack,
+.panel[data-compact="true"] .sub {
+  display: none;
+}
+
+.panel[data-compact="true"]:hover .marker,
+.panel[data-compact="true"].hovered .marker {
+  opacity: 0.78;
+  transform: scale(0.96);
+}
+
 @media (max-width: 860px) {
   .panel {
     width: auto;
     min-width: 0;
     flex: none;
-    padding: 10px;
+    padding: 12px 14px;
   }
 
   .label {
@@ -170,6 +212,29 @@
   }
 
   .active .marker {
+    transform: scale(1);
+  }
+
+  .panel[data-compact="true"] {
+    width: auto;
+    padding: 12px 14px;
+    border-radius: 18px;
+  }
+
+  .panel[data-compact="true"] .copyStack {
+    display: flex;
+  }
+
+  .panel[data-compact="true"] .marker {
+    position: absolute;
+    top: 15px;
+    right: 12px;
+    opacity: 0;
+    transform: scale(0.3);
+  }
+
+  .panel[data-compact="true"].active .marker {
+    opacity: 1;
     transform: scale(1);
   }
 }

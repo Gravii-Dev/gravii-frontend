@@ -1,8 +1,8 @@
 :root {
-  --font-ui: var(--font-roboto-flex), system-ui, sans-serif;
-  --font-display: var(--font-roboto-flex), system-ui, sans-serif;
-  --font-serif: var(--font-roboto-flex), system-ui, sans-serif;
-  --font-accent: var(--font-roboto-flex), system-ui, sans-serif;
+  --font-ui: var(--font-roboto-flex, "Roboto Flex"), system-ui, sans-serif;
+  --font-display: var(--font-roboto-flex, "Roboto Flex"), system-ui, sans-serif;
+  --font-serif: var(--font-roboto-flex, "Roboto Flex"), system-ui, sans-serif;
+  --font-accent: var(--font-roboto-flex, "Roboto Flex"), system-ui, sans-serif;
   --font-grade-ui: 0;
   --font-grade-display: 24;
   --font-width-ui: 100%;
@@ -26,18 +26,49 @@
   --type-button-size: 0.72rem;
   --type-button-tracking: 0.1em;
 
-  /* Raw Materials-inspired solid palette. Legacy --green names stay as aliases for existing modules. */
-  --raw-ink: #090705;
-  --raw-paper: #f2e7db;
-  --raw-paper-strong: #fff8f0;
-  --raw-paper-muted: #ead8ca;
-  --raw-paper-deep: #dcc3b4;
-  --raw-orange: #ff3b0b;
-  --raw-orange-deep: #b82a12;
-  --raw-blue: #2537ff;
-  --raw-violet: #6b00d7;
-  --raw-line: rgba(9, 7, 5, 0.72);
-  --raw-line-soft: rgba(9, 7, 5, 0.22);
+  /* Solid dashboard palette. Legacy --raw/--green names stay as aliases for existing modules. */
+  --solid-dark-canvas: #0f1118;
+  --solid-dark-canvas-deep: #0b0d13;
+  --solid-dark-surface: #191c24;
+  --solid-dark-surface-strong: #222631;
+  --solid-dark-surface-hover: #2b303b;
+  --solid-dark-line: rgba(245, 242, 235, 0.1);
+  --solid-dark-line-strong: rgba(245, 242, 235, 0.16);
+  --solid-dark-text: #f5f2eb;
+  --solid-dark-muted: rgba(245, 242, 235, 0.62);
+  --solid-dark-muted-soft: rgba(245, 242, 235, 0.4);
+  --solid-light-canvas: #f3eee7;
+  --solid-light-canvas-deep: #e8ddd2;
+  --solid-light-surface: #fffaf3;
+  --solid-light-surface-strong: #ffffff;
+  --solid-light-surface-hover: #eee4da;
+  --solid-light-line: rgba(21, 18, 15, 0.1);
+  --solid-light-line-strong: rgba(21, 18, 15, 0.18);
+  --solid-light-text: #15120f;
+  --solid-light-muted: rgba(21, 18, 15, 0.62);
+  --solid-light-muted-soft: rgba(21, 18, 15, 0.42);
+  --solid-accent-purple: #c8b4f0;
+  --solid-accent-purple-strong: #6d5aa6;
+  --solid-accent-blue: #829ff0;
+  --solid-accent-blue-strong: #4e62b8;
+  --solid-accent-green: #64c882;
+  --solid-accent-green-strong: #2f7650;
+  --solid-accent-amber: #ffc850;
+  --solid-accent-amber-strong: #9c6f1f;
+  --solid-accent-red: #ff5a5a;
+  --solid-accent-orange: #ff5a2a;
+
+  --raw-ink: var(--solid-light-text);
+  --raw-paper: var(--solid-light-canvas);
+  --raw-paper-strong: #fffaf3;
+  --raw-paper-muted: #eee4da;
+  --raw-paper-deep: #ded1c6;
+  --raw-orange: var(--solid-accent-orange);
+  --raw-orange-deep: #b94123;
+  --raw-blue: var(--solid-accent-blue-strong);
+  --raw-violet: var(--solid-accent-purple-strong);
+  --raw-line: var(--solid-light-line-strong);
+  --raw-line-soft: var(--solid-light-line);
 
   --green-00: var(--raw-paper-strong);
   --green-01: var(--raw-paper);
@@ -57,23 +88,23 @@
   --color-primary-active: var(--raw-orange-deep);
   --color-primary-soft: var(--raw-paper-deep);
   --color-primary-subtle: var(--raw-paper-muted);
-  --color-background-primary: var(--raw-paper);
-  --color-background-secondary: var(--raw-paper-strong);
+  --color-background-primary: var(--solid-light-canvas);
+  --color-background-secondary: var(--solid-light-canvas-deep);
   --color-background-tertiary: var(--raw-paper-muted);
-  --color-surface-front: var(--raw-paper-strong);
-  --color-surface-back: var(--raw-paper);
-  --color-surface-hover: var(--raw-paper-muted);
-  --color-card: var(--raw-paper-strong);
-  --color-card-hover: var(--raw-paper-muted);
+  --color-surface-front: var(--solid-light-surface);
+  --color-surface-back: var(--solid-light-surface);
+  --color-surface-hover: var(--solid-light-surface-hover);
+  --color-card: var(--solid-light-surface);
+  --color-card-hover: var(--solid-light-surface-hover);
   --color-button: var(--raw-orange);
   --color-button-hover: var(--raw-ink);
   --color-button-active: var(--raw-orange-deep);
-  --color-border-primary: color-mix(in srgb, var(--raw-ink) 18%, transparent);
-  --color-border-secondary: color-mix(in srgb, var(--raw-ink) 42%, transparent);
-  --color-border-strong: color-mix(in srgb, var(--raw-ink) 72%, transparent);
+  --color-border-primary: var(--solid-light-line);
+  --color-border-secondary: var(--solid-light-line-strong);
+  --color-border-strong: rgba(21, 18, 15, 0.28);
   --color-text-primary: var(--raw-ink);
-  --color-text-secondary: color-mix(in srgb, var(--raw-ink) 68%, transparent);
-  --color-text-muted: color-mix(in srgb, var(--raw-ink) 48%, transparent);
+  --color-text-secondary: var(--solid-light-muted);
+  --color-text-muted: var(--solid-light-muted-soft);
   --color-text-accent: var(--raw-orange);
   --color-text-on-primary: var(--raw-paper-strong);
   --color-success: var(--raw-orange);
@@ -81,9 +112,9 @@
   --color-error: var(--raw-orange-deep);
   --color-info: var(--raw-blue);
   --color-overlay: color-mix(in srgb, var(--raw-ink) 72%, transparent);
-  --color-glass-background: var(--raw-paper-strong);
-  --color-glass-fill: var(--raw-paper-strong);
-  --color-glass-fill-strong: var(--raw-paper-muted);
+  --color-glass-background: var(--solid-light-surface);
+  --color-glass-fill: var(--solid-light-surface);
+  --color-glass-fill-strong: var(--solid-light-surface-hover);
   --color-glass-edge: transparent;
   --color-surface-blush: var(--raw-paper-strong);
   --color-surface-lavender: var(--raw-paper);
@@ -232,10 +263,10 @@ body::-webkit-scrollbar {
 }
 
 body {
-  --font-ui: var(--font-roboto-flex), system-ui, sans-serif;
-  --font-display: var(--font-roboto-flex), system-ui, sans-serif;
-  --font-serif: var(--font-roboto-flex), system-ui, sans-serif;
-  --font-accent: var(--font-roboto-flex), system-ui, sans-serif;
+  --font-ui: var(--font-roboto-flex, "Roboto Flex"), system-ui, sans-serif;
+  --font-display: var(--font-roboto-flex, "Roboto Flex"), system-ui, sans-serif;
+  --font-serif: var(--font-roboto-flex, "Roboto Flex"), system-ui, sans-serif;
+  --font-accent: var(--font-roboto-flex, "Roboto Flex"), system-ui, sans-serif;
 
   position: relative;
   background: var(--raw-paper);

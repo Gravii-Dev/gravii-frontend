@@ -10,9 +10,9 @@
   --profile-surface: var(--color-glass-fill);
   --profile-surface-strong: var(--color-surface-violet);
   --profile-line: var(--color-border-secondary);
-  --profile-a: var(--green-07);
-  --profile-b: var(--green-06);
-  --profile-c: var(--green-04);
+  --profile-a: var(--color-primary);
+  --profile-b: var(--color-primary-hover);
+  --profile-c: var(--color-primary-active);
   --profile-accent: var(--color-primary);
   --profile-frame-shadow: none;
   --profile-inset-border: var(--color-border-secondary);
@@ -39,25 +39,25 @@
 .persona4,
 .persona8,
 .persona12,
-.persona16 { --profile-a: var(--green-07); --profile-b: var(--green-05); --profile-c: var(--green-02); --profile-accent: var(--color-primary); }
+.persona16 { --profile-a: var(--color-primary); --profile-b: var(--color-primary-hover); --profile-c: var(--color-primary-active); --profile-accent: var(--color-primary); }
 
 .persona1,
 .persona5,
 .persona9,
 .persona13,
-.persona17 { --profile-a: var(--green-08); --profile-b: var(--green-06); --profile-c: var(--green-03); --profile-accent: var(--color-primary-active); }
+.persona17 { --profile-a: var(--color-primary-hover); --profile-b: var(--color-primary); --profile-c: var(--color-primary-soft); --profile-accent: var(--color-primary-active); }
 
 .persona2,
 .persona6,
 .persona10,
 .persona14,
-.persona18 { --profile-a: var(--green-06); --profile-b: var(--green-04); --profile-c: var(--green-01); --profile-accent: var(--color-primary-soft); }
+.persona18 { --profile-a: var(--color-primary-active); --profile-b: var(--color-primary-hover); --profile-c: var(--color-primary); --profile-accent: var(--color-primary-soft); }
 
 .persona3,
 .persona7,
 .persona11,
 .persona15,
-.persona19 { --profile-a: var(--green-07); --profile-b: var(--green-04); --profile-c: var(--green-00); --profile-accent: var(--color-primary-hover); }
+.persona19 { --profile-a: var(--color-primary-soft); --profile-b: var(--color-primary-active); --profile-c: var(--color-primary); --profile-accent: var(--color-primary-hover); }
 
 .atmosphere {
   position: absolute;
