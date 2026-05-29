@@ -17,8 +17,8 @@
 
 .rootDark,
 .rootLight {
-  --panel-text-color: var(--raw-ink);
-  --panel-muted-color: rgba(10, 8, 6, 0.64);
+  --panel-text-color: var(--color-text-primary);
+  --panel-muted-color: var(--color-text-secondary);
 }
 
 .header {
@@ -27,7 +27,7 @@
   justify-content: space-between;
   gap: 24px;
   padding-bottom: clamp(20px, 2.2vw, 30px);
-  border-bottom: 1px solid var(--raw-line-soft);
+  border-bottom: 1px solid var(--color-border-primary);
   animation: panelContentSettle 320ms cubic-bezier(0.2, 0, 0, 1) both;
 }
 
@@ -64,7 +64,7 @@
 
 .closeButton {
   --button-front: var(--solid-ink-surface, var(--raw-ink));
-  --button-front-hover: var(--raw-orange);
+  --button-front-hover: var(--color-primary);
   --button-text: var(--solid-ink-text, var(--raw-paper));
   --button-text-hover: var(--theme-on-accent, var(--raw-paper));
   --button-min-height: 38px;

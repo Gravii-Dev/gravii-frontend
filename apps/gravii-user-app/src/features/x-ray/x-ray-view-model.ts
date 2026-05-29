@@ -5,9 +5,8 @@ import type {
 
 export const XRAY_SEARCH_STATS = [
   { label: 'COST', value: '1 CREDIT' },
-  { label: 'DEPTH', value: 'MULTI-CHAIN' },
-  { label: 'ACCESS', value: 'OWN WALLET FREE' },
-  { label: 'SPEED', value: '10–30 SEC' },
+  { label: 'IN-DEPTH', value: 'MULTI-CHAIN' },
+  { label: 'SPEED', value: '10-30 SEC', sub: 'Varies by wallet activity' },
 ] as const
 
 export interface XRayDetailViewModel {

@@ -11,9 +11,11 @@ describe("StandingContent", () => {
 
     render(<StandingContent dark connected={false} onConnect={onConnect} onNavigate={() => {}} />);
 
-    expect(screen.getByRole("heading", { name: "See where every wallet stands." })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Wealth" })).toBeInTheDocument();
-    expect(screen.getByText("Rank hidden")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "See where you stand." })).toBeInTheDocument();
+    expect(screen.getByText("Season")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "G-REP" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "NFT" })).toBeInTheDocument();
+    expect(screen.getByText("Get your Gravii ID")).toBeInTheDocument();
     expect(screen.getByText("Public leaderboard data is not connected yet.")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "SIGN IN" }));
@@ -28,6 +30,9 @@ describe("StandingContent", () => {
     render(<StandingContent dark connected onConnect={() => {}} onNavigate={onNavigate} />);
 
     expect(screen.getByText("Connected wallet")).toBeInTheDocument();
+    expect(screen.getByText("Season rank")).toBeInTheDocument();
+    expect(screen.getByText("Season best")).toBeInTheDocument();
+    expect(screen.getByText("Season change")).toBeInTheDocument();
     expect(screen.getAllByText("Pending API").length).toBeGreaterThan(0);
 
     await user.click(screen.getByRole("button", { name: "REVIEW GRAVII ID" }));

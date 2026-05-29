@@ -81,9 +81,6 @@ src/
       gravii-logo/
         gravii-logo.module.css
         index.tsx
-      launch-primitives/
-        index.tsx
-        launch-primitives.module.css
       theme-ink-transition/
         index.tsx
         theme-ink-transition.module.css
@@ -92,16 +89,11 @@ src/
       panel-config.ts
       types.ts
     discovery/
-      components/
-        discovery-filters/
-          discovery-filters.module.css
-          index.tsx
       discovery-content.module.css
       discovery-content.tsx
     my-space/
       my-space-content.module.css
       my-space-content.tsx
-      use-my-space-state.ts
     profile/
       components/
         infinite-canvas/

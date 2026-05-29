@@ -14,6 +14,10 @@ It covers:
 
 This document describes the codebase as it exists now. Product intent and backend target architecture remain covered under `docs/launch-app/*`.
 
+Related maintenance snapshot:
+
+- [`code-audit-2026-05-28.md`](code-audit-2026-05-28.md) records the current unused-code, dependency, strictness, and cleanup findings that should guide future refactor work.
+
 ## Current Snapshot
 
 The app is a single-route, client-driven Launch App shell with five product panels.

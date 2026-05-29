@@ -1,18 +1,18 @@
 .root {
-  --xray-bg: #0f1118;
-  --xray-card: rgba(255, 255, 255, 0.045);
-  --xray-card-strong: rgba(255, 255, 255, 0.07);
-  --xray-line: rgba(245, 242, 235, 0.09);
-  --xray-line-strong: rgba(245, 242, 235, 0.14);
-  --xray-text: #f5f2eb;
-  --xray-muted: rgba(245, 242, 235, 0.52);
-  --xray-muted-soft: rgba(245, 242, 235, 0.32);
-  --xray-purple: rgba(200, 180, 240, 0.84);
-  --xray-green: rgba(100, 200, 130, 0.88);
-  --xray-amber: rgba(255, 200, 80, 0.86);
-  --xray-blue: rgba(130, 160, 240, 0.82);
-  --xray-red: rgba(255, 90, 90, 0.84);
-  --xray-muted-surface: rgba(255, 255, 255, 0.06);
+  --xray-bg: var(--app-canvas, #0f1118);
+  --xray-card: var(--app-surface, rgba(255, 255, 255, 0.045));
+  --xray-card-strong: var(--app-surface-strong, rgba(255, 255, 255, 0.07));
+  --xray-line: var(--app-line, rgba(245, 242, 235, 0.09));
+  --xray-line-strong: var(--app-line-strong, rgba(245, 242, 235, 0.14));
+  --xray-text: var(--app-text, #f5f2eb);
+  --xray-muted: var(--app-muted, rgba(245, 242, 235, 0.52));
+  --xray-muted-soft: var(--app-muted-soft, rgba(245, 242, 235, 0.32));
+  --xray-purple: var(--color-primary);
+  --xray-green: var(--color-primary-hover);
+  --xray-amber: var(--color-primary-active);
+  --xray-blue: var(--color-primary-soft);
+  --xray-red: var(--app-accent-red, rgba(255, 90, 90, 0.84));
+  --xray-muted-surface: color-mix(in srgb, var(--xray-text) 6%, transparent);
 
   display: flex;
   flex-direction: column;
@@ -23,9 +23,9 @@
   overflow: hidden;
   border-radius: clamp(24px, 3vw, 36px);
   background:
-    radial-gradient(circle at 8% 0%, rgba(200, 180, 240, 0.12), transparent 32%),
-    radial-gradient(circle at 92% 16%, rgba(100, 200, 130, 0.1), transparent 34%),
-    linear-gradient(180deg, #121520 0%, var(--xray-bg) 44%, #0b0d13 100%);
+    radial-gradient(circle at 8% 0%, color-mix(in srgb, var(--xray-purple) 14%, transparent), transparent 32%),
+    radial-gradient(circle at 92% 16%, color-mix(in srgb, var(--xray-green) 12%, transparent), transparent 34%),
+    linear-gradient(180deg, color-mix(in srgb, var(--xray-bg) 88%, var(--xray-text) 12%) 0%, var(--xray-bg) 44%, var(--app-canvas-deep, #0b0d13) 100%);
   color: var(--xray-text);
 }
 

@@ -10,7 +10,6 @@ The UI layer answers questions such as:
 
 - What should a shared action button look like?
 - How should shared tag chips be rendered?
-- How can multiple features reuse the same small display primitive?
 - How can the app keep shared surfaces on one solid material system?
 
 ## Component Map
@@ -79,41 +78,6 @@ Responsibilities:
 Why it is shared:
 
 - it is a presentational transition primitive owned by the shell, but isolated from the page so the landing and app shells can reuse the same theme-motion contract later
-
-### `launch-primitives`
-
-Primary job:
-
-- provide small reusable display components used by multiple feature views
-
-Exports:
-
-- `SectionTitle`
-- `Card`
-- `MiniBar`
-- `SharedTagChip`
-
-Responsibilities of each primitive:
-
-#### `SectionTitle`
-
-- render a consistent section heading treatment
-- currently used heavily in the X-Ray result dashboard
-
-#### `Card`
-
-- provide a shared card container style
-- helps X-Ray sections and other surfaces reuse the same basic frame
-
-#### `MiniBar`
-
-- render a compact segmented percentage bar
-- useful for funding source, DeFi, or transfer pattern summaries
-
-#### `SharedTagChip`
-
-- render campaign or persona tags with consistent type-driven styling
-- map shared campaign tag semantics such as `verified`, `requires`, `tier`, and `open` into visual treatment
 
 ## Why These Components Live in `components/ui`
 

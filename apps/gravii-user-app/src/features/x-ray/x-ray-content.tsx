@@ -326,6 +326,7 @@ export default function XRayContent({ dark, connected, onConnect }: SharedConten
               <div key={stat.label} className={styles.statCard} data-liquid-glass="soft">
                 <span className={styles.statLabel}>{stat.label}</span>
                 <strong className={styles.statValue}>{stat.value}</strong>
+                {'sub' in stat ? <span className={styles.statSub}>{stat.sub}</span> : null}
               </div>
             ))}
           </div>

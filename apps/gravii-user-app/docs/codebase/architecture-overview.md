@@ -57,7 +57,7 @@ The shell includes:
 - the active or hovered panel state in `src/features/launch-app/use-launch-shell.ts`
 - the panel opening and closing behavior in `src/components/layout/launch-panel`
 - the shared expanded frame in `src/components/layout/panel-shell`
-- the fixed navigation/scroll split where the sidebar remains visible and the active workspace frame handles long feature content independently
+- the navigation/scroll split where desktop can collapse the sidebar into a compact dot rail, mobile opens navigation as an off-canvas hamburger menu, and the active workspace frame handles long feature content independently
 
 The shell does not own the full internal logic of Profile, Discovery, X-Ray, or Ranking. It only places those features inside the panel system and coordinates top-level interaction.
 
@@ -164,7 +164,6 @@ It contains:
 
 - `action-button`: a reusable button style with propagation control
 - `gravii-logo`: shared logo rendering for symbol, wordmark, and motion variants
-- `launch-primitives`: small reusable display primitives used mainly in X-Ray and campaign-style views
 - `theme-ink-transition`: the shared WebGL light/dark theme transition layer
 
 ### `src/lib`

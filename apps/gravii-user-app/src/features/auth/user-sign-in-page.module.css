@@ -98,12 +98,12 @@
 }
 
 .buttonPrimary {
-  background: var(--raw-orange);
-  color: var(--raw-paper-strong);
+  background: var(--auth-accent, var(--color-primary));
+  color: var(--auth-on-accent, var(--color-text-on-primary));
 }
 
 .buttonPrimary:hover:not(:disabled) {
-  background: var(--raw-ink);
+  background: var(--auth-accent-hover, var(--color-primary-hover));
 }
 
 .buttonLabel {
@@ -171,7 +171,7 @@
   height: 20px;
   margin-top: 2px;
   border: 2px solid rgba(255, 248, 240, 0.28);
-  border-top-color: var(--raw-orange);
+  border-top-color: var(--auth-accent, var(--color-primary));
   border-radius: 999px;
   animation: statusSpinner 780ms linear infinite;
 }
@@ -228,8 +228,8 @@
 }
 
 .statusToastActions button:hover {
-  background: var(--raw-orange);
-  color: var(--raw-paper-strong);
+  background: var(--auth-accent, var(--color-primary));
+  color: var(--auth-on-accent, var(--color-text-on-primary));
 }
 
 @keyframes statusToastEnter {

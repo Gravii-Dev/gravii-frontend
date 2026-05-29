@@ -9,8 +9,8 @@ export const PANELS: PanelConfig[] = [
     editorCopy: "Start from the signal.",
     summary: "A command home for the current Gravii session.",
     dark: false,
-    bg: "#ffffff",
-    bgHover: "#f4e9e1",
+    bg: "#fffaf3",
+    bgHover: "#eee4da",
   },
   {
     id: "profile",
@@ -20,8 +20,8 @@ export const PANELS: PanelConfig[] = [
     editorCopy: "Your identity, distilled.",
     summary: "Persona, tier, wallet momentum, and identity status.",
     dark: true,
-    bg: "#ff3d00",
-    bgHover: "#ff3d00",
+    bg: "#6d5aa6",
+    bgHover: "#c8b4f0",
   },
   {
     id: "lookup",
@@ -31,8 +31,8 @@ export const PANELS: PanelConfig[] = [
     editorCopy: "Peel back any account.",
     summary: "Run a wallet lookup and reopen previous analysis.",
     dark: true,
-    bg: "#5900cc",
-    bgHover: "#5900cc",
+    bg: "#4e62b8",
+    bgHover: "#829ff0",
     xray: true,
   },
   {
@@ -43,8 +43,8 @@ export const PANELS: PanelConfig[] = [
     editorCopy: "Campaigns, soon.",
     summary: "Campaign and partner discovery matched to identity.",
     dark: true,
-    bg: "#2835f8",
-    bgHover: "#2835f8",
+    bg: "#2f6f7a",
+    bgHover: "#8bd0d9",
   },
   {
     id: "leaderboard",
@@ -54,8 +54,8 @@ export const PANELS: PanelConfig[] = [
     editorCopy: "Wallet ranking.",
     summary: "Public rank board with wallet-specific standing gated by sign-in.",
     dark: true,
-    bg: "#0fa968",
-    bgHover: "#0fa968",
+    bg: "#2f7650",
+    bgHover: "#64c882",
   },
   {
     id: "myspace",
@@ -65,8 +65,8 @@ export const PANELS: PanelConfig[] = [
     editorCopy: "Personalized curation, soon.",
     summary: "A private feed for saved context and personalized drops.",
     dark: true,
-    bg: "#ff003d",
-    bgHover: "#ff003d",
+    bg: "#8c4f29",
+    bgHover: "#ffc850",
   },
 ];
 

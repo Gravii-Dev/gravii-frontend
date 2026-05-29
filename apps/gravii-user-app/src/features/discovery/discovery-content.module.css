@@ -121,12 +121,12 @@
 
 .filterButton:hover {
   transform: translateY(-1px);
-  background: var(--raw-orange);
+  background: var(--color-primary);
   color: var(--theme-on-accent);
 }
 
 .filterActive {
-  background: var(--raw-orange);
+  background: var(--color-primary);
   color: var(--theme-on-accent);
 }
 
@@ -223,7 +223,7 @@
   height: 38px;
   place-items: center;
   border-radius: 10px;
-  background: var(--raw-orange);
+  background: var(--color-primary);
   color: var(--theme-on-accent);
   font-size: 1rem;
   font-weight: 900;
@@ -285,8 +285,8 @@
 }
 
 .tagTargeting {
-  background: rgba(255, 61, 0, 0.12);
-  color: var(--raw-orange);
+  background: color-mix(in srgb, var(--color-primary) 14%, transparent);
+  color: var(--color-primary);
 }
 
 .extraTag {
@@ -302,7 +302,7 @@
 }
 
 .statusInvite {
-  color: var(--raw-orange);
+  color: var(--color-primary);
 }
 
 .statusUpcoming {
@@ -355,8 +355,8 @@
 }
 
 .lockedAction {
-  --button-front: var(--raw-orange);
-  --button-front-hover: var(--solid-ink-surface);
+  --button-front: var(--color-primary);
+  --button-front-hover: var(--color-primary-hover);
   --button-text: var(--theme-on-accent);
   margin-top: 1.2rem;
 }
@@ -522,7 +522,7 @@
 }
 
 .verifyAction {
-  --button-front: var(--raw-orange);
+  --button-front: var(--color-primary);
   --button-text: var(--theme-on-accent);
   width: 100%;
 }
