@@ -85,6 +85,6 @@ Do not use this file as a backlog. Durable remaining work belongs in `TODO.md` i
 
 - Verified PR #50 Vercel checks with `gh pr checks 50`.
 - `Vercel - gravii-frontend-gravii-user-app` passed.
-- User app inspector URL: `https://vercel.com/kxwxns-projects/gravii-frontend-gravii-user-app/8ARvjqKuxHvTRYoqpuuADWpio3y8`.
 - User app preview URL: `https://gravii-frontend-gravii-user-app-git-code-83365e-kxwxns-projects.vercel.app`.
+- The exact Vercel inspector URL changes on every push and should be read live from `gh pr checks 50`.
 - Operating rule going forward: after every push/PR update, verify the Vercel user-app deployment and record the preview URL or failure state here.

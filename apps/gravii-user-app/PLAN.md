@@ -28,9 +28,9 @@ When the user asks "where are we?", "what is left?", "what did we do?", or simil
 
 - Branch: `codex/launch-app-visual-system-handoff`
 - Latest visual-system checkpoint: `65c8017 feat(user-app): stabilize visual system`
-- Latest handoff checkpoint: `e310d0c docs(user-app): add handoff tracking`
 - Pull request: `https://github.com/Gravii-Dev/gravii-frontend/pull/50`
 - Vercel preview for user app: `https://gravii-frontend-gravii-user-app-git-code-83365e-kxwxns-projects.vercel.app`
+- Latest exact commit and Vercel inspector URL should be read live from `git log -1 --oneline` and `gh pr checks 50`.
 - Worktree: root `lefthook.yml` remains intentionally unstaged.
 - Preferred local dev URL: `http://localhost:3001/`
 
