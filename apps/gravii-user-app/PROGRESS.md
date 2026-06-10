@@ -75,5 +75,16 @@ Do not use this file as a backlog. Durable remaining work belongs in `TODO.md` i
   - `bun run test`
   - `bun run build`
 - Created commit `65c8017 feat(user-app): stabilize visual system`.
+- Created commit `e310d0c docs(user-app): add handoff tracking`.
+- Pushed branch `codex/launch-app-visual-system-handoff` to origin.
+- Created PR `https://github.com/Gravii-Dev/gravii-frontend/pull/50`.
 - Excluded root `lefthook.yml` from the app/UI commit because it is an example Lefthook config and not part of the user-app visual-system workstream.
 - Kept handoff tracking docs separate so they can be committed as their own documentation checkpoint.
+
+### Vercel Deployment Check
+
+- Verified PR #50 Vercel checks with `gh pr checks 50`.
+- `Vercel - gravii-frontend-gravii-user-app` passed.
+- User app inspector URL: `https://vercel.com/kxwxns-projects/gravii-frontend-gravii-user-app/8ARvjqKuxHvTRYoqpuuADWpio3y8`.
+- User app preview URL: `https://gravii-frontend-gravii-user-app-git-code-83365e-kxwxns-projects.vercel.app`.
+- Operating rule going forward: after every push/PR update, verify the Vercel user-app deployment and record the preview URL or failure state here.
