@@ -74,7 +74,7 @@ export function UserSignInPage() {
       {isBootstrapping ? (
         <section className={styles.panel} data-liquid-glass="panel">
           <div className={styles.eyebrow}>Gravii Launch App</div>
-          <h1 className={styles.title}>Checking your Gravii session...</h1>
+          <h1 className={styles.title}>Checking your Gravii session…</h1>
           <p className={styles.copy}>Restoring a previous wallet-backed session if one exists.</p>
         </section>
       ) : (

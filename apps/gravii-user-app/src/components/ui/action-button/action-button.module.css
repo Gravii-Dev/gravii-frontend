@@ -2,7 +2,7 @@
   --button-pad-y: 0.72em;
   --button-pad-x: 1.45em;
   --button-font-size: var(--type-button-size);
-  --button-font-weight: 850;
+  --button-font-weight: 920;
   --button-min-height: 36px;
   --button-border-size: 0;
   --button-border-color: transparent;
@@ -15,25 +15,53 @@
   color: var(--button-text, var(--color-text-primary));
   font-family: var(--font-ui);
   font-size: var(--button-font-size);
+  font-style: italic;
+  font-variation-settings: var(--type-expressive-rest);
   font-weight: var(--button-font-weight);
-  letter-spacing: var(--type-button-tracking);
-  line-height: 1;
+  letter-spacing: var(--ds-type-label-tracking);
+  line-height: 1.14;
+  max-width: 100%;
   text-transform: uppercase;
   cursor: pointer;
   isolation: isolate;
+  overflow: visible;
   transition:
     color var(--motion-duration-fast) var(--motion-ease-standard),
+    font-variation-settings var(--motion-duration-expressive) var(--motion-ease-expressive),
+    letter-spacing var(--motion-duration-expressive-fast) var(--motion-ease-expressive),
     opacity var(--motion-duration-fast) var(--motion-ease-standard);
 }
 
 .button::before {
-  display: none;
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: -12px -18px;
+  border-radius: 999px;
+  background:
+    radial-gradient(
+      ellipse at 50% 50%,
+      var(--button-bloom, color-mix(in srgb, var(--button-front, var(--color-button)) 34%, transparent)) 0%,
+      color-mix(in srgb, var(--button-front, var(--color-button)) 16%, transparent) 38%,
+      transparent 72%
+    );
+  filter: blur(14px);
+  opacity: 0.46;
+  pointer-events: none;
+  transform: scale(0.88);
+  transition:
+    opacity var(--motion-duration-standard) var(--motion-ease-standard),
+    transform var(--motion-duration-standard) var(--motion-ease-expressive),
+    filter var(--motion-duration-standard) var(--motion-ease-standard);
 }
 
 .inner {
   position: relative;
+  z-index: 1;
   pointer-events: none;
   display: grid;
+  min-width: 0;
+  max-width: 100%;
   isolation: isolate;
 }
 
@@ -43,6 +71,8 @@
   display: grid;
   align-items: center;
   justify-items: center;
+  min-width: 0;
+  max-width: 100%;
   min-height: var(--button-min-height);
   border-radius: 999px;
   overflow: hidden;
@@ -92,6 +122,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 0;
+  max-width: 100%;
   white-space: nowrap;
 }
 
@@ -103,11 +135,50 @@
   color: var(--button-text, var(--color-text-primary));
   font-size: 1em;
   font-weight: var(--button-font-weight);
-  line-height: 1;
+  line-height: 1.16;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
   transition: color var(--motion-duration-fast) var(--motion-ease-standard);
 }
 
+.contentWithIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.56em;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.contentWithEndIcon {
+  flex-direction: row-reverse;
+}
+
+.icon {
+  width: 1.12em;
+  height: 1.12em;
+  margin-top: -0.02em;
+}
+
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .button:is(:hover, :focus-visible) {
+    font-variation-settings: var(--type-expressive-hover);
+  }
+
+  .button:is(:hover, :focus-visible)::before {
+    background:
+      radial-gradient(
+        ellipse at 50% 50%,
+        var(--button-bloom-hover, color-mix(in srgb, var(--button-front-hover, var(--button-front, var(--color-button))) 48%, transparent)) 0%,
+        color-mix(in srgb, var(--button-front-hover, var(--button-front, var(--color-button))) 22%, transparent) 42%,
+        transparent 76%
+      );
+    filter: blur(18px);
+    opacity: 0.72;
+    transform: scale(1.08);
+  }
+
   .button:is(:hover, :focus-visible) .frontBackground {
     background: var(--button-front-hover, var(--button-front, var(--color-button)));
   }
@@ -122,6 +193,10 @@
 }
 
 @media (hover: hover) and (prefers-reduced-motion: reduce) {
+  .button:is(:hover, :focus-visible) {
+    font-variation-settings: var(--type-expressive-hover);
+  }
+
   .button:is(:hover, :focus-visible) .frontBackground {
     background: var(--button-front-hover, var(--button-front, var(--color-button)));
   }
@@ -129,6 +204,10 @@
   .button:is(:hover, :focus-visible) .front {
     color: var(--button-text-hover, var(--button-text, var(--color-text-primary)));
   }
+}
+
+.button[aria-pressed="true"] {
+  font-variation-settings: var(--type-expressive-active);
 }
 
 .light {
@@ -157,20 +236,25 @@
   opacity: 0.42;
 }
 
+.button:disabled::before {
+  opacity: 0;
+  transform: scale(0.86);
+}
+
 .button:disabled .front,
 .button:disabled .frontText {
   transform: none;
 }
 
 .compact {
-  --button-font-size: 0.68rem;
+  --button-font-size: var(--ds-type-label-size);
   --button-min-height: 32px;
   --button-pad-y: 0.86em;
   --button-pad-x: 1.42em;
 }
 
 .panel {
-  --button-font-size: 0.72rem;
+  --button-font-size: var(--ds-type-caption-size);
   --button-min-height: 38px;
   --button-pad-y: 0.92em;
   --button-pad-x: 1.7em;

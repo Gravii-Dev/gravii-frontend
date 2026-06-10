@@ -12,7 +12,9 @@ import {
 import LaunchPanel from "@/components/layout/launch-panel";
 import PanelShell from "@/components/layout/panel-shell";
 import ActionButton from "@/components/ui/action-button";
+import ExpressiveCursor from "@/components/ui/expressive-cursor";
 import GraviiLogo from "@/components/ui/gravii-logo";
+import MorphIcon from "@/components/ui/morph-icon";
 import ThemeInkTransition from "@/components/ui/theme-ink-transition";
 import { useUserAuth } from "@/features/auth/auth-provider";
 import { UserSignInLauncher } from "@/features/auth/user-sign-in-launcher";
@@ -79,6 +81,7 @@ export default function HomePage() {
   const [themeTransition, setThemeTransition] = useState<ThemeTransition | null>(null);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
   const themeTransitionTimeoutRef = useRef<number | null>(null);
   const isConnected = auth.isAuthenticated;
   const activePanel = findPanel(shell.activePanel);
@@ -105,6 +108,8 @@ export default function HomePage() {
     "--brand-logo-filter": shouldInvertBrandLogo ? "invert(1)" : "none",
   };
   const activeSectionDotCount = getSectionDotCount(activePanel.id);
+  const isMobileSidebarHidden = isMobileViewport && !isMobileNavOpen;
+  const sidebarInertAttributes = isMobileSidebarHidden ? { inert: true } : {};
 
   useEffect(() => {
     if (isConnected) {
@@ -118,6 +123,27 @@ export default function HomePage() {
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
+
+  useEffect(() => {
+    const mobileQuery = window.matchMedia("(max-width: 860px)");
+
+    function syncMobileViewport() {
+      const nextIsMobile = mobileQuery.matches;
+
+      setIsMobileViewport(nextIsMobile);
+
+      if (!nextIsMobile) {
+        setIsMobileNavOpen(false);
+      }
+    }
+
+    syncMobileViewport();
+    mobileQuery.addEventListener("change", syncMobileViewport);
+
+    return () => {
+      mobileQuery.removeEventListener("change", syncMobileViewport);
+    };
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -215,7 +241,10 @@ export default function HomePage() {
       <ActionButton
         size="compact"
         className={authButtonClassName}
+        hoverIcon={isConnected ? "arrowLeft" : "arrowRight"}
+        icon={isConnected ? "check" : "wallet"}
         pressed={isConnected}
+        pressedIcon="check"
         onClick={handleAuthAction}
       >
         {authActionLabel}
@@ -230,7 +259,7 @@ export default function HomePage() {
           <GraviiLogo decorative loading="eager" variant="motion" className={styles.loadingLogo} />
           <div className={styles.loadingCopyStack}>
             <span className={styles.loadingEyebrow}>GRAVII SESSION</span>
-            <p className={styles.loadingCopy}>Rehydrating your Gravii session...</p>
+            <p className={styles.loadingCopy}>Rehydrating your Gravii session…</p>
           </div>
         </div>
       </div>
@@ -254,6 +283,7 @@ export default function HomePage() {
           durationMs={THEME_TRANSITION_DURATION_MS}
         />
       ) : null}
+      <ExpressiveCursor />
       <UserSignInLauncher
         isOpen={auth.isSignInModalOpen}
         nextPath={auth.signInNextPath}
@@ -268,16 +298,20 @@ export default function HomePage() {
           aria-label={isMobileNavOpen ? "Close navigation menu" : "Open navigation menu"}
           aria-controls={SIDEBAR_NAV_ID}
           aria-expanded={isMobileNavOpen}
+          data-cursor-target="mobile-menu"
+          data-cursor-label={isMobileNavOpen ? "CLOSE" : "MENU"}
+          data-cursor-variant="pill"
           onClick={() => setIsMobileNavOpen((current) => !current)}
         >
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
+          <MorphIcon name={isMobileNavOpen ? "cross" : "menu"} className={styles.mobileMenuIcon} />
         </button>
         <button
           type="button"
           className={styles.mobileBrandButton}
           aria-label="HOME navigation"
+          data-cursor-target="brand"
+          data-cursor-label="HOME"
+          data-cursor-variant="pill"
           onClick={() => handleNavigate("home")}
         >
           <GraviiLogo decorative variant="symbol" className={styles.mobileHeaderLogo} />
@@ -291,15 +325,24 @@ export default function HomePage() {
         aria-label="Close navigation menu"
         aria-hidden={!isMobileNavOpen}
         tabIndex={isMobileNavOpen ? 0 : -1}
+        data-cursor-target="scrim"
+        data-cursor-label="CLOSE"
+        data-cursor-variant="pill"
         onClick={() => setIsMobileNavOpen(false)}
       />
       <aside
         id={SIDEBAR_NAV_ID}
         className={`${styles.sidebar} ${isMobileNavOpen ? styles.sidebarOpen : ""}`}
         aria-label="Gravii workspace navigation"
+        aria-hidden={isMobileSidebarHidden ? true : undefined}
         data-collapse-state={isSidebarCollapsed ? "collapsed" : "expanded"}
+        data-mobile-hidden={isMobileSidebarHidden ? "true" : undefined}
+        data-cursor-target="nav-rail"
+        data-cursor-label={isSidebarCollapsed ? "EXPAND" : "COLLAPSE"}
+        data-cursor-variant="pill"
         title={isSidebarCollapsed ? "Click empty rail to expand navigation" : "Click empty rail to collapse navigation"}
         onClick={handleDesktopNavBlankClick}
+        {...sidebarInertAttributes}
       >
         <div className={styles.sidebarMobileHead}>
           <span>WORKSPACE</span>
@@ -307,6 +350,9 @@ export default function HomePage() {
             type="button"
             className={styles.sidebarMobileClose}
             aria-label="Close navigation menu"
+            data-cursor-target="mobile-close"
+            data-cursor-label="CLOSE"
+            data-cursor-variant="pill"
             onClick={() => setIsMobileNavOpen(false)}
           >
             X
@@ -318,6 +364,9 @@ export default function HomePage() {
           aria-current={shell.activePanel === "home" ? "page" : undefined}
           aria-label="HOME navigation"
           data-panel-id="home"
+          data-cursor-target="brand"
+          data-cursor-label="HOME"
+          data-cursor-variant="pill"
           onClick={() => handleNavigate("home")}
         >
           <span className={styles.headerSymbolMotion} key={`brand-motion-${activePanel.id}`}>
@@ -355,18 +404,27 @@ export default function HomePage() {
               data-theme-state={theme}
               aria-label={isDarkTheme ? "Switch to light theme" : "Switch to dark theme"}
               aria-pressed={isDarkTheme}
+              data-cursor-target="theme-toggle"
+              data-cursor-label={isDarkTheme ? "LIGHT" : "DARK"}
+              data-cursor-variant="pill"
               onClick={handleThemeToggle}
             >
               <span className={styles.themeToggleThumb} aria-hidden="true" />
-              <span className={styles.themeToggleOption}>LIGHT</span>
-              <span className={styles.themeToggleOption}>DARK</span>
+              <span className={styles.themeToggleIcon} aria-hidden="true">
+                <MorphIcon name={isDarkTheme ? "moon" : "sun"} />
+              </span>
+              <span className={`${styles.themeToggleOption} ${styles.themeToggleOptionLight}`}>LIGHT</span>
+              <span className={`${styles.themeToggleOption} ${styles.themeToggleOptionDark}`}>DARK</span>
             </button>
           </div>
           <span className={styles.footerLabel}>{isConnected ? "SESSION ACTIVE" : "WALLET REQUIRED"}</span>
           <ActionButton
             size="compact"
             className={isConnected ? styles.sessionButtonConnected : styles.sessionButtonDisconnected}
+            hoverIcon={isConnected ? "arrowLeft" : "arrowRight"}
+            icon={isConnected ? "check" : "wallet"}
             pressed={isConnected}
+            pressedIcon="check"
             aria-label={authActionLabel}
             onClick={handleAuthAction}
           >

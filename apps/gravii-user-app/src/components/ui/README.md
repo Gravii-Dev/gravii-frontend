@@ -8,7 +8,7 @@ These components are smaller and more reusable than the feature surfaces, but th
 
 The UI layer answers questions such as:
 
-- What should a shared action button look like?
+- What should a shared bold action button with a controlled pastel bloom look like?
 - How should shared tag chips be rendered?
 - How can the app keep shared surfaces on one solid material system?
 
@@ -24,9 +24,11 @@ Responsibilities:
 
 - apply the standard button styling for light or dark surfaces
 - support compact and panel button sizes
+- optionally render a morphing icon before or after the label
+- support separate default, hover, and pressed icon states without changing the accessible button name
 - optionally stop click propagation so nested buttons do not accidentally trigger parent panel actions
 - expose `aria-pressed` for toggle-like cases such as the authenticated session button
-- render the current solid pill treatment with tonal hover color and no 3D flip layer
+- render the current bold solid pill treatment with tonal hover color, a shared pastel bloom underlay, and no 3D flip layer
 - keep `data-liquid-glass="button"` only as a backwards-compatible material hook; the runtime now neutralizes glass blur and reflection
 
 Where it is used:
@@ -39,6 +41,50 @@ Why it matters:
 
 - the panel system uses click handlers at multiple levels
 - stopping propagation by default makes panel controls safer and more predictable
+- the optional icon slot keeps motion affordances consistent without duplicating button markup in feature code
+
+### `morph-icon`
+
+Primary job:
+
+- render a shared three-line SVG icon that morphs between named states
+
+Responsibilities:
+
+- keep all icons on the same three-line drawing model so state changes feel like transformation rather than replacement
+- animate line coordinates with `requestAnimationFrame` without adding a motion dependency
+- respect `prefers-reduced-motion` by jumping directly to the target shape
+- stay `aria-hidden` so button labels remain the accessible source of truth
+
+Where it is used:
+
+- action-button icon slots for sign-in, X-Ray, profile sharing, checkout, and workspace navigation actions
+- standalone shell controls such as the mobile menu and collapsed theme toggle
+
+Why it matters:
+
+- shared morphing icons keep high-touch controls polished while avoiding broad decorative animation across static cards
+
+### `expressive-cursor`
+
+Primary job:
+
+- render the Material Expressive-inspired cursor layer for the Launch App shell
+
+Responsibilities:
+
+- hide the native cursor only on desktop fine-pointer devices
+- keep touch devices, text inputs, and reduced-motion users on the native cursor
+- read stable `data-cursor-target`, `data-cursor-label`, and `data-cursor-variant` attributes from interactive controls
+- render active, pressed, checked, hidden, and pill-label states without intercepting pointer events
+
+Where it is used:
+
+- the app shell root, with target attributes on navigation, shell actions, theme controls, and shared `ActionButton` instances
+
+Why it matters:
+
+- the cursor effect is global and high-impact, so it needs a single owner and a stable target contract instead of ad hoc component CSS
 
 ### `gravii-logo`
 

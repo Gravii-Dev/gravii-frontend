@@ -1,9 +1,10 @@
 .root {
-  --xray-bg: var(--app-canvas, #0f1118);
-  --xray-card: var(--app-surface, rgba(255, 255, 255, 0.045));
-  --xray-card-strong: var(--app-surface-strong, rgba(255, 255, 255, 0.07));
-  --xray-line: var(--app-line, rgba(245, 242, 235, 0.09));
-  --xray-line-strong: var(--app-line-strong, rgba(245, 242, 235, 0.14));
+  --feature-bottom-space: clamp(28px, 4vh, 48px);
+  --xray-bg: var(--section-surface-soft, var(--app-canvas, #0f1118));
+  --xray-card: var(--section-surface, var(--app-surface, rgba(255, 255, 255, 0.045)));
+  --xray-card-strong: var(--section-surface-strong, var(--app-surface-strong, rgba(255, 255, 255, 0.07)));
+  --xray-line: var(--section-line, var(--app-line, rgba(245, 242, 235, 0.09)));
+  --xray-line-strong: var(--color-border-secondary, var(--app-line-strong, rgba(245, 242, 235, 0.14)));
   --xray-text: var(--app-text, #f5f2eb);
   --xray-muted: var(--app-muted, rgba(245, 242, 235, 0.52));
   --xray-muted-soft: var(--app-muted-soft, rgba(245, 242, 235, 0.32));
@@ -16,17 +17,23 @@
 
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--ds-space-gap);
   min-height: 100%;
   margin: 0;
-  padding: clamp(28px, 4vw, 48px) clamp(24px, 4vw, 60px);
+  padding: var(--ds-space-panel);
   overflow: hidden;
-  border-radius: clamp(24px, 3vw, 36px);
+  border-radius: var(--ds-radius-frame);
   background:
     radial-gradient(circle at 8% 0%, color-mix(in srgb, var(--xray-purple) 14%, transparent), transparent 32%),
     radial-gradient(circle at 92% 16%, color-mix(in srgb, var(--xray-green) 12%, transparent), transparent 34%),
     linear-gradient(180deg, color-mix(in srgb, var(--xray-bg) 88%, var(--xray-text) 12%) 0%, var(--xray-bg) 44%, var(--app-canvas-deep, #0b0d13) 100%);
   color: var(--xray-text);
+}
+
+.root::after {
+  content: "";
+  display: block;
+  flex: 0 0 var(--feature-bottom-space);
 }
 
 .header {
@@ -42,9 +49,10 @@
   color: var(--xray-muted);
   cursor: pointer;
   font-family: var(--font-ui, system-ui, sans-serif);
-  font-size: 0.78rem;
-  font-weight: 900;
-  letter-spacing: 0.16em;
+  font-size: var(--ds-type-label-size);
+  font-weight: var(--ds-type-label-weight);
+  letter-spacing: var(--ds-type-label-tracking);
+  line-height: var(--ds-type-label-line);
   text-transform: uppercase;
   transition:
     color var(--motion-duration-standard) var(--motion-ease-standard),
@@ -63,9 +71,10 @@
 .subsectionTitle {
   color: var(--xray-muted);
   font-family: var(--font-ui, system-ui, sans-serif);
-  font-size: 0.72rem;
-  font-weight: 900;
-  letter-spacing: 0.18em;
+  font-size: var(--ds-type-label-size);
+  font-weight: var(--ds-type-label-weight);
+  letter-spacing: var(--ds-type-label-tracking);
+  line-height: var(--ds-type-label-line);
   text-transform: uppercase;
 }
 
@@ -77,11 +86,11 @@
   margin: 10px 0 0;
   color: var(--xray-text);
   font-family: var(--font-ui, system-ui, sans-serif);
-  font-size: clamp(1.35rem, 2.4vw, 2.25rem);
+  font-size: var(--ds-type-title-size);
   font-style: italic;
   font-variation-settings: "wdth" 112, "GRAD" 42;
-  font-weight: 900;
-  line-height: 1.08;
+  font-weight: var(--ds-type-title-weight);
+  line-height: var(--ds-type-title-line);
   word-break: break-all;
 }
 
@@ -90,7 +99,7 @@
   position: relative;
   overflow: hidden;
   border: 1px solid var(--xray-line);
-  border-radius: 18px;
+  border-radius: var(--ds-radius-card);
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.025)),
     var(--xray-card);
@@ -101,15 +110,17 @@
 }
 
 .sectionCard {
-  padding: clamp(18px, 2.2vw, 28px);
+  padding: var(--ds-space-card);
 }
 
 .sectionTitle {
   display: block;
   margin-bottom: 16px;
   color: rgba(245, 242, 235, 0.64);
-  font-size: 0.86rem;
-  letter-spacing: 0.2em;
+  font-size: var(--ds-type-label-size);
+  font-weight: var(--ds-type-label-weight);
+  letter-spacing: var(--ds-type-label-tracking);
+  line-height: var(--ds-type-label-line);
 }
 
 .identityGrid {
@@ -127,19 +138,20 @@
   display: block;
   margin-bottom: 7px;
   color: var(--xray-muted);
-  font-size: 0.76rem;
-  line-height: 1.35;
+  font-size: var(--ds-type-caption-size);
+  font-weight: var(--ds-type-caption-weight);
+  line-height: var(--ds-type-caption-line);
 }
 
 .identityCell strong {
   display: block;
   color: var(--xray-text);
   font-family: var(--font-ui, system-ui, sans-serif);
-  font-size: clamp(1rem, 1.35vw, 1.35rem);
+  font-size: var(--ds-type-title-size);
   font-style: italic;
   font-variation-settings: "wdth" 112, "GRAD" 42;
-  font-weight: 900;
-  line-height: 1.08;
+  font-weight: var(--ds-type-title-weight);
+  line-height: var(--ds-type-title-line);
 }
 
 .positiveValue {
@@ -161,8 +173,9 @@
   padding: 3px 10px;
   color: var(--xray-purple);
   background: rgba(200, 180, 240, 0.08);
-  font-size: 0.76rem;
-  font-weight: 800;
+  font-size: var(--ds-type-caption-size);
+  font-weight: var(--ds-type-caption-weight);
+  line-height: var(--ds-type-caption-line);
 }
 
 .personaPillMuted {
@@ -182,7 +195,7 @@
 }
 
 .metricCard {
-  padding: 20px;
+  padding: var(--ds-space-card-compact);
 }
 
 .metricValue {
@@ -190,19 +203,20 @@
   margin-top: 10px;
   color: var(--xray-text);
   font-family: var(--font-ui, system-ui, sans-serif);
-  font-size: clamp(1.35rem, 2vw, 2rem);
+  font-size: var(--ds-type-value-size);
   font-style: italic;
   font-variation-settings: "wdth" 112, "GRAD" 42;
-  font-weight: 900;
-  line-height: 1;
+  font-weight: var(--ds-type-value-weight);
+  line-height: var(--ds-type-value-line);
 }
 
 .metricMeta {
   display: block;
   margin-top: 8px;
   color: var(--xray-muted);
-  font-size: 0.76rem;
-  line-height: 1.45;
+  font-size: var(--ds-type-caption-size);
+  font-weight: var(--ds-type-caption-weight);
+  line-height: var(--ds-type-caption-line);
 }
 
 .metricCard_positive .metricValue {
@@ -229,21 +243,24 @@
 .portfolioValue span {
   display: block;
   margin-bottom: 6px;
-  font-size: 0.78rem;
+  font-size: var(--ds-type-caption-size);
+  font-weight: var(--ds-type-caption-weight);
+  line-height: var(--ds-type-caption-line);
 }
 
 .portfolioValue strong {
   color: var(--xray-text);
   font-family: var(--font-ui, system-ui, sans-serif);
-  font-size: clamp(1.6rem, 2.6vw, 2.25rem);
+  font-size: var(--ds-type-value-size);
   font-style: italic;
-  font-weight: 900;
+  font-weight: var(--ds-type-value-weight);
+  line-height: var(--ds-type-value-line);
 }
 
 .portfolioTopGrid {
   display: grid;
   grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.1fr);
-  gap: clamp(22px, 3vw, 34px);
+  gap: var(--ds-space-gap);
 }
 
 .assetSummary {
@@ -272,9 +289,10 @@
   border-radius: inherit;
   background: var(--xray-bg);
   color: var(--xray-muted);
-  font-size: 0.62rem;
-  font-weight: 900;
-  letter-spacing: 0.14em;
+  font-size: var(--ds-type-label-size);
+  font-weight: var(--ds-type-label-weight);
+  letter-spacing: var(--ds-type-label-tracking);
+  line-height: var(--ds-type-label-line);
 }
 
 .assetSummaryRows {
@@ -299,7 +317,9 @@
 .chainName,
 .percentRow span {
   color: var(--xray-muted);
-  font-size: 0.8rem;
+  font-size: var(--ds-type-caption-size);
+  font-weight: var(--ds-type-caption-weight);
+  line-height: var(--ds-type-caption-line);
 }
 
 .assetSummaryRow strong,
@@ -308,15 +328,19 @@
 .percentRow strong,
 .chainValue {
   color: var(--xray-text);
-  font-size: 0.82rem;
-  font-weight: 900;
+  font-size: var(--ds-type-caption-size);
+  font-weight: var(--ds-type-title-weight);
+  line-height: var(--ds-type-caption-line);
 }
 
 .assetSummaryRow small,
 .chainDistributionRow small,
 .percentRow small {
   color: var(--xray-muted);
-  font-size: 0.72rem;
+  font-size: var(--ds-type-label-size);
+  font-weight: var(--ds-type-label-weight);
+  letter-spacing: 0.04em;
+  line-height: var(--ds-type-label-line);
 }
 
 .assetDot {
@@ -424,12 +448,16 @@
 
 .healthCard span {
   color: var(--xray-muted);
-  font-size: 0.74rem;
+  font-size: var(--ds-type-caption-size);
+  font-weight: var(--ds-type-caption-weight);
+  line-height: var(--ds-type-caption-line);
 }
 
 .healthCard strong {
   color: var(--xray-green);
-  font-size: 0.74rem;
+  font-size: var(--ds-type-caption-size);
+  font-weight: var(--ds-type-title-weight);
+  line-height: var(--ds-type-caption-line);
 }
 
 .assetTypeHeader {
@@ -442,7 +470,7 @@
 }
 
 .assetTypeBlock {
-  padding: 16px;
+  padding: var(--ds-space-card-compact);
 }
 
 .assetTypeTopline {
@@ -451,7 +479,9 @@
 
 .assetTypeTopline small {
   color: var(--xray-muted-soft);
-  font-size: 0.7rem;
+  font-size: var(--ds-type-label-size);
+  font-weight: var(--ds-type-label-weight);
+  line-height: var(--ds-type-label-line);
   text-align: right;
 }
 
@@ -465,8 +495,9 @@
 .breakdownList {
   grid-column: 2 / -1;
   color: var(--xray-muted-soft);
-  font-size: 0.68rem;
-  line-height: 1.45;
+  font-size: var(--ds-type-caption-size);
+  font-weight: var(--ds-type-caption-weight);
+  line-height: var(--ds-type-caption-line);
 }
 
 .sectionGrid {
@@ -489,8 +520,9 @@
 
 .sectionNote {
   margin: 14px 0 0;
-  font-size: 0.78rem;
-  line-height: 1.5;
+  font-size: var(--ds-type-caption-size);
+  font-weight: var(--ds-type-caption-weight);
+  line-height: var(--ds-type-caption-line);
 }
 
 .sectionNote strong {
@@ -504,12 +536,12 @@
 }
 
 .riskGrid .metricCard {
-  padding: 16px;
+  padding: var(--ds-space-card-compact);
   background: var(--xray-card-strong);
 }
 
 .riskGrid .metricValue {
-  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  font-size: var(--ds-type-title-size);
 }
 
 .activityRow {
@@ -523,13 +555,16 @@
 .activityDate,
 .activityMeta {
   color: var(--xray-muted);
-  font-size: 0.76rem;
+  font-size: var(--ds-type-caption-size);
+  font-weight: var(--ds-type-caption-weight);
+  line-height: var(--ds-type-caption-line);
 }
 
 .activityAction {
   color: var(--xray-text);
-  font-size: 0.82rem;
-  font-weight: 800;
+  font-size: var(--ds-type-caption-size);
+  font-weight: var(--ds-type-title-weight);
+  line-height: var(--ds-type-caption-line);
 }
 
 .activityRowEmpty {
@@ -556,8 +591,8 @@
 
 @media (max-width: 760px) {
   .root {
-    margin: -24px -20px;
-    padding: 24px 18px;
+    margin: 0;
+    padding: 18px;
     border-radius: 22px;
   }
 

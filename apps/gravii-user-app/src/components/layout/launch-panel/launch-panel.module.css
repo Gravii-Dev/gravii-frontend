@@ -11,10 +11,10 @@
   width: min(100%, var(--nav-panel-width, 178px));
   height: var(--panel-rest-height);
   min-height: var(--panel-rest-height);
-  padding: 16px;
+  padding: var(--ds-space-card-compact);
   overflow: hidden;
   border: 1px solid color-mix(in srgb, currentColor 10%, transparent);
-  border-radius: 18px;
+  border-radius: var(--ds-radius-card-compact);
   background: var(--panel-bg);
   color: var(--panel-active-text, var(--raw-ink));
   font-family: var(--font-ui);
@@ -71,7 +71,7 @@
 }
 
 .dark {
-  --panel-active-text: #fff8f0;
+  --panel-active-text: #fffaff;
 }
 
 .light {
@@ -131,14 +131,27 @@
 }
 
 .label {
-  font-size: clamp(20px, 1.35vw, 23px);
+  font-size: clamp(1.18rem, 1.35vw, 1.45rem);
   font-style: italic;
-  font-variation-settings: "wdth" 112, "GRAD" 42;
-  font-weight: 900;
-  line-height: 0.96;
+  font-variation-settings: var(--type-expressive-rest);
+  font-weight: var(--ds-type-title-weight);
+  line-height: var(--ds-type-title-line);
   letter-spacing: -0.005em;
+  padding-block: 0.04em;
   text-transform: uppercase;
-  transition: color 300ms ease-in-out;
+  transition:
+    color 300ms ease-in-out,
+    font-variation-settings var(--motion-duration-expressive) var(--motion-ease-expressive),
+    letter-spacing var(--motion-duration-expressive-fast) var(--motion-ease-expressive);
+}
+
+.panel:hover .label,
+.hovered .label {
+  font-variation-settings: var(--type-expressive-hover);
+}
+
+.active .label {
+  font-variation-settings: var(--type-expressive-active);
 }
 
 .summary {
@@ -196,7 +209,7 @@
   }
 
   .label {
-    font-size: clamp(14px, 2.35vw, 18px);
+    font-size: clamp(0.9rem, 2.35vw, 1.1rem);
   }
 
   .summary {
@@ -245,8 +258,8 @@
   }
 
   .label {
-    font-size: clamp(14px, 4.2vw, 18px);
-    line-height: 0.96;
+    font-size: clamp(0.86rem, 4.2vw, 1.05rem);
+    line-height: var(--ds-type-title-line);
   }
 }
 
@@ -256,7 +269,7 @@
   }
 
   .label {
-    font-size: clamp(12px, 4vw, 15px);
+    font-size: clamp(0.75rem, 4vw, 0.95rem);
   }
 
   .markerDot {

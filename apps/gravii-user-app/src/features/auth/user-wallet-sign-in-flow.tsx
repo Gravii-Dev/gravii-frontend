@@ -11,6 +11,7 @@ import {
   requestUserChallenge,
   verifyUserWallet,
 } from '@/lib/auth/user-api'
+import MorphIcon from '@/components/ui/morph-icon'
 import { isWalletConnectConfigured } from '@/lib/wallet/appkit-config'
 
 import styles from './user-sign-in-page.module.css'
@@ -80,7 +81,7 @@ function getInjectedWalletProvider(): InjectedWalletProvider | null {
 
 function getStageTitle(stage: PendingStage) {
   if (stage === 'bootstrapping') {
-    return 'Checking your Gravii session...'
+    return 'Checking your Gravii session…'
   }
 
   if (stage === 'selecting') {
@@ -88,7 +89,7 @@ function getStageTitle(stage: PendingStage) {
   }
 
   if (stage === 'challenge') {
-    return 'Preparing your sign-in challenge...'
+    return 'Preparing your sign-in challenge…'
   }
 
   if (stage === 'signing') {
@@ -96,7 +97,7 @@ function getStageTitle(stage: PendingStage) {
   }
 
   if (stage === 'verifying') {
-    return 'X-Raying your on-chain activity across 50+ chains...'
+    return 'X-Raying your on-chain activity across 50+ chains…'
   }
 
   return 'Connect your wallet to enter Gravii.'
@@ -371,7 +372,10 @@ export function UserWalletSignInFlow({
               Pick your preferred EVM wallet through WalletConnect. If WalletConnect is not configured locally, Gravii falls back to your browser wallet.
             </span>
           </span>
-          <span aria-hidden="true">→</span>
+          <MorphIcon
+            name={isWalletActionLocked ? 'spark' : 'wallet'}
+            className={styles.buttonIcon}
+          />
         </button>
       </div>
 

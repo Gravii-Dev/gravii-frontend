@@ -3,7 +3,7 @@
   min-height: 100%;
   min-width: 0;
   flex-direction: column;
-  gap: clamp(1rem, 1.7vw, 1.35rem);
+  gap: var(--ds-space-gap);
   color: var(--color-text-primary);
 }
 
@@ -17,7 +17,7 @@
   isolation: isolate;
   overflow: hidden;
   border: 0;
-  border-radius: var(--slush-radius-card);
+  border-radius: var(--ds-radius-card);
   background: var(--color-surface-front);
 }
 
@@ -25,9 +25,9 @@
 .partnerHero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: clamp(1rem, 2vw, 1.5rem);
+  gap: var(--ds-space-gap);
   align-items: end;
-  padding: clamp(1.2rem, 2.8vw, 2.2rem);
+  padding: var(--ds-space-card);
 }
 
 .intro::before,
@@ -56,9 +56,10 @@
 .guideLabel,
 .searchBox span {
   color: var(--color-text-muted);
-  font-size: var(--type-eyebrow-size);
-  font-weight: var(--type-eyebrow-weight);
-  letter-spacing: var(--type-eyebrow-tracking);
+  font-size: var(--ds-type-label-size);
+  font-weight: var(--ds-type-label-weight);
+  letter-spacing: var(--ds-type-label-tracking);
+  line-height: var(--ds-type-label-line);
   text-transform: uppercase;
 }
 
@@ -66,11 +67,12 @@
 .partnerHero h2 {
   max-width: 14ch;
   margin: 0.75rem 0 0;
-  font-size: clamp(2.4rem, 5vw, 5.2rem);
+  font-size: var(--ds-type-headline-size);
   font-variation-settings: "wdth" 104, "GRAD" 18;
-  font-weight: var(--type-display-weight);
-  letter-spacing: -0.024em;
-  line-height: 0.96;
+  font-weight: var(--ds-type-headline-weight);
+  letter-spacing: var(--ds-type-headline-tracking);
+  line-height: var(--ds-type-headline-line);
+  text-wrap: balance;
   text-transform: uppercase;
 }
 
@@ -78,15 +80,16 @@
   max-width: 42rem;
   margin: 0;
   color: var(--color-text-secondary);
-  font-size: var(--type-body);
-  line-height: var(--type-line-body);
+  font-size: var(--ds-type-body-size);
+  font-weight: var(--ds-type-body-weight);
+  line-height: var(--ds-type-body-line);
 }
 
 .filterBar {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 0.7rem;
-  padding: clamp(0.8rem, 1.5vw, 1rem);
+  padding: var(--ds-space-card-compact);
 }
 
 .filterGroup {
@@ -104,8 +107,8 @@
   cursor: pointer;
   padding: 0 0.85rem;
   font-family: var(--font-ui);
-  font-size: 0.68rem;
-  font-weight: 900;
+  font-size: var(--ds-type-caption-size);
+  font-weight: var(--ds-type-label-weight);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   transition:
@@ -130,6 +133,19 @@
   color: var(--theme-on-accent);
 }
 
+.filterButton:focus-visible,
+.filterActive:focus-visible,
+.partnerCard:focus-visible,
+.lockedTitle:focus-visible,
+.backButton:focus-visible,
+.detailsButton:focus-visible,
+.partnerNav button:focus-visible,
+.crossActions button:focus-visible,
+.campaignToggle:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
 .searchBox {
   display: grid;
   grid-template-columns: auto minmax(12rem, 1fr);
@@ -139,6 +155,15 @@
   border-radius: 999px;
   background: var(--color-surface-hover);
   padding: 0 0.9rem;
+  transition:
+    background-color 220ms var(--motion-ease-standard),
+    box-shadow 220ms var(--motion-ease-standard);
+}
+
+.searchBox:focus-within {
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--color-primary) 32%, transparent),
+    0 0 0 6px color-mix(in srgb, var(--color-primary) 12%, transparent);
 }
 
 .searchBox input {
@@ -148,7 +173,7 @@
   background: transparent;
   color: var(--color-text-primary);
   font: inherit;
-  font-weight: 760;
+  font-weight: var(--ds-type-body-weight);
 }
 
 .panelBody {
@@ -178,6 +203,7 @@
 .summaryRow,
 .campaignHeader {
   display: flex;
+  min-width: 0;
   align-items: baseline;
   justify-content: space-between;
   gap: 0.8rem;
@@ -186,7 +212,9 @@
 .summaryHint,
 .campaignHeader span:last-child {
   color: var(--color-text-muted);
-  font-size: 0.78rem;
+  font-size: var(--ds-type-caption-size);
+  font-weight: var(--ds-type-caption-weight);
+  line-height: var(--ds-type-caption-line);
 }
 
 .resultsGrid {
@@ -202,7 +230,7 @@
   align-items: center;
   width: 100%;
   min-height: 132px;
-  padding: clamp(1rem, 1.9vw, 1.35rem);
+  padding: var(--ds-space-card-compact);
   color: inherit;
   cursor: pointer;
   text-align: left;
@@ -226,21 +254,24 @@
   background: var(--color-primary);
   color: var(--theme-on-accent);
   font-size: 1rem;
-  font-weight: 900;
+  font-weight: var(--ds-type-title-weight);
 }
 
 .partnerName {
   min-width: 0;
   color: var(--color-text-primary);
-  font-size: clamp(1rem, 1.6vw, 1.3rem);
-  font-weight: 900;
+  font-size: var(--ds-type-title-size);
+  font-weight: var(--ds-type-title-weight);
+  line-height: var(--ds-type-title-line);
   overflow-wrap: anywhere;
 }
 
 .partnerMeta {
   grid-column: 2 / -1;
   color: var(--color-text-secondary);
-  font-size: 0.83rem;
+  font-size: var(--ds-type-caption-size);
+  font-weight: var(--ds-type-caption-weight);
+  line-height: var(--ds-type-caption-line);
 }
 
 .tagRow {
@@ -262,8 +293,8 @@
   min-height: 26px;
   border-radius: 999px;
   padding: 0 0.65rem;
-  font-size: 0.66rem;
-  font-weight: 900;
+  font-size: var(--ds-type-label-size);
+  font-weight: var(--ds-type-label-weight);
   letter-spacing: 0.05em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -318,12 +349,12 @@
   inset: 0;
   display: grid;
   place-items: center;
-  padding: clamp(1rem, 2vw, 1.5rem);
+  padding: var(--ds-space-card);
 }
 
 .lockedCard {
   width: min(26rem, 100%);
-  padding: clamp(1.5rem, 3vw, 2.2rem);
+  padding: var(--ds-space-card);
   text-align: center;
 }
 
@@ -333,10 +364,10 @@
   color: var(--color-text-primary);
   cursor: pointer;
   font-family: var(--font-ui);
-  font-size: 1rem;
+  font-size: var(--ds-type-title-size);
   font-style: italic;
   font-variation-settings: "wdth" 112, "GRAD" 42;
-  font-weight: 900;
+  font-weight: var(--ds-type-title-weight);
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -345,7 +376,9 @@
 .lockedItalic {
   margin: 0.9rem 0 0;
   color: var(--color-text-secondary);
-  line-height: 1.55;
+  font-size: var(--ds-type-body-size);
+  font-weight: var(--ds-type-body-weight);
+  line-height: var(--ds-type-body-line);
 }
 
 .lockedItalic {
@@ -372,8 +405,8 @@
   cursor: pointer;
   padding: 0.7rem 0.9rem;
   font-family: var(--font-ui);
-  font-size: 0.68rem;
-  font-weight: 900;
+  font-size: var(--ds-type-label-size);
+  font-weight: var(--ds-type-label-weight);
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -389,7 +422,7 @@
 }
 
 .campaignCard {
-  padding: clamp(1rem, 1.9vw, 1.35rem);
+  padding: var(--ds-space-card-compact);
 }
 
 .campaignToggle {
@@ -406,10 +439,15 @@
   text-align: left;
 }
 
+.campaignToggle > div {
+  min-width: 0;
+}
+
 .campaignTitle {
   color: var(--color-text-primary);
-  font-size: clamp(1.2rem, 2.3vw, 1.65rem);
-  font-weight: 900;
+  font-size: var(--ds-type-title-size);
+  font-weight: var(--ds-type-title-weight);
+  line-height: var(--ds-type-title-line);
   overflow-wrap: anywhere;
 }
 
@@ -420,7 +458,9 @@
   align-items: center;
   margin-top: 0.8rem;
   color: var(--color-text-secondary);
-  font-size: 0.8rem;
+  font-size: var(--ds-type-caption-size);
+  font-weight: var(--ds-type-caption-weight);
+  line-height: var(--ds-type-caption-line);
 }
 
 .typeChip {
@@ -442,7 +482,9 @@
   max-width: 64rem;
   margin: 0 0 1rem;
   color: var(--color-text-secondary);
-  line-height: 1.65;
+  font-size: var(--ds-type-body-size);
+  font-weight: var(--ds-type-body-weight);
+  line-height: var(--ds-type-body-line);
 }
 
 .successAction,
@@ -451,7 +493,7 @@
 .mutedAction,
 .verifyAction {
   margin-right: 0.55rem;
-  --button-font-size: 0.7rem;
+  --button-font-size: var(--ds-type-label-size);
 }
 
 .successAction {
@@ -477,9 +519,9 @@
 
 .guidePanel {
   margin-top: 1rem;
-  border-radius: var(--gravii-radius-lg);
+  border-radius: var(--ds-radius-card);
   background: var(--color-surface-back);
-  padding: clamp(1rem, 2vw, 1.35rem);
+  padding: var(--ds-space-card-compact);
 }
 
 .statusGrid {
@@ -490,7 +532,7 @@
 }
 
 .statusGrid div {
-  border-radius: var(--gravii-radius-md);
+  border-radius: var(--ds-radius-card-compact);
   background: var(--color-surface-hover);
   padding: 0.9rem;
 }
@@ -498,7 +540,11 @@
 .statusGrid span {
   display: block;
   color: var(--color-text-muted);
-  font-size: 0.7rem;
+  font-size: var(--ds-type-label-size);
+  font-weight: var(--ds-type-label-weight);
+  letter-spacing: var(--ds-type-label-tracking);
+  line-height: var(--ds-type-label-line);
+  text-transform: uppercase;
 }
 
 .statusGrid strong {
@@ -518,7 +564,9 @@
   margin: 0 0 1rem;
   padding-left: 1.3rem;
   color: var(--color-text-secondary);
-  line-height: 1.55;
+  font-size: var(--ds-type-body-size);
+  font-weight: var(--ds-type-body-weight);
+  line-height: var(--ds-type-body-line);
 }
 
 .verifyAction {
@@ -554,7 +602,7 @@
   gap: 0.4rem;
   min-height: 11rem;
   place-items: center;
-  border-radius: var(--slush-radius-card);
+  border-radius: var(--ds-radius-card);
   background: var(--color-surface-front);
   color: var(--color-text-secondary);
   text-align: center;
@@ -562,6 +610,9 @@
 
 .emptyState strong {
   color: var(--color-text-primary);
+  font-size: var(--ds-type-title-size);
+  font-weight: var(--ds-type-title-weight);
+  line-height: var(--ds-type-title-line);
 }
 
 @media (max-width: 1100px) {
@@ -578,7 +629,7 @@
 @media (max-width: 760px) {
   .searchBox {
     grid-template-columns: 1fr;
-    border-radius: var(--gravii-radius-md);
+    border-radius: var(--ds-radius-card-compact);
     padding: 0.75rem;
   }
 
@@ -586,6 +637,12 @@
   .campaignToggle,
   .partnerNav {
     grid-template-columns: 1fr;
+  }
+
+  .summaryRow,
+  .campaignHeader {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .statusGrid {

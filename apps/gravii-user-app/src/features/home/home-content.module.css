@@ -1,21 +1,30 @@
 .root {
-  --home-accent-text: color-mix(in srgb, var(--raw-orange) 64%, var(--raw-ink));
+  --home-accent-text: color-mix(in srgb, var(--section-accent, var(--raw-orange)) 72%, var(--raw-ink));
+  --feature-bottom-space: clamp(28px, 4vh, 48px);
   display: flex;
   flex-direction: column;
-  gap: clamp(18px, 2vw, 28px);
+  gap: var(--ds-space-gap);
+}
+
+.root::after {
+  content: "";
+  display: block;
+  flex: 0 0 var(--feature-bottom-space);
 }
 
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(260px, 0.46fr);
   align-items: end;
-  gap: clamp(24px, 3vw, 56px);
-  min-height: clamp(360px, 47vh, 560px);
-  padding: clamp(32px, 5vw, 76px);
+  gap: clamp(20px, 2.5vw, 44px);
+  min-height: clamp(280px, 39vh, 460px);
+  padding: clamp(28px, 4vw, 56px);
   overflow: hidden;
-  border: 1.25px solid var(--raw-line);
-  border-radius: 16px;
-  background: var(--raw-paper);
+  border: 0;
+  border-radius: var(--ds-radius-section);
+  background:
+    radial-gradient(circle at 14% 4%, color-mix(in srgb, var(--section-accent, var(--raw-orange)) 12%, transparent), transparent 34%),
+    var(--raw-paper);
 }
 
 .heroMain {
@@ -23,7 +32,7 @@
   min-width: 0;
   flex-direction: column;
   justify-content: flex-end;
-  gap: clamp(24px, 5vh, 64px);
+  gap: clamp(18px, 3.6vh, 42px);
 }
 
 .heroBrandStack {
@@ -36,10 +45,10 @@
 .kicker,
 .cardLabel {
   color: color-mix(in srgb, var(--raw-ink) 52%, transparent);
-  font-size: var(--type-eyebrow-size);
-  font-weight: var(--type-eyebrow-weight);
-  letter-spacing: var(--type-eyebrow-tracking);
-  line-height: 1;
+  font-size: var(--ds-type-label-size);
+  font-weight: var(--ds-type-label-weight);
+  letter-spacing: var(--ds-type-label-tracking);
+  line-height: var(--ds-type-label-line);
   text-transform: uppercase;
 }
 
@@ -50,10 +59,11 @@
   font-family: var(--font-display);
   font-stretch: var(--font-width-display);
   font-variation-settings: "GRAD" var(--font-grade-display);
-  font-size: var(--type-hero-title);
-  font-weight: var(--type-display-weight);
-  letter-spacing: -0.008em;
-  line-height: 0.88;
+  font-size: var(--ds-type-display-size);
+  font-weight: var(--ds-type-display-weight);
+  letter-spacing: var(--ds-type-display-tracking);
+  line-height: var(--ds-type-display-line);
+  text-wrap: balance;
 }
 
 .title span {
@@ -72,10 +82,10 @@
 
 .heroAside p {
   margin: 0;
-  font-size: var(--type-body-large);
-  font-weight: 760;
+  font-size: var(--ds-type-body-size);
+  font-weight: var(--ds-type-body-weight);
   letter-spacing: -0.006em;
-  line-height: 1.2;
+  line-height: var(--ds-type-body-line);
 }
 
 .primaryAction {
@@ -97,16 +107,17 @@
 
 .statusCard,
 .mapCard {
-  min-height: 150px;
-  padding: 22px;
-  border: 1.25px solid var(--raw-line);
-  border-radius: 14px;
+  min-width: 0;
+  min-height: clamp(112px, 15vh, 128px);
+  padding: var(--ds-space-card-compact);
+  border: 0;
+  border-radius: var(--ds-radius-card-compact);
   background: var(--raw-paper);
 }
 
 .statusCardStrong {
-  background: var(--solid-ink-surface, var(--raw-ink));
-  color: var(--solid-ink-text, var(--raw-paper));
+  background: var(--section-accent, var(--solid-ink-surface, var(--raw-ink)));
+  color: var(--section-on-accent, var(--solid-ink-text, var(--raw-paper)));
 }
 
 .statusCardStrong .cardLabel,
@@ -117,14 +128,15 @@
 .statusCard strong,
 .mapCard strong {
   display: block;
-  margin-top: 28px;
+  margin-top: clamp(14px, 1.8vw, 24px);
   color: inherit;
   font-family: var(--font-display);
-  font-size: clamp(2rem, 2.7vw, 3.25rem);
-  font-weight: var(--type-display-weight);
+  font-size: var(--ds-type-value-size);
+  font-weight: var(--ds-type-value-weight);
   letter-spacing: -0.012em;
-  line-height: 0.94;
+  line-height: var(--ds-type-value-line);
   text-transform: uppercase;
+  overflow-wrap: anywhere;
 }
 
 .statusCard p,
@@ -132,10 +144,10 @@
   max-width: 240px;
   margin: 12px 0 0;
   color: color-mix(in srgb, var(--raw-ink) 62%, transparent);
-  font-size: var(--type-body);
-  font-weight: var(--type-body-weight);
+  font-size: var(--ds-type-body-size);
+  font-weight: var(--ds-type-body-weight);
   letter-spacing: 0;
-  line-height: 1.34;
+  line-height: var(--ds-type-body-line);
 }
 
 .mapGrid {
@@ -145,22 +157,55 @@
 }
 
 .mapCard {
-  background: color-mix(in srgb, var(--raw-paper) 88%, var(--raw-paper-strong));
+  background: var(--raw-paper-strong);
 }
 
 .mapCard span {
   color: color-mix(in srgb, var(--raw-ink) 52%, transparent);
-  font-size: var(--type-eyebrow-size);
-  font-weight: var(--type-eyebrow-weight);
-  letter-spacing: var(--type-eyebrow-tracking);
+  font-size: var(--ds-type-label-size);
+  font-weight: var(--ds-type-label-weight);
+  letter-spacing: var(--ds-type-label-tracking);
   text-transform: uppercase;
 }
 
 .mapCard strong {
-  margin-top: 34px;
+  margin-top: clamp(18px, 2.4vw, 28px);
   color: var(--home-accent-text);
-  font-size: clamp(1.8rem, 2.2vw, 2.45rem);
+  font-size: var(--ds-type-title-size);
   overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+@media (max-width: 1180px) {
+  .mapGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-height: 820px) and (min-width: 761px) {
+  .root {
+    gap: 10px;
+  }
+
+  .hero {
+    min-height: 0;
+    padding: clamp(22px, 3.2vw, 44px);
+  }
+
+  .title {
+    font-size: clamp(3rem, 5.7vw, 5.85rem);
+  }
+
+  .statusCard,
+  .mapCard {
+    min-height: 104px;
+  }
+
+  .statusCard p,
+  .mapCard p {
+    margin-top: 8px;
+    line-height: 1.25;
+  }
 }
 
 @media (max-width: 980px) {
@@ -190,13 +235,13 @@
 
   .title {
     max-width: 100%;
-    font-size: clamp(46px, 14.2vw, 60px);
+    font-size: clamp(2.8rem, 14.2vw, 3.75rem);
     letter-spacing: -0.006em;
-    line-height: 0.9;
+    line-height: var(--ds-type-display-line);
   }
 
   .heroAside p {
-    font-size: 16px;
-    line-height: 1.16;
+    font-size: var(--ds-type-body-size);
+    line-height: var(--ds-type-body-line);
   }
 }

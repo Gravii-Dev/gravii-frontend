@@ -31,14 +31,16 @@ export default function XRayCreditPurchaseModal({
         <p className={styles.kicker}>X-Ray checkout</p>
         <p className={styles.price}>{creditBundleLabel}</p>
         <p className={styles.copy}>
-          Continue to Stripe Checkout to add analysis credits. Credits are granted only after backend webhook fulfillment confirms payment.
+          Continue to checkout to add analysis credits for deeper wallet reads.
         </p>
-        <p className={styles.hint}>The frontend creates a checkout session; the backend owns pricing, metadata, and credit delivery.</p>
+        <p className={styles.hint}>Each completed X-Ray analysis spends one credit.</p>
         {errorMessage ? <p className={styles.error}>{errorMessage}</p> : null}
         <div className={styles.actions}>
           <ActionButton
             size="panel"
             className={`${styles.button} ${styles.secondary}`}
+            hoverIcon="cross"
+            icon="chevronLeft"
             onClick={onCancel}
             disabled={isLoading}
           >
@@ -47,6 +49,8 @@ export default function XRayCreditPurchaseModal({
           <ActionButton
             size="panel"
             className={`${styles.button} ${styles.primary}`}
+            hoverIcon={isLoading ? "spark" : "arrowRight"}
+            icon={isLoading ? "spark" : "plus"}
             onClick={onContinue}
             disabled={isLoading}
           >

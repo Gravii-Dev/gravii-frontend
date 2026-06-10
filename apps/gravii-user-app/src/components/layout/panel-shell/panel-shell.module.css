@@ -1,4 +1,5 @@
 .root {
+  --panel-bottom-breathing-room: clamp(28px, 4vh, 48px);
   position: relative;
   display: flex;
   flex: 1;
@@ -6,7 +7,11 @@
   flex-direction: column;
   overflow: auto;
   scrollbar-width: none;
-  padding: clamp(28px, 3.4vw, 52px);
+  scroll-padding-bottom: var(--panel-bottom-breathing-room);
+  padding:
+    var(--ds-space-panel)
+    var(--ds-space-panel)
+    var(--panel-bottom-breathing-room);
   background: transparent;
   color: var(--raw-ink);
 }
@@ -25,10 +30,14 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 24px;
-  padding-bottom: clamp(20px, 2.2vw, 30px);
+  gap: var(--ds-space-gap);
+  padding-bottom: clamp(12px, 1.35vw, 20px);
   border-bottom: 1px solid var(--color-border-primary);
   animation: panelContentSettle 320ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+.header > div:first-child {
+  min-width: 0;
 }
 
 .headerActions {
@@ -41,11 +50,11 @@
 
 .kicker {
   display: block;
-  margin-bottom: 10px;
-  font-size: var(--type-eyebrow-size);
-  font-weight: var(--type-eyebrow-weight);
-  letter-spacing: var(--type-eyebrow-tracking);
-  line-height: 1;
+  margin-bottom: 6px;
+  font-size: var(--ds-type-label-size);
+  font-weight: var(--ds-type-label-weight);
+  letter-spacing: var(--ds-type-label-tracking);
+  line-height: var(--ds-type-label-line);
   color: var(--panel-muted-color);
 }
 
@@ -54,12 +63,21 @@
   color: var(--panel-text-color);
   font-family: var(--font-ui);
   font-style: italic;
-  font-variation-settings: "wdth" 112, "GRAD" 42;
-  font-size: var(--type-panel-title);
-  font-weight: 900;
-  letter-spacing: -0.005em;
-  line-height: 1.12;
+  font-variation-settings: var(--type-expressive-rest);
+  font-size: var(--ds-type-display-size);
+  font-weight: var(--ds-type-display-weight);
+  letter-spacing: var(--ds-type-display-tracking);
+  line-height: 1.04;
+  text-wrap: balance;
   text-transform: uppercase;
+  transition:
+    color var(--motion-duration-standard) var(--motion-ease-standard),
+    font-variation-settings var(--motion-duration-expressive) var(--motion-ease-expressive),
+    letter-spacing var(--motion-duration-expressive-fast) var(--motion-ease-expressive);
+}
+
+.root:hover .title {
+  font-variation-settings: var(--type-expressive-hover);
 }
 
 .closeButton {
@@ -68,6 +86,7 @@
   --button-text: var(--solid-ink-text, var(--raw-paper));
   --button-text-hover: var(--theme-on-accent, var(--raw-paper));
   --button-min-height: 38px;
+  max-width: 100%;
   flex-shrink: 0;
   white-space: nowrap;
 }
@@ -79,7 +98,7 @@
 .body {
   flex: 1;
   min-height: 0;
-  padding-top: clamp(22px, 2.7vw, 38px);
+  padding-top: clamp(14px, 1.65vw, 24px);
   animation: panelContentSettle 340ms cubic-bezier(0.2, 0, 0, 1) 40ms both;
 }
 
@@ -97,7 +116,8 @@
 
 @media (max-width: 760px) {
   .root {
-    padding: 24px;
+    --panel-bottom-breathing-room: 36px;
+    padding: 18px 18px var(--panel-bottom-breathing-room);
   }
 
   .header {
@@ -112,8 +132,30 @@
   }
 
   .title {
-    font-size: clamp(34px, 10vw, 62px);
+    font-size: clamp(32px, 9vw, 56px);
     line-height: 1.04;
     overflow-wrap: anywhere;
+  }
+}
+
+@media (max-height: 760px) and (min-width: 761px) {
+  .root {
+    --panel-bottom-breathing-room: clamp(26px, 4vh, 40px);
+    padding:
+      clamp(14px, 1.7vw, 22px)
+      clamp(14px, 1.7vw, 22px)
+      var(--panel-bottom-breathing-room);
+  }
+
+  .header {
+    padding-bottom: 10px;
+  }
+
+  .title {
+    font-size: clamp(2.85rem, 4.55vw, 4.9rem);
+  }
+
+  .body {
+    padding-top: 12px;
   }
 }

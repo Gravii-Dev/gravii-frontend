@@ -29,7 +29,7 @@ bun run typecheck
 bun run build
 ```
 
-`bun run dev` starts the app on `http://localhost:3003` so landing handoff stays stable inside the shared workspace.
+`bun run dev` starts the app on `http://localhost:3001`. Keep this as the default local port because the X-Ray Stripe checkout allowlist includes `http://localhost:3001`.
 
 Within the shared frontend workspace, Turbopack is configured to resolve from the parent workspace root so the app can still be run directly from this directory or orchestrated from the shared root.
 

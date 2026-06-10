@@ -6,22 +6,22 @@
 
 .rootDark {
   --history-row-border: var(--color-border-primary);
-  --history-row-background: var(--color-surface-back);
+  --history-row-background: var(--section-surface-soft, var(--color-surface-back));
   --history-text: var(--color-text-primary);
   --history-sub: var(--color-text-muted);
-  --history-active-bg: var(--color-surface-hover);
+  --history-active-bg: var(--section-surface-hover, var(--color-surface-hover));
   --history-accent: var(--color-primary);
-  --history-active-text: var(--color-text-primary);
+  --history-active-text: var(--section-on-accent, var(--color-text-primary));
 }
 
 .rootLight {
   --history-row-border: var(--color-border-primary);
-  --history-row-background: var(--color-surface-back);
+  --history-row-background: var(--section-surface-soft, var(--color-surface-back));
   --history-text: var(--color-text-primary);
   --history-sub: var(--color-text-muted);
-  --history-active-bg: var(--color-surface-hover);
+  --history-active-bg: var(--section-surface-hover, var(--color-surface-hover));
   --history-accent: var(--color-primary);
-  --history-active-text: var(--color-text-primary);
+  --history-active-text: var(--section-on-accent, var(--color-text-primary));
 }
 
 .header {
@@ -103,6 +103,12 @@
     var(--history-active-bg);
 }
 
+.row:focus-visible,
+.pageButton:focus-visible {
+  outline: 3px solid var(--history-accent);
+  outline-offset: 3px;
+}
+
 .rowMeta {
   color: var(--history-sub);
 }
@@ -119,6 +125,7 @@
 
 .pagination {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 6px;
 }
@@ -154,6 +161,11 @@
 }
 
 @media (max-width: 760px) {
+  .header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
   .row {
     grid-template-columns: 1fr;
   }

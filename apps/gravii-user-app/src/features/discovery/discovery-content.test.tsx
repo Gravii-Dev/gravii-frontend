@@ -12,7 +12,7 @@ describe("DiscoveryContent", () => {
       screen.getByRole("heading", { name: "Discover the full spectrum of benefits." })
     ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Eligible" })).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Search partners or campaigns...")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Search partners or campaigns…")).toBeInTheDocument();
     expect(screen.getByText("Campaign catalog is waiting for live data.")).toBeInTheDocument();
     expect(screen.queryAllByText(/campaigns? indexed/i)).toHaveLength(1);
   });
