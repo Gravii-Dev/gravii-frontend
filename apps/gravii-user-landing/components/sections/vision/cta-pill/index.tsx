@@ -14,12 +14,14 @@ import {
 import {
   isValidWaitlistEmail,
   normalizeWaitlistEmail,
+  parseWaitlistSubmission,
+  WAITLIST_CACHE_EVENT,
+  WAITLIST_CACHE_KEY,
+  type WaitlistSubmission,
 } from '@/lib/utils/waitlist'
 import s from './cta-pill.module.css'
 
 type State = 'collapsed' | 'expanded' | 'submitting' | 'success'
-
-const WAITLIST_CACHE_KEY = 'gravii_waitlist'
 
 /**
  * Passport-stamp CTA using the flat Gravii action control treatment.
@@ -34,8 +36,17 @@ export function CtaPill() {
   const [email, setEmail] = useState('')
   const [clientError, setClientError] = useState('')
   const [referralCode, setReferralCode] = useState('')
+  const [cachedSubmission, setCachedSubmission] =
+    useState<WaitlistSubmission | null>(null)
   const statusId = useId()
-  const visualState: State = isPending ? 'submitting' : state
+  const successSubmission = formState?.data ?? cachedSubmission
+  let visualState: State = state
+  if (successSubmission) {
+    visualState = 'success'
+  }
+  if (isPending) {
+    visualState = 'submitting'
+  }
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -51,6 +62,44 @@ export function CtaPill() {
   }, [])
 
   useEffect(() => {
+    if (typeof window === 'undefined') {
+      return undefined
+    }
+
+    const syncCachedSubmission = (value: string | null) => {
+      const parsed = parseWaitlistSubmission(value)
+      setCachedSubmission(parsed)
+      if (parsed) {
+        setEmail(parsed.email)
+        setState('success')
+      }
+    }
+
+    syncCachedSubmission(window.localStorage.getItem(WAITLIST_CACHE_KEY))
+
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key === WAITLIST_CACHE_KEY) {
+        syncCachedSubmission(event.newValue)
+      }
+    }
+
+    const handleCacheEvent = (event: Event) => {
+      const detail = (event as CustomEvent<WaitlistSubmission>).detail
+      setCachedSubmission(detail)
+      setEmail(detail.email)
+      setState('success')
+    }
+
+    window.addEventListener('storage', handleStorage)
+    window.addEventListener(WAITLIST_CACHE_EVENT, handleCacheEvent)
+
+    return () => {
+      window.removeEventListener('storage', handleStorage)
+      window.removeEventListener(WAITLIST_CACHE_EVENT, handleCacheEvent)
+    }
+  }, [])
+
+  useEffect(() => {
     if (!formState?.data || typeof window === 'undefined') {
       return
     }
@@ -59,17 +108,14 @@ export function CtaPill() {
       WAITLIST_CACHE_KEY,
       JSON.stringify(formState.data)
     )
+    window.dispatchEvent(
+      new CustomEvent(WAITLIST_CACHE_EVENT, {
+        detail: formState.data,
+      })
+    )
+    setCachedSubmission(formState.data)
     setEmail(formState.data.email)
     setState('success')
-
-    const timeoutId = window.setTimeout(() => {
-      setState('collapsed')
-      setEmail('')
-    }, 2400)
-
-    return () => {
-      window.clearTimeout(timeoutId)
-    }
   }, [formState?.data])
 
   useEffect(() => {
@@ -98,9 +144,14 @@ export function CtaPill() {
   }
 
   const isCollapsed = state === 'collapsed'
-  const isSuccess = state === 'success'
+  const isSuccess = Boolean(successSubmission) || state === 'success'
   const showForm = state === 'expanded' || isPending
-  const statusMessage = clientError || formState?.message
+  const statusMessage =
+    clientError ||
+    formState?.message ||
+    (successSubmission
+      ? `You're already on the waitlist. Your referral code is ${successSubmission.referralCode}.`
+      : null)
   const isError = Boolean(clientError) || (formState?.status ?? 0) >= 400
 
   return (
@@ -116,7 +167,7 @@ export function CtaPill() {
           className={s.label}
           onClick={handleTriggerClick}
           aria-label="Join Waitlist"
-          aria-expanded={!isCollapsed}
+          aria-expanded={showForm}
           aria-hidden={!(isCollapsed || isSuccess)}
           tabIndex={isCollapsed || isSuccess ? 0 : -1}
         >

@@ -111,34 +111,6 @@ export function rateLimit(
   }
 }
 
-/**
- * Get client IP from request headers
- * Works with Vercel, Cloudflare, and standard proxies
- */
-export function getClientIP(request: Request): string {
-  const headers = request.headers
-
-  // Vercel
-  const forwardedFor = headers.get('x-forwarded-for')
-  if (forwardedFor) {
-    return forwardedFor.split(',')[0]?.trim() || 'unknown'
-  }
-
-  // Cloudflare
-  const cfConnectingIP = headers.get('cf-connecting-ip')
-  if (cfConnectingIP) {
-    return cfConnectingIP
-  }
-
-  // Real IP header
-  const realIP = headers.get('x-real-ip')
-  if (realIP) {
-    return realIP
-  }
-
-  return 'unknown'
-}
-
 // Pre-configured rate limiters for common use cases
 export const rateLimiters = {
   /** Strict: 5 requests per minute (login, auth) */

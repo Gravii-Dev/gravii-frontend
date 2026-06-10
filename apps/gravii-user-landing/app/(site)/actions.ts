@@ -8,16 +8,9 @@ import {
   getWaitlistRateLimitIdentifier,
   isValidWaitlistEmail,
   normalizeWaitlistEmail,
+  type WaitlistResultStatus,
+  type WaitlistSubmission,
 } from '@/lib/utils/waitlist'
-
-type WaitlistResultStatus = 'created' | 'existing'
-
-export interface WaitlistSubmission {
-  email: string
-  referralCode: string
-  resultStatus: WaitlistResultStatus
-  uid: string
-}
 
 type FormState<TData> = {
   status: number

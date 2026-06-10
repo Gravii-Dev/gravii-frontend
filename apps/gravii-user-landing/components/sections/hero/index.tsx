@@ -99,7 +99,7 @@ export function Hero() {
         >
           &quot;WE&apos;VE BURNT THE OLD PLAYBOOK&quot;
         </p>
-        <Link href="#vision" className={s.ctaButton}>
+        <Link href="#waitlist" className={s.ctaButton}>
           <span className={s.ctaButtonBody}>
             <span className={s.ctaButtonText}>JOIN WAITLIST</span>
           </span>

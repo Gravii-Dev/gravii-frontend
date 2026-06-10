@@ -47,10 +47,7 @@ function resolveDestinationUrl(input: {
 const userAppUrl = resolveDestinationUrl({
   allowedHostnames: ['app.gravii.io', 'localhost', '127.0.0.1'],
   envValue: process.env.NEXT_PUBLIC_USER_APP_URL,
-  fallback:
-    process.env.NODE_ENV === 'development'
-      ? 'http://localhost:3003'
-      : 'https://app.gravii.io',
+  fallback: 'https://app.gravii.io',
 })
 
 type HeaderPillProps = {

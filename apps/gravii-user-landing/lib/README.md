@@ -9,9 +9,9 @@ Non-UI code for the landing app.
 | `config/` | Site URL and deployment-derived configuration |
 | `dev/` | Development-only overlay tools |
 | `features/` | Root-level optional runtime toggles |
-| `hooks/` | Shared React hooks and Lenis state |
+| `hooks/` | App-local client state used by Lenis and layout runtime |
 | `styles/` | Tokens, generated CSS config, and global CSS |
-| `utils/` | Fetch, math, strings, rate limiting, waitlist helpers |
+| `utils/` | Fetch, rate limiting, and waitlist helpers |
 | `webgpu/` | Raw WebGPU hero renderer internals |
 
 ## Rule
