@@ -130,3 +130,14 @@ Caveats:
 
 - Playwright is not installed in this app's `node_modules`, so screenshot automation was not available in this pass.
 - Localhost WalletConnect metadata warning is visible in dev because configured metadata URL is `https://app.gravii.io` while the dev URL is `http://localhost:3001`.
+
+### DepthIcon Removal Follow-Up
+
+- Removed the rejected `DepthIcon` primitive and section-icon wiring in commit `6dbb448 fix(user-app): remove depth iconography`.
+- Kept the Discovery and Ranking API-ready adapters and state surfaces intact.
+- Verified locally with `bun run typecheck`, `bun run lint`, `bun run test`, and `bun run build`.
+- Build required network access only for `next/font` Roboto Flex fetching, then passed.
+- Pushed PR #52 branch `codex/launch-app-api-ready-iconography`.
+- Verified `gh pr checks 52`: all Vercel checks passed.
+- User app preview inspector: `https://vercel.com/kxwxns-projects/gravii-frontend-gravii-user-app/9supUR3XCgeMXBBmBymmTj4FszeK`.
+- This removal pass did not restart or change local dev server processes.
