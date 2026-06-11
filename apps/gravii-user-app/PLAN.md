@@ -4,14 +4,15 @@ This file describes the current active workstream. Rewrite this file when the ac
 
 ## Current Workstream
 
-Post-merge monitoring for the Launch App visual-system stabilization.
+Implement the next focused Launch App slice: 3D-style iconography plus API-ready Discovery and Ranking surfaces.
 
 ## Immediate Plan
 
 1. Keep the merged visual-system checkpoint intact on `main`.
-2. Leave the generated/example `lefthook.yml` unstaged unless it is explicitly adopted later.
-3. For future pushes or PRs, verify the Vercel user-app deployment before handoff.
-4. Continue UI/UX work as focused slices rather than another broad unbounded redesign pass.
+2. Add lightweight dimensional iconography without introducing a WebGL runtime.
+3. Keep Discovery and Ranking free of mock data while wiring frontend adapters for live API data.
+4. Leave the generated/example `lefthook.yml` unstaged unless it is explicitly adopted later.
+5. For future pushes or PRs, verify the Vercel user-app deployment before handoff.
 
 ## Status Query Protocol
 
@@ -32,10 +33,11 @@ When the user asks "where are we?", "what is left?", "what did we do?", or simil
 - Latest exact commit and Vercel inspector URL should be read live from `git log -1 --oneline` and GitHub commit statuses.
 - Worktree: root `lefthook.yml` remains intentionally unstaged.
 - Preferred local dev URL: `http://localhost:3001/`
+- Current local mock reference URL: `http://localhost:3000/`, served from `/Users/kxwxn/Downloads/GraviiApp.jsx` through `/private/tmp/gravii-mock-viewer`
 
 ## Not In Scope For This Plan
 
 - Rebuilding the whole UI from a new external reference.
 - Removing existing product UI or feature logic.
 - Implementing backend APIs.
-- Implementing the future 3D iconography system unless explicitly requested as the next slice.
+- Reintroducing local mock campaign or ranking rows.

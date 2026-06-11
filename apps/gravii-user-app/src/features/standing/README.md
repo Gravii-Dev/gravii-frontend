@@ -11,7 +11,7 @@ The Ranking surface answers two different questions:
 
 The first layer is visible to everyone. The second layer requires sign-in because it depends on a wallet-specific session.
 
-The current implementation intentionally renders no local leaderboard rows, names, ranks, seasons, or reward values. Ranking data should appear only after live leaderboard endpoints are connected.
+The current implementation intentionally renders no local leaderboard rows, names, ranks, seasons, or reward values. It now calls the public leaderboard and signed wallet summary adapters, then falls back to product-safe loading, unavailable, error, or empty states until live endpoints return data.
 
 ## Main Files
 
@@ -19,11 +19,12 @@ The current implementation intentionally renders no local leaderboard rows, name
 
 Responsibilities:
 
-- render the live-data placeholder for Ranking
-- describe the required public board, current-wallet rank, season, and reward endpoints
+- call the public leaderboard read adapter for the active category
+- call the signed current-wallet ranking summary adapter after sign-in
+- render stable loading, unavailable, error, and empty states without mock rows
 - gate the future personal wallet rank behind the sign-in action for anonymous users
 - route connected users back to `GRAVII ID` for identity review
 
 ## Production Direction
 
-When real ranking APIs arrive, this folder should add category reads, public ranking snapshots, and current-wallet standing reads without changing the shell-level `leaderboard` panel ID.
+When real ranking APIs arrive, this folder should keep the shell-level `leaderboard` panel ID and fill the existing board and wallet-summary states from the backend contract.

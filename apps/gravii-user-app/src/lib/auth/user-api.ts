@@ -73,6 +73,86 @@ export interface UserXrayDetailResponse {
   xray: Record<string, unknown> | string | null
 }
 
+export type DiscoveryCampaignEligibility = true | false | null | 'ineligible'
+export type DiscoveryPartnerStatus =
+  | 'ELIGIBLE'
+  | 'REACH TO UNLOCK'
+  | 'COMING SOON'
+  | 'INVITE ONLY'
+  | 'INELIGIBLE'
+export type DiscoveryCampaignTagType =
+  | 'open'
+  | 'requires'
+  | 'targeting'
+  | 'tier'
+  | 'verified'
+
+export interface DiscoveryCampaignTag {
+  persona?: string
+  tier?: string
+  type: DiscoveryCampaignTagType
+}
+
+export interface DiscoveryCampaign {
+  category: string
+  chains: string[]
+  desc: string
+  eligible: DiscoveryCampaignEligibility
+  name: string
+  period: string
+  qualifySteps?: string[]
+  tags?: DiscoveryCampaignTag[]
+  type: string
+}
+
+export interface DiscoveryPartner {
+  campaigns: DiscoveryCampaign[]
+  delay: string
+  eligible: DiscoveryCampaignEligibility
+  id: string
+  name: string
+  status: DiscoveryPartnerStatus
+}
+
+export interface DiscoveryCatalogResponse {
+  partners: DiscoveryPartner[]
+}
+
+export type RankingCategoryId = 'activity' | 'g-rep' | 'nft' | 'streak' | 'trade'
+export type RankingTier =
+  | 'Base'
+  | 'Black'
+  | 'Classic'
+  | 'Gold'
+  | 'Obsidian'
+  | 'Platinum'
+
+export interface RankingRow {
+  chain: string
+  change: string
+  name: string
+  persona: string
+  rank: string
+  tier: RankingTier
+  up: boolean | null
+}
+
+export interface RankingLeaderboardResponse {
+  generatedAt: string | null
+  rows: RankingRow[]
+  seasonLabel: string | null
+  updateLabel: string | null
+}
+
+export interface UserRankingSummary {
+  categoryRanks: Partial<Record<RankingCategoryId, string>>
+  connectedWalletLabel: string | null
+  seasonBest: string | null
+  seasonChange: string | null
+  seasonRank: string | null
+  totalRankedWallets: number | null
+}
+
 export type UserXrayCreditBundleId = 'xray_credits_10'
 
 export interface UserXrayCheckoutSessionInput {
@@ -184,6 +264,64 @@ interface UserXrayCheckoutSessionWire {
   url?: string
 }
 
+interface DiscoveryCampaignTagWire {
+  persona?: string | null
+  tier?: string | null
+  type?: string
+}
+
+interface DiscoveryCampaignWire {
+  category?: string
+  chains?: string[]
+  desc?: string
+  description?: string
+  eligible?: DiscoveryCampaignEligibility
+  name?: string
+  period?: string
+  qualify_steps?: string[]
+  tags?: DiscoveryCampaignTagWire[]
+  type?: string
+}
+
+interface DiscoveryPartnerWire {
+  campaigns?: DiscoveryCampaignWire[]
+  delay?: string
+  eligible?: DiscoveryCampaignEligibility
+  id?: string
+  name?: string
+  status?: DiscoveryPartnerStatus
+}
+
+interface DiscoveryCatalogResponseWire {
+  partners?: DiscoveryPartnerWire[]
+}
+
+interface RankingRowWire {
+  chain?: string
+  change?: string | number
+  name?: string
+  persona?: string
+  rank?: string | number
+  tier?: RankingTier
+  up?: boolean | null
+}
+
+interface RankingLeaderboardResponseWire {
+  generated_at?: string | null
+  rows?: RankingRowWire[]
+  season_label?: string | null
+  update_label?: string | null
+}
+
+interface UserRankingSummaryWire {
+  category_ranks?: Partial<Record<RankingCategoryId, string | number>>
+  connected_wallet_label?: string | null
+  season_best?: string | null
+  season_change?: string | number | null
+  season_rank?: string | number | null
+  total_ranked_wallets?: number | null
+}
+
 const DEFAULT_USER_API_BASE_URL =
   'https://gravii-user-api-1077809741476.europe-west6.run.app'
 const DEFAULT_BROWSER_USER_API_BASE_URL = '/api/user-api'
@@ -283,6 +421,108 @@ function normalizeCheckoutSession(
     checkoutUrl,
     expiresAt: source.expires_at ?? null,
     sessionId: source.session_id ?? source.id ?? null,
+  }
+}
+
+function normalizeDiscoveryTag(tag: DiscoveryCampaignTagWire): DiscoveryCampaignTag | null {
+  const type = tag.type
+
+  if (
+    type !== 'open' &&
+    type !== 'requires' &&
+    type !== 'targeting' &&
+    type !== 'tier' &&
+    type !== 'verified'
+  ) {
+    return null
+  }
+
+  return {
+    persona: tag.persona ?? undefined,
+    tier: tag.tier ?? undefined,
+    type,
+  }
+}
+
+function normalizeDiscoveryCampaign(campaign: DiscoveryCampaignWire): DiscoveryCampaign {
+  return {
+    category: campaign.category ?? 'General',
+    chains: campaign.chains && campaign.chains.length > 0 ? campaign.chains : ['All'],
+    desc: campaign.desc ?? campaign.description ?? '',
+    eligible: campaign.eligible ?? null,
+    name: campaign.name ?? 'Untitled campaign',
+    period: campaign.period ?? 'Timing pending',
+    qualifySteps: campaign.qualify_steps,
+    tags: campaign.tags?.map(normalizeDiscoveryTag).filter((tag): tag is DiscoveryCampaignTag => tag !== null),
+    type: campaign.type ?? 'Campaign',
+  }
+}
+
+function normalizeDiscoveryPartner(
+  partner: DiscoveryPartnerWire,
+  index: number
+): DiscoveryPartner {
+  return {
+    campaigns: partner.campaigns?.map(normalizeDiscoveryCampaign) ?? [],
+    delay: partner.delay ?? `${Math.min(index * 60, 420)}ms`,
+    eligible: partner.eligible ?? null,
+    id: partner.id ?? `partner-${index + 1}`,
+    name: partner.name ?? `Partner ${index + 1}`,
+    status: partner.status ?? 'COMING SOON',
+  }
+}
+
+function normalizeRankingRow(row: RankingRowWire): RankingRow {
+  return {
+    chain: row.chain ?? 'All',
+    change: row.change === undefined ? '0' : String(row.change),
+    name: row.name ?? 'Wallet',
+    persona: row.persona ?? 'Pending',
+    rank: row.rank === undefined ? '-' : String(row.rank),
+    tier: row.tier ?? 'Base',
+    up: row.up ?? null,
+  }
+}
+
+function normalizeRankingLeaderboard(
+  payload: RankingLeaderboardResponseWire
+): RankingLeaderboardResponse {
+  return {
+    generatedAt: payload.generated_at ?? null,
+    rows: payload.rows?.map(normalizeRankingRow) ?? [],
+    seasonLabel: payload.season_label ?? null,
+    updateLabel: payload.update_label ?? null,
+  }
+}
+
+function normalizeUserRankingSummary(
+  payload: UserRankingSummaryWire
+): UserRankingSummary {
+  const categoryRanks: Partial<Record<RankingCategoryId, string>> = {}
+
+  for (const [category, rank] of Object.entries(payload.category_ranks ?? {})) {
+    if (
+      category === 'activity' ||
+      category === 'g-rep' ||
+      category === 'nft' ||
+      category === 'streak' ||
+      category === 'trade'
+    ) {
+      categoryRanks[category] = String(rank)
+    }
+  }
+
+  return {
+    categoryRanks,
+    connectedWalletLabel: payload.connected_wallet_label ?? null,
+    seasonBest: payload.season_best ?? null,
+    seasonChange: payload.season_change === undefined || payload.season_change === null
+      ? null
+      : String(payload.season_change),
+    seasonRank: payload.season_rank === undefined || payload.season_rank === null
+      ? null
+      : String(payload.season_rank),
+    totalRankedWallets: payload.total_ranked_wallets ?? null,
   }
 }
 
@@ -546,4 +786,54 @@ export async function readUserXrayDetail(
       method: 'GET',
     }
   )
+}
+
+export async function readDiscoveryCatalog(options?: {
+  signal?: AbortSignal
+}): Promise<DiscoveryCatalogResponse> {
+  const payload = await userApiFetch<DiscoveryCatalogResponseWire>(
+    '/api/v1/discovery/partners',
+    {
+      method: 'GET',
+      signal: options?.signal,
+      timeoutMs: 7000,
+    }
+  )
+
+  return {
+    partners: payload.partners?.map(normalizeDiscoveryPartner) ?? [],
+  }
+}
+
+export async function readRankingLeaderboard(
+  category: RankingCategoryId,
+  options?: {
+    signal?: AbortSignal
+  }
+): Promise<RankingLeaderboardResponse> {
+  const payload = await userApiFetch<RankingLeaderboardResponseWire>(
+    `/api/v1/ranking/leaderboard?category=${encodeURIComponent(category)}`,
+    {
+      method: 'GET',
+      signal: options?.signal,
+      timeoutMs: 7000,
+    }
+  )
+
+  return normalizeRankingLeaderboard(payload)
+}
+
+export async function readUserRankingSummary(options?: {
+  signal?: AbortSignal
+}): Promise<UserRankingSummary> {
+  const payload = await userApiFetch<UserRankingSummaryWire>(
+    '/api/v1/me/ranking/summary',
+    {
+      method: 'GET',
+      signal: options?.signal,
+      timeoutMs: 7000,
+    }
+  )
+
+  return normalizeUserRankingSummary(payload)
 }

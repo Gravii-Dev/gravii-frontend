@@ -4,6 +4,31 @@ import userEvent from "@testing-library/user-event";
 
 import StandingContent from "./standing-content";
 
+vi.mock("@/lib/auth/user-api", () => ({
+  readRankingLeaderboard: vi.fn().mockResolvedValue({
+    generatedAt: null,
+    rows: [],
+    seasonLabel: null,
+    updateLabel: null,
+  }),
+  readUserRankingSummary: vi.fn().mockResolvedValue({
+    categoryRanks: {},
+    connectedWalletLabel: null,
+    seasonBest: null,
+    seasonChange: null,
+    seasonRank: null,
+    totalRankedWallets: null,
+  }),
+  UserApiError: class UserApiError extends Error {
+    status: number;
+
+    constructor(message: string, status: number) {
+      super(message);
+      this.status = status;
+    }
+  },
+}));
+
 describe("StandingContent", () => {
   it("keeps the ranking UI while gating wallet-specific rank", async () => {
     const user = userEvent.setup();
@@ -16,7 +41,7 @@ describe("StandingContent", () => {
     expect(screen.getByRole("button", { name: "G-REP" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "NFT" })).toBeInTheDocument();
     expect(screen.getByText("Get your Gravii ID")).toBeInTheDocument();
-    expect(screen.getByText("Public leaderboard data is not connected yet.")).toBeInTheDocument();
+    expect(await screen.findByText("Ranking board is ready for live data.")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "SIGN IN" }));
 

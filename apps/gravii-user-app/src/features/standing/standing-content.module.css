@@ -296,6 +296,15 @@
   white-space: nowrap;
 }
 
+.updatePill[data-state="error"] {
+  background: color-mix(in srgb, var(--color-error) 16%, var(--ranking-card-strong));
+  color: var(--color-error);
+}
+
+.updatePill[data-state="loading"] {
+  color: var(--ranking-sub);
+}
+
 .boardHeader,
 .row {
   display: grid;
@@ -332,6 +341,22 @@
   background: var(--ranking-card-strong);
   color: var(--ranking-sub);
   text-align: center;
+}
+
+.emptyRows[data-state="loading"] {
+  background:
+    linear-gradient(
+      100deg,
+      var(--ranking-card-strong),
+      color-mix(in srgb, var(--ranking-accent) 14%, var(--ranking-card-strong)),
+      var(--ranking-card-strong)
+    );
+  background-size: 220% 100%;
+  animation: rankingStateSweep 1.5s var(--motion-ease-standard) infinite;
+}
+
+.emptyRows[data-state="error"] {
+  color: var(--color-error);
 }
 
 .emptyRows strong {
@@ -530,5 +555,21 @@
   .boardIntro {
     align-items: flex-start;
     flex-direction: column;
+  }
+}
+
+@keyframes rankingStateSweep {
+  0% {
+    background-position: 120% 0;
+  }
+
+  100% {
+    background-position: -120% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .emptyRows[data-state="loading"] {
+    animation: none;
   }
 }

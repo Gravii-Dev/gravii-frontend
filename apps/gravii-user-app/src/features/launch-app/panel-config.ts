@@ -3,6 +3,7 @@ import type { PanelConfig, PanelId } from "@/features/launch-app/types";
 export const PANELS: PanelConfig[] = [
   {
     id: "home",
+    icon: "home",
     num: "00",
     tab: "HOME",
     sub: "COMMAND",
@@ -14,6 +15,7 @@ export const PANELS: PanelConfig[] = [
   },
   {
     id: "profile",
+    icon: "identity",
     num: "01",
     tab: "GRAVII ID",
     sub: "GRAVII ID",
@@ -25,6 +27,7 @@ export const PANELS: PanelConfig[] = [
   },
   {
     id: "lookup",
+    icon: "xray",
     num: "02",
     tab: "X-RAY",
     sub: "VERIFY",
@@ -37,6 +40,7 @@ export const PANELS: PanelConfig[] = [
   },
   {
     id: "discovery",
+    icon: "discovery",
     num: "03",
     tab: "DISCOVERY",
     sub: "COMING SOON",
@@ -48,6 +52,7 @@ export const PANELS: PanelConfig[] = [
   },
   {
     id: "leaderboard",
+    icon: "ranking",
     num: "04",
     tab: "RANKING",
     sub: "PUBLIC RANKS",
@@ -59,6 +64,7 @@ export const PANELS: PanelConfig[] = [
   },
   {
     id: "myspace",
+    icon: "myspace",
     num: "05",
     tab: "MY SPACE",
     sub: "COMING SOON",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import ActionButton from "@/components/ui/action-button";
 import type {
@@ -13,6 +13,10 @@ import type {
   SharedContentProps,
   VerifyState,
 } from "@/features/launch-app/types";
+import {
+  readDiscoveryCatalog,
+  UserApiError,
+} from "@/lib/auth/user-api";
 
 import styles from "./discovery-content.module.css";
 
@@ -33,7 +37,34 @@ const STATUS_FILTERS = [
   "Invite Only",
 ] as const;
 
-const PARTNERS_DATA: Partner[] = [];
+type DiscoveryCatalogStatus = "error" | "loading" | "ready" | "unavailable";
+
+type DiscoveryCatalogState = {
+  message?: string;
+  partners: Partner[];
+  status: DiscoveryCatalogStatus;
+};
+
+const emptyCatalogState: DiscoveryCatalogState = {
+  partners: [],
+  status: "loading",
+};
+
+function getCatalogStatusCopy(state: DiscoveryCatalogState) {
+  if (state.status === "loading") {
+    return "Loading live campaign catalog";
+  }
+
+  if (state.status === "ready") {
+    return `${state.partners.length} partners from live API`;
+  }
+
+  if (state.status === "error") {
+    return "Campaign API request failed";
+  }
+
+  return "Campaign API contract ready";
+}
 
 function statusLabel(eligible: CampaignEligibility, partnerStatus: PartnerStatus) {
   if (eligible === true) {
@@ -154,11 +185,52 @@ export default function DiscoveryContent({
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedPartnerId, setSelectedPartnerId] = useState<string | null>(null);
   const [verifyState, setVerifyState] = useState<VerifyState>(null);
+  const [catalogState, setCatalogState] = useState<DiscoveryCatalogState>(emptyCatalogState);
+  const partnersData = catalogState.partners;
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    readDiscoveryCatalog({ signal: controller.signal })
+      .then((catalog) => {
+        setCatalogState({
+          partners: catalog.partners,
+          status: "ready",
+        });
+      })
+      .catch((error: unknown) => {
+        if (controller.signal.aborted) {
+          return;
+        }
+
+        if (error instanceof UserApiError && (error.status === 404 || error.status === 501)) {
+          setCatalogState({
+            message: "Partner and campaign cards will render here when the Discovery API is enabled.",
+            partners: [],
+            status: "unavailable",
+          });
+          return;
+        }
+
+        setCatalogState({
+          message:
+            error instanceof Error
+              ? error.message
+              : "Unable to load the Discovery catalog.",
+          partners: [],
+          status: "error",
+        });
+      });
+
+    return () => {
+      controller.abort();
+    };
+  }, []);
 
   const filteredPartners = useMemo(() => {
     const normalizedSearch = searchQuery.trim().toLowerCase();
 
-    return PARTNERS_DATA.filter((partner) => {
+    return partnersData.filter((partner) => {
       if (
         normalizedSearch &&
         !partner.name.toLowerCase().includes(normalizedSearch) &&
@@ -187,11 +259,11 @@ export default function DiscoveryContent({
 
       return true;
     });
-  }, [activeCategory, activeStatus, searchQuery]);
+  }, [activeCategory, activeStatus, partnersData, searchQuery]);
 
   const selectedPartner = useMemo(
-    () => PARTNERS_DATA.find((partner) => partner.id === selectedPartnerId) ?? null,
-    [selectedPartnerId]
+    () => partnersData.find((partner) => partner.id === selectedPartnerId) ?? null,
+    [partnersData, selectedPartnerId]
   );
 
   function resetCampaignState() {
@@ -424,12 +496,20 @@ export default function DiscoveryContent({
   return (
     <div className={styles.root}>
       <section className={styles.intro}>
-        <span className={styles.eyebrow}>Campaign discovery</span>
-        <h2>Discover the full spectrum of benefits.</h2>
-        <p>
-          Browse partner campaigns, claim available benefits, or see the exact
-          identity requirements needed to unlock exclusive privileges.
-        </p>
+        <div>
+          <span className={styles.eyebrow}>Campaign discovery</span>
+          <h2>Discover the full spectrum of benefits.</h2>
+          <p>
+            Browse partner campaigns, claim available benefits, or see the exact
+            identity requirements needed to unlock exclusive privileges.
+          </p>
+        </div>
+        <span
+          className={styles.apiStatus}
+          data-state={catalogState.status}
+        >
+          {getCatalogStatusCopy(catalogState)}
+        </span>
       </section>
 
       <section className={styles.filterBar} aria-label="Discovery filters">
@@ -480,15 +560,29 @@ export default function DiscoveryContent({
               PARTNERS ({filteredPartners.length})
             </span>
             <span className={styles.summaryHint}>
-              {PARTNERS_DATA.reduce((total, partner) => total + partner.campaigns.length, 0)} campaigns indexed
+              {partnersData.reduce((total, partner) => total + partner.campaigns.length, 0)} campaigns indexed
             </span>
           </div>
 
           <div className={styles.resultsGrid}>
-            {filteredPartners.length === 0 ? (
+            {catalogState.status === "loading" ? (
+              <div className={styles.emptyState} data-state="loading">
+                <strong>Loading campaign catalog.</strong>
+                <span>Discovery will populate partner cards from the live API.</span>
+              </div>
+            ) : null}
+
+            {catalogState.status !== "loading" && filteredPartners.length === 0 ? (
               <div className={styles.emptyState}>
-                <strong>Campaign catalog is waiting for live data.</strong>
-                <span>Partner and campaign cards will render here when the backend catalog is connected.</span>
+                <strong>
+                  {catalogState.status === "error"
+                    ? "Campaign catalog could not load."
+                    : "Campaign catalog is ready for live data."}
+                </strong>
+                <span>
+                  {catalogState.message ??
+                    "Partner and campaign cards will render here when the backend catalog is connected."}
+                </span>
               </div>
             ) : null}
 

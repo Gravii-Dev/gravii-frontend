@@ -106,3 +106,27 @@ Do not use this file as a backlog. Durable remaining work belongs in `TODO.md` i
 - Local branch: `main`.
 - Latest merged app checkpoint: `7cb4026 feat(user-app): stabilize launch app visual system`.
 - Root `lefthook.yml` remains intentionally unstaged and was not included in the product/UI work.
+
+### Next Slice In Progress
+
+- Added lightweight 3D-style section iconography with `src/components/ui/depth-icon`.
+- Wired `DepthIcon` into the workspace navigation panels and active section top bar.
+- Added Discovery catalog read support through `readDiscoveryCatalog`.
+- Added Ranking public leaderboard and signed wallet summary read support through `readRankingLeaderboard` and `readUserRankingSummary`.
+- Kept Discovery and Ranking free of local mock rows; empty/loading/error/unavailable states now represent API readiness.
+- Updated UI, feature, and lib docs to describe the new iconography primitive and API-ready surfaces.
+
+Verification completed:
+
+- `bun run typecheck` passed.
+- `bun run lint` passed.
+- `bun run test` passed: 10 test files, 24 tests.
+- `bun run build` passed after rerunning with network access for `next/font` Roboto Flex.
+- Product dev server is running at `http://localhost:3001/`.
+- Mock reference dev server is running at `http://127.0.0.1:3000/` from `/Users/kxwxn/Downloads/GraviiApp.jsx`.
+- Both local servers returned `HTTP 200` through curl with network permissions.
+
+Caveats:
+
+- Playwright is not installed in this app's `node_modules`, so screenshot automation was not available in this pass.
+- Localhost WalletConnect metadata warning is visible in dev because configured metadata URL is `https://app.gravii.io` while the dev URL is `http://localhost:3001`.
