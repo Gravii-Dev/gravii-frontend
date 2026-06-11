@@ -163,6 +163,6 @@ describe("XRayContent", () => {
 
     expect(dialog).toBeInTheDocument();
     expect(within(dialog).getByText("10 X-Ray credits")).toBeInTheDocument();
-    expect(within(dialog).getByText(/backend webhook fulfillment/i)).toBeInTheDocument();
+    expect(within(dialog).getByText(/Each completed X-Ray analysis spends one credit/i)).toBeInTheDocument();
   });
 });

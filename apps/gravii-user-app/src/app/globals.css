@@ -7,64 +7,102 @@
   --font-grade-display: 24;
   --font-width-ui: 100%;
   --font-width-display: 112%;
+
+  /* Gravii product type roles. Feature CSS should consume these before inventing new sizes. */
+  --ds-type-display-size: clamp(3.8rem, 6.2vw, 6.4rem);
+  --ds-type-display-weight: 950;
+  --ds-type-display-line: 1.04;
+  --ds-type-display-tracking: -0.012em;
+  --ds-type-headline-size: clamp(2.3rem, 4.25vw, 4.55rem);
+  --ds-type-headline-weight: 930;
+  --ds-type-headline-line: 1;
+  --ds-type-headline-tracking: -0.014em;
+  --ds-type-title-size: clamp(1.45rem, 1.85vw, 2rem);
+  --ds-type-title-weight: 900;
+  --ds-type-title-line: 1.14;
+  --ds-type-value-size: clamp(1.45rem, 2.1vw, 2.45rem);
+  --ds-type-value-weight: 900;
+  --ds-type-value-line: 1.04;
+  --ds-type-body-size: clamp(0.92rem, 0.98vw, 1rem);
+  --ds-type-body-weight: 650;
+  --ds-type-body-line: 1.55;
+  --ds-type-caption-size: 0.75rem;
+  --ds-type-caption-weight: 720;
+  --ds-type-caption-line: 1.35;
+  --ds-type-label-size: 0.6875rem;
+  --ds-type-label-weight: 850;
+  --ds-type-label-tracking: 0.14em;
+  --ds-type-label-line: 1.12;
   --type-eyebrow-size: 0.6875rem;
-  --type-eyebrow-weight: 850;
-  --type-eyebrow-tracking: 0.14em;
-  --type-panel-title: clamp(4.75rem, 7.1vw, 7.4rem);
-  --type-hero-title: clamp(3.5rem, 7.4vw, 7.5rem);
-  --type-section-title: clamp(2.25rem, 3.25vw, 3.9rem);
-  --type-card-title: clamp(1.42rem, 1.9vw, 2.2rem);
-  --type-card-value: clamp(1.35rem, 1.75vw, 2rem);
-  --type-body-large: clamp(0.96rem, 1.12vw, 1.08rem);
-  --type-body: 0.875rem;
-  --type-caption: 0.75rem;
-  --type-display-weight: 960;
-  --type-heading-weight: 900;
-  --type-body-weight: 650;
-  --type-line-tight: 0.94;
-  --type-line-body: 1.56;
+  --type-eyebrow-weight: var(--ds-type-label-weight);
+  --type-eyebrow-tracking: var(--ds-type-label-tracking);
+  --type-panel-title: var(--ds-type-display-size);
+  --type-hero-title: var(--ds-type-display-size);
+  --type-section-title: var(--ds-type-headline-size);
+  --type-card-title: var(--ds-type-title-size);
+  --type-card-value: var(--ds-type-value-size);
+  --type-body-large: var(--ds-type-body-size);
+  --type-body: var(--ds-type-body-size);
+  --type-caption: var(--ds-type-caption-size);
+  --type-display-weight: var(--ds-type-display-weight);
+  --type-heading-weight: var(--ds-type-title-weight);
+  --type-body-weight: var(--ds-type-body-weight);
+  --type-line-tight: var(--ds-type-headline-line);
+  --type-line-body: var(--ds-type-body-line);
   --type-button-size: 0.72rem;
   --type-button-tracking: 0.1em;
 
-  /* Solid dashboard palette. Legacy --raw/--green names stay as aliases for existing modules. */
-  --solid-dark-canvas: #0f1118;
-  --solid-dark-canvas-deep: #0b0d13;
-  --solid-dark-surface: #191c24;
-  --solid-dark-surface-strong: #222631;
-  --solid-dark-surface-hover: #2b303b;
-  --solid-dark-line: rgba(245, 242, 235, 0.1);
-  --solid-dark-line-strong: rgba(245, 242, 235, 0.16);
-  --solid-dark-text: #f5f2eb;
-  --solid-dark-muted: rgba(245, 242, 235, 0.62);
-  --solid-dark-muted-soft: rgba(245, 242, 235, 0.4);
-  --solid-light-canvas: #f3eee7;
-  --solid-light-canvas-deep: #e8ddd2;
-  --solid-light-surface: #fffaf3;
+  /* Gravii product surface roles. Keep components on these shared radii and densities. */
+  --ds-radius-frame: 24px;
+  --ds-radius-section: 16px;
+  --ds-radius-card: 22px;
+  --ds-radius-card-compact: 16px;
+  --ds-radius-pill: 999px;
+  --ds-space-panel: clamp(18px, 2.2vw, 30px);
+  --ds-space-card: clamp(16px, 1.9vw, 24px);
+  --ds-space-card-compact: clamp(12px, 1.35vw, 18px);
+  --ds-space-gap: clamp(12px, 1.5vw, 18px);
+  --ds-space-gap-tight: 10px;
+
+  /* Violet temperature palette. Legacy --raw/--green names stay as aliases for existing modules. */
+  --solid-dark-canvas: #111018;
+  --solid-dark-canvas-deep: #0b0a11;
+  --solid-dark-surface: #1b1724;
+  --solid-dark-surface-strong: #25202f;
+  --solid-dark-surface-hover: #30283d;
+  --solid-dark-line: rgba(250, 244, 255, 0.1);
+  --solid-dark-line-strong: rgba(250, 244, 255, 0.17);
+  --solid-dark-text: #faf4ff;
+  --solid-dark-muted: rgba(250, 244, 255, 0.64);
+  --solid-dark-muted-soft: rgba(250, 244, 255, 0.42);
+  --solid-light-canvas: #f5effa;
+  --solid-light-canvas-deep: #e9ddea;
+  --solid-light-surface: #fffaff;
   --solid-light-surface-strong: #ffffff;
-  --solid-light-surface-hover: #eee4da;
-  --solid-light-line: rgba(21, 18, 15, 0.1);
-  --solid-light-line-strong: rgba(21, 18, 15, 0.18);
-  --solid-light-text: #15120f;
-  --solid-light-muted: rgba(21, 18, 15, 0.62);
-  --solid-light-muted-soft: rgba(21, 18, 15, 0.42);
-  --solid-accent-purple: #c8b4f0;
-  --solid-accent-purple-strong: #6d5aa6;
-  --solid-accent-blue: #829ff0;
-  --solid-accent-blue-strong: #4e62b8;
-  --solid-accent-green: #64c882;
-  --solid-accent-green-strong: #2f7650;
-  --solid-accent-amber: #ffc850;
-  --solid-accent-amber-strong: #9c6f1f;
-  --solid-accent-red: #ff5a5a;
-  --solid-accent-orange: #ff5a2a;
+  --solid-light-surface-hover: #eee3f2;
+  --solid-light-line: rgba(23, 17, 29, 0.1);
+  --solid-light-line-strong: rgba(23, 17, 29, 0.18);
+  --solid-light-text: #17111d;
+  --solid-light-muted: rgba(23, 17, 29, 0.64);
+  --solid-light-muted-soft: rgba(23, 17, 29, 0.44);
+  --solid-accent-purple: #d7c8ff;
+  --solid-accent-purple-strong: #7562b7;
+  --solid-accent-blue: #c8d5ff;
+  --solid-accent-blue-strong: #586ec9;
+  --solid-accent-green: #f1c7e5;
+  --solid-accent-green-strong: #a36a9e;
+  --solid-accent-amber: #efd0df;
+  --solid-accent-amber-strong: #8d637d;
+  --solid-accent-red: #d7688a;
+  --solid-accent-orange: #b989f2;
 
   --raw-ink: var(--solid-light-text);
   --raw-paper: var(--solid-light-canvas);
-  --raw-paper-strong: #fffaf3;
-  --raw-paper-muted: #eee4da;
-  --raw-paper-deep: #ded1c6;
-  --raw-orange: var(--solid-accent-orange);
-  --raw-orange-deep: #b94123;
+  --raw-paper-strong: var(--solid-light-surface);
+  --raw-paper-muted: var(--solid-light-surface-hover);
+  --raw-paper-deep: var(--solid-light-canvas-deep);
+  --raw-orange: var(--solid-accent-purple-strong);
+  --raw-orange-deep: #4b386f;
   --raw-blue: var(--solid-accent-blue-strong);
   --raw-violet: var(--solid-accent-purple-strong);
   --raw-line: var(--solid-light-line-strong);
@@ -79,7 +117,7 @@
   --green-06: var(--raw-orange-deep);
   --green-07: var(--raw-ink);
   --green-08: var(--raw-ink);
-  --reference-warm: var(--raw-orange);
+  --reference-warm: var(--solid-accent-green);
   --reference-rose: var(--raw-paper-muted);
   --reference-lilac: var(--raw-paper-deep);
 
@@ -97,7 +135,7 @@
   --color-card: var(--solid-light-surface);
   --color-card-hover: var(--solid-light-surface-hover);
   --color-button: var(--raw-orange);
-  --color-button-hover: var(--raw-ink);
+  --color-button-hover: color-mix(in srgb, var(--raw-orange) 72%, var(--raw-ink));
   --color-button-active: var(--raw-orange-deep);
   --color-border-primary: var(--solid-light-line);
   --color-border-secondary: var(--solid-light-line-strong);
@@ -134,6 +172,11 @@
   --liquid-glass-shadow: transparent;
   --gradient-primary: var(--raw-orange);
   --gradient-surface: var(--raw-paper-strong);
+  --button-bloom: color-mix(in srgb, var(--color-button) 34%, transparent);
+  --button-bloom-hover: color-mix(in srgb, var(--color-button-hover) 48%, transparent);
+  --surface-atmosphere-a: color-mix(in srgb, var(--solid-accent-purple) 24%, transparent);
+  --surface-atmosphere-b: color-mix(in srgb, var(--solid-accent-green) 18%, transparent);
+  --surface-atmosphere-c: color-mix(in srgb, var(--solid-accent-blue) 16%, transparent);
 
   /* Legacy aliases kept so existing components inherit the semantic palette. */
   --slush-dark: var(--color-background-primary);
@@ -162,8 +205,8 @@
   --gravii-mint-50: var(--color-text-primary);
   --gravii-border-soft: var(--color-border-primary);
   --gravii-border-strong: var(--color-border-secondary);
-  --slush-radius-card: 1.7rem;
-  --slush-radius-container: 2.25rem;
+  --slush-radius-card: var(--ds-radius-card);
+  --slush-radius-container: var(--ds-radius-frame);
   --slush-border-width: 0;
   --slush-border: var(--slush-border-width) solid var(--gravii-border-soft);
   --slush-shadow-pop: none;
@@ -174,6 +217,19 @@
   --motion-duration-slow: 360ms;
   --motion-ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --motion-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-ease-expressive: cubic-bezier(0, 0.1, 0.1, 1);
+  --motion-ease-cursor: cubic-bezier(0, 0.1, 0.1, 1);
+  --motion-duration-expressive-fast: 150ms;
+  --motion-duration-expressive: 220ms;
+  --type-expressive-rest: "wdth" 112, "GRAD" 42;
+  --type-expressive-hover: "wdth" 118, "GRAD" 72;
+  --type-expressive-active: "wdth" 116, "GRAD" 58;
+  --expressive-cursor-size: 24px;
+  --expressive-cursor-active-size: 40px;
+  --expressive-cursor-fill: #ffffff;
+  --expressive-cursor-border: var(--color-text-primary);
+  --expressive-cursor-label-bg: var(--color-background-primary);
+  --expressive-cursor-label-text: var(--color-text-primary);
   --slush-duration-default: var(--motion-duration-standard);
   --slush-duration-medium: var(--motion-duration-slow);
   --slush-duration-fade: var(--motion-duration-instant);
@@ -203,11 +259,11 @@
   --m3e-success: var(--green-05);
   --m3e-warning: var(--green-04);
   --m3e-radius-xs: 12px;
-  --m3e-radius-sm: 18px;
-  --m3e-radius-md: 28px;
-  --m3e-radius-lg: 38px;
+  --m3e-radius-sm: var(--ds-radius-card-compact);
+  --m3e-radius-md: var(--ds-radius-card);
+  --m3e-radius-lg: var(--ds-radius-frame);
   --m3e-radius-xl: 54px;
-  --m3e-radius-full: 999px;
+  --m3e-radius-full: var(--ds-radius-pill);
   --m3e-space-1: 4px;
   --m3e-space-2: 8px;
   --m3e-space-3: 12px;
@@ -237,9 +293,9 @@
   --gravii-primary: var(--color-primary);
   --gravii-secondary: var(--color-primary-soft);
   --gravii-tertiary: var(--color-text-accent);
-  --gravii-radius-lg: var(--slush-radius-card);
-  --gravii-radius-md: 1.35em;
-  --gravii-radius-sm: 0.9em;
+  --gravii-radius-lg: var(--ds-radius-card);
+  --gravii-radius-md: var(--ds-radius-card-compact);
+  --gravii-radius-sm: 14px;
   --gravii-shadow-soft: var(--slush-shadow-soft);
   --gravii-shadow-card: none;
   --gravii-ease: var(--slush-duration-default) var(--slush-elastic-ease-out);
@@ -254,7 +310,16 @@
 html,
 body {
   height: 100%;
+  overflow-x: hidden;
   scrollbar-width: none;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
 }
 
 html::-webkit-scrollbar,
@@ -276,7 +341,9 @@ body {
   font-stretch: var(--font-width-ui);
   font-variation-settings: "GRAD" var(--font-grade-ui);
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
   text-rendering: optimizeLegibility;
+  touch-action: manipulation;
 }
 
 body::before {
@@ -299,6 +366,7 @@ button,
 input,
 textarea,
 select {
+  color: inherit;
   font: inherit;
 }
 

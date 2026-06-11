@@ -1,14 +1,15 @@
 .root {
+  --feature-bottom-space: clamp(28px, 4vh, 48px);
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--ds-space-gap);
   min-height: 100%;
   color: var(--profile-text);
   --profile-text: var(--color-text-primary);
   --profile-subtle: var(--color-text-secondary);
-  --profile-surface: var(--color-glass-fill);
-  --profile-surface-strong: var(--color-surface-violet);
+  --profile-surface: color-mix(in srgb, var(--section-accent, var(--color-primary)) 16%, var(--color-glass-fill));
+  --profile-surface-strong: color-mix(in srgb, var(--section-accent, var(--color-primary)) 24%, var(--color-surface-violet));
   --profile-line: var(--color-border-secondary);
   --profile-a: var(--color-primary);
   --profile-b: var(--color-primary-hover);
@@ -16,19 +17,25 @@
   --profile-accent: var(--color-primary);
   --profile-frame-shadow: none;
   --profile-inset-border: var(--color-border-secondary);
-  --profile-quiet-surface: var(--color-surface-blush);
+  --profile-quiet-surface: color-mix(in srgb, var(--section-accent, var(--color-primary)) 12%, var(--color-surface-blush));
+}
+
+.root::after {
+  content: "";
+  display: block;
+  flex: 0 0 var(--feature-bottom-space);
 }
 
 .rootDark {
   --profile-text: var(--color-text-primary);
   --profile-subtle: var(--color-text-secondary);
-  --profile-surface: var(--color-glass-fill);
-  --profile-surface-strong: var(--color-surface-violet);
+  --profile-surface: color-mix(in srgb, var(--section-accent, var(--color-primary)) 16%, var(--color-glass-fill));
+  --profile-surface-strong: color-mix(in srgb, var(--section-accent, var(--color-primary)) 24%, var(--color-surface-violet));
   --profile-line: var(--color-border-secondary);
   --profile-accent: var(--color-primary);
   --profile-frame-shadow: none;
   --profile-inset-border: var(--color-border-secondary);
-  --profile-quiet-surface: var(--color-surface-blush);
+  --profile-quiet-surface: color-mix(in srgb, var(--section-accent, var(--color-primary)) 12%, var(--color-surface-blush));
 }
 
 .rootLight {
@@ -82,7 +89,7 @@
 .headerBand {
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.9fr);
-  gap: 20px;
+  gap: var(--ds-space-gap);
   align-items: stretch;
 }
 
@@ -96,8 +103,9 @@
 .previewCard {
   position: relative;
   isolation: isolate;
+  min-width: 0;
   border: 0;
-  border-radius: var(--gravii-radius-lg);
+  border-radius: var(--ds-radius-card);
   background:
     linear-gradient(145deg, var(--liquid-glass-fill), var(--liquid-glass-fill-soft)),
     var(--profile-surface);
@@ -142,7 +150,7 @@
 
 .headerCopy {
   position: relative;
-  padding: 30px 32px;
+  padding: var(--ds-space-card);
 }
 
 .headerCopy::after {
@@ -180,9 +188,10 @@
   min-width: 0;
   overflow: hidden;
   color: var(--profile-text);
-  font-size: 14px;
-  font-weight: 900;
-  letter-spacing: -0.006em;
+  font-size: var(--ds-type-caption-size);
+  font-weight: var(--ds-type-label-weight);
+  letter-spacing: 0.04em;
+  line-height: var(--ds-type-caption-line);
   text-overflow: ellipsis;
   text-transform: uppercase;
   white-space: nowrap;
@@ -194,9 +203,10 @@
   justify-content: flex-end;
   gap: 8px;
   color: var(--profile-subtle);
-  font-size: 11px;
-  font-weight: 900;
-  letter-spacing: 0.12em;
+  font-size: var(--ds-type-label-size);
+  font-weight: var(--ds-type-label-weight);
+  letter-spacing: var(--ds-type-label-tracking);
+  line-height: var(--ds-type-label-line);
   text-transform: uppercase;
 }
 
@@ -225,19 +235,21 @@
   display: inline-flex;
   align-items: center;
   color: var(--profile-subtle);
-  font-size: var(--type-eyebrow-size);
-  font-weight: var(--type-eyebrow-weight);
-  letter-spacing: var(--type-eyebrow-tracking);
+  font-size: var(--ds-type-label-size);
+  font-weight: var(--ds-type-label-weight);
+  letter-spacing: var(--ds-type-label-tracking);
+  line-height: var(--ds-type-label-line);
   text-transform: uppercase;
 }
 
 .title {
   margin-top: 14px;
-  font-weight: var(--type-display-weight);
   max-width: 13ch;
-  font-size: var(--type-section-title);
-  line-height: var(--type-line-tight);
-  letter-spacing: -0.016em;
+  font-size: var(--ds-type-headline-size);
+  font-weight: var(--ds-type-headline-weight);
+  letter-spacing: var(--ds-type-headline-tracking);
+  line-height: var(--ds-type-headline-line);
+  text-wrap: balance;
   text-transform: uppercase;
 }
 
@@ -251,18 +263,20 @@
 .metricMeta,
 .previewMeta {
   color: var(--profile-subtle);
-  line-height: 1.6;
+  font-size: var(--ds-type-body-size);
+  font-weight: var(--ds-type-body-weight);
+  line-height: var(--ds-type-body-line);
 }
 
 .copy {
   margin-top: 16px;
   max-width: 56ch;
-  font-size: var(--type-body);
-  font-weight: var(--type-body-weight);
+  font-size: var(--ds-type-body-size);
+  font-weight: var(--ds-type-body-weight);
 }
 
 .brandWell {
-  padding: 26px 28px;
+  padding: var(--ds-space-card);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -277,31 +291,32 @@
 .brandWordmarkText {
   color: var(--profile-text);
   font-family: var(--font-ui);
-  font-size: 26px;
-  font-weight: 850;
+  font-size: var(--ds-type-title-size);
+  font-weight: var(--ds-type-title-weight);
   letter-spacing: 0.015em;
   line-height: 1;
 }
 
 .brandMeta {
   max-width: 24ch;
-  font-size: 13px;
+  font-size: var(--ds-type-caption-size);
 }
 
 .connectedStack {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: var(--ds-space-gap);
 }
 
 .identityStatement {
   margin: 0;
   color: var(--profile-subtle);
-  font-size: clamp(1.2rem, 1.8vw, 2rem);
+  font-size: var(--ds-type-title-size);
   font-style: normal;
   font-weight: var(--type-body-weight);
   letter-spacing: -0.01em;
-  line-height: 1;
+  line-height: 1.12;
+  text-wrap: balance;
 }
 
 .profileDashboard {
@@ -320,8 +335,9 @@
 .dashboardCard {
   position: relative;
   isolation: isolate;
+  min-width: 0;
   border: 0;
-  border-radius: var(--gravii-radius-lg);
+  border-radius: var(--ds-radius-card);
   background:
     linear-gradient(145deg, var(--liquid-glass-fill), var(--liquid-glass-fill-soft)),
     var(--color-surface-blush);
@@ -353,23 +369,24 @@
 .personaDashboardTitle {
   margin: 6px 0 0;
   color: var(--profile-text);
-  font-size: var(--type-section-title);
-  font-weight: var(--type-display-weight);
-  letter-spacing: -0.014em;
-  line-height: 0.9;
+  font-size: var(--ds-type-headline-size);
+  font-weight: var(--ds-type-headline-weight);
+  letter-spacing: var(--ds-type-headline-tracking);
+  line-height: var(--ds-type-headline-line);
   text-transform: uppercase;
   overflow-wrap: anywhere;
+  text-wrap: balance;
 }
 
 .personaDashboardQuote {
   max-width: 22ch;
   margin: 0;
   color: var(--profile-subtle);
-  font-size: var(--type-body);
+  font-size: var(--ds-type-body-size);
   font-style: normal;
-  font-weight: var(--type-body-weight);
+  font-weight: var(--ds-type-body-weight);
   letter-spacing: -0.006em;
-  line-height: 1.22;
+  line-height: var(--ds-type-body-line);
 }
 
 .personaDashboardChips {
@@ -431,7 +448,7 @@
   flex-direction: column;
   justify-content: flex-start;
   gap: 10px;
-  padding: clamp(16px, 1.8vw, 22px);
+  padding: var(--ds-space-card-compact);
   color: var(--profile-text);
   text-align: left;
 }
@@ -441,6 +458,12 @@ button.dashboardCard {
   border: 0;
   cursor: pointer;
   font: inherit;
+}
+
+button.dashboardCard:focus-visible,
+.routeCard:focus-visible {
+  outline: 3px solid var(--profile-accent);
+  outline-offset: 3px;
 }
 
 .dashboardCardAccent {
@@ -459,29 +482,30 @@ button.dashboardCard {
   display: inline-flex;
   align-items: center;
   color: var(--profile-subtle);
-  font-size: var(--type-eyebrow-size);
-  font-weight: var(--type-eyebrow-weight);
-  letter-spacing: var(--type-eyebrow-tracking);
-  line-height: 1;
+  font-size: var(--ds-type-label-size);
+  font-weight: var(--ds-type-label-weight);
+  letter-spacing: var(--ds-type-label-tracking);
+  line-height: var(--ds-type-label-line);
   text-transform: uppercase;
 }
 
 .dashboardValue {
   display: block;
   color: var(--profile-text);
-  font-size: var(--type-card-title);
-  font-weight: var(--type-heading-weight);
+  font-size: var(--ds-type-title-size);
+  font-weight: var(--ds-type-title-weight);
   letter-spacing: -0.012em;
-  line-height: 0.95;
+  line-height: var(--ds-type-title-line);
+  overflow-wrap: anywhere;
 }
 
 .dashboardMeta {
   display: block;
   color: var(--profile-subtle);
-  font-size: var(--type-caption);
-  font-weight: var(--type-body-weight);
+  font-size: var(--ds-type-caption-size);
+  font-weight: var(--ds-type-caption-weight);
   letter-spacing: -0.006em;
-  line-height: 1.25;
+  line-height: var(--ds-type-caption-line);
 }
 
 .homeChainCard {
@@ -526,11 +550,11 @@ button.dashboardCard {
 
 .xrayCard .dashboardValue {
   max-width: 24ch;
-  font-size: clamp(1.25rem, 1.45vw, 1.7rem);
+  font-size: var(--ds-type-title-size);
   font-style: italic;
-  font-weight: 650;
+  font-weight: var(--ds-type-body-weight);
   letter-spacing: -0.01em;
-  line-height: 1.15;
+  line-height: var(--ds-type-title-line);
 }
 
 .skeletonBlock,
@@ -637,8 +661,8 @@ button.dashboardCard {
 .heroPanel {
   display: grid;
   grid-template-columns: minmax(0, 1.08fr) minmax(300px, 0.92fr);
-  gap: 18px;
-  padding: clamp(18px, 2.1vw, 28px);
+  gap: var(--ds-space-gap);
+  padding: var(--ds-space-card);
 }
 
 .heroCopy {
@@ -648,18 +672,19 @@ button.dashboardCard {
 }
 
 .heroTitle {
-  font-weight: var(--type-display-weight);
-  font-size: var(--type-section-title);
-  line-height: var(--type-line-tight);
-  letter-spacing: -0.018em;
+  font-size: var(--ds-type-headline-size);
+  font-weight: var(--ds-type-headline-weight);
+  letter-spacing: var(--ds-type-headline-tracking);
+  line-height: var(--ds-type-headline-line);
+  text-wrap: balance;
   text-transform: uppercase;
 }
 
 .heroQuote {
   max-width: 52ch;
-  font-size: var(--type-body);
-  font-weight: var(--type-body-weight);
-  line-height: var(--type-line-body);
+  font-size: var(--ds-type-body-size);
+  font-weight: var(--ds-type-body-weight);
+  line-height: var(--ds-type-body-line);
 }
 
 .badgeRow {
@@ -685,8 +710,9 @@ button.dashboardCard {
   backdrop-filter: blur(14px) saturate(1.08);
   -webkit-backdrop-filter: blur(14px) saturate(1.08);
   color: var(--profile-text);
-  font-size: 13px;
-  font-weight: 800;
+  font-size: var(--ds-type-caption-size);
+  font-weight: var(--ds-type-caption-weight);
+  line-height: var(--ds-type-caption-line);
 }
 
 .tierBadge {
@@ -744,7 +770,7 @@ button.dashboardCard {
   overflow: hidden;
   padding: 18px;
   border: 0;
-  border-radius: var(--gravii-radius-md);
+  border-radius: var(--ds-radius-card-compact);
   background:
     linear-gradient(145deg, var(--liquid-glass-fill-soft), transparent),
     var(--profile-quiet-surface);
@@ -773,9 +799,11 @@ button.dashboardCard {
   display: block;
   margin-top: 8px;
   max-width: 10ch;
-  font-size: var(--type-card-title);
-  line-height: 0.95;
+  font-size: var(--ds-type-title-size);
+  font-weight: var(--ds-type-title-weight);
+  line-height: var(--ds-type-title-line);
   letter-spacing: -0.016em;
+  overflow-wrap: anywhere;
   text-transform: uppercase;
 }
 
@@ -783,8 +811,9 @@ button.dashboardCard {
   display: block;
   margin-top: 10px;
   color: var(--profile-subtle);
-  font-size: 13px;
-  font-weight: 800;
+  font-size: var(--ds-type-caption-size);
+  font-weight: var(--ds-type-caption-weight);
+  line-height: var(--ds-type-caption-line);
 }
 
 .signalBars {
@@ -832,25 +861,29 @@ button.dashboardCard {
 .signalValue {
   display: block;
   margin-top: 8px;
-  font-size: var(--type-card-title);
-  line-height: 0.95;
+  font-size: var(--ds-type-title-size);
+  font-weight: var(--ds-type-title-weight);
+  line-height: var(--ds-type-title-line);
   letter-spacing: -0.014em;
+  overflow-wrap: anywhere;
 }
 
 .signalMeta {
   display: block;
   margin-top: 12px;
-  font-size: 14px;
+  font-size: var(--ds-type-caption-size);
+  font-weight: var(--ds-type-caption-weight);
+  line-height: var(--ds-type-caption-line);
 }
 
 .metricGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
+  gap: var(--ds-space-gap-tight);
 }
 
 .metricCard {
-  padding: 15px 16px;
+  padding: var(--ds-space-card-compact);
   border: 0;
   background:
     linear-gradient(145deg, var(--liquid-glass-fill-soft), transparent),
@@ -861,8 +894,9 @@ button.dashboardCard {
 .metricValue {
   display: block;
   margin-top: 10px;
-  font-size: var(--type-card-value);
-  line-height: 1;
+  font-size: var(--ds-type-value-size);
+  font-weight: var(--ds-type-value-weight);
+  line-height: var(--ds-type-value-line);
   letter-spacing: -0.012em;
 }
 
@@ -870,7 +904,9 @@ button.dashboardCard {
 .previewMeta {
   display: block;
   margin-top: 9px;
-  font-size: 12px;
+  font-size: var(--ds-type-caption-size);
+  font-weight: var(--ds-type-caption-weight);
+  line-height: var(--ds-type-caption-line);
 }
 
 .lowerGrid {
@@ -880,7 +916,7 @@ button.dashboardCard {
 }
 
 .secondaryPanel {
-  padding: 18px;
+  padding: var(--ds-space-card-compact);
   border: 0;
   background:
     linear-gradient(145deg, var(--liquid-glass-fill-soft), transparent),
@@ -902,8 +938,9 @@ button.dashboardCard {
 
 .bodyText {
   margin-top: 18px;
-  font-size: var(--type-body);
-  line-height: var(--type-line-body);
+  font-size: var(--ds-type-body-size);
+  font-weight: var(--ds-type-body-weight);
+  line-height: var(--ds-type-body-line);
 }
 
 .routePanel {
@@ -913,7 +950,7 @@ button.dashboardCard {
 }
 
 .routeCard {
-  padding: 18px;
+  padding: var(--ds-space-card-compact);
   border: 0;
   background:
     linear-gradient(145deg, var(--liquid-glass-fill-soft), transparent),
@@ -925,38 +962,42 @@ button.dashboardCard {
 .routeValue {
   display: block;
   margin-top: 10px;
-  font-size: var(--type-card-title);
-  line-height: 1.05;
+  font-size: var(--ds-type-title-size);
+  font-weight: var(--ds-type-title-weight);
+  line-height: var(--ds-type-title-line);
   letter-spacing: -0.012em;
 }
 
 .routeCopy {
   margin-top: 10px;
-  font-size: 13px;
+  font-size: var(--ds-type-caption-size);
+  font-weight: var(--ds-type-caption-weight);
+  line-height: var(--ds-type-caption-line);
 }
 
 .routeMeta {
   display: inline-flex;
   margin-top: 14px;
   color: var(--profile-text);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-size: var(--ds-type-label-size);
+  font-weight: var(--ds-type-label-weight);
+  letter-spacing: var(--ds-type-label-tracking);
+  line-height: var(--ds-type-label-line);
   text-transform: uppercase;
 }
 
 .lockedState {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--ds-space-gap);
 }
 
 .lockedHero {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 20px;
+  gap: var(--ds-space-gap);
   align-items: center;
-  padding: 22px 24px;
+  padding: var(--ds-space-card);
 }
 
 .lockedCopyBlock {
@@ -966,16 +1007,18 @@ button.dashboardCard {
 }
 
 .lockedTitle {
-  font-size: var(--type-section-title);
-  line-height: var(--type-line-tight);
-  letter-spacing: -0.012em;
+  font-size: var(--ds-type-headline-size);
+  font-weight: var(--ds-type-headline-weight);
+  letter-spacing: var(--ds-type-headline-tracking);
+  line-height: var(--ds-type-headline-line);
+  text-wrap: balance;
 }
 
 .lockedCopy {
   max-width: 52ch;
-  font-size: var(--type-body);
-  font-weight: var(--type-body-weight);
-  line-height: var(--type-line-body);
+  font-size: var(--ds-type-body-size);
+  font-weight: var(--ds-type-body-weight);
+  line-height: var(--ds-type-body-line);
 }
 
 .lockedActionSecondary {
@@ -986,18 +1029,19 @@ button.dashboardCard {
 .previewGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  gap: var(--ds-space-gap);
 }
 
 .previewCard {
-  padding: 20px 22px;
+  padding: var(--ds-space-card-compact);
 }
 
 .previewValue {
   display: block;
   margin-top: 18px;
-  font-size: var(--type-card-value);
-  line-height: 1;
+  font-size: var(--ds-type-value-size);
+  font-weight: var(--ds-type-value-weight);
+  line-height: var(--ds-type-value-line);
   letter-spacing: -0.012em;
 }
 
@@ -1074,7 +1118,7 @@ button.dashboardCard {
   }
 
   .dashboardCard {
-    min-height: 150px;
+    min-height: 132px;
   }
 
   .identityBar {

@@ -17,30 +17,32 @@
   --app-muted: var(--solid-light-muted);
   --app-muted-soft: var(--solid-light-muted-soft);
   --app-accent-primary: var(--solid-accent-purple-strong);
-  --app-accent-primary-soft: rgba(200, 180, 240, 0.2);
+  --app-accent-primary-soft: color-mix(in srgb, var(--solid-accent-purple) 42%, transparent);
   --app-accent-green: var(--solid-accent-green-strong);
   --app-accent-blue: var(--solid-accent-blue-strong);
   --app-accent-amber: var(--solid-accent-amber-strong);
-  --app-accent-red: #b85a5a;
-  --app-shadow-card: 0 18px 48px rgba(21, 18, 15, 0.08);
+  --app-accent-red: var(--solid-accent-red);
+  --app-shadow-card: 0 18px 48px rgba(23, 17, 29, 0.08);
   --raw-ink: var(--app-text);
   --raw-paper: var(--app-canvas);
   --raw-paper-strong: var(--app-surface-strong);
   --raw-line: var(--app-line-strong);
   --raw-line-soft: var(--app-line);
-  --raw-orange: var(--solid-accent-orange);
+  --raw-orange: var(--solid-accent-purple-strong);
   --raw-violet: var(--app-accent-primary);
   --raw-blue: var(--app-accent-blue);
-  --theme-on-accent: #fff8f0;
-  --solid-ink-surface: #111014;
-  --solid-ink-text: #fff8f0;
+  --theme-on-accent: #fffaff;
+  --solid-ink-surface: #14101a;
+  --solid-ink-text: #fffaff;
   --app-root-background:
-    radial-gradient(circle at 12% 0%, rgba(200, 180, 240, 0.18), transparent 32%),
-    radial-gradient(circle at 88% 18%, rgba(100, 200, 130, 0.11), transparent 34%),
+    radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--solid-accent-purple) 28%, transparent), transparent 32%),
+    radial-gradient(circle at 88% 18%, color-mix(in srgb, var(--solid-accent-green) 20%, transparent), transparent 34%),
+    radial-gradient(circle at 54% 100%, color-mix(in srgb, var(--solid-accent-blue) 18%, transparent), transparent 38%),
     linear-gradient(180deg, var(--app-canvas) 0%, var(--app-canvas-deep) 100%);
   --workspace-board-background:
-    radial-gradient(circle at 9% 0%, rgba(200, 180, 240, 0.12), transparent 34%),
-    radial-gradient(circle at 94% 14%, rgba(100, 200, 130, 0.09), transparent 36%),
+    radial-gradient(circle at 9% 0%, color-mix(in srgb, var(--solid-accent-purple) 18%, transparent), transparent 34%),
+    radial-gradient(circle at 94% 14%, color-mix(in srgb, var(--solid-accent-green) 14%, transparent), transparent 36%),
+    radial-gradient(circle at 48% 100%, color-mix(in srgb, var(--solid-accent-blue) 12%, transparent), transparent 38%),
     linear-gradient(180deg, var(--app-surface-strong), var(--app-surface));
   --sidebar-footer-bg: var(--solid-ink-surface);
   --sidebar-footer-fg: var(--solid-ink-text);
@@ -74,7 +76,7 @@
   --color-text-secondary: var(--app-muted);
   --color-text-muted: var(--app-muted-soft);
   --color-text-accent: var(--app-accent-primary);
-  --color-text-on-primary: #fff8f0;
+  --color-text-on-primary: #fffaff;
   --color-success: var(--app-accent-green);
   --color-warning: var(--app-accent-amber);
   --color-error: var(--app-accent-red);
@@ -90,6 +92,8 @@
   --auth-on-accent: var(--color-text-on-primary);
   --auth-accent-strong: color-mix(in srgb, var(--auth-accent) 76%, var(--solid-ink-surface));
   --auth-accent-hover: color-mix(in srgb, var(--auth-accent) 62%, var(--solid-ink-surface));
+  --button-bloom: color-mix(in srgb, var(--color-button) 34%, transparent);
+  --button-bloom-hover: color-mix(in srgb, var(--color-button-hover) 48%, transparent);
   position: relative;
   z-index: 1;
   isolation: isolate;
@@ -120,7 +124,7 @@
   --app-muted: var(--solid-dark-muted);
   --app-muted-soft: var(--solid-dark-muted-soft);
   --app-accent-primary: var(--solid-accent-purple);
-  --app-accent-primary-soft: rgba(200, 180, 240, 0.1);
+  --app-accent-primary-soft: color-mix(in srgb, var(--solid-accent-purple) 20%, transparent);
   --app-accent-green: var(--solid-accent-green);
   --app-accent-blue: var(--solid-accent-blue);
   --app-accent-amber: var(--solid-accent-amber);
@@ -131,21 +135,23 @@
   --raw-paper-strong: var(--app-surface-strong);
   --raw-line: var(--app-line-strong);
   --raw-line-soft: var(--app-line);
-  --raw-orange: var(--solid-accent-orange);
+  --raw-orange: var(--solid-accent-purple);
   --raw-violet: var(--app-accent-primary);
   --raw-blue: var(--app-accent-blue);
-  --solid-ink-surface: #080807;
-  --solid-ink-text: #f8f4ec;
+  --solid-ink-surface: #090711;
+  --solid-ink-text: #fffaff;
   --app-root-background:
-    radial-gradient(circle at 10% 0%, rgba(200, 180, 240, 0.13), transparent 34%),
-    radial-gradient(circle at 92% 18%, rgba(100, 200, 130, 0.1), transparent 36%),
-    linear-gradient(180deg, #121520 0%, var(--app-canvas) 48%, var(--app-canvas-deep) 100%);
+    radial-gradient(circle at 10% 0%, color-mix(in srgb, var(--solid-accent-purple) 16%, transparent), transparent 34%),
+    radial-gradient(circle at 92% 18%, color-mix(in srgb, var(--solid-accent-green) 13%, transparent), transparent 36%),
+    radial-gradient(circle at 52% 100%, color-mix(in srgb, var(--solid-accent-blue) 12%, transparent), transparent 40%),
+    linear-gradient(180deg, #15111e 0%, var(--app-canvas) 48%, var(--app-canvas-deep) 100%);
   --workspace-board-background:
-    radial-gradient(circle at 9% 0%, rgba(200, 180, 240, 0.12), transparent 34%),
-    radial-gradient(circle at 94% 14%, rgba(100, 200, 130, 0.09), transparent 36%),
-    linear-gradient(180deg, #121520 0%, var(--app-canvas) 44%, var(--app-canvas-deep) 100%);
-  --sidebar-footer-bg: #080807;
-  --sidebar-footer-fg: #f8f4ec;
+    radial-gradient(circle at 9% 0%, color-mix(in srgb, var(--solid-accent-purple) 14%, transparent), transparent 34%),
+    radial-gradient(circle at 94% 14%, color-mix(in srgb, var(--solid-accent-green) 11%, transparent), transparent 36%),
+    radial-gradient(circle at 48% 100%, color-mix(in srgb, var(--solid-accent-blue) 10%, transparent), transparent 40%),
+    linear-gradient(180deg, #15111e 0%, var(--app-canvas) 44%, var(--app-canvas-deep) 100%);
+  --sidebar-footer-bg: #090711;
+  --sidebar-footer-fg: #fffaff;
   --sidebar-footer-muted: rgba(255, 255, 255, 0.56);
   --theme-toggle-track: color-mix(in srgb, var(--auth-accent) 18%, var(--sidebar-footer-bg));
   --theme-toggle-track-hover: color-mix(in srgb, var(--auth-accent) 26%, var(--sidebar-footer-bg));
@@ -169,7 +175,7 @@
   --color-text-primary: var(--app-text);
   --color-text-secondary: var(--app-muted);
   --color-text-muted: var(--app-muted-soft);
-  --color-text-on-primary: #fff8f0;
+  --color-text-on-primary: #fffaff;
   --color-glass-background: var(--app-surface);
   --color-glass-fill: var(--app-surface);
   --color-glass-fill-strong: var(--app-surface-hover);
@@ -197,9 +203,9 @@
   display: flex;
   align-items: center;
   gap: 24px;
-  padding: 28px 32px;
+  padding: var(--ds-space-card);
   border: 1px solid var(--app-line, rgba(9, 7, 5, 0.12));
-  border-radius: 16px;
+  border-radius: var(--ds-radius-card-compact);
   background: var(--app-surface-strong, #fff8f0);
   box-shadow: var(--app-shadow-card, none);
 }
@@ -216,19 +222,19 @@
 
 .loadingEyebrow {
   color: rgba(9, 7, 5, 0.54);
-  font-size: 11px;
-  font-weight: 850;
-  letter-spacing: 0.16em;
+  font-size: var(--ds-type-label-size);
+  font-weight: var(--ds-type-label-weight);
+  letter-spacing: var(--ds-type-label-tracking);
   text-transform: uppercase;
 }
 
 .loadingCopy {
   margin: 0;
   color: var(--raw-ink);
-  font-size: 15px;
-  font-weight: 720;
+  font-size: var(--ds-type-body-size);
+  font-weight: var(--ds-type-body-weight);
   letter-spacing: -0.01em;
-  line-height: 1.35;
+  line-height: var(--ds-type-body-line);
 }
 
 .sidebar {
@@ -460,11 +466,11 @@
 }
 
 .root[data-theme="dark"] .navList button[data-panel-id] {
-  filter: saturate(0.86) brightness(0.74);
+  filter: saturate(0.92) brightness(0.88);
 }
 
 .root[data-theme="dark"] .navList button[data-panel-id][aria-current="page"] {
-  filter: saturate(0.95) brightness(0.9);
+  filter: saturate(0.98) brightness(1);
 }
 
 .sidebarFooter {
@@ -493,7 +499,7 @@
   font-size: 0.58rem;
   font-weight: 850;
   letter-spacing: 0.14em;
-  line-height: 1;
+  line-height: var(--ds-type-label-line);
   text-transform: uppercase;
 }
 
@@ -521,19 +527,8 @@
   background: var(--theme-toggle-track-hover);
 }
 
-.root[data-nav-collapsed="true"] .themeToggle::after {
-  content: "L";
-  position: relative;
-  z-index: 1;
-  color: var(--theme-toggle-active-text);
-  font-size: 0.62rem;
-  font-weight: 900;
-  letter-spacing: 0.04em;
-  line-height: 1;
-}
-
-.root[data-nav-collapsed="true"] .themeToggle[data-theme-state="dark"]::after {
-  content: "D";
+.root[data-nav-collapsed="true"] .themeToggleIcon {
+  display: block;
 }
 
 .themeToggle:focus-visible {
@@ -556,6 +551,18 @@
     background-color 260ms var(--motion-ease-standard);
 }
 
+.themeToggleIcon {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  display: none;
+  width: 18px;
+  height: 18px;
+  color: var(--theme-toggle-active-text);
+  transform: translate(-50%, -50%);
+}
+
 .themeToggle[data-theme-state="dark"] .themeToggleThumb {
   transform: translateX(100%);
 }
@@ -575,14 +582,14 @@
   font-size: 0.62rem;
   font-weight: 850;
   letter-spacing: 0.12em;
-  line-height: 1;
+  line-height: 1.14;
   transition:
     color 260ms var(--motion-ease-standard),
     opacity 260ms var(--motion-ease-standard);
 }
 
-.themeToggle[data-theme-state="light"] .themeToggleOption:nth-of-type(2),
-.themeToggle[data-theme-state="dark"] .themeToggleOption:nth-of-type(3) {
+.themeToggle[data-theme-state="light"] .themeToggleOptionLight,
+.themeToggle[data-theme-state="dark"] .themeToggleOptionDark {
   color: var(--theme-toggle-active-text);
 }
 
@@ -591,7 +598,7 @@
   font-size: var(--type-eyebrow-size);
   font-weight: var(--type-eyebrow-weight);
   letter-spacing: var(--type-eyebrow-tracking);
-  line-height: 1;
+  line-height: var(--ds-type-label-line);
 }
 
 .sessionButtonDisconnected,
@@ -634,7 +641,7 @@
   min-height: 0;
   overflow: hidden;
   border: 1px solid var(--app-line);
-  border-radius: 24px;
+  border-radius: var(--ds-radius-frame);
   background: var(--workspace-board-background);
   box-shadow: var(--app-shadow-card);
   transition:
@@ -657,19 +664,45 @@
   --section-on-accent: var(--theme-on-accent);
   --section-accent-hover: color-mix(in srgb, var(--section-accent) 78%, var(--app-text));
   --section-accent-active: color-mix(in srgb, var(--section-accent) 62%, var(--app-text));
-  --section-accent-soft: color-mix(in srgb, var(--section-accent) 16%, var(--app-surface));
-  --section-accent-subtle: color-mix(in srgb, var(--section-accent) 11%, var(--app-surface));
+  --section-accent-soft: color-mix(in srgb, var(--section-accent) 22%, var(--app-surface));
+  --section-accent-subtle: color-mix(in srgb, var(--section-accent) 14%, var(--app-surface));
+  --section-surface: color-mix(in srgb, var(--section-accent) 16%, var(--app-surface));
+  --section-surface-strong: color-mix(in srgb, var(--section-accent) 26%, var(--app-surface-strong));
+  --section-surface-hover: color-mix(in srgb, var(--section-accent) 34%, var(--app-surface-hover));
+  --section-surface-soft: color-mix(in srgb, var(--section-accent) 11%, var(--app-canvas));
+  --section-line: color-mix(in srgb, var(--section-accent) 42%, var(--app-line-strong));
+  --section-bloom: color-mix(in srgb, var(--section-accent) 32%, transparent);
   --app-accent-primary: var(--section-accent);
   --color-primary: var(--section-accent);
   --color-primary-hover: var(--section-accent-hover);
   --color-primary-active: var(--section-accent-active);
   --color-primary-soft: var(--section-accent-soft);
   --color-primary-subtle: var(--section-accent-subtle);
+  --color-surface-front: var(--section-surface);
+  --color-surface-back: var(--section-surface-soft);
+  --color-surface-hover: var(--section-surface-hover);
+  --color-card: var(--section-surface);
+  --color-card-hover: var(--section-surface-hover);
+  --color-glass-background: var(--section-surface);
+  --color-glass-fill: var(--section-surface);
+  --color-glass-fill-strong: var(--section-surface-strong);
+  --color-surface-blush: var(--section-surface-soft);
+  --color-surface-lavender: var(--section-surface);
+  --color-surface-violet: var(--section-surface-hover);
   --color-button: var(--section-accent);
   --color-button-hover: var(--section-accent-hover);
   --color-button-active: var(--section-accent-active);
+  --button-bloom: color-mix(in srgb, var(--section-accent) 38%, transparent);
+  --button-bloom-hover: color-mix(in srgb, var(--section-accent-hover) 52%, transparent);
+  --color-border-primary: var(--section-line);
+  --color-border-secondary: color-mix(in srgb, var(--section-accent) 56%, var(--app-line-strong));
   --color-text-accent: var(--section-accent);
   --color-surface-purple: color-mix(in srgb, var(--section-accent) 14%, var(--app-surface));
+  --raw-paper: var(--section-surface-soft);
+  --raw-paper-strong: var(--section-surface);
+  --raw-paper-muted: var(--section-surface-hover);
+  --raw-line: var(--section-line);
+  --raw-line-soft: color-mix(in srgb, var(--section-accent) 30%, var(--app-line));
   position: relative;
   display: flex;
   flex: 1;
@@ -677,9 +710,9 @@
   height: 100%;
   min-height: 0;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--ds-space-gap-tight);
   overflow: hidden;
-  padding: clamp(14px, 1.35vw, 20px);
+  padding: clamp(12px, 1.25vw, 18px);
 }
 
 .sectionTopBar {
@@ -712,18 +745,26 @@
 
 .sectionTopCopy span {
   min-width: 0;
-  overflow: visible;
+  overflow: hidden;
   color: inherit;
   font-family: var(--font-ui);
-  font-size: clamp(20px, 1.35vw, 23px);
+  font-size: clamp(1.18rem, 1.35vw, 1.45rem);
   font-style: italic;
-  font-variation-settings: "wdth" 112, "GRAD" 42;
-  font-weight: 900;
+  font-variation-settings: var(--type-expressive-rest);
+  font-weight: var(--ds-type-title-weight);
   letter-spacing: -0.005em;
-  line-height: 1.12;
+  line-height: var(--ds-type-title-line);
+  padding-block: 0.04em;
   text-overflow: ellipsis;
   text-transform: uppercase;
   white-space: nowrap;
+  transition:
+    font-variation-settings var(--motion-duration-expressive) var(--motion-ease-expressive),
+    letter-spacing var(--motion-duration-expressive-fast) var(--motion-ease-expressive);
+}
+
+.sectionTopBar:hover .sectionTopCopy span {
+  font-variation-settings: var(--type-expressive-hover);
 }
 
 .sectionTopMeta {
@@ -747,15 +788,16 @@
   position: relative;
   z-index: 1;
   display: flex;
+  min-width: 0;
   align-items: center;
   justify-content: flex-end;
 }
 
 .sectionTopActions .workspaceAuthButton {
-  --button-front: var(--auth-accent);
-  --button-front-hover: var(--auth-accent-hover);
-  --button-text: var(--auth-on-accent);
-  --button-text-hover: var(--auth-on-accent);
+  --button-front: color-mix(in srgb, var(--section-on-accent) 92%, var(--section-accent));
+  --button-front-hover: color-mix(in srgb, var(--section-on-accent) 82%, var(--section-accent));
+  --button-text: var(--section-accent);
+  --button-text-hover: color-mix(in srgb, var(--section-accent) 82%, var(--solid-ink-surface));
   --button-border-size: 1px;
   --button-border-color: color-mix(in srgb, var(--section-on-accent) 24%, transparent);
   --button-min-height: 28px;
@@ -765,7 +807,8 @@
 }
 
 .sectionFrame {
-  --section-content-padding: clamp(18px, 2.2vw, 32px);
+  --section-content-padding: var(--ds-space-panel);
+  --section-content-bottom-padding: clamp(28px, 4vh, 48px);
   position: relative;
   display: flex;
   flex: 1 1 auto;
@@ -774,8 +817,12 @@
   min-height: 0;
   overflow: hidden;
   border: 6px solid var(--section-accent);
-  border-radius: 16px;
-  background: var(--workspace-board-background);
+  border-radius: var(--ds-radius-section);
+  background:
+    radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--section-accent) 16%, transparent), transparent 34%),
+    radial-gradient(circle at 92% 14%, color-mix(in srgb, var(--section-accent-hover) 13%, transparent), transparent 36%),
+    radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--section-accent) 10%, transparent), transparent 42%),
+    linear-gradient(180deg, var(--section-surface-soft), var(--section-surface));
   box-shadow:
     inset 0 1px 0 color-mix(in srgb, var(--section-on-accent) 6%, transparent),
     var(--app-shadow-card);
@@ -793,7 +840,11 @@
   min-height: 0;
   overflow: auto;
   scrollbar-width: none;
-  padding: var(--section-content-padding);
+  scroll-padding-bottom: var(--section-content-bottom-padding);
+  padding:
+    var(--section-content-padding)
+    var(--section-content-padding)
+    var(--section-content-bottom-padding);
 }
 
 .homeShell::-webkit-scrollbar {
@@ -806,14 +857,27 @@
   width: 100%;
   min-height: 0;
   overflow: auto;
-  padding: var(--section-content-padding);
+  scrollbar-width: none;
+  scroll-padding-bottom: var(--section-content-bottom-padding);
+  padding:
+    var(--section-content-padding)
+    var(--section-content-padding)
+    var(--section-content-bottom-padding);
+}
+
+.sectionPanelShell::-webkit-scrollbar {
+  display: none;
 }
 
 .sectionFrame .sectionPanelShell {
   flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
-  padding: var(--section-content-padding);
+  scroll-padding-bottom: var(--section-content-bottom-padding);
+  padding:
+    var(--section-content-padding)
+    var(--section-content-padding)
+    var(--section-content-bottom-padding);
 }
 
 .workspaceAuthButton {
@@ -918,27 +982,9 @@
     outline-offset: 3px;
   }
 
-  .mobileMenuButton span {
-    display: block;
-    width: 17px;
-    height: 2px;
-    border-radius: 999px;
-    background: currentColor;
-    transition:
-      transform 260ms cubic-bezier(0.16, 1, 0.3, 1),
-      opacity 180ms var(--motion-ease-standard);
-  }
-
-  .root[data-mobile-nav-open="true"] .mobileMenuButton span:nth-child(1) {
-    transform: translateY(6px) rotate(45deg);
-  }
-
-  .root[data-mobile-nav-open="true"] .mobileMenuButton span:nth-child(2) {
-    opacity: 0;
-  }
-
-  .root[data-mobile-nav-open="true"] .mobileMenuButton span:nth-child(3) {
-    transform: translateY(-6px) rotate(-45deg);
+  .mobileMenuIcon {
+    width: 18px;
+    height: 18px;
   }
 
   .mobileBrandButton {
@@ -956,11 +1002,20 @@
     font-family: var(--font-ui);
     font-size: clamp(0.82rem, 3.8vw, 1rem);
     font-style: italic;
-    font-variation-settings: "wdth" 112, "GRAD" 42;
+    font-variation-settings: var(--type-expressive-rest);
     font-weight: 900;
     letter-spacing: -0.01em;
+    line-height: 1.14;
     text-transform: uppercase;
     cursor: pointer;
+    transition:
+      background-color 260ms var(--motion-ease-standard),
+      color 260ms var(--motion-ease-standard),
+      font-variation-settings var(--motion-duration-expressive) var(--motion-ease-expressive);
+  }
+
+  .mobileBrandButton:hover {
+    font-variation-settings: var(--type-expressive-hover);
   }
 
   .mobileHeaderLogo {
@@ -978,11 +1033,16 @@
 
   .mobileHeaderAuth {
     display: flex;
+    min-width: 0;
     align-items: center;
     justify-content: flex-end;
   }
 
   .mobileHeaderAuth .workspaceAuthButton {
+    --button-front: color-mix(in srgb, var(--auth-on-accent) 92%, var(--auth-accent));
+    --button-front-hover: color-mix(in srgb, var(--auth-on-accent) 82%, var(--auth-accent));
+    --button-text: var(--auth-accent);
+    --button-text-hover: color-mix(in srgb, var(--auth-accent) 82%, var(--solid-ink-surface));
     --button-min-height: 40px;
     --button-font-size: 0.58rem;
     --button-pad-x: 1em;
@@ -1057,6 +1117,11 @@
     font-size: 0.72rem;
     font-weight: 900;
     cursor: pointer;
+  }
+
+  .sidebarMobileClose:focus-visible {
+    outline: 3px solid var(--auth-accent);
+    outline-offset: 3px;
   }
 
   .brandTile {
@@ -1167,6 +1232,7 @@
   }
 
   .sectionTopActions {
+    min-width: 0;
     justify-content: flex-end;
   }
 
@@ -1186,7 +1252,10 @@
 
   .homeShell {
     flex: 1 1 auto;
-    padding: var(--section-content-padding);
+    padding:
+      var(--section-content-padding)
+      var(--section-content-padding)
+      var(--section-content-bottom-padding);
     overflow: auto;
   }
 }

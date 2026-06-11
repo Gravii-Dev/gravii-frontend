@@ -300,11 +300,11 @@ export default function XRayContent({ dark, connected, onConnect }: SharedConten
         <div className={styles.heroCopy}>
           <span className={styles.kicker}>X-RAY</span>
           <h2 className={styles.heroTitle}>
-            Read any wallet through Gravii&apos;s identity model.
+            Deep-dive into any wallet&apos;s footprint.
           </h2>
           <p className={styles.heroText}>
-            Run live Gravii analysis, reopen prior lookups, and compare each address
-            against the same persona system that powers Gravii ID.
+            Unlock an in-depth dashboard that reads any wallet address through
+            Gravii&apos;s intelligence layer.
           </p>
         </div>
 
@@ -335,13 +335,16 @@ export default function XRayContent({ dark, connected, onConnect }: SharedConten
             <ActionButton
               size="panel"
               className={styles.creditButton}
+              hoverIcon="arrowRight"
+              icon={connected ? "plus" : "wallet"}
               onClick={handleOpenCheckout}
               disabled={isPanelLoading}
             >
               {connected ? "BUY X-RAY CREDITS" : "SIGN IN TO BUY"}
             </ActionButton>
             <p className={styles.creditHint}>
-              Stripe Checkout creates the payment. Backend webhook fulfillment grants credits.
+              Add credits when you need deeper lookups. Each completed analysis
+              spends one credit.
             </p>
           </div>
         </div>
@@ -360,7 +363,7 @@ export default function XRayContent({ dark, connected, onConnect }: SharedConten
             data-liquid-glass="soft"
             type="text"
             value={walletInput}
-            placeholder="0x000... enter any wallet address"
+            placeholder="0x000… enter any wallet address"
             onChange={(event) => setWalletInput(event.target.value)}
           />
           <ActionButton
@@ -368,6 +371,8 @@ export default function XRayContent({ dark, connected, onConnect }: SharedConten
             className={`${styles.analyzeButton} ${
               !walletInput.trim() ? styles.analyzeButtonEmpty : ""
             }`}
+            hoverIcon={connected ? "spark" : "arrowRight"}
+            icon={connected ? "search" : "wallet"}
             onClick={() => void handleAnalyze()}
             title={
               !connected
@@ -383,7 +388,7 @@ export default function XRayContent({ dark, connected, onConnect }: SharedConten
         </div>
 
         <p className={styles.helperCopy}>
-          Connected wallets can inspect themselves for free and reopen history from
+          Connected wallets can inspect themselves and reopen prior analysis from
           the same workspace.
         </p>
 
@@ -396,12 +401,18 @@ export default function XRayContent({ dark, connected, onConnect }: SharedConten
           <div>
             <span className={styles.creditLabel}>SESSION REQUIRED</span>
             <p className={styles.restoreCopy}>
-              Restore the Gravii session first, then any EVM address can flow through
-              the same X-Ray pipeline.
+              Sign in to unlock wallet analysis, lookup history, and X-Ray credit
+              access.
             </p>
           </div>
 
-          <ActionButton size="panel" className={styles.restoreButton} onClick={onConnect}>
+          <ActionButton
+            size="panel"
+            className={styles.restoreButton}
+            hoverIcon="arrowRight"
+            icon="wallet"
+            onClick={onConnect}
+          >
             RESTORE SESSION
           </ActionButton>
         </section>
@@ -411,8 +422,8 @@ export default function XRayContent({ dark, connected, onConnect }: SharedConten
             <div>
               <span className={styles.creditLabel}>HISTORY</span>
               <p className={styles.historyCopy}>
-                Persisted lookups stay close so you can reopen detail views without
-                leaving the panel.
+                Previous analyses stay close so you can reopen wallet detail views
+                without leaving the panel.
               </p>
             </div>
             <span className={styles.historyCount}>{lookupHistory.length} analyzed</span>

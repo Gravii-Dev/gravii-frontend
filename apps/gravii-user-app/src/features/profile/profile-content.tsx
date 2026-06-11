@@ -235,7 +235,21 @@ function LockedProfileState({
         </div>
 
         {action && actionLabel ? (
-          <ActionButton size="panel" className={styles.lockedAction} onClick={action}>
+          <ActionButton
+            size="panel"
+            className={styles.lockedAction}
+            hoverIcon={
+              identityStatus === "error" && errorAction !== "refreshSession"
+                ? "spark"
+                : "arrowRight"
+            }
+            icon={
+              identityStatus === "error" && errorAction !== "refreshSession"
+                ? "search"
+                : "wallet"
+            }
+            onClick={action}
+          >
             {actionLabel}
           </ActionButton>
         ) : (
@@ -296,6 +310,9 @@ function ConnectedProfileState({
               <ActionButton
                 size="panel"
                 className={styles.shareAction}
+                hoverIcon="arrowRight"
+                icon="share"
+                iconPlacement="end"
                 onClick={() => {
                   const text = encodeURIComponent(
                     `I'm a ${personaName} on @Gravii — ${snapshot.tier} tier with ${getProfileNetWorthLabel(identity)} on-chain.`

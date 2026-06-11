@@ -45,7 +45,13 @@ export default function PanelShell({
         <div className={styles.headerActions}>
           {headerAction}
           {onClose ? (
-            <ActionButton dark={dark} className={styles.closeButton} onClick={onClose}>
+            <ActionButton
+              dark={dark}
+              className={styles.closeButton}
+              hoverIcon="arrowLeft"
+              icon="home"
+              onClick={onClose}
+            >
               {actionLabel}
             </ActionButton>
           ) : null}

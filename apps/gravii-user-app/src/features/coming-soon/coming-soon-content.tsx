@@ -116,6 +116,8 @@ export default function ComingSoonContent({
             <ActionButton
               size="panel"
               className={styles.primaryAction}
+              hoverIcon="arrowRight"
+              icon={connected ? "check" : "wallet"}
               onClick={() => {
                 if (connected) {
                   onNavigate?.(primaryRoute)
@@ -130,6 +132,8 @@ export default function ComingSoonContent({
             <ActionButton
               size="panel"
               className={styles.secondaryAction}
+              hoverIcon="arrowRight"
+              icon="chevronRight"
               onClick={() => onNavigate?.(secondaryRoute)}
             >
               {secondaryActionLabel}
@@ -144,7 +148,13 @@ export default function ComingSoonContent({
             <span className={styles.lockEyebrow}>Wallet layer locked</span>
             <h3>{lockTitle}</h3>
             <p>{lockCopy}</p>
-            <ActionButton size="panel" className={styles.lockAction} onClick={onConnect}>
+            <ActionButton
+              size="panel"
+              className={styles.lockAction}
+              hoverIcon="arrowRight"
+              icon="wallet"
+              onClick={onConnect}
+            >
               {lockActionLabel}
             </ActionButton>
           </div>

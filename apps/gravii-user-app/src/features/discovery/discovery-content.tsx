@@ -462,7 +462,7 @@ export default function DiscoveryContent({
         <label className={styles.searchBox}>
           <span>Search</span>
           <input
-            placeholder="Search partners or campaigns..."
+            placeholder="Search partners or campaigns…"
             type="search"
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}

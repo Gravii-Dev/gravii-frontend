@@ -62,6 +62,9 @@ export default function LaunchPanel({
       aria-label={`${panel.tab} navigation`}
       title={isCompact ? panel.tab : undefined}
       data-compact={isCompact ? "true" : undefined}
+      data-cursor-target="nav-panel"
+      data-cursor-label={isCompact ? panel.tab : undefined}
+      data-cursor-variant="pill"
       data-panel-id={panel.id}
       onClick={() => onOpen(panel.id)}
       onKeyDown={(event) => handleToggleKey(event, () => onOpen(panel.id))}

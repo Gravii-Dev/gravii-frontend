@@ -53,6 +53,8 @@ export default function HomeContent({
           <ActionButton
             size="panel"
             className={styles.primaryAction}
+            hoverIcon="arrowRight"
+            icon={connected ? "check" : "wallet"}
             onClick={connected ? () => onNavigate?.("profile") : onConnect}
           >
             {connected ? "OPEN GRAVII ID" : "SIGN IN"}
