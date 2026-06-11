@@ -65,28 +65,6 @@ Why it matters:
 
 - shared morphing icons keep high-touch controls polished while avoiding broad decorative animation across static cards
 
-### `depth-icon`
-
-Primary job:
-
-- render lightweight 3D-style section iconography without introducing a WebGL runtime
-
-Responsibilities:
-
-- map each Launch App section to a consistent dimensional glyph treatment
-- inherit the active section color through CSS variables so icons stay aligned with the current tonal system
-- use CSS transform, shadow, and layered SVG fills for depth instead of shipping raster placeholders
-- respect `prefers-reduced-motion` by disabling rotational lift transitions
-
-Where it is used:
-
-- workspace navigation panels
-- active section title bars
-
-Why it matters:
-
-- the iconography direction can now become more dimensional and product-specific without coupling the app shell to Three.js or external assets
-
 ### `expressive-cursor`
 
 Primary job:

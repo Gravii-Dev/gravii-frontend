@@ -739,15 +739,8 @@
   z-index: 1;
   display: flex;
   align-items: center;
-  gap: 10px;
   min-width: 0;
   overflow: hidden;
-}
-
-.sectionTopIcon {
-  --depth-icon-size: 30px;
-  --depth-icon-front: color-mix(in srgb, var(--section-on-accent) 86%, var(--section-accent));
-  --depth-icon-ink: var(--section-accent);
 }
 
 .sectionTopCopy span {

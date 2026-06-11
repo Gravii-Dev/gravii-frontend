@@ -4,13 +4,13 @@ This file describes the current active workstream. Rewrite this file when the ac
 
 ## Current Workstream
 
-Implement the next focused Launch App slice: 3D-style iconography plus API-ready Discovery and Ranking surfaces.
+Implement the next focused Launch App slice: API-ready Discovery and Ranking surfaces. The lightweight `DepthIcon` direction was rejected in review and must stay removed unless a new approved iconography direction is provided.
 
 ## Immediate Plan
 
 1. Keep the merged visual-system checkpoint intact on `main`.
-2. Add lightweight dimensional iconography without introducing a WebGL runtime.
-3. Keep Discovery and Ranking free of mock data while wiring frontend adapters for live API data.
+2. Keep Discovery and Ranking free of mock data while wiring frontend adapters for live API data.
+3. Remove the `DepthIcon` primitive and all section-icon wiring from the current PR branch.
 4. Leave the generated/example `lefthook.yml` unstaged unless it is explicitly adopted later.
 5. For future pushes or PRs, verify the Vercel user-app deployment before handoff.
 

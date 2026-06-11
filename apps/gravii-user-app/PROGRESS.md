@@ -109,12 +109,12 @@ Do not use this file as a backlog. Durable remaining work belongs in `TODO.md` i
 
 ### Next Slice In Progress
 
-- Added lightweight 3D-style section iconography with `src/components/ui/depth-icon`.
-- Wired `DepthIcon` into the workspace navigation panels and active section top bar.
+- Removed the rejected `DepthIcon` primitive direction from the active PR branch.
+- Removed `DepthIcon` wiring from workspace navigation panels and the active section top bar.
 - Added Discovery catalog read support through `readDiscoveryCatalog`.
 - Added Ranking public leaderboard and signed wallet summary read support through `readRankingLeaderboard` and `readUserRankingSummary`.
 - Kept Discovery and Ranking free of local mock rows; empty/loading/error/unavailable states now represent API readiness.
-- Updated UI, feature, and lib docs to describe the new iconography primitive and API-ready surfaces.
+- Updated UI, feature, and lib docs to describe the API-ready surfaces without keeping the rejected iconography primitive.
 
 Verification completed:
 

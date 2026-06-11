@@ -2,7 +2,6 @@ export type PanelId = "home" | "profile" | "discovery" | "leaderboard" | "lookup
 
 export type PanelConfig = {
   id: PanelId;
-  icon: "home" | "identity" | "xray" | "discovery" | "ranking" | "myspace";
   num: string;
   tab: string;
   sub: string;

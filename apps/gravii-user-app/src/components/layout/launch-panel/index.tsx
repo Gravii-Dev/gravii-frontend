@@ -2,7 +2,6 @@
 
 import type { CSSProperties, KeyboardEvent } from "react";
 
-import DepthIcon from "@/components/ui/depth-icon";
 import type { PanelConfig, PanelId } from "@/features/launch-app/types";
 
 import styles from "./launch-panel.module.css";
@@ -33,7 +32,6 @@ function joinClasses(...classNames: Array<string | false | undefined>) {
 type PanelStyle = CSSProperties & {
   "--panel-bg": string;
   "--panel-bg-hover": string;
-  "--depth-icon-front": string;
 };
 
 export default function LaunchPanel({
@@ -48,7 +46,6 @@ export default function LaunchPanel({
   const panelStyle: PanelStyle = {
     "--panel-bg": panel.bg,
     "--panel-bg-hover": panel.bgHover,
-    "--depth-icon-front": panel.bg,
   };
 
   return (
@@ -79,7 +76,6 @@ export default function LaunchPanel({
           <span className={styles.markerDot} key={`${panel.id}-marker-${index}`} />
         ))}
       </span>
-      <DepthIcon name={panel.icon} className={styles.panelIcon} />
       <span className={styles.copyStack}>
         <span className={styles.label}>{panel.tab}</span>
         <span className={styles.summary}>{panel.summary}</span>

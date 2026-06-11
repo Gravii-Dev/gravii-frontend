@@ -12,7 +12,6 @@ import {
 import LaunchPanel from "@/components/layout/launch-panel";
 import PanelShell from "@/components/layout/panel-shell";
 import ActionButton from "@/components/ui/action-button";
-import DepthIcon from "@/components/ui/depth-icon";
 import ExpressiveCursor from "@/components/ui/expressive-cursor";
 import GraviiLogo from "@/components/ui/gravii-logo";
 import MorphIcon from "@/components/ui/morph-icon";
@@ -449,7 +448,6 @@ export default function HomePage() {
           >
             <div className={styles.sectionTopBar}>
               <div className={styles.sectionTopCopy}>
-                <DepthIcon name={activePanel.icon} className={styles.sectionTopIcon} />
                 <span>{activePanel.tab}</span>
               </div>
               {activeSectionDotCount > 0 ? (

@@ -10,7 +10,7 @@ This file tracks durable remaining work. Keep session history in `PROGRESS.md` a
 
 ## Product/UI Follow-Ups
 
-- Review the lightweight `DepthIcon` direction in the browser and decide whether the next step should be custom 3D assets, Lottie, or WebGL.
+- Do not reintroduce `DepthIcon` or 3D section iconography unless a new direction is explicitly approved.
 - Continue checking responsive states after each major layout or motion change.
 - Keep sign-in, X-Ray checkout, analysis before/after, Discovery, and Ranking scenarios in browser QA.
 - Continue using section representative colors inside content surfaces without returning to unrelated accent palettes.
@@ -25,7 +25,7 @@ This file tracks durable remaining work. Keep session history in `PROGRESS.md` a
 - Update `PROGRESS.md` after meaningful implementation work.
 - Latest merged visual-system checkpoint: `7cb4026 feat(user-app): stabilize launch app visual system`.
 - Latest verified production inspector: `https://vercel.com/kxwxns-projects/gravii-frontend-gravii-user-app/zgpPHp4xbTmnL5Yg3J4L1J1XW12V`.
-- Current focused slice adds `DepthIcon`, Discovery catalog adapter, and Ranking board/user-summary adapters.
+- Current focused slice keeps Discovery catalog adapter and Ranking board/user-summary adapters while removing the rejected `DepthIcon` direction.
 
 ## Backlog
 
