@@ -88,3 +88,21 @@ Do not use this file as a backlog. Durable remaining work belongs in `TODO.md` i
 - User app preview URL: `https://gravii-frontend-gravii-user-app-git-code-83365e-kxwxns-projects.vercel.app`.
 - The exact Vercel inspector URL changes on every push and should be read live from `gh pr checks 50`.
 - Operating rule going forward: after every push/PR update, verify the Vercel user-app deployment and record the preview URL or failure state here.
+
+## 2026-06-11
+
+### PR Merge And Production Deployment
+
+- Merged PR #50: `https://github.com/Gravii-Dev/gravii-frontend/pull/50`.
+- Merge commit: `7cb4026936ab5d74109591ceb970cccb276e9eef`.
+- Fast-forwarded local `main` to `origin/main`.
+- Verified main commit status through GitHub/Vercel status checks.
+- `Vercel - gravii-frontend-gravii-user-app` completed successfully.
+- User app production deployment inspector: `https://vercel.com/kxwxns-projects/gravii-frontend-gravii-user-app/zgpPHp4xbTmnL5Yg3J4L1J1XW12V`.
+- Confirmed `https://app.gravii.io/` responds with `HTTP/2 200`.
+
+### Current Handoff Point
+
+- Local branch: `main`.
+- Latest merged app checkpoint: `7cb4026 feat(user-app): stabilize launch app visual system`.
+- Root `lefthook.yml` remains intentionally unstaged and was not included in the product/UI work.

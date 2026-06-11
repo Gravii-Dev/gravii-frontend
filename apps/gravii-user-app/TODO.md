@@ -4,8 +4,7 @@ This file tracks durable remaining work. Keep session history in `PROGRESS.md` a
 
 ## High Priority
 
-- Commit the handoff tracking files separately from the visual-system checkpoint.
-- Verify the Vercel preview deployment after every push/PR update.
+- Verify the Vercel user-app deployment after every push/PR update.
 - Leave root `lefthook.yml` unstaged unless the project intentionally adopts Lefthook later.
 - Preserve the current UI and feature logic while cleaning up any future version history.
 
@@ -24,8 +23,8 @@ This file tracks durable remaining work. Keep session history in `PROGRESS.md` a
 - After pushing, check `gh pr checks <number>` and confirm the relevant `Vercel - gravii-frontend-gravii-user-app` check is passing.
 - Record the Vercel preview URL in `PROGRESS.md` for every PR handoff.
 - Update `PROGRESS.md` after meaningful implementation work.
-- Latest verified visual-system checkpoint: `65c8017 feat(user-app): stabilize visual system`.
-- Current PR preview URL: `https://gravii-frontend-gravii-user-app-git-code-83365e-kxwxns-projects.vercel.app`.
+- Latest merged visual-system checkpoint: `7cb4026 feat(user-app): stabilize launch app visual system`.
+- Latest verified production inspector: `https://vercel.com/kxwxns-projects/gravii-frontend-gravii-user-app/zgpPHp4xbTmnL5Yg3J4L1J1XW12V`.
 
 ## Backlog
 
