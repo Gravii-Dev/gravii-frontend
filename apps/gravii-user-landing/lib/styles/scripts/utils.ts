@@ -14,5 +14,6 @@ export function formatObject<Obj extends Record<string, unknown>>(
   mapper: (args: [key: keyof Obj, value: Obj[keyof Obj]]) => string,
   joiner = '\n\t'
 ) {
-  return Object.entries(obj).map(mapper).join(joiner)
+  const entries = Object.entries(obj) as [keyof Obj, Obj[keyof Obj]][]
+  return entries.map(mapper).join(joiner)
 }

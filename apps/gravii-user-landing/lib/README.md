@@ -7,8 +7,6 @@ Non-UI code for the landing app.
 | Directory | Purpose |
 | --- | --- |
 | `config/` | Site URL and deployment-derived configuration |
-| `dev/` | Development-only overlay tools |
-| `features/` | Root-level optional runtime toggles |
 | `hooks/` | App-local client state used by Lenis and layout runtime |
 | `styles/` | Tokens, generated CSS config, and global CSS |
 | `utils/` | Fetch, rate limiting, and waitlist helpers |
