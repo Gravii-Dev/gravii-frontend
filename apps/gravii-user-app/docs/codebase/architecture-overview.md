@@ -14,7 +14,7 @@ In this repository, the high-level frontend architecture is:
 
 1. `src/app/page.tsx` acts as the single route entry point.
 2. `src/features/auth/auth-provider.tsx` owns client-side User API session bootstrap and the explicit in-app sign-in modal state.
-3. `src/features/launch-app/use-launch-shell.ts` owns shared shell state such as the active and hovered panel.
+3. `src/features/launch-app/use-launch-shell.ts` owns shared shell state such as the active panel.
 4. `src/components/layout/*` renders the panel system around the feature content.
 5. `src/features/*` renders each product surface and computes feature-specific UI state.
 6. `src/lib/auth/user-api.ts` owns browser-safe User API calls and wire-to-view model normalization for live auth, Gravii ID, and X-Ray data.
@@ -53,11 +53,11 @@ In this repository, "shell" means the shared application frame around feature co
 
 The shell includes:
 
-- the top header in `src/app/page.tsx`
-- the active or hovered panel state in `src/features/launch-app/use-launch-shell.ts`
-- the panel opening and closing behavior in `src/components/layout/launch-panel`
-- the shared expanded frame in `src/components/layout/panel-shell`
-- the navigation/scroll split where desktop can collapse the sidebar into a compact dot rail, mobile opens navigation as an off-canvas hamburger menu, and the active workspace frame handles long feature content independently
+- the mobile header in `src/app/page.tsx`
+- the active panel state in `src/features/launch-app/use-launch-shell.ts`
+- the panel selection behavior in `src/components/layout/launch-panel`
+- the shared in-surface title treatment in `src/components/layout/panel-shell`
+- the navigation/scroll split where desktop keeps navigation grouped inside one hue-blended contained sidebar, mobile opens navigation as an off-canvas drawer, and the active transparent workspace handles long feature content independently
 
 The shell does not own the full internal logic of Profile, Discovery, X-Ray, or Ranking. It only places those features inside the panel system and coordinates top-level interaction.
 
@@ -151,8 +151,8 @@ This folder owns the panel frame itself.
 
 It contains:
 
-- `launch-panel`: the standard vertical panel wrapper for the five current panels
-- `panel-shell`: the shared expanded panel frame with the common header and footer
+- `launch-panel`: the standard vertical panel wrapper for the visible navigation panels
+- `panel-shell`: the shared in-surface heading wrapper for non-home feature content
 
 These components know how the app opens and frames content, but they do not own the business logic inside each feature.
 

@@ -30,8 +30,23 @@ interface PartnerProfileResponseWire {
   partner: PartnerProfileWire
 }
 
+function resolveLocalPartnerApiProxyBaseUrl(): string | undefined {
+  if (
+    process.env.NODE_ENV !== 'development' ||
+    typeof window === 'undefined' ||
+    process.env.NEXT_PUBLIC_GRAVII_PARTNER_API_BASE_URL?.trim()
+  ) {
+    return undefined
+  }
+
+  return `${window.location.origin}/api/partner`
+}
+
 export function createAuthenticatedPartnerApiClient() {
+  const localProxyBaseUrl = resolveLocalPartnerApiProxyBaseUrl()
+
   return createPartnerApiClient({
+    ...(localProxyBaseUrl ? { baseUrl: localProxyBaseUrl } : {}),
     getAccessToken: async () => {
       const auth = getPartnerFirebaseAuth()
       const user = auth?.currentUser

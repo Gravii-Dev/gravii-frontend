@@ -47,11 +47,10 @@ What it owns:
 - editor copy
 - section summaries used by the navigation cards
 - dark or light token preferences
-- hover behavior metadata
 
 Why it matters:
 
-- `src/app/page.tsx` can render the left navigation rail declaratively
+- `src/app/page.tsx` can render the contained left navigation declaratively
 - layout components can style themselves from data instead of hardcoded branching spread across the app
 
 ### `use-launch-shell.ts`
@@ -63,8 +62,7 @@ Purpose:
 What it owns:
 
 - `activePanel`
-- `hoveredPanel`
-- handlers for navigation selection, home return, and hover updates
+- handlers for navigation selection and home return
 
 Why it matters:
 
@@ -82,8 +80,8 @@ What it does not own:
 The current flow looks like this:
 
 1. `src/app/page.tsx` imports `PANELS` and `useLaunchShell`.
-2. The route renders the logo Home control, left navigation, and one active workspace section based on `activePanel`.
-3. The active panel is rendered with a thin entering bar, an independent bordered frame, and section-local content.
+2. The route renders the logo Home control, contained left navigation, and one transparent active workspace based on `activePanel`.
+3. The active panel renders its title and feature content groups directly on the app canvas.
 4. Feature surfaces receive `SharedContentProps`.
 
 This folder therefore acts as:

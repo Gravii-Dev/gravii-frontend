@@ -31,6 +31,24 @@ Why it exists:
 - sign-in needs WalletConnect modal support while the User API still owns challenge generation, signature verification, and JWT issuance
 - future wallet-aware surfaces should reuse the same provider configuration instead of creating their own wallet clients
 
+### `auth/user-api.ts`
+
+Purpose:
+
+- centralize browser/server User API calls and response normalization
+
+Current user-app readers include:
+
+- auth challenge, verify, session, and logout helpers
+- Gravii ID identity reads
+- X-Ray credits, checkout, lookup list, lookup run, and lookup detail reads
+- Discovery catalog reads for API-ready campaign rendering
+- Ranking public leaderboard and signed wallet ranking summary reads
+
+Why it exists:
+
+- feature components should not duplicate endpoint construction, snake_case normalization, or User API error handling
+
 ## Boundary Rule
 
 If a helper:

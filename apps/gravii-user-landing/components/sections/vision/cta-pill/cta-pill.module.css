@@ -103,6 +103,7 @@
 /* Label inside box — "JOIN WAITLIST" */
 .label {
   position: absolute;
+  z-index: 1;
   inset: 0;
   display: inline-flex;
   align-items: center;
@@ -131,6 +132,10 @@
   cursor: pointer;
 }
 
+.label:global(.expressive-cursor-hovered) {
+  color: var(--gravii-ink);
+}
+
 .successLabel {
   display: inline-flex;
   align-items: center;
@@ -141,6 +146,7 @@
 /* Form (email + submit) — fills box on expand */
 .form {
   position: absolute;
+  z-index: 1;
   inset: 0;
   display: flex;
   align-items: center;
@@ -184,6 +190,7 @@
 }
 
 .submit {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -206,6 +213,10 @@
 .submit:hover:not(:disabled),
 .submit:focus-visible {
   background: var(--gravii-action-bg-hover);
+}
+
+.submit:global(.expressive-cursor-hovered) {
+  color: var(--gravii-ink);
 }
 
 .submit:disabled {

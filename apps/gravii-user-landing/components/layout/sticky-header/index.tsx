@@ -2,6 +2,7 @@
 
 import type { MouseEvent as ReactMouseEvent } from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { GraviiLogo3D } from '@gravii/brand-logo-3d'
 import { Link } from '@/components/ui/link'
 import s from './sticky-header.module.css'
 
@@ -74,6 +75,9 @@ function HeaderPill({
       href={href}
       className={className}
       aria-disabled={ariaDisabled || undefined}
+      data-cursor-target="nav-pill"
+      data-cursor-variant="pill"
+      data-cursor-surface="child"
       {...(target ? { target } : {})}
       {...(rel ? { rel } : {})}
       {...(onClick ? { onClick } : {})}
@@ -116,8 +120,7 @@ export function StickyHeader() {
         return
       }
 
-      const nextVisible =
-        currentScrollY <= SCROLL_HIDE_THRESHOLD || delta < 0
+      const nextVisible = currentScrollY <= SCROLL_HIDE_THRESHOLD || delta < 0
 
       if (isVisibleRef.current !== nextVisible) {
         isVisibleRef.current = nextVisible
@@ -147,8 +150,8 @@ export function StickyHeader() {
     <header className={`${s.root} ${!isVisible ? s.isHidden : ''}`.trim()}>
       {/* Left Area: Logo and Nav Menu */}
       <div className={s.leftGroup}>
-        <Link href="#hero" className={s.logoLink}>
-          GRAVII
+        <Link href="#hero" className={s.logoLink} aria-label="Go to Gravii">
+          <GraviiLogo3D animated={false} className={s.logoMark} variant="nav" />
         </Link>
 
         <nav className={s.nav}>

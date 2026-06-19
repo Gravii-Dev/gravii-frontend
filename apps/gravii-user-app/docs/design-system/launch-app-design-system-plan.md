@@ -15,38 +15,39 @@ The goal is not just to restyle screens. The goal is to create a stable product 
 
 ## Current Layout And Reference Decision
 
-The current redesign direction uses a Raw Materials-inspired workspace shell: the logo tile acts as Home, the left rail owns the product sections, and the right board owns the active workspace.
+The current redesign direction uses a Gravii-branded workspace shell with Slush-inspired structure: the logo tile acts as Home, the left rail owns the product sections inside one contained sidebar, and the right side lets feature content groups float directly on the app background without a separate title bar or enclosing content frame.
 
-The earlier `Identity Command Center` option is not the active direction for this app. Instead, the design system should improve the currently visible ordered surfaces with Slush-inspired foundations from the local reference file at `/Users/kxwxn/Downloads/index.html`.
+The earlier `Identity Command Center` option is not the active direction for this app. Instead, the design system should improve the currently visible ordered surfaces with Slush-inspired structure and Material 3 Expressive-inspired color relationships.
 
 - high-contrast ink and paper foundations
-- restrained violet-family accent tokens: lavender, blue-violet, warm lilac, and deep plum create section differences through temperature rather than unrelated hues
+- expressive but related accent relationships: warm coral, vivid violet, blue, cyan, lemon, and plum are blended through fuzzy pastel boundaries so the shell feels colorful without becoming a set of unrelated blocks
 - heavy uppercase display typography with tight line-height
-- thin ink borders on interactive cards and containers
+- borderless interactive cards and containers separated by color, spacing, radius, and shadow
 - bold solid pill buttons with a soft pastel bloom layer under the control and tonal hover motion
 - square or rounded card forms with bold color fills
 - smoother hover, focus, and active panel motion using elastic easing
 - polished reserved or gated states for `RANKING`, `DISCOVERY`, and hidden code-preserved `MY SPACE`
-- no mixed glass, caustic, reflection, or backdrop-blur material inside content surfaces; atmosphere gradients are reserved for canvas and action emphasis
+- no mixed glass, caustic, reflection, or backdrop-blur material around feature content groups; atmosphere gradients are reserved for canvas and action emphasis
 
 ## Implemented Foundation Slice
 
 The current implementation slice applies the Raw Materials-inspired direction with a solid material system.
 
-- `src/app/globals.css` owns the violet temperature palette, paper/ink color, radius, border, shadow, and motion primitives, while legacy token names remain mapped for existing feature modules.
+- `src/app/globals.css` owns the violet temperature palette, paper/ink color, radius, shadow, and motion primitives, while legacy border token names remain mapped only for compatibility.
 - font role tokens are resolved on `body` so the Next.js local font variables are available before `--font-ui`, `--font-display`, and `--font-accent` are consumed.
-- `src/app/page.module.css` keeps the logo Home control plus the visible navigation sections and adds a mobile horizontal scroll treatment for the rail.
-- `src/components/layout/launch-panel` and `src/components/layout/panel-shell` carry the shared solid navigation shell, oversized active titles, and workspace affordances.
+- `src/app/page.module.css` keeps the logo Home control plus the visible navigation sections inside one rounded sidebar, blends expressive warm/cool product hues into that sidebar background, and leaves the active workspace background transparent so feature content groups float directly on the canvas.
+- `src/components/layout/launch-panel` and `src/components/layout/panel-shell` carry the shared solid navigation controls, active nav expansion, and in-surface section title treatment.
+- Feature content should be grouped into small floating panels and full-width row buttons, not wrapped in one large page-level content card. The exception is the connected Gravii ID surface, which may use a tightly ordered bento readout.
 - `src/components/ui/action-button` carries the shared bold solid pill action pattern, including the pastel bloom layer that sits under every shared CTA.
 - `src/features/profile`, `src/features/x-ray`, and reserved surfaces inherit the same solid paper/ink material contract through global tokens and runtime material neutralization.
-- Connected Gravii ID states prioritize the live persona dashboard first; the larger brand introduction remains for locked, loading, and error states where orientation is still useful.
+- Connected Gravii ID states prioritize the live persona readout first, then continue through full-width metric rows; the larger brand introduction remains for locked, loading, and error states where orientation is still useful.
 - Decorative logo repetition is intentionally reduced inside connected product states; live signals such as reputation, tier, credits, history, and net worth should carry the visual weight.
 - Reserved panels no longer rely on single-message placeholders; each reserved surface now exposes panel-specific readiness metrics, launch-step status, and quick routes back to live surfaces.
-- Navigation cards use color by default and reverse to paper on hover; marker dots appear only on the active control.
-- Connected product states suppress ambient atmosphere gradients and reflective overlays behind live dashboard content so colored backgrounds do not read as accidental external panels.
+- Navigation cards use flat solid product colors with no card-level gradient, shadow, or hover treatment; they remove secondary explanation copy from the buttons and use the existing active expansion and logo color shift for orientation instead of adding marker dots.
+- Connected product states suppress ambient atmosphere gradients, reflective overlays, and repeated inset frames behind live dashboard content so colored backgrounds do not read as accidental external panels.
 - The app now exposes `--ds-type-*`, `--ds-radius-*`, and `--ds-space-*` role tokens as the preferred foundation layer for visible product surfaces. Legacy `--type-*`, `--slush-radius-*`, and `--gravii-radius-*` names remain mapped so existing feature modules can migrate without a visual reset.
 - The first normalization pass applies those role tokens to the app shell, panel shell, navigation panels, Home, Gravii ID, X-Ray entry/result/purchase flows, Discovery, Ranking, reserved surfaces, sign-in surfaces, and shared action buttons.
-- The current color pass keeps every visible section inside one violet/lavender/plum family. Section accents are still distinct, but content surfaces, buttons, focus states, and atmospheric backgrounds now share the same hue family instead of mixing green, orange, and unrelated blues.
+- The current color pass uses related warm/cool hue distance, bridge colors, and soft light-dark contrast for the navigation shell while keeping feature content calmer and more legible.
 - Remaining visual cleanup should focus on older hidden surfaces and deep component-specific CSS that still uses one-off fixed sizes, not on changing the product flow or removing existing UI features.
 
 ## Design System Principles
@@ -69,7 +70,7 @@ Minimum token families:
 - typography
 - spacing
 - radius
-- border
+- shadow and surface separation
 - shadow and elevation
 - motion
 - opacity
@@ -131,8 +132,8 @@ Suggested layers:
 - `--color-text`
 - `--color-text-muted`
 - `--color-text-inverse`
-- `--color-border`
-- `--color-border-strong`
+- legacy `--color-border`
+- legacy `--color-border-strong`
 - `--color-accent`
 - `--color-accent-contrast`
 - `--color-success`

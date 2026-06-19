@@ -1,6 +1,5 @@
 .panel {
   --panel-bg: #f4eadf;
-  --panel-bg-hover: #fff8f0;
   --panel-rest-height: var(--nav-panel-rest-height, 104px);
   --panel-active-height: var(--nav-panel-active-height, clamp(160px, 24dvh, 240px));
   position: relative;
@@ -8,31 +7,24 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  width: min(100%, var(--nav-panel-width, 178px));
+  width: 100%;
   height: var(--panel-rest-height);
   min-height: var(--panel-rest-height);
   padding: var(--ds-space-card-compact);
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+  border: 0;
   border-radius: var(--ds-radius-card-compact);
   background: var(--panel-bg);
-  color: var(--panel-active-text, var(--raw-ink));
+  color: var(--panel-text, var(--raw-ink));
   font-family: var(--font-ui);
   text-align: center;
   cursor: pointer;
   transform: translate3d(0, 0, 0);
-  will-change: height, background-color, border-color, color;
+  will-change: height;
   transition:
-    width 520ms cubic-bezier(0.16, 1, 0.3, 1),
     height 500ms cubic-bezier(0.22, 0.61, 0.36, 1),
-    min-height 500ms cubic-bezier(0.22, 0.61, 0.36, 1),
-    background-color 300ms ease-in-out,
-    border-color 300ms ease-in-out,
-    color 300ms ease-in-out,
-    filter 300ms ease-in-out,
-    transform 300ms var(--motion-ease-standard),
-    box-shadow 300ms var(--motion-ease-standard);
-  box-shadow: var(--app-shadow-card, none);
+    min-height 500ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  box-shadow: none;
 }
 
 .panel:focus-visible {
@@ -44,75 +36,37 @@
   display: none;
 }
 
-.panel:hover,
-.hovered {
-  background: color-mix(in srgb, var(--app-surface, transparent) 74%, transparent);
-  color: var(--raw-ink);
-  border-color: var(--app-line-strong, currentColor);
-  transform: translate3d(0, -1px, 0);
+.panel:hover {
+  background: var(--panel-bg);
+  color: var(--panel-text, var(--raw-ink));
+  transform: translate3d(0, 0, 0);
 }
 
 .active {
   height: var(--panel-active-height);
   min-height: var(--panel-active-height);
   background: var(--panel-bg);
-  border-color: color-mix(in srgb, currentColor 12%, transparent);
   color: var(--panel-active-text, var(--raw-ink));
 }
 
 .active:hover {
   background: var(--panel-bg);
-  border-color: color-mix(in srgb, currentColor 12%, transparent);
   color: var(--panel-active-text, var(--raw-ink));
 }
 
-.active::before {
-  opacity: 1;
-}
-
 .dark {
+  --panel-text: #fffaff;
   --panel-active-text: #fffaff;
 }
 
 .light {
+  --panel-text: var(--raw-ink);
   --panel-active-text: var(--raw-ink);
 }
 
-.marker,
-.copyStack,
-.sub {
+.copyStack {
   position: relative;
   z-index: 1;
-}
-
-.marker {
-  position: absolute;
-  top: 16px;
-  right: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 4px;
-  min-width: 6px;
-  min-height: 6px;
-  opacity: 0;
-  transform: scale(0.35);
-  transition:
-    opacity 300ms ease-in-out,
-    transform 300ms cubic-bezier(0.22, 0.61, 0.36, 1);
-}
-
-.markerDot {
-  width: 6px;
-  height: 6px;
-  flex: 0 0 auto;
-  border-radius: 999px;
-  background: currentColor;
-}
-
-.active .marker {
-  opacity: 1;
-  transform: scale(1);
 }
 
 .copyStack {
@@ -127,11 +81,10 @@
   padding-right: 0;
   text-align: center;
   transform: translate3d(0, 0, 0);
-  transition: transform 500ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .label {
-  font-size: clamp(1.18rem, 1.35vw, 1.45rem);
+  font-size: clamp(0.96rem, 1.05vw, 1.18rem);
   font-style: italic;
   font-variation-settings: var(--type-expressive-rest);
   font-weight: var(--ds-type-title-weight);
@@ -139,70 +92,20 @@
   letter-spacing: -0.005em;
   padding-block: 0.04em;
   text-transform: uppercase;
-  transition:
-    color 300ms ease-in-out,
-    font-variation-settings var(--motion-duration-expressive) var(--motion-ease-expressive),
-    letter-spacing var(--motion-duration-expressive-fast) var(--motion-ease-expressive);
 }
 
-.panel:hover .label,
-.hovered .label {
-  font-variation-settings: var(--type-expressive-hover);
+.panel:hover .label {
+  font-variation-settings: var(--type-expressive-rest);
 }
 
 .active .label {
+  font-size: clamp(1.12rem, 1.28vw, 1.42rem);
   font-variation-settings: var(--type-expressive-active);
-}
-
-.summary {
-  display: none;
-}
-
-.sub {
-  display: none;
-}
-
-.panel[data-compact="true"] {
-  width: var(--nav-panel-width, 64px);
-  padding: 10px;
-  border-radius: 22px;
-}
-
-.panel[data-compact="true"] .marker {
-  position: static;
-  top: auto;
-  right: auto;
-  justify-content: center;
-  opacity: 0.78;
-  transform: scale(1);
-}
-
-.panel[data-compact="true"] .markerDot {
-  width: 5px;
-  height: 5px;
-  background: color-mix(in srgb, currentColor 90%, transparent);
-  box-shadow: 0 0 0 1px color-mix(in srgb, currentColor 12%, transparent);
-}
-
-.panel[data-compact="true"].active .marker {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.panel[data-compact="true"] .copyStack,
-.panel[data-compact="true"] .sub {
-  display: none;
-}
-
-.panel[data-compact="true"]:hover .marker,
-.panel[data-compact="true"].hovered .marker {
-  opacity: 0.78;
-  transform: scale(0.96);
 }
 
 @media (max-width: 860px) {
   .panel {
-    width: auto;
+    width: 100%;
     min-width: 0;
     flex: none;
     padding: 12px 14px;
@@ -210,45 +113,6 @@
 
   .label {
     font-size: clamp(0.9rem, 2.35vw, 1.1rem);
-  }
-
-  .summary {
-    max-width: 100%;
-    font-size: 10px;
-    letter-spacing: 0;
-  }
-
-  .marker {
-    top: 15px;
-    right: 12px;
-    transform: scale(0.3);
-  }
-
-  .active .marker {
-    transform: scale(1);
-  }
-
-  .panel[data-compact="true"] {
-    width: auto;
-    padding: 12px 14px;
-    border-radius: 18px;
-  }
-
-  .panel[data-compact="true"] .copyStack {
-    display: flex;
-  }
-
-  .panel[data-compact="true"] .marker {
-    position: absolute;
-    top: 15px;
-    right: 12px;
-    opacity: 0;
-    transform: scale(0.3);
-  }
-
-  .panel[data-compact="true"].active .marker {
-    opacity: 1;
-    transform: scale(1);
   }
 }
 
@@ -271,16 +135,10 @@
   .label {
     font-size: clamp(0.75rem, 4vw, 0.95rem);
   }
-
-  .markerDot {
-    width: 5px;
-    height: 5px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .panel,
-  .marker,
   .copyStack,
   .label {
     transition-duration: 1ms;

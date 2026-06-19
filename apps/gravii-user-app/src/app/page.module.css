@@ -1,10 +1,10 @@
 .root {
   --app-shell-padding: 20px;
   --app-shell-gap: 20px;
-  --brand-tile-height: clamp(76px, 11dvh, 104px);
+  --brand-tile-height: clamp(88px, 12dvh, 122px);
   --nav-panel-gap: 10px;
-  --nav-panel-rest-height: clamp(58px, 8.4dvh, 86px);
-  --nav-panel-active-height: clamp(128px, 22dvh, 220px);
+  --nav-panel-rest-height: clamp(50px, 7dvh, 70px);
+  --nav-panel-active-height: clamp(110px, 16.5dvh, 160px);
   --sidebar-footer-padding: clamp(12px, 1.8dvh, 16px);
   --app-canvas: var(--solid-light-canvas);
   --app-canvas-deep: var(--solid-light-canvas-deep);
@@ -23,6 +23,18 @@
   --app-accent-amber: var(--solid-accent-amber-strong);
   --app-accent-red: var(--solid-accent-red);
   --app-shadow-card: 0 18px 48px rgba(23, 17, 29, 0.08);
+  --sidebar-blend-background:
+    radial-gradient(circle at 14% 6%, color-mix(in srgb, #ff6b3d 48%, transparent), transparent 38%),
+    radial-gradient(circle at 88% 12%, color-mix(in srgb, #d83cff 44%, transparent), transparent 42%),
+    radial-gradient(ellipse at 32% 48%, color-mix(in srgb, #6f5cff 48%, transparent), transparent 48%),
+    radial-gradient(circle at 90% 58%, color-mix(in srgb, #00bfd8 34%, transparent), transparent 42%),
+    radial-gradient(circle at 28% 92%, color-mix(in srgb, #e9ff3d 32%, transparent), transparent 44%),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, #ffd4c5 78%, var(--app-surface)),
+      color-mix(in srgb, #efd7ff 76%, var(--app-surface)) 48%,
+      color-mix(in srgb, #d1dcff 72%, var(--app-surface))
+    );
   --raw-ink: var(--app-text);
   --raw-paper: var(--app-canvas);
   --raw-paper-strong: var(--app-surface-strong);
@@ -98,7 +110,7 @@
   z-index: 1;
   isolation: isolate;
   display: grid;
-  grid-template-columns: 226px minmax(0, 1fr);
+  grid-template-columns: 276px minmax(0, 1fr);
   gap: var(--app-shell-gap);
   height: 100dvh;
   min-height: 0;
@@ -130,6 +142,18 @@
   --app-accent-amber: var(--solid-accent-amber);
   --app-accent-red: var(--solid-accent-red);
   --app-shadow-card: 0 18px 48px rgba(0, 0, 0, 0.18);
+  --sidebar-blend-background:
+    radial-gradient(circle at 14% 6%, color-mix(in srgb, #ff6b3d 34%, transparent), transparent 38%),
+    radial-gradient(circle at 88% 12%, color-mix(in srgb, #d83cff 36%, transparent), transparent 42%),
+    radial-gradient(ellipse at 32% 48%, color-mix(in srgb, #6f5cff 42%, transparent), transparent 48%),
+    radial-gradient(circle at 90% 58%, color-mix(in srgb, #00bfd8 26%, transparent), transparent 42%),
+    radial-gradient(circle at 28% 92%, color-mix(in srgb, #e9ff3d 16%, transparent), transparent 44%),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, #26172a 88%, var(--app-surface)),
+      color-mix(in srgb, #1d1734 86%, var(--app-surface)) 48%,
+      color-mix(in srgb, #12182e 88%, var(--app-surface))
+    );
   --raw-ink: var(--app-text);
   --raw-paper: var(--app-canvas);
   --raw-paper-strong: var(--app-surface-strong);
@@ -203,11 +227,11 @@
   display: flex;
   align-items: center;
   gap: 24px;
-  padding: var(--ds-space-card);
-  border: 1px solid var(--app-line, rgba(9, 7, 5, 0.12));
-  border-radius: var(--ds-radius-card-compact);
-  background: var(--app-surface-strong, #fff8f0);
-  box-shadow: var(--app-shadow-card, none);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .loadingLogo {
@@ -241,97 +265,23 @@
   position: relative;
   z-index: 1;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   height: calc(100dvh - (var(--app-shell-padding) * 2));
   min-height: 0;
   flex-direction: column;
   gap: var(--nav-panel-gap);
   overflow: hidden;
+  padding: clamp(14px, 1.45vw, 18px);
+  border: 0;
+  border-radius: var(--ds-radius-frame);
+  background: var(--sidebar-blend-background);
+  box-shadow: var(--app-shadow-card);
 }
 
 @media (min-width: 861px) {
-  .root[data-nav-collapsed="true"] {
-    --brand-tile-height: 74px;
-    --nav-panel-width: 64px;
-    --nav-panel-gap: 8px;
-    --nav-panel-rest-height: 58px;
-    --nav-panel-active-height: 66px;
-    --sidebar-footer-padding: 8px;
-    grid-template-columns: 96px minmax(0, 1fr);
-  }
-
-  .root[data-nav-collapsed="true"] .brandTile,
-  .root[data-nav-collapsed="true"] .sidebarFooter,
-  .root[data-nav-collapsed="true"] .navList {
-    width: 64px;
-  }
-
-  .root[data-nav-collapsed="true"] .brandTile {
-    padding: 10px;
-    border-radius: 22px;
-  }
-
-  .root[data-nav-collapsed="true"] .headerSymbol {
-    width: 42px;
-    max-height: 42px;
-  }
-
-  .root[data-nav-collapsed="true"] .sidebarFooter {
-    align-items: center;
-    gap: 8px;
-    border-radius: 22px;
-  }
-
-  .root[data-nav-collapsed="true"] .themeToggleLabel,
-  .root[data-nav-collapsed="true"] .footerLabel {
-    display: none;
-  }
-
-  .root[data-nav-collapsed="true"] .themeToggleGroup {
-    width: 100%;
-    align-items: center;
-  }
-
-  .root[data-nav-collapsed="true"] .themeToggle {
-    width: 44px;
-    min-height: 44px;
-    grid-template-columns: 1fr;
-    padding: 4px;
-  }
-
-  .root[data-nav-collapsed="true"] .themeToggleThumb {
-    inset: 4px;
-    width: auto;
-    transform: none;
-  }
-
-  .root[data-nav-collapsed="true"] .themeToggleOption {
-    display: none;
-  }
-
-  .root[data-nav-collapsed="true"] .sessionButtonDisconnected,
-  .root[data-nav-collapsed="true"] .sessionButtonConnected {
-    --button-font-size: 0.58rem;
-    --button-pad-x: 0;
-    width: 44px;
-    min-width: 44px;
-  }
-
-  .sidebar {
-    cursor: w-resize;
-  }
-
-  .sidebar[data-collapse-state="collapsed"] {
-    cursor: e-resize;
-  }
-
   .sidebar button,
   .sidebar nav button {
     cursor: pointer;
-  }
-
-  .navList {
-    cursor: inherit;
   }
 }
 
@@ -340,32 +290,31 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 178px;
+  width: 100%;
   height: var(--brand-tile-height);
   min-height: var(--brand-tile-height);
-  padding: 16px;
-  border: 1px solid color-mix(in srgb, var(--auth-on-accent) 18%, transparent);
+  padding: 6px;
+  border: 0;
   border-radius: 18px;
-  background: var(--auth-accent);
-  color: var(--auth-on-accent);
+  background: var(--solid-ink-surface);
+  color: var(--solid-ink-text);
   font: inherit;
   text-align: left;
   cursor: pointer;
+  overflow: visible;
   transition:
     background-color 300ms ease-in-out,
-    border-color 300ms ease-in-out,
     color 300ms ease-in-out,
     transform 300ms var(--motion-ease-standard);
 }
 
 .brandTile:hover {
-  background: var(--auth-accent-hover);
-  border-color: color-mix(in srgb, var(--auth-on-accent) 28%, transparent);
+  background: color-mix(in srgb, var(--solid-ink-surface) 90%, var(--solid-ink-text));
   transform: translateY(-1px);
 }
 
 .brandTile:focus-visible {
-  outline: 3px solid var(--auth-accent);
+  outline: 3px solid color-mix(in srgb, var(--solid-ink-text) 76%, transparent);
   outline-offset: 3px;
 }
 
@@ -379,79 +328,35 @@
 
 .headerSymbolMotion {
   position: relative;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  transform-origin: 50% 58%;
-  animation: brandStampSettle 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.headerSymbolMotion::before {
-  content: "";
-  position: absolute;
-  inset: -18%;
-  z-index: -1;
-  border-radius: 999px;
-  background:
-    radial-gradient(circle, color-mix(in srgb, var(--auth-on-accent) 34%, transparent) 0%, transparent 62%);
-  opacity: 0;
-  transform: scale(0.72);
-  animation: brandStampHalo 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  pointer-events: none;
+  width: min(172px, 100%);
+  height: min(118px, calc(var(--brand-tile-height) - 4px));
+  transform-origin: 50% 50%;
 }
 
 .headerSymbol {
-  width: 88px;
-  max-height: 72px;
+  width: 64px;
+  max-height: 56px;
   filter: var(--brand-logo-filter);
   transition: filter 420ms var(--motion-ease-standard);
+}
+
+.headerLogo3d {
+  width: min(168px, 100%);
+  height: min(116px, calc(var(--brand-tile-height) - 4px));
+  min-height: 0;
+  filter: drop-shadow(0 14px 18px rgb(0 0 0 / 18%));
 }
 
 .headerWordmarkText {
   display: none;
 }
 
-@keyframes brandStampSettle {
-  0% {
-    opacity: 0.72;
-    transform: translateY(3px) scale(0.88) rotate(-2.8deg);
-  }
-
-  44% {
-    opacity: 1;
-    transform: translateY(-2px) scale(1.055) rotate(1.25deg);
-  }
-
-  68% {
-    transform: translateY(0) scale(0.985) rotate(-0.35deg);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1) rotate(0deg);
-  }
-}
-
-@keyframes brandStampHalo {
-  0% {
-    opacity: 0;
-    transform: scale(0.72);
-  }
-
-  38% {
-    opacity: 0.42;
-    transform: scale(1.02);
-  }
-
-  100% {
-    opacity: 0;
-    transform: scale(1.26);
-  }
-}
-
 .navList {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   min-height: 0;
   width: 100%;
   flex: 1;
@@ -477,9 +382,9 @@
   display: flex;
   flex-direction: column;
   gap: clamp(8px, 1.25dvh, 12px);
-  width: 178px;
+  width: 100%;
   padding: var(--sidebar-footer-padding);
-  border: 1px solid var(--app-line);
+  border: 0;
   border-radius: 18px;
   background: var(--sidebar-footer-bg);
   color: var(--sidebar-footer-fg);
@@ -527,10 +432,6 @@
   background: var(--theme-toggle-track-hover);
 }
 
-.root[data-nav-collapsed="true"] .themeToggleIcon {
-  display: block;
-}
-
 .themeToggle:focus-visible {
   outline: 3px solid var(--auth-accent);
   outline-offset: 3px;
@@ -565,10 +466,6 @@
 
 .themeToggle[data-theme-state="dark"] .themeToggleThumb {
   transform: translateX(100%);
-}
-
-.root[data-nav-collapsed="true"] .themeToggle[data-theme-state="dark"] .themeToggleThumb {
-  transform: none;
 }
 
 .themeToggleOption {
@@ -640,12 +537,11 @@
   height: 100%;
   min-height: 0;
   overflow: hidden;
-  border: 1px solid var(--app-line);
-  border-radius: var(--ds-radius-frame);
-  background: var(--workspace-board-background);
-  box-shadow: var(--app-shadow-card);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
   transition:
-    border-color 300ms ease-in-out,
     background-color 420ms var(--motion-ease-standard),
     color 420ms var(--motion-ease-standard);
 }
@@ -660,6 +556,8 @@
 }
 
 .activeSection {
+  --section-content-padding: var(--ds-space-panel);
+  --section-content-bottom-padding: clamp(28px, 4vh, 48px);
   --section-accent: var(--raw-line);
   --section-on-accent: var(--theme-on-accent);
   --section-accent-hover: color-mix(in srgb, var(--section-accent) 78%, var(--app-text));
@@ -710,128 +608,9 @@
   height: 100%;
   min-height: 0;
   flex-direction: column;
-  gap: var(--ds-space-gap-tight);
+  gap: 0;
   overflow: hidden;
-  padding: clamp(12px, 1.25vw, 18px);
-}
-
-.sectionTopBar {
-  position: relative;
-  z-index: 10;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
-  align-items: center;
-  gap: 18px;
-  min-height: 42px;
-  padding: 6px 10px 6px 22px;
-  overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--section-on-accent) 12%, transparent);
-  border-radius: 999px;
-  background: var(--section-accent);
-  color: var(--section-on-accent);
-  box-shadow: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-}
-
-.sectionTopCopy {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  min-width: 0;
-  overflow: hidden;
-}
-
-.sectionTopCopy span {
-  min-width: 0;
-  overflow: hidden;
-  color: inherit;
-  font-family: var(--font-ui);
-  font-size: clamp(1.18rem, 1.35vw, 1.45rem);
-  font-style: italic;
-  font-variation-settings: var(--type-expressive-rest);
-  font-weight: var(--ds-type-title-weight);
-  letter-spacing: -0.005em;
-  line-height: var(--ds-type-title-line);
-  padding-block: 0.04em;
-  text-overflow: ellipsis;
-  text-transform: uppercase;
-  white-space: nowrap;
-  transition:
-    font-variation-settings var(--motion-duration-expressive) var(--motion-ease-expressive),
-    letter-spacing var(--motion-duration-expressive-fast) var(--motion-ease-expressive);
-}
-
-.sectionTopBar:hover .sectionTopCopy span {
-  font-variation-settings: var(--type-expressive-hover);
-}
-
-.sectionTopMeta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 5px;
-  color: inherit;
-  min-width: 24px;
-}
-
-.sectionTopDot {
-  width: 6px;
-  height: 6px;
-  flex: 0 0 auto;
-  border-radius: 999px;
-  background: currentColor;
-}
-
-.sectionTopActions {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  min-width: 0;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-.sectionTopActions .workspaceAuthButton {
-  --button-front: color-mix(in srgb, var(--section-on-accent) 92%, var(--section-accent));
-  --button-front-hover: color-mix(in srgb, var(--section-on-accent) 82%, var(--section-accent));
-  --button-text: var(--section-accent);
-  --button-text-hover: color-mix(in srgb, var(--section-accent) 82%, var(--solid-ink-surface));
-  --button-border-size: 1px;
-  --button-border-color: color-mix(in srgb, var(--section-on-accent) 24%, transparent);
-  --button-min-height: 28px;
-  --button-font-size: 0.58rem;
-  --button-pad-y: 0.64em;
-  --button-pad-x: 1.12em;
-}
-
-.sectionFrame {
-  --section-content-padding: var(--ds-space-panel);
-  --section-content-bottom-padding: clamp(28px, 4vh, 48px);
-  position: relative;
-  display: flex;
-  flex: 1 1 auto;
-  min-width: 0;
-  width: 100%;
-  min-height: 0;
-  overflow: hidden;
-  border: 6px solid var(--section-accent);
-  border-radius: var(--ds-radius-section);
-  background:
-    radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--section-accent) 16%, transparent), transparent 34%),
-    radial-gradient(circle at 92% 14%, color-mix(in srgb, var(--section-accent-hover) 13%, transparent), transparent 36%),
-    radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--section-accent) 10%, transparent), transparent 42%),
-    linear-gradient(180deg, var(--section-surface-soft), var(--section-surface));
-  box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--section-on-accent) 6%, transparent),
-    var(--app-shadow-card);
   padding: 0;
-}
-
-.sectionFrame > * {
-  min-width: 0;
-  width: 100%;
 }
 
 .homeShell {
@@ -869,17 +648,6 @@
   display: none;
 }
 
-.sectionFrame .sectionPanelShell {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow: auto;
-  scroll-padding-bottom: var(--section-content-bottom-padding);
-  padding:
-    var(--section-content-padding)
-    var(--section-content-padding)
-    var(--section-content-bottom-padding);
-}
-
 .workspaceAuthButton {
   --button-min-height: 38px;
   --button-font-size: 0.68rem;
@@ -904,23 +672,16 @@
   .root {
     --app-shell-padding: 14px;
     --app-shell-gap: 14px;
-    --brand-tile-height: clamp(64px, 9.5dvh, 88px);
+    --brand-tile-height: clamp(82px, 10.5dvh, 108px);
     --nav-panel-rest-height: clamp(54px, 7.8dvh, 78px);
     --nav-panel-active-height: clamp(112px, 18dvh, 170px);
     --sidebar-footer-padding: 12px;
-    grid-template-columns: 202px minmax(0, 1fr);
+    grid-template-columns: 246px minmax(0, 1fr);
   }
 
   .brandTile,
   .sidebarFooter {
-    width: 168px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .headerSymbolMotion,
-  .headerSymbolMotion::before {
-    animation: none;
+    width: 100%;
   }
 }
 
@@ -928,7 +689,7 @@
   .root {
     --app-shell-padding: 12px;
     --app-shell-gap: 10px;
-    --brand-tile-height: 72px;
+    --brand-tile-height: 88px;
     --nav-panel-gap: 8px;
     --nav-panel-rest-height: 58px;
     --nav-panel-active-height: 72px;
@@ -946,9 +707,9 @@
     grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
     gap: 10px;
-    min-height: 56px;
+    min-height: 66px;
     padding: 8px;
-    border: 1px solid var(--app-line);
+    border: 0;
     border-radius: 22px;
     background: var(--app-surface-strong);
     box-shadow: var(--app-shadow-card);
@@ -961,7 +722,7 @@
     flex-direction: column;
     gap: 4px;
     width: 42px;
-    height: 42px;
+    height: 54px;
     border: 0;
     border-radius: 999px;
     background: var(--auth-accent);
@@ -990,15 +751,17 @@
   .mobileBrandButton {
     display: flex;
     align-items: center;
+    justify-content: center;
     min-width: 0;
     gap: 10px;
-    height: 42px;
-    padding: 0 14px 0 9px;
-    overflow: hidden;
+    height: 58px;
+    min-height: 58px;
+    padding: 0 14px 0 6px;
+    overflow: visible;
     border: 0;
     border-radius: 999px;
-    background: color-mix(in srgb, var(--auth-accent) 16%, var(--app-surface));
-    color: var(--app-text);
+    background: var(--solid-ink-surface);
+    color: var(--solid-ink-text);
     font-family: var(--font-ui);
     font-size: clamp(0.82rem, 3.8vw, 1rem);
     font-style: italic;
@@ -1022,6 +785,15 @@
     width: 32px;
     max-height: 32px;
     filter: var(--brand-logo-filter);
+  }
+
+  .mobileHeaderLogo3d {
+    flex: 0 0 auto;
+    width: 78px;
+    height: 56px;
+    min-height: 0;
+    margin-left: 0;
+    filter: drop-shadow(0 8px 10px rgb(0 0 0 / 16%));
   }
 
   .mobileBrandButton span {
@@ -1076,15 +848,14 @@
     padding: 12px;
     align-items: stretch;
     overflow: auto;
-    border: 1px solid var(--app-line);
+    border: 0;
     border-radius: 24px;
-    background: var(--app-surface-strong);
+    background: var(--sidebar-blend-background);
     box-shadow: 0 26px 80px rgba(8, 8, 7, 0.24);
     transform: translateX(calc(-100% - 28px));
     transition:
       transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
-      background-color 320ms var(--motion-ease-standard),
-      border-color 320ms var(--motion-ease-standard);
+      background-color 320ms var(--motion-ease-standard);
   }
 
   .sidebarOpen {
@@ -1136,6 +907,11 @@
     max-height: 44px;
   }
 
+  .headerLogo3d {
+    width: min(150px, 100%);
+    height: min(104px, calc(var(--brand-tile-height) - 4px));
+  }
+
   .navList {
     display: flex;
     width: 100%;
@@ -1182,11 +958,8 @@
     min-height: 0;
   }
 
-  .sectionFrame {
+  .activeSection {
     --section-content-padding: 14px;
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow: hidden;
   }
 
   .sectionPanelShell {
@@ -1200,7 +973,7 @@
 @media (max-width: 520px) {
   .root {
     --app-shell-padding: 10px;
-    --brand-tile-height: 50px;
+    --brand-tile-height: 74px;
     --nav-panel-rest-height: 54px;
     --nav-panel-active-height: 70px;
     --nav-panel-gap: 7px;
@@ -1220,36 +993,6 @@
     padding: 10px;
   }
 
-  .sectionTopBar {
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 8px;
-    align-items: stretch;
-    padding: 6px 8px 6px 14px;
-  }
-
-  .sectionTopMeta {
-    display: none;
-  }
-
-  .sectionTopActions {
-    min-width: 0;
-    justify-content: flex-end;
-  }
-
-  .sectionTopActions .workspaceAuthButton {
-    --button-font-size: 0.54rem;
-    --button-pad-x: 0.95em;
-  }
-
-  .sectionFrame {
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow: hidden;
-    border-width: 4px;
-    border-radius: 14px;
-    padding: 0;
-  }
-
   .homeShell {
     flex: 1 1 auto;
     padding:
@@ -1263,30 +1006,9 @@
 @media (max-width: 360px) {
   .root {
     --app-shell-padding: 8px;
-    --brand-tile-height: 46px;
+    --brand-tile-height: 68px;
     --nav-panel-rest-height: 50px;
     --nav-panel-active-height: 64px;
-  }
-
-  .sectionTopBar {
-    grid-template-columns: 1fr;
-    gap: 6px;
-    padding: 5px 6px 5px 12px;
-    border-radius: 18px;
-  }
-
-  .sectionTopCopy span {
-    font-size: 18px;
-  }
-
-  .sectionTopActions .workspaceAuthButton {
-    --button-font-size: 0.5rem;
-    --button-pad-x: 0.78em;
-    width: auto;
-  }
-
-  .sectionTopActions {
-    justify-content: flex-start;
   }
 
   .footerLabel {

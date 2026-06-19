@@ -57,28 +57,3 @@ export async function fetchWithTimeout(
     clearTimeout(timeoutId)
   }
 }
-
-/**
- * Fetch JSON with timeout protection
- *
- * Convenience wrapper that automatically parses JSON and handles errors
- *
- * @example
- * ```ts
- * const data = await fetchJSON<{ name: string }>('https://api.example.com/user', {
- *   timeout: 5000
- * })
- * ```
- */
-export async function fetchJSON<T = unknown>(
-  url: string,
-  options: FetchWithTimeoutOptions = {}
-): Promise<T> {
-  const response = await fetchWithTimeout(url, options)
-
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-  }
-
-  return response.json() as Promise<T>
-}

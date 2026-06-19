@@ -1,85 +1,491 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import s from './cursor-trail.module.css'
 
-const MAX_POINTS = 16
-const FADE_RATE = 0.08
-const DOT_RADIUS = 4
-const HUE = 264 // violet
+type CursorVariant = 'default' | 'pill' | 'checked' | 'hidden'
 
-type Point = { x: number; y: number; life: number }
+type CursorVisualState = {
+  isActive: boolean
+  isPressed: boolean
+  isVisible: boolean
+  label: string
+  variant: CursorVariant
+}
+
+type CursorHit = {
+  state: CursorVisualState
+  surface: HTMLElement | null
+  target: HTMLElement | null
+}
+
+type SurfaceRect = {
+  height: number
+  left: number
+  top: number
+  width: number
+}
+
+const CURSOR_TARGET_SELECTOR =
+  '[data-cursor-target], [data-cursor-label], [data-cursor-shape]'
+const IMPLICIT_CURSOR_TARGET_SELECTOR =
+  "button:not(:disabled), a[href], [role='button']"
+const NATIVE_CURSOR_SELECTOR =
+  "input, textarea, select, [contenteditable='true'], [contenteditable=''], [data-cursor-native='true']"
+
+const DEFAULT_VISUAL_STATE: CursorVisualState = {
+  isActive: false,
+  isPressed: false,
+  isVisible: false,
+  label: '',
+  variant: 'default',
+}
+
+function joinClasses(...classNames: Array<string | false | undefined>) {
+  return classNames.filter(Boolean).join(' ')
+}
+
+function normalizeCursorVariant(value: string | undefined): CursorVariant {
+  if (value === 'pill' || value === 'checked' || value === 'hidden') {
+    return value
+  }
+
+  if (value === 'chip') {
+    return 'pill'
+  }
+
+  return 'default'
+}
+
+function statesMatch(left: CursorVisualState, right: CursorVisualState) {
+  return (
+    left.isActive === right.isActive &&
+    left.isPressed === right.isPressed &&
+    left.isVisible === right.isVisible &&
+    left.label === right.label &&
+    left.variant === right.variant
+  )
+}
+
+function shouldUseNativeCursor(target: Element | null) {
+  return Boolean(target?.closest(NATIVE_CURSOR_SELECTOR))
+}
+
+function isDisabledTarget(target: HTMLElement) {
+  return (
+    target.matches(':disabled') ||
+    target.getAttribute('aria-disabled') === 'true'
+  )
+}
+
+function resolveCursorSurface(target: HTMLElement | null) {
+  if (!target) {
+    return null
+  }
+
+  if (target.dataset.cursorSurface === 'parent') {
+    return target.parentElement
+  }
+
+  if (target.dataset.cursorSurface === 'child') {
+    return target.firstElementChild instanceof HTMLElement
+      ? target.firstElementChild
+      : target
+  }
+
+  return target
+}
+
+function measureSurface(surface: HTMLElement): SurfaceRect | null {
+  const rect = surface.getBoundingClientRect()
+
+  if (rect.width === 0 || rect.height === 0) {
+    return null
+  }
+
+  return {
+    height: rect.height,
+    left: rect.left,
+    top: rect.top,
+    width: rect.width,
+  }
+}
+
+function syncSurfaceFill(
+  surface: HTMLElement,
+  rect: SurfaceRect,
+  clientX: number,
+  clientY: number
+) {
+  const x = Math.min(Math.max(clientX - rect.left, 0), rect.width)
+  const y = Math.min(Math.max(clientY - rect.top, 0), rect.height)
+  const radius =
+    Math.hypot(Math.max(x, rect.width - x), Math.max(y, rect.height - y)) + 4
+
+  surface.style.setProperty('--gravii-cursor-fill-x', `${x}px`)
+  surface.style.setProperty('--gravii-cursor-fill-y', `${y}px`)
+  surface.style.setProperty('--gravii-cursor-fill-radius', `${radius}px`)
+}
+
+function primeSurfaceFill(
+  surface: HTMLElement,
+  rect: SurfaceRect,
+  clientX: number,
+  clientY: number
+) {
+  const x = Math.min(Math.max(clientX - rect.left, 0), rect.width)
+  const y = Math.min(Math.max(clientY - rect.top, 0), rect.height)
+
+  surface.style.setProperty('--gravii-cursor-fill-x', `${x}px`)
+  surface.style.setProperty('--gravii-cursor-fill-y', `${y}px`)
+  surface.style.setProperty('--gravii-cursor-fill-radius', '0px')
+}
+
+function clearSurfaceFill(surface: HTMLElement | null) {
+  if (!surface) {
+    return
+  }
+
+  surface.classList.remove('expressive-cursor-surface-hovered')
+  surface.style.removeProperty('--gravii-cursor-fill-x')
+  surface.style.removeProperty('--gravii-cursor-fill-y')
+  surface.style.removeProperty('--gravii-cursor-fill-radius')
+}
+
+function readCursorHit(
+  eventTarget: EventTarget | null,
+  isPressed: boolean
+): CursorHit {
+  if (!(eventTarget instanceof Element)) {
+    return {
+      state: DEFAULT_VISUAL_STATE,
+      surface: null,
+      target: null,
+    }
+  }
+
+  if (shouldUseNativeCursor(eventTarget)) {
+    return {
+      state: {
+        ...DEFAULT_VISUAL_STATE,
+        variant: 'hidden',
+      },
+      surface: null,
+      target: null,
+    }
+  }
+
+  const cursorTarget =
+    eventTarget.closest<HTMLElement>(CURSOR_TARGET_SELECTOR)
+  const implicitTarget = eventTarget.closest<HTMLElement>(
+    IMPLICIT_CURSOR_TARGET_SELECTOR
+  )
+  const interactiveTarget = cursorTarget ?? implicitTarget
+
+  if (!interactiveTarget) {
+    return {
+      state: {
+        ...DEFAULT_VISUAL_STATE,
+        isPressed,
+        isVisible: true,
+      },
+      surface: null,
+      target: null,
+    }
+  }
+
+  if (isDisabledTarget(interactiveTarget)) {
+    return {
+      state: {
+        ...DEFAULT_VISUAL_STATE,
+        isPressed,
+        isVisible: true,
+      },
+      surface: null,
+      target: interactiveTarget,
+    }
+  }
+
+  const variant = normalizeCursorVariant(
+    interactiveTarget.dataset.cursorVariant ??
+      interactiveTarget.dataset.cursorShape
+  )
+
+  if (variant === 'hidden') {
+    return {
+      state: {
+        ...DEFAULT_VISUAL_STATE,
+        variant,
+      },
+      surface: null,
+      target: interactiveTarget,
+    }
+  }
+
+  return {
+    state: {
+      isActive: true,
+      isPressed,
+      isVisible: true,
+      label: interactiveTarget.dataset.cursorLabel ?? '',
+      variant,
+    },
+    surface: variant === 'pill' ? resolveCursorSurface(interactiveTarget) : null,
+    target: interactiveTarget,
+  }
+}
+
+function syncCursorPosition(
+  cursor: HTMLElement | null,
+  label: HTMLElement | null,
+  event: PointerEvent
+) {
+  const x = `${event.clientX}px`
+  const y = `${event.clientY}px`
+
+  if (cursor) {
+    cursor.style.left = x
+    cursor.style.top = y
+  }
+
+  if (label) {
+    label.style.left = x
+    label.style.top = y
+  }
+}
 
 export function CursorTrail() {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const cursorRef = useRef<HTMLDivElement | null>(null)
+  const labelRef = useRef<HTMLDivElement | null>(null)
+  const activeTargetRef = useRef<HTMLElement | null>(null)
+  const activeSurfaceRef = useRef<HTMLElement | null>(null)
+  const activeSurfaceRectRef = useRef<SurfaceRect | null>(null)
+  const surfaceFrameRef = useRef(0)
+  const pendingSurfaceFillRef = useRef<{
+    clientX: number
+    clientY: number
+    surface: HTMLElement
+  } | null>(null)
+  const pressedRef = useRef(false)
+  const visualStateRef = useRef<CursorVisualState>(DEFAULT_VISUAL_STATE)
+  const [isEnabled, setIsEnabled] = useState(false)
+  const [visualState, setVisualState] =
+    useState<CursorVisualState>(DEFAULT_VISUAL_STATE)
 
   useEffect(() => {
-    if (typeof window === 'undefined') return undefined
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches)
-      return undefined
-    if (window.matchMedia('(hover: none)').matches) return undefined
+    const pointerQuery = window.matchMedia('(hover: hover) and (pointer: fine)')
+    const reducedMotionQuery = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    )
 
-    const canvas = canvasRef.current
-    if (!canvas) return undefined
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return undefined
-
-    const dpr = window.devicePixelRatio || 1
-    const resize = () => {
-      canvas.width = window.innerWidth * dpr
-      canvas.height = window.innerHeight * dpr
-      canvas.style.width = `${window.innerWidth}px`
-      canvas.style.height = `${window.innerHeight}px`
-      ctx.scale(dpr, dpr)
-    }
-    resize()
-
-    const points: Point[] = []
-    let mouseX = -100
-    let mouseY = -100
-    let rafId = 0
-
-    const handleMove = (event: MouseEvent) => {
-      mouseX = event.clientX
-      mouseY = event.clientY
-      points.push({ x: mouseX, y: mouseY, life: 1 })
-      if (points.length > MAX_POINTS) points.shift()
+    function syncEnabledState() {
+      setIsEnabled(pointerQuery.matches && !reducedMotionQuery.matches)
     }
 
-    const handleResize = () => {
-      ctx.setTransform(1, 0, 0, 1, 0, 0)
-      resize()
-    }
-
-    const tick = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-      for (const p of points) {
-        p.life -= FADE_RATE
-        if (p.life <= 0) continue
-        const r = DOT_RADIUS * p.life
-        ctx.beginPath()
-        ctx.arc(p.x, p.y, r, 0, Math.PI * 2)
-        ctx.fillStyle = `hsla(${HUE}, 70%, 55%, ${p.life * 0.35})`
-        ctx.fill()
-      }
-      // Remove dead points
-      for (let i = points.length - 1; i >= 0; i--) {
-        const p = points[i]
-        if (p && p.life <= 0) points.splice(i, 1)
-      }
-      rafId = window.requestAnimationFrame(tick)
-    }
-    rafId = window.requestAnimationFrame(tick)
-
-    window.addEventListener('mousemove', handleMove, { passive: true })
-    window.addEventListener('resize', handleResize)
+    syncEnabledState()
+    pointerQuery.addEventListener('change', syncEnabledState)
+    reducedMotionQuery.addEventListener('change', syncEnabledState)
 
     return () => {
-      window.cancelAnimationFrame(rafId)
-      window.removeEventListener('mousemove', handleMove)
-      window.removeEventListener('resize', handleResize)
+      pointerQuery.removeEventListener('change', syncEnabledState)
+      reducedMotionQuery.removeEventListener('change', syncEnabledState)
     }
   }, [])
 
-  return <canvas ref={canvasRef} className={s.canvas} />
+  useEffect(() => {
+    function cancelSurfaceFill() {
+      if (surfaceFrameRef.current !== 0) {
+        window.cancelAnimationFrame(surfaceFrameRef.current)
+        surfaceFrameRef.current = 0
+      }
+      pendingSurfaceFillRef.current = null
+    }
+
+    function clearHoverState() {
+      activeTargetRef.current?.classList.remove(
+        'expressive-cursor-hovered',
+        'is-hovered'
+      )
+      cancelSurfaceFill()
+      clearSurfaceFill(activeSurfaceRef.current)
+      activeTargetRef.current = null
+      activeSurfaceRef.current = null
+      activeSurfaceRectRef.current = null
+    }
+
+    if (!isEnabled) {
+      delete document.documentElement.dataset.expressiveCursor
+      pressedRef.current = false
+      clearHoverState()
+      return undefined
+    }
+
+    document.documentElement.dataset.expressiveCursor = 'true'
+
+    function updateVisualState(nextState: CursorVisualState) {
+      if (statesMatch(visualStateRef.current, nextState)) {
+        return
+      }
+
+      visualStateRef.current = nextState
+      setVisualState(nextState)
+    }
+
+    function scheduleSurfaceFill(
+      surface: HTMLElement,
+      clientX: number,
+      clientY: number
+    ) {
+      pendingSurfaceFillRef.current = { clientX, clientY, surface }
+
+      if (surfaceFrameRef.current !== 0) {
+        return
+      }
+
+      surfaceFrameRef.current = window.requestAnimationFrame(() => {
+        surfaceFrameRef.current = 0
+
+        const pending = pendingSurfaceFillRef.current
+        pendingSurfaceFillRef.current = null
+
+        if (!pending || pending.surface !== activeSurfaceRef.current) {
+          return
+        }
+
+        const rect =
+          activeSurfaceRectRef.current ?? measureSurface(pending.surface)
+
+        if (!rect) {
+          return
+        }
+
+        activeSurfaceRectRef.current = rect
+        syncSurfaceFill(
+          pending.surface,
+          rect,
+          pending.clientX,
+          pending.clientY
+        )
+      })
+    }
+
+    function syncHoverState(hit: CursorHit, event: PointerEvent) {
+      const targetChanged = activeTargetRef.current !== hit.target
+      const surfaceChanged = activeSurfaceRef.current !== hit.surface
+
+      if (targetChanged || surfaceChanged) {
+        clearHoverState()
+        activeTargetRef.current = hit.target
+        activeSurfaceRef.current = hit.surface
+
+        hit.target?.classList.add('expressive-cursor-hovered', 'is-hovered')
+
+        if (hit.surface) {
+          const rect = measureSurface(hit.surface)
+
+          if (!rect) {
+            return
+          }
+
+          activeSurfaceRectRef.current = rect
+          primeSurfaceFill(hit.surface, rect, event.clientX, event.clientY)
+          hit.surface.classList.add('expressive-cursor-surface-hovered')
+          scheduleSurfaceFill(hit.surface, event.clientX, event.clientY)
+        }
+      }
+    }
+
+    function handlePointerMove(event: PointerEvent) {
+      syncCursorPosition(cursorRef.current, labelRef.current, event)
+      const hit = readCursorHit(event.target, pressedRef.current)
+      syncHoverState(hit, event)
+      updateVisualState(hit.state)
+    }
+
+    function handlePointerDown(event: PointerEvent) {
+      pressedRef.current = true
+      const hit = readCursorHit(event.target, true)
+      syncHoverState(hit, event)
+      updateVisualState(hit.state)
+    }
+
+    function handlePointerUp(event: PointerEvent) {
+      pressedRef.current = false
+      const hit = readCursorHit(event.target, false)
+      syncHoverState(hit, event)
+      updateVisualState(hit.state)
+    }
+
+    function handlePointerOut(event: PointerEvent) {
+      if (event.relatedTarget === null) {
+        pressedRef.current = false
+        clearHoverState()
+        updateVisualState(DEFAULT_VISUAL_STATE)
+      }
+    }
+
+    function handleWindowBlur() {
+      pressedRef.current = false
+      clearHoverState()
+      updateVisualState(DEFAULT_VISUAL_STATE)
+    }
+
+    window.addEventListener('pointermove', handlePointerMove, { passive: true })
+    window.addEventListener('pointerdown', handlePointerDown, { passive: true })
+    window.addEventListener('pointerup', handlePointerUp, { passive: true })
+    window.addEventListener('pointerout', handlePointerOut, { passive: true })
+    window.addEventListener('blur', handleWindowBlur)
+
+    return () => {
+      delete document.documentElement.dataset.expressiveCursor
+      window.removeEventListener('pointermove', handlePointerMove)
+      window.removeEventListener('pointerdown', handlePointerDown)
+      window.removeEventListener('pointerup', handlePointerUp)
+      window.removeEventListener('pointerout', handlePointerOut)
+      window.removeEventListener('blur', handleWindowBlur)
+      clearHoverState()
+      visualStateRef.current = DEFAULT_VISUAL_STATE
+    }
+  }, [isEnabled])
+
+  if (!isEnabled) {
+    return null
+  }
+
+  const hasLabel =
+    visualState.isActive &&
+    visualState.isVisible &&
+    visualState.label.length > 0 &&
+    visualState.variant !== 'pill'
+
+  return (
+    <>
+      <div
+        ref={cursorRef}
+        className={joinClasses(
+          s.cursor,
+          visualState.isVisible && s.visible,
+          visualState.isActive && s.active,
+          visualState.isPressed && s.pressed,
+          visualState.variant === 'pill' && s.pill,
+          visualState.variant === 'checked' && s.checked,
+          visualState.variant === 'hidden' && s.hidden
+        )}
+        data-testid="expressive-cursor"
+        aria-hidden="true"
+      />
+      <div
+        ref={labelRef}
+        className={joinClasses(
+          s.label,
+          hasLabel && s.labelActive,
+          visualState.variant === 'pill' && s.labelPill
+        )}
+        data-testid="expressive-cursor-label"
+        aria-hidden="true"
+      >
+        {visualState.label}
+      </div>
+    </>
+  )
 }

@@ -5,6 +5,11 @@ html {
   --global-font-weight: 500;
   --global-letter-spacing: 0em;
   --global-font-style: normal;
+  --expressive-cursor-size: 24px;
+  --expressive-cursor-active-size: 40px;
+  --expressive-cursor-fill: #fff;
+  --expressive-cursor-label-bg: var(--gravii-paper);
+  --expressive-cursor-label-text: var(--gravii-ink);
   --scrollbar-gutter: 0px;
   scrollbar-gutter: stable; /* This is needed to prevent the scrollbar from jumping */
   overflow-x: clip;
@@ -134,9 +139,45 @@ select {
   touch-action: manipulation;
 }
 
-html.screenshot {
-  *:not(:has(canvas), canvas, :has(#orchestra), #orchestra, #orchestra *) {
-    /* biome-ignore lint: it's all good */
-    opacity: 0 !important;
+@media (hover: hover) and (pointer: fine) {
+  html[data-expressive-cursor='true'],
+  html[data-expressive-cursor='true'] body,
+  html[data-expressive-cursor='true'] a,
+  html[data-expressive-cursor='true'] button:not(:disabled),
+  html[data-expressive-cursor='true'] [role='button'],
+  html[data-expressive-cursor='true'] [data-cursor-target] {
+    cursor: none;
+  }
+
+  html[data-expressive-cursor='true'] input,
+  html[data-expressive-cursor='true'] textarea,
+  html[data-expressive-cursor='true'] select,
+  html[data-expressive-cursor='true'] [contenteditable='true'],
+  html[data-expressive-cursor='true'] [data-cursor-native='true'] {
+    cursor: auto;
+  }
+
+  html[data-expressive-cursor='true'] .expressive-cursor-surface-hovered {
+    --gravii-cursor-fill-x: 50%;
+    --gravii-cursor-fill-y: 50%;
+    --gravii-cursor-fill-radius: 0px;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  html[data-expressive-cursor='true'] .expressive-cursor-surface-hovered::before {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    border-radius: inherit;
+    background: #fff;
+    clip-path: circle(
+      var(--gravii-cursor-fill-radius) at var(--gravii-cursor-fill-x)
+        var(--gravii-cursor-fill-y)
+    );
+    content: '';
+    mix-blend-mode: difference;
+    pointer-events: none;
+    transition: clip-path 360ms cubic-bezier(0, 0.65, 0.18, 1);
   }
 }

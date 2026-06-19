@@ -26,7 +26,6 @@ features/
   partner-landing/ Partner acquisition page
 lib/
   config/          Site URL configuration
-  dev/             Development-only tools
   hooks/           Shared hooks/state
   styles/          Tokens and global CSS
   utils/           Waitlist, fetch, rate limit, math, strings
@@ -35,7 +34,8 @@ lib/
 
 ## Runtime Boundaries
 
-- Production runtime should not mount development overlays.
+- The app runtime should stay focused on public product behavior; development
+  overlays are not mounted by this app.
 - Mock UI behavior must not replace waitlist/API/referral behavior.
 - The `/partners` route keeps its handoff to `partner.gravii.io`.
 - Metadata routes must remain server-rendered by Next.js.

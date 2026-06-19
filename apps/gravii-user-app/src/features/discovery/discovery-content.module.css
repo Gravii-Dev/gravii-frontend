@@ -1,4 +1,7 @@
 .root {
+  --discovery-floating-panel: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface-front));
+  --discovery-floating-row: color-mix(in srgb, var(--color-primary) 8%, var(--color-surface-hover));
+  --discovery-floating-line: color-mix(in srgb, var(--color-primary) 22%, var(--color-border-primary));
   display: flex;
   min-height: 100%;
   min-width: 0;
@@ -18,15 +21,16 @@
   overflow: hidden;
   border: 0;
   border-radius: var(--ds-radius-card);
-  background: var(--color-surface-front);
+  background: var(--discovery-floating-panel);
+  box-shadow: 0 18px 46px color-mix(in srgb, var(--color-primary) 12%, transparent);
 }
 
 .intro,
 .partnerHero {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  display: flex;
+  flex-direction: column;
   gap: var(--ds-space-gap);
-  align-items: end;
+  align-items: flex-start;
   padding: var(--ds-space-card);
 }
 
@@ -36,18 +40,7 @@
 .campaignCard::before,
 .partnerCard::before,
 .lockedCard::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse at 16% 0%, var(--liquid-glass-rim-strong) 0%, transparent 32%),
-    radial-gradient(ellipse at 88% 94%, var(--liquid-glass-chroma-a) 0%, transparent 36%),
-    linear-gradient(118deg, transparent 0 34%, var(--liquid-glass-caustic) 48%, transparent 66%);
-  filter: url("#gravii-liquid-glass");
-  opacity: 0.36;
+  display: none;
 }
 
 .eyebrow,
@@ -85,6 +78,32 @@
   line-height: var(--ds-type-body-line);
 }
 
+.apiStatus {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-primary) 18%, var(--color-surface-hover));
+  color: var(--color-text-primary);
+  padding: 0 0.85rem;
+  font-size: var(--ds-type-label-size);
+  font-weight: var(--ds-type-label-weight);
+  letter-spacing: 0.08em;
+  line-height: var(--ds-type-label-line);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.apiStatus[data-state="error"] {
+  background: color-mix(in srgb, var(--color-error) 18%, var(--color-surface-hover));
+  color: var(--color-error);
+}
+
+.apiStatus[data-state="loading"] {
+  background: color-mix(in srgb, var(--color-primary) 12%, var(--color-surface-hover));
+  color: var(--color-text-secondary);
+}
+
 .filterBar {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -118,7 +137,7 @@
 }
 
 .filterButton {
-  background: var(--color-surface-hover);
+  background: var(--discovery-floating-row);
   color: var(--color-text-secondary);
 }
 
@@ -153,7 +172,7 @@
   align-items: center;
   min-height: 42px;
   border-radius: 999px;
-  background: var(--color-surface-hover);
+  background: var(--discovery-floating-row);
   padding: 0 0.9rem;
   transition:
     background-color 220ms var(--motion-ease-standard),
@@ -218,8 +237,8 @@
 }
 
 .resultsGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 0.8rem;
 }
 
@@ -242,7 +261,7 @@
 
 .partnerCard:hover {
   transform: translateY(-2px);
-  background: var(--color-surface-hover);
+  background: color-mix(in srgb, var(--color-primary) 13%, var(--color-surface-front));
 }
 
 .partnerAvatar {
@@ -400,7 +419,7 @@
 .crossActions button {
   border: 0;
   border-radius: 999px;
-  background: var(--color-surface-hover);
+  background: var(--discovery-floating-row);
   color: var(--color-text-secondary);
   cursor: pointer;
   padding: 0.7rem 0.9rem;
@@ -432,10 +451,11 @@
   align-items: center;
   width: 100%;
   border: 0;
-  background: transparent;
+  background: var(--discovery-floating-row);
   color: inherit;
   cursor: pointer;
-  padding: 0;
+  padding: 0.9rem 1rem;
+  border-radius: var(--ds-radius-card-compact);
   text-align: left;
 }
 
@@ -475,7 +495,7 @@
 .campaignExpanded {
   margin-top: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid var(--raw-line-soft);
+  border-top: 0;
 }
 
 .campaignExpanded p {
@@ -520,13 +540,13 @@
 .guidePanel {
   margin-top: 1rem;
   border-radius: var(--ds-radius-card);
-  background: var(--color-surface-back);
+  background: var(--discovery-floating-row);
   padding: var(--ds-space-card-compact);
 }
 
 .statusGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 0.75rem;
   margin-bottom: 1rem;
 }
@@ -583,8 +603,9 @@
 }
 
 .partnerNav {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
   gap: 0.65rem;
 }
 
@@ -608,6 +629,18 @@
   text-align: center;
 }
 
+.emptyState[data-state="loading"] {
+  background:
+    linear-gradient(
+      100deg,
+      var(--color-surface-front),
+      color-mix(in srgb, var(--color-primary) 14%, var(--color-surface-hover)),
+      var(--color-surface-front)
+    );
+  background-size: 220% 100%;
+  animation: discoveryStateSweep 1.5s var(--motion-ease-standard) infinite;
+}
+
 .emptyState strong {
   color: var(--color-text-primary);
   font-size: var(--ds-type-title-size);
@@ -616,13 +649,8 @@
 }
 
 @media (max-width: 1100px) {
-  .intro,
-  .partnerHero {
-    grid-template-columns: 1fr;
-  }
-
   .resultsGrid {
-    grid-template-columns: 1fr;
+    flex-direction: column;
   }
 }
 
@@ -634,9 +662,12 @@
   }
 
   .partnerCard,
-  .campaignToggle,
-  .partnerNav {
+  .campaignToggle {
     grid-template-columns: 1fr;
+  }
+
+  .partnerNav {
+    flex-direction: column;
   }
 
   .summaryRow,
@@ -645,7 +676,20 @@
     flex-direction: column;
   }
 
-  .statusGrid {
-    grid-template-columns: 1fr;
+}
+
+@keyframes discoveryStateSweep {
+  0% {
+    background-position: 120% 0;
+  }
+
+  100% {
+    background-position: -120% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .emptyState[data-state="loading"] {
+    animation: none;
   }
 }

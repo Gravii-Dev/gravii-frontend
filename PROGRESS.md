@@ -1500,3 +1500,74 @@ Append only. Use newest entries first. Record what changed, how it was checked, 
   - Secret scan for `sk_*`, `pk_*`, and `whsec_*` patterns in tracked source returned no matches.
 - Next handoff:
   - GitHub non-provider secret scanning and validity checks remained disabled after the API update, while standard secret scanning, push protection, and Dependabot security updates are enabled. Add CI status checks and then attach them to branch protection once the first workflow run exists.
+
+- Date: `2026-06-15`
+- Summary:
+  - Audited `apps/gravii-user-landing` for production readiness and removed the unused dev overlay stack from the app runtime and source tree.
+  - Deleted the Orchestra/Theatre development tools, their root optional runtime mount, stale TypeScript aliases, stale reset/Lenis exceptions, and unused `fetchJSON`/theme context exports.
+  - Removed dev-only dependencies that no longer had runtime or source references: `@base-ui/react`, `hamo`, `@theatre/core`, `@theatre/studio`, and `stats-gl`.
+  - Fixed a stricter Next build TypeScript issue in the style generation helper and updated local architecture/lib docs to match the reduced structure.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/app/layout.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/components/layout/lenis/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/components/layout/theme/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/lib/dev/*`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/lib/features/index.tsx`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/lib/styles/css/global.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/lib/styles/css/reset.css`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/lib/styles/scripts/utils.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/lib/utils/fetch.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/package.json`
+  - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/tsconfig.json`
+  - `/Users/kxwxn/Gravii/FRONTEND/bun.lock`
+- Verification:
+  - `bun run check:user-landing`
+  - `bun run test` in `apps/gravii-user-landing`
+  - `bun run build:user-landing`
+  - Production `next start` on `http://localhost:3017`
+  - Route smoke checks returned 200 for `/`, `/partners`, `/privacy`, `/terms`, `/robots.txt`, `/sitemap.xml`, and `/manifest.webmanifest`.
+  - Playwright desktop/mobile screenshots:
+    - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/output/playwright/user-landing-home-3017.png`
+    - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/output/playwright/user-landing-home-mobile-3017.png`
+    - `/Users/kxwxn/Gravii/FRONTEND/apps/gravii-user-landing/output/playwright/user-landing-partners-3017.png`
+  - Production artifact search found no `lib/dev`, `lib/features`, `@theatre`, `stats-gl`, `hamo`, or `theatrejs` references; `react-loadable-manifest.json` only lists Lenis and hero renderer dynamic chunks.
+- Next handoff:
+  - The production server started for verification is running on `http://localhost:3017`.
+  - Remaining Knip findings for style generation files are script/PostCSS false positives; `lib/styles/index.ts` is the only currently unused style barrel if a future cleanup wants to remove that convenience API.
+
+- Date: `2026-06-15`
+- Summary:
+  - Deployed `apps/gravii-user-landing` to the existing Vercel production project `gravii-frontend-gravii-user-landing`.
+  - Added a root `.vercelignore` so Vercel CLI deploys do not upload local caches, build outputs, sibling apps, or unrelated packages from the monorepo.
+  - The successful production deployment is `dpl_88aLgwBM9nza9XmHuuDFaWkH6CZh`, aliased to `https://www.gravii.io`.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/.vercelignore`
+  - `/Users/kxwxn/Gravii/FRONTEND/PROGRESS.md`
+- Verification:
+  - `bun run check:user-landing`
+  - `bun run build:user-landing`
+  - `bunx vercel project inspect gravii-frontend-gravii-user-landing`
+  - `bunx vercel deploy --prod --yes --project gravii-frontend-gravii-user-landing --logs`
+  - `bunx vercel inspect gravii-frontend-gravii-user-landing-cj28cnlrd-kxwxns-projects.vercel.app`
+  - Live route smoke checks returned 200 for `https://www.gravii.io/`, `/partners`, `/privacy`, `/terms`, `/robots.txt`, `/sitemap.xml`, and `/manifest.webmanifest`.
+- Next handoff:
+  - Vercel production is live on `https://www.gravii.io`.
+  - A failed preflight deployment `2tk5V9VFQoAzLWy7Zmhz4B49e9kW` occurred before `.vercelignore` was corrected; it did not become the live production alias.
+
+- Date: `2026-06-19`
+- Summary:
+  - Added the first automated AI-ready design-system guardrail for the Gravii frontend monorepo.
+  - Registered `bun run check:design-system` and wired it into the default `bun run check` gate before typecheck and lint.
+  - Documented the design-system workflow, canonical 3D logo ownership, and Figma/code handoff references in the root harness and README.
+- Files touched:
+  - `/Users/kxwxn/Gravii/FRONTEND/scripts/check-design-system-harness.ts`
+  - `/Users/kxwxn/Gravii/FRONTEND/package.json`
+  - `/Users/kxwxn/Gravii/FRONTEND/README.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/docs/codex-harness.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/docs/design-system/ai-ready-design-system.md`
+  - `/Users/kxwxn/Gravii/FRONTEND/packages/README.md`
+- Verification:
+  - `bun run check`
+  - `git diff --check`
+- Next handoff:
+  - The default workspace check now protects the first logo, token, design-system doc, and Figma handoff boundaries. Broader raw-color or promoted-component checks should be added later only after the initial harness stays low-noise.

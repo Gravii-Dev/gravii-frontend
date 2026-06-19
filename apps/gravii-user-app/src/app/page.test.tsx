@@ -141,9 +141,8 @@ describe("HomePage", () => {
       "page",
     );
     expect(screen.getByRole("heading", { name: "DISCOVERY" })).toBeInTheDocument();
-    expect(screen.getAllByRole("button", { name: "HOME" }).length).toBeGreaterThan(0);
 
-    await user.click(screen.getAllByRole("button", { name: "HOME" })[0]);
+    await user.click(screen.getByRole("button", { name: "HOME navigation" }));
 
     expect(screen.getByRole("button", { name: "HOME navigation" })).toHaveAttribute(
       "aria-current",
@@ -154,7 +153,7 @@ describe("HomePage", () => {
     );
   });
 
-  it("renders the session action in the top-right workspace area", async () => {
+  it("keeps the session action in the navigation shell", async () => {
     const user = userEvent.setup();
     authMock.state = {
       isAuthenticated: false,
@@ -164,12 +163,11 @@ describe("HomePage", () => {
 
     render(<HomePage />);
 
-    expect(screen.getAllByRole("button", { name: "SIGN IN" }).length).toBeGreaterThanOrEqual(2);
-    expect(
-      within(screen.getByRole("article", { name: "HOME section" })).getAllByRole("button", {
-        name: "SIGN IN",
-      }).length,
-    ).toBeGreaterThan(0);
+    const navigationShell = screen.getByRole("complementary", {
+      name: "Gravii workspace navigation",
+    });
+
+    expect(within(navigationShell).getByRole("button", { name: "SIGN IN" })).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "X-RAY navigation" }));
 
@@ -179,9 +177,11 @@ describe("HomePage", () => {
     );
     expect(screen.getByRole("heading", { name: "X-RAY" })).toBeInTheDocument();
     expect(
-      within(screen.getByRole("article", { name: "X-RAY section" })).getAllByRole("button", {
+      within(screen.getByRole("complementary", {
+        name: "Gravii workspace navigation",
+      })).getByRole("button", {
         name: "SIGN IN",
-      }).length,
-    ).toBeGreaterThan(0);
+      }),
+    ).toBeInTheDocument();
   });
 });

@@ -1,0 +1,25 @@
+{
+  "name": "@gravii/brand-logo-3d",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.tsx"
+  },
+  "dependencies": {
+    "@react-three/fiber": "^9.5.0",
+    "three": "0.182.0"
+  },
+  "peerDependencies": {
+    "react": ">=19 <19.3",
+    "react-dom": ">=19 <19.3"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/three": "^0.182.0"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  }
+}

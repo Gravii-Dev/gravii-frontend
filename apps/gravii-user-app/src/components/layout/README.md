@@ -8,11 +8,12 @@ These components are responsible for framing and opening the product surfaces. T
 
 The layout layer answers questions such as:
 
-- How does a workspace navigation card look when inactive, hovered, or active?
-- How does the active product surface render inside the main workspace board?
-- How is the common workspace header rendered for non-home sections?
+- How does a workspace navigation card look when inactive or active?
+- How does the active product surface render inside the main workspace board as one readable surface?
+- How is the common workspace title rendered inside non-home sections?
 - How does the logo tile act as the Home entry point for the rest of the app?
-- How does the active section keep an independent border and a thin entering bar inside the workspace board?
+- How does the left navigation stay visually grouped inside one contained sidebar?
+- How does the sidebar use the product panel hues as one blended pastel navigation container?
 
 It does not answer questions such as:
 
@@ -34,7 +35,7 @@ Responsibilities:
 
 - render the product section affordance in the left navigation rail
 - handle click and keyboard selection behavior
-- track the active and hovered visual states passed in by the shell
+- track the active visual state passed in by the shell
 - choose dark or light text treatment based on the panel configuration
 - expose accessible navigation labels for tests and keyboard users
 
@@ -42,14 +43,16 @@ Important details:
 
 - it receives metadata from `src/features/launch-app/panel-config.ts`
 - the Home section stays in shell state, but the logo tile renders the Home navigation control instead of a separate `00 HOME` card
-- section cards show their configured color by default, reverse to the neutral paper surface on hover, and show the marker dot only when active
+- section cards sit inside one rounded sidebar container and use flat solid product colors, with no gradient, shadow, or hover treatment on the cards themselves
+- the sidebar container uses a more expressive blended pastel background derived from warm and cool product-adjacent hues, while each card still owns its active expansion state
 - active cards expand vertically in the sidebar instead of turning into the workspace body
 - inactive cards remain visible so the user can jump between product surfaces without losing orientation
-- selecting a card replaces the active workspace surface with that section
-- the active section owns its own thin "entering section" bar and bordered frame, so section boundaries stay visually explicit without stacking all sections at once
+- navigation cards render only the section label, without extra descriptive copy inside the button
+- selecting a card replaces the active workspace content with that section
+- the active section no longer adds a large enclosing content surface; titles and feature content groups sit directly on the app canvas
+- feature folders own the small floating panels and clickable row/button treatments inside that transparent workspace
 - the app shell keeps navigation and feature content in separate scroll contexts: the sidebar stays fully visible, while the active workspace frame owns long-content scrolling
-- the active border frame is the full feature viewport; spacing lives inside the scroll surface so the visible content area does not shrink away from the border
-- on small screens, the navigation rail becomes a compact responsive grid above the workspace board instead of relying on nav scrolling
+- on small screens, navigation opens as an off-canvas contained drawer while the workspace keeps its own scroll surface
 
 What it does not own:
 
@@ -65,18 +68,14 @@ Primary job:
 
 Responsibilities:
 
-- draw the shared header
-- render the shared title treatment
-- accept a header action slot for shared session controls such as `SIGN IN` or `SIGN OUT`
-- provide the workspace action button, currently used to return to Home
+- render the shared title treatment above the feature content groups
 - render the body content passed from the feature
-- preserve consistent spacing and editorial display typography across sections
+- preserve consistent spacing and display typography across sections
 
 Why it matters:
 
-- it gives the app a consistent workspace frame
+- it gives the app a consistent in-surface title treatment
 - it keeps each feature from duplicating the same shell structure
-- it keeps the top-right session action consistent across every expanded product surface
 
 What it does not own:
 
@@ -90,8 +89,8 @@ The normal expanded flow is:
 
 1. `HomePage` decides which panel is active.
 2. `LaunchPanel` renders the active state inside the navigation rail.
-3. `HomePage` renders the active feature surface inside one bordered workspace section.
-4. `PanelShell` wraps non-home feature content inside that active section.
+3. `HomePage` renders the active feature content directly inside the transparent workspace.
+4. `PanelShell` adds a simple in-surface heading for non-home feature content.
 
 This layering is useful because:
 

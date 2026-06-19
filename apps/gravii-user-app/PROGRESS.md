@@ -106,3 +106,38 @@ Do not use this file as a backlog. Durable remaining work belongs in `TODO.md` i
 - Local branch: `main`.
 - Latest merged app checkpoint: `7cb4026 feat(user-app): stabilize launch app visual system`.
 - Root `lefthook.yml` remains intentionally unstaged and was not included in the product/UI work.
+
+### Next Slice In Progress
+
+- Removed the rejected `DepthIcon` primitive direction from the active PR branch.
+- Removed `DepthIcon` wiring from workspace navigation panels and the active section top bar.
+- Added Discovery catalog read support through `readDiscoveryCatalog`.
+- Added Ranking public leaderboard and signed wallet summary read support through `readRankingLeaderboard` and `readUserRankingSummary`.
+- Kept Discovery and Ranking free of local mock rows; empty/loading/error/unavailable states now represent API readiness.
+- Updated UI, feature, and lib docs to describe the API-ready surfaces without keeping the rejected iconography primitive.
+
+Verification completed:
+
+- `bun run typecheck` passed.
+- `bun run lint` passed.
+- `bun run test` passed: 10 test files, 24 tests.
+- `bun run build` passed after rerunning with network access for `next/font` Roboto Flex.
+- Product dev server is running at `http://localhost:3001/`.
+- Mock reference dev server is running at `http://127.0.0.1:3000/` from `/Users/kxwxn/Downloads/GraviiApp.jsx`.
+- Both local servers returned `HTTP 200` through curl with network permissions.
+
+Caveats:
+
+- Playwright is not installed in this app's `node_modules`, so screenshot automation was not available in this pass.
+- Localhost WalletConnect metadata warning is visible in dev because configured metadata URL is `https://app.gravii.io` while the dev URL is `http://localhost:3001`.
+
+### DepthIcon Removal Follow-Up
+
+- Removed the rejected `DepthIcon` primitive and section-icon wiring in commit `6dbb448 fix(user-app): remove depth iconography`.
+- Kept the Discovery and Ranking API-ready adapters and state surfaces intact.
+- Verified locally with `bun run typecheck`, `bun run lint`, `bun run test`, and `bun run build`.
+- Build required network access only for `next/font` Roboto Flex fetching, then passed.
+- Pushed PR #52 branch `codex/launch-app-api-ready-iconography`.
+- Verified `gh pr checks 52`: all Vercel checks passed.
+- User app preview inspector: `https://vercel.com/kxwxns-projects/gravii-frontend-gravii-user-app/9supUR3XCgeMXBBmBymmTj4FszeK`.
+- This removal pass did not restart or change local dev server processes.

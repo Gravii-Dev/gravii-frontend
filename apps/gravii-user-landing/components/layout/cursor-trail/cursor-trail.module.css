@@ -1,20 +1,97 @@
-.canvas {
+.cursor {
   position: fixed;
-  inset: 0;
+  top: -100px;
+  left: 0;
+  z-index: 2147483000;
+  width: var(--expressive-cursor-size, 24px);
+  height: var(--expressive-cursor-size, 24px);
+  border: 0;
+  border-radius: 999px;
+  background: var(--expressive-cursor-fill, #fff);
+  mix-blend-mode: exclusion;
+  opacity: 0;
   pointer-events: none;
-  z-index: 6;
-  mix-blend-mode: multiply;
+  transform: translate3d(-50%, -50%, 0) scale(1);
+  transform-origin: center;
+  transition:
+    width 110ms ease-in,
+    height 160ms ease-in,
+    border-radius 160ms ease-in,
+    opacity 110ms ease-out,
+    transform 150ms var(--gravii-action-ease);
+  will-change: left, top, width, height, opacity, transform, border-radius;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .canvas {
-    display: none;
-  }
+.visible {
+  opacity: 1;
 }
 
-@media (hover: none) {
-  /* Touch devices — no cursor trail */
-  .canvas {
+.active {
+  width: var(--expressive-cursor-active-size, 40px);
+  height: var(--expressive-cursor-active-size, 40px);
+}
+
+.pressed {
+  transform: translate3d(-50%, -50%, 0) scale(0.82);
+}
+
+.pill {
+  opacity: 0;
+}
+
+.checked {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+}
+
+.hidden {
+  opacity: 0;
+}
+
+.label {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2147483000;
+  max-width: min(220px, calc(100vw - 36px));
+  margin-left: 24px;
+  color: #fff;
+  font-family: var(--gravii-font-ui);
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  mix-blend-mode: exclusion;
+  opacity: 0;
+  pointer-events: none;
+  text-transform: uppercase;
+  transform: translate3d(0, -50%, 0);
+  user-select: none;
+  white-space: nowrap;
+  transition:
+    opacity 120ms ease-out,
+    transform 180ms var(--gravii-action-ease);
+  will-change: left, top, opacity, transform;
+}
+
+.labelActive {
+  opacity: 1;
+}
+
+.labelPill {
+  margin-left: 12px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--expressive-cursor-label-bg, var(--gravii-paper));
+  color: var(--expressive-cursor-label-text, var(--gravii-ink));
+  box-shadow: 0 12px 30px rgb(9 7 5 / 12%);
+  mix-blend-mode: normal;
+}
+
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .cursor,
+  .label {
     display: none;
   }
 }

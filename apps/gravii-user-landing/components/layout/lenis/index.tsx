@@ -76,8 +76,7 @@ export function Lenis({
         anchors: true,
         autoToggle: true,
         prevent: (node: Element | null) =>
-          node?.nodeName === 'VERCEL-LIVE-FEEDBACK' ||
-          node?.id === 'theatrejs-studio-root',
+          node?.nodeName === 'VERCEL-LIVE-FEEDBACK',
       }}
     >
       {syncScrollTrigger && root && <LenisScrollTriggerSync />}

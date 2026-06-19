@@ -170,6 +170,9 @@ export function CtaPill() {
           aria-expanded={showForm}
           aria-hidden={!(isCollapsed || isSuccess)}
           tabIndex={isCollapsed || isSuccess ? 0 : -1}
+          data-cursor-target="waitlist-trigger"
+          data-cursor-variant="pill"
+          data-cursor-surface="parent"
         >
           {isSuccess ? (
             <span className={s.successLabel}>Joined ✓</span>
@@ -224,6 +227,8 @@ export function CtaPill() {
             disabled={isPending || isSuccess}
             aria-label="Submit"
             tabIndex={showForm ? 0 : -1}
+            data-cursor-target="waitlist-submit"
+            data-cursor-variant="pill"
           >
             {isPending ? (
               <span className={s.spinner} aria-hidden="true" />

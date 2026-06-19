@@ -40,9 +40,18 @@
   color: var(--gravii-action-text);
 }
 
+.button:global(.expressive-cursor-hovered) {
+  color: var(--gravii-ink);
+}
+
 .button:focus-visible {
   outline: 3px solid var(--gravii-action-focus);
   outline-offset: 4px;
+}
+
+.button > span {
+  position: relative;
+  z-index: 1;
 }
 
 .arrow {

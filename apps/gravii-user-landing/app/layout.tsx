@@ -1,10 +1,8 @@
 import type { Metadata, Viewport } from 'next'
 
 import type { PropsWithChildren } from 'react'
-import { ReactTempus } from 'tempus/react'
 import { Link } from '@/components/ui/link'
 import { SITE_BASE_URL } from '@/lib/config/site'
-import { DevTools } from '@/lib/features'
 import { themes } from '@/lib/styles/colors'
 import { fontsVariable } from '@/lib/styles/fonts'
 import '@gravii/brand-tokens/css'
@@ -16,7 +14,6 @@ const APP_DEFAULT_TITLE = 'Gravii'
 const APP_TITLE_TEMPLATE = '%s | Gravii'
 const APP_DESCRIPTION =
   'Connect once. Live differently. Gravii turns your onchain activity into one identity, one signal, and one door.'
-const ENABLE_OPTIONAL_RUNTIME = process.env.NODE_ENV === 'development'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_BASE_URL),
@@ -97,8 +94,6 @@ export default async function Layout({ children }: PropsWithChildren) {
           Skip to main content
         </Link>
         {children}
-        {ENABLE_OPTIONAL_RUNTIME ? <DevTools /> : null}
-        {ENABLE_OPTIONAL_RUNTIME ? <ReactTempus patch={true} /> : null}
       </body>
     </html>
   )

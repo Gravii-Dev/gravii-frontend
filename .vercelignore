@@ -1,0 +1,24 @@
+# Keep Vercel deploys from uploading local caches and generated artifacts.
+.DS_Store
+.git/
+.github/
+.cursor/
+.turbo/
+.vercel/
+.env
+.env.*
+.local-docs/
+**/.local-docs/
+**/node_modules/
+**/.next/
+**/.turbo/
+**/.playwright-cli/
+**/coverage/
+**/dist/
+**/output/
+**/test-results/
+**/*.tsbuildinfo
+tmp/
+docs/
+tests/
+tooling/

@@ -11,11 +11,7 @@
       "@/lib/*": ["./lib/*"],
       "@/hooks/*": ["./lib/hooks/*"],
       "@/styles/*": ["./lib/styles/*"],
-      "@/utils/*": ["./lib/utils/*"],
-      "@/dev/*": ["./lib/dev/*"],
-      "@/dev/theatre/*": ["./lib/dev/theatre/*"],
-      "@/dev/theatre": ["./lib/dev/theatre"],
-      "@/dev": ["./lib/dev"]
+      "@/utils/*": ["./lib/utils/*"]
     }
   },
   "include": [

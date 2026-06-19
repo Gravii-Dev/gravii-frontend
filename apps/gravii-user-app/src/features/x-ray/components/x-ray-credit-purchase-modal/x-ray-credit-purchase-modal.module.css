@@ -16,7 +16,7 @@
   overflow-y: auto;
   width: min(440px, 100%);
   max-height: min(720px, calc(100dvh - 40px));
-  border: 1.25px solid var(--raw-line);
+  border: 0;
   border-radius: var(--ds-radius-card);
   background: var(--raw-paper);
   box-shadow: 0 24px 70px rgba(10, 8, 6, 0.18);
