@@ -451,6 +451,10 @@
   text-shadow: none;
 }
 
+.ctaButton:global(.expressive-cursor-hovered) .ctaButtonText {
+  color: var(--gravii-ink);
+}
+
 .ctaButton:focus-visible {
   outline: 3px solid var(--gravii-action-focus);
   outline-offset: 4px;

@@ -99,7 +99,13 @@ export function Hero() {
         >
           &quot;WE&apos;VE BURNT THE OLD PLAYBOOK&quot;
         </p>
-        <Link href="#waitlist" className={s.ctaButton}>
+        <Link
+          href="#waitlist"
+          className={s.ctaButton}
+          data-cursor-target="hero-cta"
+          data-cursor-variant="pill"
+          data-cursor-surface="child"
+        >
           <span className={s.ctaButtonBody}>
             <span className={s.ctaButtonText}>JOIN WAITLIST</span>
           </span>

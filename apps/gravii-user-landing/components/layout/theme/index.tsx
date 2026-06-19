@@ -1,11 +1,11 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 import type { Themes } from '@/styles/colors'
 import { type ThemeName, themes } from '@/styles/config'
 
-export const ThemeContext = createContext<{
+const ThemeContext = createContext<{
   name: ThemeName
   theme: Themes[ThemeName]
   setThemeName: (theme: ThemeName) => void
@@ -16,10 +16,6 @@ export const ThemeContext = createContext<{
     void 0
   },
 })
-
-export function useTheme() {
-  return useContext(ThemeContext)
-}
 
 export function Theme({
   children,

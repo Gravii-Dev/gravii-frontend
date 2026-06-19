@@ -56,6 +56,8 @@ export function BackToTop() {
       onClick={handleClick}
       aria-label="Back to top"
       tabIndex={visible ? 0 : -1}
+      data-cursor-target="back-to-top"
+      data-cursor-variant="pill"
     >
       <span className={s.arrow} aria-hidden="true">
         ↑
