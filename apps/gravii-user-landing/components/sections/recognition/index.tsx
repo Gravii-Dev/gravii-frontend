@@ -27,6 +27,7 @@ export function Recognition() {
     <ChapterPanel
       id="recognition"
       distance={4.8}
+      anchorProgress={0.24}
       background="var(--gravii-paper)"
     >
       {(progress) => {

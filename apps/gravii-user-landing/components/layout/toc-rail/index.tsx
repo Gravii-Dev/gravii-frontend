@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { scrollToAnchorId } from '@/lib/utils/anchor-scroll'
 import s from './toc-rail.module.css'
 
 const SECTIONS = [
@@ -69,16 +70,12 @@ export function TocRail() {
   }, [])
 
   const handleClick = (id: string) => {
-    const el = document.getElementById(id)
-    if (!el) return
-
     const reducedMotion = window.matchMedia(
       '(prefers-reduced-motion: reduce)'
     ).matches
 
-    el.scrollIntoView({
+    scrollToAnchorId(id, {
       behavior: reducedMotion ? 'auto' : 'smooth',
-      block: 'start',
     })
   }
 

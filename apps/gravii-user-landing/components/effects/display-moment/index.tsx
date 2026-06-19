@@ -218,6 +218,7 @@ export function DisplayMoment({
   return (
     <h2
       ref={rootRef}
+      aria-label={text.replace(/\s+/g, ' ').trim()}
       className={clsx(
         s.root,
         SIZE_CLASS[size],
@@ -228,10 +229,11 @@ export function DisplayMoment({
       style={style}
     >
       {tokens.map((token) => {
-        if (token.type === 'break') return <br key={token.key} />
+        if (token.type === 'break')
+          return <br key={token.key} aria-hidden="true" />
         if (token.type === 'space') {
           return (
-            <span key={token.key} className={s.space}>
+            <span key={token.key} className={s.space} aria-hidden="true">
               {' '}
             </span>
           )
@@ -240,6 +242,7 @@ export function DisplayMoment({
           <span
             key={token.key}
             className={clsx(s.word, token.isHighlighted && s.highlight)}
+            aria-hidden="true"
             ref={(node) => {
               if (!node) return
               wordRefs.current[token.wordIndex] = node

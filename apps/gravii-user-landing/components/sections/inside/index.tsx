@@ -29,6 +29,7 @@ export function Inside() {
     <ChapterPanel
       id="inside"
       distance={5.4}
+      anchorProgress={0.06}
       background="var(--gravii-paper)"
     >
       {(progress) => {
@@ -134,7 +135,8 @@ export function Inside() {
                 opacity: intro3Opacity,
                 transform: `translate3d(0, ${(1 - intro3Opacity) * 32}px, 0) scale(${intro3FlyScale})`,
                 transformOrigin: 'center center',
-                filter: intro3In < 1 ? `blur(${(1 - intro3In) * 6}px)` : undefined,
+                filter:
+                  intro3In < 1 ? `blur(${(1 - intro3In) * 6}px)` : undefined,
               }}
             >
               <DisplayMoment

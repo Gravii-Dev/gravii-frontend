@@ -1,12 +1,20 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import {
+  type MouseEvent as ReactMouseEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { Link } from '@/components/ui/link'
+import { scrollToAnchorId } from '@/lib/utils/anchor-scroll'
 import s from './hero.module.css'
 import { HeroBackground } from './hero-background'
 
 const SPLASH_EXIT_DURATION_MS = 520
 const SPLASH_MAX_WAIT_MS = 2400
+const HERO_SUBTITLE = '"WE\'VE BURNT THE OLD PLAYBOOK"'
 
 export function Hero() {
   const [splashPhase, setSplashPhase] = useState<
@@ -26,6 +34,14 @@ export function Hero() {
     hasSettledRef.current = true
     beginSplashExit()
   }, [beginSplashExit])
+
+  const handleWaitlistClick = useCallback(
+    (event: ReactMouseEvent<HTMLElement>) => {
+      event.preventDefault()
+      scrollToAnchorId('waitlist', { behavior: 'auto', updateHash: true })
+    },
+    []
+  )
 
   useEffect(() => {
     if (splashPhase !== 'visible') {
@@ -92,16 +108,13 @@ export function Hero() {
           <span className={s.line}>Live</span>
           <span className={`${s.line} ${s.lineOffset}`}>differently</span>
         </h1>
-        <p
-          className={s.subtitle}
-          data-glitch={'"WE\'VE BURNT THE OLD PLAYBOOK"'}
-          suppressHydrationWarning
-        >
-          &quot;WE&apos;VE BURNT THE OLD PLAYBOOK&quot;
+        <p className={s.subtitle} suppressHydrationWarning>
+          <span className={s.subtitleText}>{HERO_SUBTITLE}</span>
         </p>
         <Link
           href="#waitlist"
           className={s.ctaButton}
+          onClick={handleWaitlistClick}
           data-cursor-target="hero-cta"
           data-cursor-variant="pill"
           data-cursor-surface="child"

@@ -27,6 +27,7 @@ export function Vision() {
     <ChapterPanel
       id="vision"
       distance={5.6}
+      anchorProgress={0.08}
       background="var(--gravii-paper)"
     >
       {(progress) => {
@@ -161,7 +162,9 @@ export function Vision() {
                 <div
                   className={s.finaleStage}
                   data-bookend={
-                    stage2Opacity > 0.5 && stage2Opacity < 0.99 ? 'true' : 'false'
+                    stage2Opacity > 0.5 && stage2Opacity < 0.99
+                      ? 'true'
+                      : 'false'
                   }
                   style={{ opacity: stage2Opacity }}
                 >

@@ -169,16 +169,17 @@ export function IntroOne() {
   return (
     <section id="about" ref={sectionRef} className={s.section}>
       <div className={s.stage}>
-        <h2 ref={titleRef} className={s.title}>
+        <h2 ref={titleRef} className={s.title} aria-label={INTRO_ONE_TITLE}>
           {INTRO_ONE_CHARS.map((item) =>
             item.char === ' ' ? (
-              <span key={item.key} className={s.space}>
+              <span key={item.key} className={s.space} aria-hidden="true">
                 {'\u00A0'}
               </span>
             ) : (
               <span
                 key={item.key}
                 className={s.char}
+                aria-hidden="true"
                 ref={(node) => {
                   if (!node) return
                   charRefs.current[item.motionIndex] = node

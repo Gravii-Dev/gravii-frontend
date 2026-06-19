@@ -4,6 +4,7 @@ import type { MouseEvent as ReactMouseEvent } from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { GraviiLogo3D } from '@gravii/brand-logo-3d'
 import { Link } from '@/components/ui/link'
+import { scrollToAnchorId } from '@/lib/utils/anchor-scroll'
 import s from './sticky-header.module.css'
 
 const SCROLL_HIDE_THRESHOLD = 120
@@ -96,6 +97,11 @@ export function StickyHeader() {
   const isVisibleRef = useRef(true)
   const resolvedLaunchAppHref = useMemo(() => launchAppHref, [launchAppHref])
 
+  const handleWaitlistClick = (event: ReactMouseEvent<HTMLElement>) => {
+    event.preventDefault()
+    scrollToAnchorId('waitlist', { behavior: 'auto', updateHash: true })
+  }
+
   useEffect(() => {
     const targetUrl = new URL(userAppUrl, window.location.origin)
     const searchParams = new URLSearchParams(window.location.search)
@@ -164,6 +170,7 @@ export function StickyHeader() {
             href="#waitlist"
             label="WAITLIST"
             className={`${s.pillLink} ${s.navLink}`}
+            onClick={handleWaitlistClick}
           />
           <HeaderPill
             href="/partners"

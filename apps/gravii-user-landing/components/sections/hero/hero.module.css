@@ -56,11 +56,7 @@
       rgb(255 244 215 / 28%) 0%,
       rgb(255 244 215 / 0%) 44%
     ),
-    linear-gradient(
-      180deg,
-      var(--gravii-paper) 0%,
-      var(--gravii-paper) 100%
-    );
+    linear-gradient(180deg, var(--gravii-paper) 0%, var(--gravii-paper) 100%);
   transform: translateX(0) skewX(0deg);
   box-shadow:
     inset -1px 0 0 rgb(255 255 255 / 24%),
@@ -81,11 +77,7 @@
       rgb(207 188 156 / 18%) 0%,
       rgb(207 188 156 / 0%) 34%
     ),
-    linear-gradient(
-      180deg,
-      var(--gravii-paper) 0%,
-      var(--gravii-paper) 100%
-    );
+    linear-gradient(180deg, var(--gravii-paper) 0%, var(--gravii-paper) 100%);
   transform: translateX(0) skewX(0deg);
   box-shadow:
     inset 1px 0 0 rgb(255 255 255 / 24%),
@@ -290,24 +282,10 @@
   animation: subtitleGlitch 2200ms cubic-bezier(0.22, 1, 0.36, 1) 1100ms both;
 }
 
-.overlay .subtitle::before,
-.overlay .subtitle::after {
-  content: attr(data-glitch);
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  text-align: center;
-  opacity: 0;
-}
-
-.overlay .subtitle::before {
-  color: rgb(0 186 226 / 80%);
-  animation: glitchShiftA 2200ms cubic-bezier(0.22, 1, 0.36, 1) 1100ms both;
-}
-
-.overlay .subtitle::after {
-  color: rgb(214 91 156 / 80%);
-  animation: glitchShiftB 2200ms cubic-bezier(0.22, 1, 0.36, 1) 1100ms both;
+.subtitleText {
+  display: block;
+  animation: subtitleChromaticShift 2200ms cubic-bezier(0.22, 1, 0.36, 1) 1100ms
+    both;
 }
 
 @keyframes subtitleGlitch {
@@ -337,60 +315,36 @@
   }
 }
 
-@keyframes glitchShiftA {
+@keyframes subtitleChromaticShift {
   0%,
   100% {
-    opacity: 0;
-    transform: translate3d(0, 0, 0);
+    text-shadow: none;
   }
   10% {
-    opacity: 0.8;
-    transform: translate3d(-3px, 1px, 0);
+    text-shadow:
+      -3px 1px 0 rgb(0 186 226 / 55%),
+      3px -1px 0 rgb(214 91 156 / 45%);
   }
   20% {
-    opacity: 0.6;
-    transform: translate3d(2px, -1px, 0);
+    text-shadow:
+      2px -1px 0 rgb(0 186 226 / 42%),
+      -2px 1px 0 rgb(214 91 156 / 55%);
   }
   30% {
-    opacity: 0.7;
-    transform: translate3d(-2px, 0, 0);
+    text-shadow:
+      -2px 0 0 rgb(0 186 226 / 36%),
+      2px 0 0 rgb(214 91 156 / 36%);
   }
   40% {
-    opacity: 0;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@keyframes glitchShiftB {
-  0%,
-  100% {
-    opacity: 0;
-    transform: translate3d(0, 0, 0);
-  }
-  10% {
-    opacity: 0.6;
-    transform: translate3d(3px, -1px, 0);
-  }
-  20% {
-    opacity: 0.8;
-    transform: translate3d(-2px, 1px, 0);
-  }
-  30% {
-    opacity: 0.5;
-    transform: translate3d(2px, 0, 0);
-  }
-  40% {
-    opacity: 0;
-    transform: translate3d(0, 0, 0);
+    text-shadow: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .overlay .subtitle,
-  .overlay .subtitle::before,
-  .overlay .subtitle::after {
+  .subtitleText {
     animation: none;
-    opacity: 1;
+    text-shadow: none;
   }
 }
 
@@ -403,8 +357,7 @@
   isolation: isolate;
   margin-top: clamp(0.35rem, 1.1vw, 0.75rem);
   cursor: pointer;
-  transition:
-    opacity 180ms ease;
+  transition: opacity 180ms ease;
 }
 
 .ctaButtonBody {

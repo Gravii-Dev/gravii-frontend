@@ -13,6 +13,7 @@ export function Bridge() {
     <ChapterPanel
       id="bridge"
       distance={3.4}
+      anchorProgress={0.22}
       background="var(--gravii-paper)"
     >
       {(progress) => {
@@ -53,10 +54,7 @@ export function Bridge() {
         )
         // Beat 1 tail "Over and over." fades in after char-reveal of lines 1-2
         // completes (0.18-0.21). Larger + bold for emphasis.
-        const beat1TailIn = Math.min(
-          1,
-          Math.max(0, (progress - 0.18) / 0.03)
-        )
+        const beat1TailIn = Math.min(1, Math.max(0, (progress - 0.18) / 0.03))
         const beat2CharProgress = Math.min(
           1,
           Math.max(0, (progress - 0.4) / 0.02)
@@ -84,10 +82,7 @@ export function Bridge() {
                 className={clsx(s.beat1Display)}
                 progress={beat1CharProgress}
               />
-              <p
-                className={s.beat1Tail}
-                style={{ opacity: beat1TailIn }}
-              >
+              <p className={s.beat1Tail} style={{ opacity: beat1TailIn }}>
                 Over and over.
               </p>
             </div>

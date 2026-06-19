@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import { getAnchorScrollTop } from '@/lib/utils/anchor-scroll'
 import s from './chapter-panel.module.css'
 
 type ChapterPanelProps = {
@@ -28,6 +29,8 @@ type ChapterPanelProps = {
   background?: string
   /** id for navigation anchors */
   id?: string
+  /** scroll progress to land on when this pinned chapter is opened by an anchor */
+  anchorProgress?: number
 }
 
 function clamp01(value: number) {
@@ -43,6 +46,7 @@ export function ChapterPanel({
   innerClassName,
   background,
   id,
+  anchorProgress = 0.16,
 }: ChapterPanelProps) {
   const rootRef = useRef<HTMLElement | null>(null)
   const [progress, setProgress] = useState(0)
@@ -58,6 +62,41 @@ export function ChapterPanel({
       setPinDisabled(true)
     }
   }, [])
+
+  useEffect(() => {
+    if (!id || pinDisabled) {
+      return undefined
+    }
+
+    let frameId = 0
+
+    const syncHashAnchor = () => {
+      if (window.location.hash !== `#${id}`) {
+        return
+      }
+
+      window.cancelAnimationFrame(frameId)
+      frameId = window.requestAnimationFrame(() => {
+        const root = rootRef.current
+        if (!root) {
+          return
+        }
+
+        window.scrollTo({
+          top: getAnchorScrollTop(root),
+          behavior: 'auto',
+        })
+      })
+    }
+
+    syncHashAnchor()
+    window.addEventListener('hashchange', syncHashAnchor)
+
+    return () => {
+      window.cancelAnimationFrame(frameId)
+      window.removeEventListener('hashchange', syncHashAnchor)
+    }
+  }, [id, pinDisabled])
 
   // Native scroll listener — single source of truth. Lenis runs in `root` mode
   // (LenisMount), so its programmatic `window.scrollTo` fires native scroll
@@ -137,6 +176,7 @@ export function ChapterPanel({
     return (
       <section
         id={id}
+        data-anchor-progress={anchorProgress}
         ref={rootRef as React.RefObject<HTMLElement>}
         className={clsx(s.section, s.unpinned, className)}
         style={style}
@@ -149,6 +189,7 @@ export function ChapterPanel({
   return (
     <section
       id={id}
+      data-anchor-progress={anchorProgress}
       ref={rootRef as React.RefObject<HTMLElement>}
       className={clsx(s.section, className)}
       style={style}

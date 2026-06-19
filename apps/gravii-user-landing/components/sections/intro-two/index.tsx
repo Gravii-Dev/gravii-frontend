@@ -28,7 +28,11 @@ const INTRO_TWO_CHARS = (() => {
   })
 })()
 
-function setCharacterState(node: HTMLElement, opacity: number, yPercent: number) {
+function setCharacterState(
+  node: HTMLElement,
+  opacity: number,
+  yPercent: number
+) {
   node.style.opacity = `${opacity}`
   node.style.transform = `translate3d(0, ${yPercent}%, 0)`
 }
@@ -45,12 +49,7 @@ export function IntroTwo() {
     const tailNode = tailRef.current
 
     if (
-      !(
-        sectionNode &&
-        textLineNode &&
-        charRefs.current.length > 0 &&
-        tailNode
-      )
+      !(sectionNode && textLineNode && charRefs.current.length > 0 && tailNode)
     ) {
       return
     }
@@ -165,12 +164,8 @@ export function IntroTwo() {
   }, [])
 
   return (
-    <section
-      id="intro-two"
-      ref={sectionRef}
-      className={s.section}
-    >
-      <h2 className={s.srOnly}>Intro two</h2>
+    <section id="intro-two" ref={sectionRef} className={s.section}>
+      <h2 className={s.srOnly}>Over and over</h2>
       <div className={s.stage} aria-hidden="true">
         <p ref={textLineRef} className={s.text}>
           {INTRO_TWO_CHARS.map((item) => {
