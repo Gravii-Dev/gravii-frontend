@@ -59,6 +59,7 @@ Run workspace tasks:
 bun run build
 bun run lint
 bun run typecheck
+bun run check:design-system
 bun run check
 bun run verify
 bun run typecheck:user-landing
@@ -68,7 +69,9 @@ bun run test:e2e
 
 Use `bun run check` as the default completion gate for code changes. Use
 `bun run verify` when build behavior, routing, workspace config, or deployment
-risk is involved.
+risk is involved. `bun run check` runs the design-system harness before
+typecheck and lint so canonical logo, token, and handoff boundaries are checked
+by default.
 
 ## Notes
 
@@ -86,6 +89,9 @@ risk is involved.
 
 - `AGENTS.md`: workspace-level operating rules plus cross-session handoff conventions
 - `docs/codex-harness.md`: Codex Desktop operating harness, verification gates, and task routines
+- `docs/design-system/ai-ready-design-system.md`: AI-ready Gravii design-system rules and the first automated design-system guardrails
+- `docs/design-system/component-inventory.md`: canonical component and package ownership map
+- `docs/design-system/figma-code-handoff.md`: Figma naming, asset, and code handoff expectations
 - `PLAN.md`: active multi-step execution plan when a workstream is in progress
 - `PROGRESS.md`: append-only work log and handoff history
 - `TODO.md`: durable backlog for cross-session work

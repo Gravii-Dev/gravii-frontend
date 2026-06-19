@@ -46,6 +46,23 @@ and the unrelated failure before finishing.
 5. Inspect the local page in a browser for layout, responsive behavior, and visible state quality.
 6. Update nearby docs when structure, behavior, or ownership changes.
 
+### AI-Ready Design System Work
+
+1. Read `docs/design-system/ai-ready-design-system.md` for brand and AI UI
+   generation rules.
+2. Read `docs/design-system/component-inventory.md` to confirm ownership before
+   creating or promoting a component.
+3. Read `docs/design-system/figma-code-handoff.md` when Figma assets, names, or
+   designer handoff are part of the task.
+4. Keep components app-owned unless the inventory and root `AGENTS.md` shared
+   package rules justify promotion.
+5. Use canonical logo and token sources before creating alternatives.
+6. Run `bun run check`; it includes `bun run check:design-system` for logo
+   ownership, design-system docs, Figma handoff docs, and shared brand package
+   guardrails.
+7. For visual work, run the relevant app gate and inspect the affected surface in
+   a browser.
+
 ### API Client or Data Flow
 
 1. Identify the owning app, shared package, and backend contract.
