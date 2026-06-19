@@ -20,13 +20,10 @@
   gap: var(--ds-space-gap);
   min-height: 100%;
   margin: 0;
-  padding: var(--ds-space-panel);
+  padding: 0;
   overflow: hidden;
-  border-radius: var(--ds-radius-frame);
-  background:
-    radial-gradient(circle at 8% 0%, color-mix(in srgb, var(--xray-purple) 14%, transparent), transparent 32%),
-    radial-gradient(circle at 92% 16%, color-mix(in srgb, var(--xray-green) 12%, transparent), transparent 34%),
-    linear-gradient(180deg, color-mix(in srgb, var(--xray-bg) 88%, var(--xray-text) 12%) 0%, var(--xray-bg) 44%, var(--app-canvas-deep, #0b0d13) 100%);
+  border-radius: 0;
+  background: transparent;
   color: var(--xray-text);
 }
 
@@ -98,7 +95,7 @@
 .metricCard {
   position: relative;
   overflow: hidden;
-  border: 1px solid var(--xray-line);
+  border: 0;
   border-radius: var(--ds-radius-card);
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.025)),
@@ -124,14 +121,16 @@
 }
 
 .identityGrid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1.35fr) minmax(110px, 0.7fr) minmax(130px, 0.8fr) minmax(120px, 0.7fr);
-  gap: 20px;
-  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .identityCell {
   min-width: 0;
+  border-radius: var(--ds-radius-card-compact);
+  background: var(--xray-card-strong);
+  padding: 12px 14px;
 }
 
 .identityCell span {
@@ -185,8 +184,8 @@
 
 .metricGrid,
 .trendGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 10px;
 }
 
@@ -258,8 +257,8 @@
 }
 
 .portfolioTopGrid {
-  display: grid;
-  grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.1fr);
+  display: flex;
+  flex-direction: column;
   gap: var(--ds-space-gap);
 }
 
@@ -268,8 +267,9 @@
   gap: 20px;
   align-items: center;
   min-width: 0;
-  padding-right: clamp(16px, 2vw, 28px);
-  border-right: 1px solid var(--xray-line);
+  padding: var(--ds-space-card-compact);
+  border-radius: var(--ds-radius-card-compact);
+  background: var(--xray-card-strong);
 }
 
 .donut {
@@ -428,15 +428,15 @@
 }
 
 .healthGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 8px 14px;
   padding-top: 14px;
-  border-top: 1px solid var(--xray-line);
+  border-top: 0;
 }
 
 .healthGrid .subsectionTitle {
-  grid-column: 1 / -1;
+  width: 100%;
 }
 
 .healthCard {
@@ -466,7 +466,7 @@
   gap: 8px;
   align-items: baseline;
   padding-top: 22px;
-  border-top: 1px solid var(--xray-line);
+  border-top: 0;
 }
 
 .assetTypeBlock {
@@ -501,8 +501,8 @@
 }
 
 .sectionGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 10px;
 }
 
@@ -530,8 +530,8 @@
 }
 
 .riskGrid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 10px;
 }
 
@@ -572,28 +572,16 @@
 }
 
 @media (max-width: 1180px) {
-  .identityGrid,
-  .metricGrid,
-  .trendGrid,
-  .portfolioTopGrid,
-  .sectionGrid,
-  .riskGrid {
-    grid-template-columns: 1fr;
-  }
-
   .assetSummary {
     border-right: 0;
-    border-bottom: 1px solid var(--xray-line);
-    padding-right: 0;
-    padding-bottom: 20px;
   }
 }
 
 @media (max-width: 760px) {
   .root {
     margin: 0;
-    padding: 18px;
-    border-radius: 22px;
+    padding: 0;
+    border-radius: 0;
   }
 
   .header,

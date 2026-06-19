@@ -187,8 +187,8 @@ flowchart TD
 
 `src/features/launch-app/use-launch-shell.ts`
 
-- Owns active and hovered panel state.
-- Provides open, close, and hover handlers to the route shell.
+- Owns active panel state.
+- Provides open and close handlers to the route shell.
 
 `src/features/launch-app/types.ts`
 
@@ -196,14 +196,14 @@ flowchart TD
 
 `src/components/layout/launch-panel`
 
-- Owns collapsed and expanded panel behavior.
-- Frames feature content in `PanelShell`.
+- Owns inactive and active navigation panel behavior.
+- Keeps the selected panel expanded inside the contained sidebar.
 - Provides keyboard access for opening panels.
 
 `src/components/layout/panel-shell`
 
-- Owns the shared expanded panel chrome.
-- Provides the header, title, close action, body, and footer frame.
+- Owns the shared in-surface title treatment for non-home panels.
+- Provides the title and body frame without a separate close action.
 
 ### Live Feature Boundaries
 

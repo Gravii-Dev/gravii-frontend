@@ -4,12 +4,9 @@ export type PanelConfig = {
   id: PanelId;
   num: string;
   tab: string;
-  sub: string;
   editorCopy: string;
-  summary: string;
   dark: boolean;
   bg: string;
-  bgHover: string;
   hoverDark?: boolean;
   xray?: boolean;
 };

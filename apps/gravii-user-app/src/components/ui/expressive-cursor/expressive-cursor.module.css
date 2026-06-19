@@ -5,7 +5,7 @@
   z-index: 2147483000;
   width: var(--expressive-cursor-size, 24px);
   height: var(--expressive-cursor-size, 24px);
-  border: 1px solid var(--expressive-cursor-border, var(--color-text-primary));
+  border: 0;
   border-radius: 999px;
   background: var(--expressive-cursor-fill, #ffffff);
   mix-blend-mode: exclusion;
@@ -17,7 +17,6 @@
   transition:
     width 110ms ease-in,
     height 160ms ease-in,
-    border-color 120ms ease-in,
     border-radius 160ms ease-in,
     opacity 110ms ease-out,
     transform 150ms var(--motion-ease-expressive);
@@ -30,7 +29,6 @@
 .active {
   width: var(--expressive-cursor-active-size, 40px);
   height: var(--expressive-cursor-active-size, 40px);
-  border-color: transparent;
 }
 
 .pressed {

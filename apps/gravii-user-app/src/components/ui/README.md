@@ -59,7 +59,7 @@ Responsibilities:
 Where it is used:
 
 - action-button icon slots for sign-in, X-Ray, profile sharing, checkout, and workspace navigation actions
-- standalone shell controls such as the mobile menu and collapsed theme toggle
+- standalone shell controls such as the mobile menu and theme toggle
 
 Why it matters:
 
@@ -106,6 +106,25 @@ Why it is shared:
 
 - the same brand mark now appears in the shell header, the Home landing hero, loading states, and reserved-surface watermarks
 - centralizing the asset wiring keeps future logo updates local to one component
+
+### `@gravii/brand-logo-3d`
+
+Primary job:
+
+- render the shared interactive 3D Gravii symbol used in shell navigation
+
+Responsibilities:
+
+- preserve the ring and lower-smile mark geometry while rendering it as a small Three.js scene
+- provide the procedural roughness/bump surface used by the landing-page logo treatment
+- support nav-sized framing so the lower smile does not clip inside compact header controls
+- react to pointer movement, hover spin, and click spin while respecting reduced-motion preferences
+- expose dark and light material tones for theme-aware shell navigation
+
+Why it is shared:
+
+- the implementation lives in the shared workspace package so the launch app navbar and landing-page header stay visually and behaviorally aligned
+- the launch app still owns the local navigation placement, sizing, and viewport-specific mount behavior
 
 ### `theme-ink-transition`
 

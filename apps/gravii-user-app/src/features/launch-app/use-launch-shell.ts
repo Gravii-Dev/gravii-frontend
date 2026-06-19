@@ -22,7 +22,6 @@ function readInitialPanel(): PanelId {
 
 export function useLaunchShell() {
   const [activePanel, setActivePanel] = useState<PanelId>(readInitialPanel);
-  const [hoveredPanel, setHoveredPanel] = useState<PanelId | null>(null);
 
   const openPanel = useCallback((panelId: PanelId) => {
     if (!panelIds.has(panelId)) {
@@ -36,12 +35,10 @@ export function useLaunchShell() {
   const shell = useMemo(
     () => ({
       activePanel,
-      hoveredPanel,
       openPanel,
       closePanel: () => setActivePanel("home"),
-      setHoveredPanel,
     }),
-    [activePanel, hoveredPanel, openPanel],
+    [activePanel, openPanel],
   );
 
   return shell;
