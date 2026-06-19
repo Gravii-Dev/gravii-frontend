@@ -94,10 +94,10 @@ const nextConfig: NextConfig = {
       ],
     },
     optimizePackageImports: [
+      '@gravii/brand-logo-3d',
       '@react-three/fiber',
       'gsap',
       'three',
-      '@base-ui/react',
       'lenis',
       'zustand',
     ],

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@gravii/api-clients": "workspace:*",
+    "@gravii/brand-logo-3d": "workspace:*",
     "@gravii/brand-tokens": "workspace:*",
     "@reown/appkit": "^1.8.19",
     "@reown/appkit-adapter-wagmi": "^1.8.19",
