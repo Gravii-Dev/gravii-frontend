@@ -1,4 +1,4 @@
-# Keep Vercel CLI deploys from uploading local caches and unrelated apps.
+# Keep Vercel deploys from uploading local caches and generated artifacts.
 .DS_Store
 .git/
 .github/
@@ -22,11 +22,3 @@ tmp/
 docs/
 tests/
 tooling/
-
-apps/gravii-backoffice/
-apps/gravii-partner-app/
-apps/gravii-user-app/
-
-packages/api-clients/
-packages/domain-types/
-packages/eslint-config/
